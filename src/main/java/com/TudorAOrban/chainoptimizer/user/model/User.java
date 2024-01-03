@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data
@@ -39,7 +37,7 @@ public class User {
     private java.time.LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "organization_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = true)
     private Organization organization;
 
 }

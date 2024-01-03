@@ -28,21 +28,6 @@ public class LoginController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
-//    @PostMapping("/api/login")
-//    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-//        try {
-//            UsernamePasswordAuthenticationToken authReq =
-//                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-//            authenticationManager.authenticate(authReq);
-//            Map<String, String> response = new HashMap<>();
-//            response.put("message", "User authenticated successfully");
-//            return ResponseEntity.ok(response);
-//        } catch (AuthenticationException e) {
-//            Map<String, String> response = new HashMap<>();
-//            response.put("error", "Authentication failed");
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-//        }
-//    }
     @PostMapping("/api/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
@@ -62,3 +47,21 @@ public class LoginController {
         private String password;
     }
 }
+
+
+
+//    @PostMapping("/api/login")
+//    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+//        try {
+//            UsernamePasswordAuthenticationToken authReq =
+//                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+//            authenticationManager.authenticate(authReq);
+//            Map<String, String> response = new HashMap<>();
+//            response.put("message", "User authenticated successfully");
+//            return ResponseEntity.ok(response);
+//        } catch (AuthenticationException e) {
+//            Map<String, String> response = new HashMap<>();
+//            response.put("error", "Authentication failed");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//        }
+//    }

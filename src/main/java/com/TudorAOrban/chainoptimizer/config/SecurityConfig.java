@@ -30,26 +30,13 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(authz -> authz
-//                        .requestMatchers("/api/login").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .httpBasic(httpBasic -> httpBasic.disable())
-//                .formLogin(formLogin -> formLogin.disable())
-//                .logout(logout -> logout.disable())
-//                .userDetailsService(userDetailsService)
-//                .authenticationManager(authenticationManagerBean());
-//
-//        return http.build();
-//    }
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/organizations/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -78,3 +65,19 @@ public class SecurityConfig {
         return provider;
     }
 }
+
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(authz -> authz
+//                        .requestMatchers("/api/login").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .httpBasic(httpBasic -> httpBasic.disable())
+//                .formLogin(formLogin -> formLogin.disable())
+//                .logout(logout -> logout.disable())
+//                .userDetailsService(userDetailsService)
+//                .authenticationManager(authenticationManagerBean());
+//
+//        return http.build();
+//    }
