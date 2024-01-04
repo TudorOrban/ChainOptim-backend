@@ -80,7 +80,8 @@ public class UserController {
             userDto.setEmail(user.getEmail());
             userDto.setCreatedAt(user.getCreatedAt());
             userDto.setUpdatedAt(user.getUpdatedAt());
-            userDto.setOrganization(user.getOrganization()); // Assuming getOrganization() returns the Organization object
+            userDto.setOrganization(user.getOrganization());
+            userDto.setRole(user.getRole());
 
             return ResponseEntity.ok(userDto);
         } else {
@@ -98,7 +99,7 @@ public class UserController {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private Organization organization;
-
+        private User.Role role;
     }
 
 

@@ -1,16 +1,16 @@
 package com.TudorAOrban.chainoptimizer.organization.model;
 
 import com.TudorAOrban.chainoptimizer.user.model.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,9 +31,6 @@ public class Organization {
     @Column
     private String contactInfo;
 
-    @Column
-    private String subscriptionPlan;
-
     @Column(name = "created_at", nullable = false)
     private java.time.LocalDateTime createdAt;
 
@@ -51,6 +48,30 @@ public class Organization {
         updatedAt = LocalDateTime.now();
     }
 
-    @OneToMany(mappedBy = "organization")
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<User> users;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization that = (Organization) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public enum SubscriptionPlan {
+        NONE,
+        BASIC,
+        PRO
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subscription_plan", nullable = false)
+    private SubscriptionPlan subscriptionPlan;
 }

@@ -1,5 +1,6 @@
 package com.TudorAOrban.chainoptimizer.organization.controller;
 
+import com.TudorAOrban.chainoptimizer.dto.OrganizationDTO;
 import com.TudorAOrban.chainoptimizer.organization.model.Organization;
 import com.TudorAOrban.chainoptimizer.organization.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,11 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Organization> getOrganizationById(@PathVariable Integer id) {
-        Optional<Organization> organizationOptional = Optional.ofNullable(organizationService.getOrganizationById(id));
-
-        if (organizationOptional.isPresent()) {
-            return ResponseEntity.ok(organizationOptional.get());
+    public ResponseEntity<OrganizationDTO> getOrganizationById(@PathVariable Integer id,
+                                                               @RequestParam(defaultValue = "false") boolean includeUsers) {
+        OrganizationDTO organizationDTO = organizationService.getOrganizationById(id, includeUsers);
+        if (organizationDTO != null) {
+            return ResponseEntity.ok(organizationDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
