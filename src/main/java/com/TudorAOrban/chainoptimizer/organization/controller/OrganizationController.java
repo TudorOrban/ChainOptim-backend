@@ -1,5 +1,6 @@
 package com.TudorAOrban.chainoptimizer.organization.controller;
 
+import com.TudorAOrban.chainoptimizer.dto.CreateOrganizationDTO;
 import com.TudorAOrban.chainoptimizer.dto.OrganizationDTO;
 import com.TudorAOrban.chainoptimizer.organization.model.Organization;
 import com.TudorAOrban.chainoptimizer.organization.service.OrganizationService;
@@ -18,8 +19,9 @@ public class OrganizationController {
     private OrganizationService organizationService;
 
     @PostMapping
-    public ResponseEntity<Organization> createOrganization(@RequestBody Organization organization) {
-        return ResponseEntity.ok(organizationService.createOrganization(organization));
+    public ResponseEntity<Organization> createOrganization(@RequestBody CreateOrganizationDTO createOrganizationDTO) {
+        Organization createdOrganization = organizationService.createOrganization(createOrganizationDTO);
+        return ResponseEntity.ok(createdOrganization);
     }
 
     @GetMapping("/{id}")

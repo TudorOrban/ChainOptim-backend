@@ -1,5 +1,6 @@
 package com.TudorAOrban.chainoptimizer.organization.controller;
 
+import com.TudorAOrban.chainoptimizer.dto.CreateOrganizationInviteDTO;
 import com.TudorAOrban.chainoptimizer.organization.model.OrganizationInvite;
 import com.TudorAOrban.chainoptimizer.organization.service.OrganizationInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class OrganizationInviteController {
     private OrganizationInviteService organizationInviteService;
 
     @PostMapping
-    public ResponseEntity<OrganizationInvite> createOrganizationInvite(@RequestBody OrganizationInvite organizationInvite) {
-        return ResponseEntity.ok(organizationInviteService.createOrganizationInvite(organizationInvite));
+    public ResponseEntity<OrganizationInvite> createOrganizationInvite(@RequestBody CreateOrganizationInviteDTO createOrganizationInviteDTO) {
+        return ResponseEntity.ok(organizationInviteService.createOrganizationInvite(createOrganizationInviteDTO));
     }
 
     @GetMapping("/{id}")

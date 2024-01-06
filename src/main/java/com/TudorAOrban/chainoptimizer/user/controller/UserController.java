@@ -1,5 +1,6 @@
 package com.TudorAOrban.chainoptimizer.user.controller;
 
+import com.TudorAOrban.chainoptimizer.dto.UserSearchResultDTO;
 import com.TudorAOrban.chainoptimizer.organization.model.Organization;
 import com.TudorAOrban.chainoptimizer.user.model.User;
 import com.TudorAOrban.chainoptimizer.user.service.UserService;
@@ -87,6 +88,12 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/search/{username}")
+    public ResponseEntity<List<UserSearchResultDTO>> searchUsers(@PathVariable String username) {
+        List<UserSearchResultDTO> users = userService.searchUsersByUsername(username);
+        return ResponseEntity.ok(users);
     }
 
 
