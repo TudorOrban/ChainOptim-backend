@@ -54,8 +54,3 @@ public class Stage {
     @OneToMany(mappedBy = "stage", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StageOutput> stageOutputs;
 }
-//    @OneToMany(mappedBy = "stage", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<StageInput> stageInputs;
-//
-//    @OneToMany(mappedBy = "stage", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<StageOutput> stageOutputs;

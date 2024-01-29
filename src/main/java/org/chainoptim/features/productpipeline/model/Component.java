@@ -41,7 +41,7 @@ public class Component {
     @Column(name = "unit_id", nullable = false)
     private Integer unitId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stage_input_id", nullable = false)
-    private StageInput stageInput;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "stage_input_id", nullable = false)
+//    private StageInput stageInput;
 }

@@ -10,11 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-    // Fetch a product with its pipeline
-//    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.stages WHERE p.id = :productId")
-//    Optional<Product> findByIdWithStages(@Param("productId") Integer productId);
-
-    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.stages s LEFT JOIN FETCH s.stageInputs LEFT JOIN FETCH s.stageOutputs WHERE p.id = :productId")
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN FETCH p.stages s " +
+            "LEFT JOIN FETCH s.stageInputs si " +
+            "WHERE p.id = :productId")
     Optional<Product> findByIdWithStages(@Param("productId") Integer productId);
 
     // Fetch all products for an organization without stages

@@ -33,5 +33,4 @@ public class StageInput {
     @JoinColumn(name = "stage_id", nullable = false)
     @JsonIgnore
     private Stage stage;
-
 }

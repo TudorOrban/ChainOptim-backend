@@ -47,7 +47,7 @@ public class UserService {
     }
 
     public Optional<User> getUserByUsername(String username) {
-        return Optional.ofNullable(userRepository.findByUsername(username).orElse(null));
+        return userRepository.findByUsername(username);
     }
 
     public List<UserSearchResultDTO> searchUsersByUsername(String username) {
