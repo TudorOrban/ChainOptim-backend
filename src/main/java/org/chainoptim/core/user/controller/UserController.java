@@ -29,32 +29,6 @@ public class UserController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
-        User registeredUser = userService.registerNewUser(registrationDto.getUsername(), registrationDto.getPassword(), registrationDto.getEmail());
-
-        // Automatically log in user after registration and return JWT
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                new org.springframework.security.core.userdetails.User(
-                        registeredUser.getUsername(),
-                        registeredUser.getPasswordHash(),
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-                ),
-                null,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-                );
-
-        String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
-    }
-
-    // DTO class for registration
-    @Data
-    static class UserRegistrationDto {
-        private String username;
-        private String password;
-        private String email;
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {

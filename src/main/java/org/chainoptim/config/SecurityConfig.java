@@ -32,7 +32,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/login", "/api/validate-token").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/organizations/**").permitAll()
                         .requestMatchers("/api/organization-invites/**").permitAll()
