@@ -13,8 +13,12 @@ import java.util.List;
 @RequestMapping("/api/components")
 public class ComponentController {
 
+    private final ComponentService componentService;
+
     @Autowired
-    private ComponentService componentService;
+    public ComponentController(ComponentService componentService) {
+        this.componentService = componentService;
+    }
 
     @GetMapping("/organizations/{organizationId}")
     public List<Component> getComponentsByOrganization(@PathVariable Integer organizationId) {

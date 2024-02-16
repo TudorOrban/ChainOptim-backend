@@ -1,6 +1,7 @@
 package org.chainoptim.core.organization.controller;
 
 import org.chainoptim.core.organization.service.OrganizationInviteService;
+import org.chainoptim.core.organization.service.OrganizationInviteServiceImpl;
 import org.chainoptim.core.organization.dto.CreateOrganizationInviteDTO;
 import org.chainoptim.core.organization.model.OrganizationInvite;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,11 @@ import java.util.List;
 @RequestMapping("/api/organization-invites")
 public class OrganizationInviteController {
 
-    @Autowired
-    private OrganizationInviteService organizationInviteService;
+    private final OrganizationInviteService organizationInviteService;
+
+    public OrganizationInviteController(OrganizationInviteService organizationInviteService) {
+        this.organizationInviteService = organizationInviteService;
+    }
 
     @PostMapping
     public ResponseEntity<OrganizationInvite> createOrganizationInvite(@RequestBody CreateOrganizationInviteDTO createOrganizationInviteDTO) {

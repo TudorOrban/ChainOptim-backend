@@ -15,8 +15,12 @@ import java.util.List;
 @RequestMapping("/api/warehouses")
 public class WarehouseController {
 
+    private final WarehouseService warehouseService;
+
     @Autowired
-    private WarehouseService warehouseService;
+    public WarehouseController(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Warehouse>> getAllWarehouses() {

@@ -1,4 +1,4 @@
-package org.chainoptim.core.user.utils.serialization;
+package org.chainoptim.core.user.util.serialization;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

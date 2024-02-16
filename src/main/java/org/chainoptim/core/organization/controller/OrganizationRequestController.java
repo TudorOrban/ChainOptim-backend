@@ -12,8 +12,12 @@ import java.util.List;
 @RequestMapping("/api/organization-requests")
 public class OrganizationRequestController {
 
+    private final OrganizationRequestService organizationRequestService;
+
     @Autowired
-    private OrganizationRequestService organizationRequestService;
+    public OrganizationRequestController(OrganizationRequestService organizationRequestService) {
+        this.organizationRequestService = organizationRequestService;
+    }
 
     @PostMapping
     public ResponseEntity<OrganizationRequest> createOrganizationRequest(@RequestBody OrganizationRequest organizationRequest) {

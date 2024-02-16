@@ -1,4 +1,4 @@
-package org.chainoptim.core.user.utils;
+package org.chainoptim.core.user.util;
 
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;

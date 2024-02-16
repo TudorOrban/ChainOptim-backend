@@ -14,8 +14,12 @@ import java.util.List;
 @RequestMapping("/api/raw-materials")
 public class RawMaterialController {
 
+    private final RawMaterialService rawMaterialService;
+
     @Autowired
-    private RawMaterialService rawMaterialService;
+    public RawMaterialController(RawMaterialService rawMaterialService) {
+        this.rawMaterialService = rawMaterialService;
+    }
 
     @GetMapping("/organizations/{organizationId}")
     public List<RawMaterial> getRawMaterialsByOrganization(@PathVariable Integer organizationId) {

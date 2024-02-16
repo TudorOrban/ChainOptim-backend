@@ -1,4 +1,4 @@
-package org.chainoptim.core.user.utils;
+package org.chainoptim.core.user.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

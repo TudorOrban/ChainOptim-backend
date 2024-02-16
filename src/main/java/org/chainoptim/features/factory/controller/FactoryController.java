@@ -15,8 +15,12 @@ import java.util.List;
 @RequestMapping("/api/factories")
 public class FactoryController {
 
+    private final FactoryService factoryService;
+
     @Autowired
-    private FactoryService factoryService;
+    public FactoryController(FactoryService factoryService) {
+        this.factoryService = factoryService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Factory>> getAllFactories() {

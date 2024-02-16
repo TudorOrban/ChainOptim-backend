@@ -4,8 +4,8 @@ import org.chainoptim.core.user.dto.LoginDTO;
 import org.chainoptim.core.user.dto.UserRegistrationDTO;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.service.UserService;
-import org.chainoptim.core.user.utils.JwtAuthenticationResponse;
-import org.chainoptim.core.user.utils.JwtTokenProvider;
+import org.chainoptim.core.user.util.JwtAuthenticationResponse;
+import org.chainoptim.core.user.util.JwtTokenProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +27,20 @@ import java.util.Collections;
 @RequestMapping("/api")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
+    @Autowired
+    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtTokenProvider tokenProvider) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.tokenProvider = tokenProvider;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDto) {

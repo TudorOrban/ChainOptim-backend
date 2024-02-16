@@ -2,20 +2,14 @@ package org.chainoptim.core.user.controller;
 
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.service.UserService;
-import org.chainoptim.core.user.utils.JwtAuthenticationResponse;
 import org.chainoptim.core.user.dto.UserSearchResultDTO;
 import org.chainoptim.core.organization.model.Organization;
-import org.chainoptim.core.user.utils.JwtTokenProvider;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,22 +17,19 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    private JwtTokenProvider tokenProvider;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
         Optional<User> userOptional = Optional.ofNullable(userService.getUserById(id));
 
-        if (userOptional.isPresent()) {
-            return ResponseEntity.ok(userOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return userOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/username/{username}")
@@ -71,7 +62,7 @@ public class UserController {
     }
 
 
-
+    // TODO: Replace this
     @Data
     public class UserDto {
         private String id;
@@ -82,7 +73,6 @@ public class UserController {
         private Organization organization;
         private User.Role role;
     }
-
 
     @GetMapping()
     public List<User> getAllUsers() {

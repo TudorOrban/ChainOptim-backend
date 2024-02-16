@@ -1,4 +1,4 @@
-package org.chainoptim.core.user.utils;
+package org.chainoptim.core.user.util;
 
 import lombok.Data;
 
