@@ -32,7 +32,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getUserIdFromJWT(String token) {
+    public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(JWT_SECRET)
                 .parseClaimsJws(token)
