@@ -84,4 +84,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid");
         }
     }
+
+    @PostMapping("/get-username-from-token")
+    public ResponseEntity<String> getUsernameFromToken(@RequestBody String jwtToken) {
+        logger.info(jwtToken);
+        String username = tokenProvider.getUsernameFromJWT(jwtToken);
+        if (username != null) {
+            return ResponseEntity.ok().body(username);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid");
+        }
+    }
 }
