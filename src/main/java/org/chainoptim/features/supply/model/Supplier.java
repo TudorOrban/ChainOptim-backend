@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.shared.location.model.Location;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -22,8 +26,18 @@ public class Supplier {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private Location location;
+
     @JoinColumn(name = "organization_id", nullable = false)
-    @JsonBackReference
-    private Organization organization;
+    private Integer organizationId;
 }

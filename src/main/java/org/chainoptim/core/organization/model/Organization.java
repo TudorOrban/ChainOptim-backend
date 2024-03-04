@@ -78,17 +78,4 @@ public class Organization {
     @Enumerated(EnumType.STRING)
     @Column(name = "subscription_plan", nullable = false)
     private SubscriptionPlan subscriptionPlan;
-
-//    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JsonManagedReference
-//    private Set<Factory> factories = new HashSet<>();
-
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Warehouse> warehouses = new HashSet<>();
-
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Supplier> suppliers = new HashSet<>();
-
 }
