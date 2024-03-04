@@ -1,11 +1,9 @@
 package org.chainoptim.core.organization.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.chainoptim.core.user.model.User;
-import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.warehouse.model.Warehouse;
-import org.chainoptim.shared.location.model.Location;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -80,17 +78,4 @@ public class Organization {
     @Enumerated(EnumType.STRING)
     @Column(name = "subscription_plan", nullable = false)
     private SubscriptionPlan subscriptionPlan;
-
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Factory> factories = new HashSet<>();
-
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Warehouse> warehouses = new HashSet<>();
-
-    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Supplier> suppliers = new HashSet<>();
-
 }

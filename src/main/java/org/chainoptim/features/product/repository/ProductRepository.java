@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Integer>, ProductsSearchRepository {
+
     @Query("SELECT p FROM Product p " +
             "LEFT JOIN FETCH p.stages s " +
             "LEFT JOIN FETCH s.stageInputs si " +

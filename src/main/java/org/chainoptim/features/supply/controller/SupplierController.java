@@ -1,13 +1,11 @@
 package org.chainoptim.features.supply.controller;
 
+import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.supply.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,6 +39,16 @@ public class SupplierController {
         if (suppliers.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(suppliers);
+    }
+
+    @GetMapping("/organizations/advanced/{organizationId}")
+    public ResponseEntity<?> getSuppliersByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending) {
+        List<SuppliersSearchDTO> suppliers = supplierService.getSuppliersByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending);
         return ResponseEntity.ok(suppliers);
     }
 }

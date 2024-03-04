@@ -1,10 +1,12 @@
 package org.chainoptim.features.warehouse.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.shared.location.model.Location;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -22,12 +24,18 @@ public class Warehouse {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
-    @JsonBackReference
-    private Organization organization;
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
 }
