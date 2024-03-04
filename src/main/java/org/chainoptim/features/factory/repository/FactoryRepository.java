@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FactoryRepository extends JpaRepository<Factory, Integer> {
+public interface FactoryRepository extends JpaRepository<Factory, Integer>, FactoriesSearchRepository {
 
     List<Factory> findByOrganizationId(Integer organizationId);
 }
