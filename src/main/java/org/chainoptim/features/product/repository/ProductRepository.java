@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Integer>, ProductsSearchRepository {
+
     @Query("SELECT p FROM Product p " +
             "LEFT JOIN FETCH p.stages s " +
             "LEFT JOIN FETCH s.stageInputs si " +
@@ -18,11 +19,4 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     // Fetch all products for an organization without stages
     List<Product> findByOrganizationId(Integer organizationId);
-
-    @Query("SELECT p FROM Product p " +
-            "WHERE p.organizationId = :organizationId " +
-            "AND p.name LIKE CONCAT('%', :searchQuery, '%')")
-    List<Product> findByOrganizationIdAdvanced(
-            @Param("organizationId") Integer organizationId,
-            @Param("searchQuery") String searchQuery);
 }

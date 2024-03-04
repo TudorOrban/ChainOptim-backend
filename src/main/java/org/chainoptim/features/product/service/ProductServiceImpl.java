@@ -32,8 +32,8 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(Integer organizationId, String searchQuery) {
-        List<Product> products = productRepository.findByOrganizationIdAdvanced(organizationId, searchQuery);
+    public List<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending) {
+        List<Product> products = productRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending);
         return products.stream()
                 .map(this::convertToProductsSearchDTO)
                 .collect(Collectors.toList());
