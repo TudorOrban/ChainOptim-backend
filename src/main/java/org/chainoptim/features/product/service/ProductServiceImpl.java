@@ -25,8 +25,15 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
-    public List<ProductsSearchDTO> getProductsByOrganization(Integer organizationId) {
+    public List<ProductsSearchDTO> getProductsByOrganizationId(Integer organizationId) {
         List<Product> products = productRepository.findByOrganizationId(organizationId);
+        return products.stream()
+                .map(this::convertToProductsSearchDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(Integer organizationId, String searchQuery) {
+        List<Product> products = productRepository.findByOrganizationIdAdvanced(organizationId, searchQuery);
         return products.stream()
                 .map(this::convertToProductsSearchDTO)
                 .collect(Collectors.toList());

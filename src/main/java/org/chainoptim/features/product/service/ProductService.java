@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ProductService {
     public Product getProductWithStages(Integer productId);
-    public List<ProductsSearchDTO> getProductsByOrganization(Integer organizationId);
+    public List<ProductsSearchDTO> getProductsByOrganizationId(Integer organizationId);
+    public List<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(Integer organizationId, String searchQuery);
     public ProductsSearchDTO convertToProductsSearchDTO(Product product);
 }

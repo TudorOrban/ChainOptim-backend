@@ -24,7 +24,15 @@ public class ProductController {
     }
 
     @GetMapping("/organizations/{organizationId}")
-    public ResponseEntity<?> getProductsByOrganization(@PathVariable Integer organizationId) {
-        return ResponseEntity.ok(productService.getProductsByOrganization(organizationId));
+    public ResponseEntity<?> getProductsByOrganizationId(@PathVariable Integer organizationId) {
+        return ResponseEntity.ok(productService.getProductsByOrganizationId(organizationId));
+    }
+
+    @GetMapping("/organizations/advanced/{organizationId}")
+    public ResponseEntity<?> getProductsByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false) String searchQuery
+    ) {
+        return ResponseEntity.ok(productService.getProductsByOrganizationIdAdvanced(organizationId, searchQuery));
     }
 }
