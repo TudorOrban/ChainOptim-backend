@@ -1,9 +1,15 @@
 package org.chainoptim.features.factory.repository;
 
 import org.chainoptim.features.factory.model.Factory;
-
-import java.util.List;
+import org.chainoptim.shared.search.model.PaginatedResults;
 
 public interface FactoriesSearchRepository {
-    List<Factory> findByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending);
+    PaginatedResults<Factory> findByOrganizationIdAdvanced(
+            Integer organizationId,
+            String searchQuery,
+            String sortBy,
+            boolean ascending,
+            int page,
+            int itemsPerPage
+    );
 }

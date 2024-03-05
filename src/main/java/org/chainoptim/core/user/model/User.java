@@ -36,7 +36,7 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private java.time.LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organization_id")
     @JsonBackReference
     private Organization organization;

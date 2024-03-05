@@ -4,6 +4,7 @@ import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,11 +34,14 @@ public class FactoryServiceImpl implements FactoryService {
         return factoryRepository.findByOrganizationId(organizationId);
     }
 
-    public List<FactoriesSearchDTO> getFactoriesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending) {
-        List<Factory> factories = factoryRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending);
-        return factories.stream()
+    public PaginatedResults<FactoriesSearchDTO> getFactoriesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        PaginatedResults<Factory> paginatedResults = factoryRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return new PaginatedResults<FactoriesSearchDTO>(
+            paginatedResults.results.stream()
                 .map(this::convertToFactoriesSearchDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()),
+            paginatedResults.totalCount
+        );
     }
 
     public FactoriesSearchDTO convertToFactoriesSearchDTO(Factory factory) {

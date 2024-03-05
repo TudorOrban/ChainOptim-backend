@@ -4,6 +4,7 @@ import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,11 +34,14 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.findByOrganizationId(organizationId);
     }
 
-    public List<WarehousesSearchDTO> getWarehousesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending) {
-        List<Warehouse> warehouses = warehouseRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending);
-        return warehouses.stream()
-                .map(this::convertToWarehousesSearchDTO)
-                .collect(Collectors.toList());
+    public PaginatedResults<WarehousesSearchDTO> getWarehousesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        PaginatedResults<Warehouse> paginatedResults = warehouseRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return new PaginatedResults<WarehousesSearchDTO>(
+                paginatedResults.results.stream()
+                        .map(this::convertToWarehousesSearchDTO)
+                        .collect(Collectors.toList()),
+                paginatedResults.totalCount
+        );
     }
 
     public WarehousesSearchDTO convertToWarehousesSearchDTO(Warehouse warehouse) {
