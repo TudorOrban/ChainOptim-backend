@@ -1,6 +1,7 @@
 package org.chainoptim.features.product.repository;
 
 import org.chainoptim.features.product.model.Product;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -18,27 +19,49 @@ public class ProductsSearchRepositoryImpl implements ProductsSearchRepository {
     private EntityManager entityManager;
 
     @Override
-    public List<Product> findByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending) {
+    public PaginatedResults<Product> findByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);
-        Root<Product> product = criteriaQuery.from(Product.class);
+        CriteriaQuery<Product> query = builder.createQuery(Product.class);
+        Root<Product> product = query.from(Product.class);
 
-        // Add conditions
-        // Filter by organizationId
-        Predicate conditions = builder.conjunction();
-        conditions = builder.and(conditions, builder.equal(product.get("organizationId"), organizationId));
-
-        // Filter by search query
-        conditions = builder.and(conditions, builder.like(product.get("name"), "%" + searchQuery + "%"));
-        criteriaQuery.where(conditions);
+        // Add conditions (organizationId and searchQuery)
+        Predicate conditions = getConditions(builder, product, organizationId, searchQuery);
+        query.where(conditions);
 
         // Add sorting
         if (ascending) {
-            criteriaQuery.orderBy(builder.asc(product.get(sortBy)));
+            query.orderBy(builder.asc(product.get(sortBy)));
         } else {
-            criteriaQuery.orderBy(builder.desc(product.get(sortBy)));
+            query.orderBy(builder.desc(product.get(sortBy)));
         }
 
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        // Create query with pagination
+        List<Product> products = entityManager.createQuery(query)
+                .setFirstResult((page - 1) * itemsPerPage)
+                .setMaxResults(itemsPerPage)
+                .getResultList();
+
+        // Query total results count
+        CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(countBuilder.count(countRoot));
+        countQuery.where(getConditions(countBuilder, countRoot, organizationId, searchQuery));
+
+        // Execute count query
+        long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+
+        return new PaginatedResults<Product>(products, totalCount);
+    }
+
+    private Predicate getConditions(CriteriaBuilder builder, Root<Product> root, Integer organizationId, String searchQuery) {
+        Predicate conditions = builder.conjunction();
+        if (organizationId != null) {
+            conditions = builder.and(conditions, builder.equal(root.get("organizationId"), organizationId));
+        }
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            conditions = builder.and(conditions, builder.like(root.get("name"), "%" + searchQuery + "%"));
+        }
+        return conditions;
     }
 }

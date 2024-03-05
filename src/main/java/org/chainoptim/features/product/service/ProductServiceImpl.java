@@ -4,6 +4,7 @@ import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +33,14 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending) {
-        List<Product> products = productRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending);
-        return products.stream()
-                .map(this::convertToProductsSearchDTO)
-                .collect(Collectors.toList());
+    public PaginatedResults<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        PaginatedResults<Product> paginatedResults = productRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return new PaginatedResults<ProductsSearchDTO>(
+                paginatedResults.results.stream()
+                        .map(this::convertToProductsSearchDTO)
+                        .collect(Collectors.toList()),
+                paginatedResults.totalCount
+        );
     }
 
     public ProductsSearchDTO convertToProductsSearchDTO(Product product) {
