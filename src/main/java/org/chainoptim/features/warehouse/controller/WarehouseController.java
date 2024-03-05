@@ -3,6 +3,7 @@ package org.chainoptim.features.warehouse.controller;
 import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.service.WarehouseService;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +48,11 @@ public class WarehouseController {
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
-            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending) {
-        List<WarehousesSearchDTO> factories = warehouseService.getWarehousesByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending);
-        return ResponseEntity.ok(factories);
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        PaginatedResults<WarehousesSearchDTO> warehouses = warehouseService.getWarehousesByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return ResponseEntity.ok(warehouses);
     }
 }

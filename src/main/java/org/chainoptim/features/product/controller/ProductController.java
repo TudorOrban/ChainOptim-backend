@@ -40,7 +40,6 @@ public class ProductController {
             @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
-
     ) {
         PaginatedResults<ProductsSearchDTO> paginatedResults = productService.getProductsByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(paginatedResults);

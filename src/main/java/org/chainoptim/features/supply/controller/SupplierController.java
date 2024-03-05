@@ -3,6 +3,7 @@ package org.chainoptim.features.supply.controller;
 import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.supply.service.SupplierService;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +48,11 @@ public class SupplierController {
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
-            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending) {
-        List<SuppliersSearchDTO> suppliers = supplierService.getSuppliersByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending);
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        PaginatedResults<SuppliersSearchDTO> suppliers = supplierService.getSuppliersByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(suppliers);
     }
 }

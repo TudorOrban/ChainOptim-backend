@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.chainoptim.features.warehouse.model.Warehouse;
+import org.chainoptim.shared.search.model.PaginatedResults;
 
 import java.util.List;
 
@@ -15,27 +16,50 @@ public class WarehousesSearchRepositoryImpl implements WarehousesSearchRepositor
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Warehouse> findByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending) {
+    @Override
+    public PaginatedResults<Warehouse> findByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Warehouse> criteriaQuery = builder.createQuery(Warehouse.class);
-        Root<Warehouse> warehouse = criteriaQuery.from(Warehouse.class);
+        CriteriaQuery<Warehouse> query = builder.createQuery(Warehouse.class);
+        Root<Warehouse> warehouse = query.from(Warehouse.class);
 
-        // Add conditions
-        // Filter by organizationId
-        Predicate conditions = builder.conjunction();
-        conditions = builder.and(conditions, builder.equal(warehouse.get("organizationId"), organizationId));
-
-        // Filter by search query
-        conditions = builder.and(conditions, builder.like(warehouse.get("name"), "%" + searchQuery + "%"));
-        criteriaQuery.where(conditions);
+        // Add conditions (organizationId and searchQuery)
+        Predicate conditions = getConditions(builder, warehouse, organizationId, searchQuery);
+        query.where(conditions);
 
         // Add sorting
         if (ascending) {
-            criteriaQuery.orderBy(builder.asc(warehouse.get(sortBy)));
+            query.orderBy(builder.asc(warehouse.get(sortBy)));
         } else {
-            criteriaQuery.orderBy(builder.desc(warehouse.get(sortBy)));
+            query.orderBy(builder.desc(warehouse.get(sortBy)));
         }
 
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        // Create query with pagination
+        List<Warehouse> warehouses = entityManager.createQuery(query)
+                .setFirstResult((page - 1) * itemsPerPage)
+                .setMaxResults(itemsPerPage)
+                .getResultList();
+
+        // Query total results count
+        CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
+        Root<Warehouse> countRoot = countQuery.from(Warehouse.class);
+        countQuery.select(countBuilder.count(countRoot));
+        countQuery.where(getConditions(countBuilder, countRoot, organizationId, searchQuery));
+
+        // Execute count query
+        long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+
+        return new PaginatedResults<Warehouse>(warehouses, totalCount);
+    }
+
+    private Predicate getConditions(CriteriaBuilder builder, Root<Warehouse> root, Integer organizationId, String searchQuery) {
+        Predicate conditions = builder.conjunction();
+        if (organizationId != null) {
+            conditions = builder.and(conditions, builder.equal(root.get("organizationId"), organizationId));
+        }
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            conditions = builder.and(conditions, builder.like(root.get("name"), "%" + searchQuery + "%"));
+        }
+        return conditions;
     }
 }
