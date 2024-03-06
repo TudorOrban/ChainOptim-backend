@@ -1,9 +1,7 @@
 package org.chainoptim.features.supply.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.shared.location.model.Location;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

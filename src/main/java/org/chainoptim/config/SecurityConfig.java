@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/factories/**").permitAll()
                         .requestMatchers("/api/warehouses/**").permitAll()
                         .requestMatchers("/api/suppliers/**").permitAll()
+                        .requestMatchers("/api/supplier-orders/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
