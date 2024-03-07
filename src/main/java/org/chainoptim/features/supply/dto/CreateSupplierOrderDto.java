@@ -1,0 +1,19 @@
+package org.chainoptim.features.supply.dto;
+
+import lombok.Data;
+import org.chainoptim.features.supply.model.SupplierOrder;
+
+import java.time.LocalDateTime;
+
+@Data
+public class CreateSupplierOrderDto {
+
+    private Integer organizationId;
+    private Integer supplierId;
+    private Integer componentId;
+    private Double quantity;
+    private LocalDateTime orderDate;
+    private LocalDateTime estimatedDeliveryDate;
+    private LocalDateTime deliveryDate;
+    private SupplierOrder.Status status;
+}

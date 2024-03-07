@@ -1,13 +1,11 @@
 package org.chainoptim.features.supply.controller;
 
+import org.chainoptim.features.supply.dto.CreateSupplierOrderDto;
 import org.chainoptim.features.supply.model.SupplierOrder;
 import org.chainoptim.features.supply.service.SupplierOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +24,11 @@ public class SupplierOrderController {
     public ResponseEntity<List<SupplierOrder>> getSuppliersByOrganizationId(@PathVariable Integer organizationId) {
         List<SupplierOrder> supplierOrders = supplierOrderService.getSupplierOrdersByOrganizationId(organizationId);
         return ResponseEntity.ok(supplierOrders);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<SupplierOrder> createSupplierOrder(@RequestBody CreateSupplierOrderDto order) {
+        SupplierOrder supplierOrder = supplierOrderService.saveOrUpdateSupplierOrder(order);
+        return ResponseEntity.ok(supplierOrder);
     }
 }
