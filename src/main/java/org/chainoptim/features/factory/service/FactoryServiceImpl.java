@@ -1,10 +1,14 @@
 package org.chainoptim.features.factory.service;
 
+import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
+import org.chainoptim.features.factory.dto.FactoryDTOMapper;
+import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.repository.FactoryRepository;
-
 import org.chainoptim.shared.search.model.PaginatedResults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,19 +41,32 @@ public class FactoryServiceImpl implements FactoryService {
         PaginatedResults<Factory> paginatedResults = factoryRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return new PaginatedResults<>(
             paginatedResults.results.stream()
-                .map(this::convertToFactoriesSearchDTO)
+                .map(FactoryDTOMapper::convertToFactoriesSearchDTO)
                     .toList(),
             paginatedResults.totalCount
         );
     }
 
-    public FactoriesSearchDTO convertToFactoriesSearchDTO(Factory factory) {
-        FactoriesSearchDTO dto = new FactoriesSearchDTO();
-        dto.setId(factory.getId());
-        dto.setName(factory.getName());
-        dto.setCreatedAt(factory.getCreatedAt());
-        dto.setUpdatedAt(factory.getUpdatedAt());
-        dto.setLocation(factory.getLocation());
-        return dto;
+    public Factory createFactory(CreateFactoryDTO factoryDTO) {
+        return factoryRepository.save(FactoryDTOMapper.convertCreateFactoryDTOToFactory(factoryDTO));
+    }
+
+    public Factory updateFactory(UpdateFactoryDTO factoryDTO) {
+        Optional<Factory> factoryOptional = factoryRepository.findById(factoryDTO.getId());
+        if (factoryOptional.isEmpty()) {
+            throw new ResourceNotFoundException("The requested factory does not exist");
+        }
+        Factory factory = factoryOptional.get();
+        factory.setName(factoryDTO.getName());
+
+        factoryRepository.save(factory);
+
+        return factory;
+    }
+
+    public void deleteFactory(Integer factoryId) {
+        Factory factory = new Factory();
+        factory.setId(factoryId);
+        factoryRepository.delete(factory);
     }
 }

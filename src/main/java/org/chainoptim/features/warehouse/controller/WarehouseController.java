@@ -1,5 +1,7 @@
 package org.chainoptim.features.warehouse.controller;
 
+import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
+import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
 import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.service.WarehouseService;
@@ -21,12 +23,8 @@ public class WarehouseController {
         this.warehouseService = warehouseService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Warehouse>> getAllWarehouses() {
-        List<Warehouse> warehouses = warehouseService.getAllWarehouses();
-        return ResponseEntity.ok(warehouses);
-    }
 
+    // Fetch
     @GetMapping("/{id}")
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable Integer id) {
         return warehouseService.getWarehouseById(id)
@@ -54,5 +52,25 @@ public class WarehouseController {
     ) {
         PaginatedResults<WarehousesSearchDTO> warehouses = warehouseService.getWarehousesByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(warehouses);
+    }
+
+    // Create
+    @PostMapping("/create")
+    public ResponseEntity<Warehouse> createWarehouse(@RequestBody CreateWarehouseDTO warehouseDTO) {
+        Warehouse warehouse = warehouseService.createWarehouse(warehouseDTO);
+        return ResponseEntity.ok(warehouse);
+    }
+
+    // Update
+    @PutMapping("/update")
+    public ResponseEntity<Warehouse> updateWarehouse(@RequestBody UpdateWarehouseDTO warehouseDTO) {
+        Warehouse warehouse = warehouseService.updateWarehouse(warehouseDTO);
+        return ResponseEntity.ok(warehouse);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteWarehouse(@PathVariable Integer id) {
+        warehouseService.deleteWarehouse(id);
+        return ResponseEntity.ok().build();
     }
 }

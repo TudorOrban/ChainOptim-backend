@@ -1,6 +1,8 @@
 package org.chainoptim.features.supply.controller;
 
+import org.chainoptim.features.supply.dto.CreateSupplierDTO;
 import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
+import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.supply.service.SupplierService;
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -21,6 +23,7 @@ public class SupplierController {
         this.supplierService = supplierService;
     }
 
+    // Fetch
     @GetMapping
     public ResponseEntity<List<Supplier>> getAllSuppliers() {
         List<Supplier> suppliers = supplierService.getAllSuppliers();
@@ -54,5 +57,25 @@ public class SupplierController {
     ) {
         PaginatedResults<SuppliersSearchDTO> suppliers = supplierService.getSuppliersByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(suppliers);
+    }
+
+    // Create
+    @PostMapping("/create")
+    public ResponseEntity<Supplier> createSupplier(@RequestBody CreateSupplierDTO supplierDTO) {
+        Supplier supplier = supplierService.createSupplier(supplierDTO);
+        return ResponseEntity.ok(supplier);
+    }
+
+    // Update
+    @PutMapping("/update")
+    public ResponseEntity<Supplier> updateSupplier(@RequestBody UpdateSupplierDTO supplierDTO) {
+        Supplier supplier = supplierService.updateSupplier(supplierDTO);
+        return ResponseEntity.ok(supplier);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteSupplier(@PathVariable Integer id) {
+        supplierService.deleteSupplier(id);
+        return ResponseEntity.ok().build();
     }
 }

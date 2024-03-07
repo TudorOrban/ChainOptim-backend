@@ -1,6 +1,10 @@
 package org.chainoptim.features.supply.service;
 
+import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.features.supply.dto.CreateSupplierDTO;
+import org.chainoptim.features.supply.dto.SupplierDTOMapper;
 import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
+import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.supply.repository.SupplierRepository;
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -36,19 +40,32 @@ public class SupplierServiceImpl implements SupplierService {
         PaginatedResults<Supplier> paginatedResults = supplierRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return new PaginatedResults<>(
             paginatedResults.results.stream()
-            .map(this::convertToSuppliersSearchDTO)
+            .map(SupplierDTOMapper::convertToSuppliersSearchDTO)
             .toList(),
             paginatedResults.totalCount
         );
     }
 
-    public SuppliersSearchDTO convertToSuppliersSearchDTO(Supplier suppliers) {
-        SuppliersSearchDTO dto = new SuppliersSearchDTO();
-        dto.setId(suppliers.getId());
-        dto.setName(suppliers.getName());
-        dto.setCreatedAt(suppliers.getCreatedAt());
-        dto.setUpdatedAt(suppliers.getUpdatedAt());
-        dto.setLocation(suppliers.getLocation());
-        return dto;
+    public Supplier createSupplier(CreateSupplierDTO supplierDTO) {
+        return supplierRepository.save(SupplierDTOMapper.convertCreateSupplierDTOToSupplier(supplierDTO));
+    }
+
+    public Supplier updateSupplier(UpdateSupplierDTO supplierDTO) {
+        Optional<Supplier> supplierOptional = supplierRepository.findById(supplierDTO.getId());
+        if (supplierOptional.isEmpty()) {
+            throw new ResourceNotFoundException("The requested supplier does not exist");
+        }
+        Supplier supplier = supplierOptional.get();
+        supplier.setName(supplierDTO.getName());
+
+        supplierRepository.save(supplier);
+
+        return supplier;
+    }
+
+    public void deleteSupplier(Integer supplierId) {
+        Supplier supplier = new Supplier();
+        supplier.setId(supplierId);
+        supplierRepository.delete(supplier);
     }
 }

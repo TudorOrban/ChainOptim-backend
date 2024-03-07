@@ -1,6 +1,6 @@
 package org.chainoptim.features.supply.service;
 
-import org.chainoptim.features.supply.dto.CreateSupplierOrderDto;
+import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supply.model.SupplierOrder;
 import org.chainoptim.features.supply.repository.SupplierOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     }
 
 
-    public SupplierOrder saveOrUpdateSupplierOrder(CreateSupplierOrderDto order) {
+    public SupplierOrder saveOrUpdateSupplierOrder(CreateSupplierOrderDTO order) {
         System.out.println("Sending order: " + order.getSupplierId());
         SupplierOrder supplierOrder = mapCreateDtoToSupplierOrder(order);
 //        SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
@@ -41,7 +41,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return supplierOrder;
     }
 
-    private SupplierOrder mapCreateDtoToSupplierOrder(CreateSupplierOrderDto order) {
+    private SupplierOrder mapCreateDtoToSupplierOrder(CreateSupplierOrderDTO order) {
         SupplierOrder supplierOrder = new SupplierOrder();
         supplierOrder.setOrganizationId(order.getOrganizationId());
         supplierOrder.setSupplierId(order.getSupplierId());

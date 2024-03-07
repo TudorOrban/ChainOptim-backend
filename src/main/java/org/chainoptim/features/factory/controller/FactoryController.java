@@ -1,6 +1,8 @@
 package org.chainoptim.features.factory.controller;
 
+import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
+import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.service.FactoryService;
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -21,12 +23,7 @@ public class FactoryController {
         this.factoryService = factoryService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Factory>> getAllFactories() {
-        List<Factory> factories = factoryService.getAllFactories();
-        return ResponseEntity.ok(factories);
-    }
-
+    // Fetch
     @GetMapping("/{id}")
     public ResponseEntity<Factory> getFactoryById(@PathVariable Integer id) {
         return factoryService.getFactoryById(id)
@@ -53,5 +50,25 @@ public class FactoryController {
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage) {
         PaginatedResults<FactoriesSearchDTO> factories = factoryService.getFactoriesByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(factories);
+    }
+
+    // Create
+    @PostMapping("/create")
+    public ResponseEntity<Factory> createFactory(@RequestBody CreateFactoryDTO factoryDTO) {
+        Factory factory = factoryService.createFactory(factoryDTO);
+        return ResponseEntity.ok(factory);
+    }
+
+    // Update
+    @PutMapping("/update")
+    public ResponseEntity<Factory> updateFactory(@RequestBody UpdateFactoryDTO factoryDTO) {
+        Factory factory = factoryService.updateFactory(factoryDTO);
+        return ResponseEntity.ok(factory);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteFactory(@PathVariable Integer id) {
+        factoryService.deleteFactory(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -6,7 +6,7 @@ import org.chainoptim.features.supply.model.SupplierOrder;
 import java.time.LocalDateTime;
 
 @Data
-public class CreateSupplierOrderDto {
+public class CreateSupplierOrderDTO {
 
     private Integer organizationId;
     private Integer supplierId;

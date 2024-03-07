@@ -1,6 +1,6 @@
 package org.chainoptim.features.supply.controller;
 
-import org.chainoptim.features.supply.dto.CreateSupplierOrderDto;
+import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supply.model.SupplierOrder;
 import org.chainoptim.features.supply.service.SupplierOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class SupplierOrderController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<SupplierOrder> createSupplierOrder(@RequestBody CreateSupplierOrderDto order) {
+    public ResponseEntity<SupplierOrder> createSupplierOrder(@RequestBody CreateSupplierOrderDTO order) {
         SupplierOrder supplierOrder = supplierOrderService.saveOrUpdateSupplierOrder(order);
         return ResponseEntity.ok(supplierOrder);
     }
