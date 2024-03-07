@@ -1,6 +1,8 @@
 package org.chainoptim.features.product.controller;
 
+import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.ProductsSearchDTO;
+import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.service.ProductService;
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -21,11 +23,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProductWithStages(@PathVariable Integer productId) {
-        Product product = productService.getProductWithStages(productId);
-        return ResponseEntity.ok(product);
-    }
+    // Fetch
 
     @GetMapping("/organizations/{organizationId}")
     public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationId(@PathVariable Integer organizationId) {
@@ -43,5 +41,31 @@ public class ProductController {
     ) {
         PaginatedResults<ProductsSearchDTO> paginatedResults = productService.getProductsByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(paginatedResults);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<Product> getProductWithStages(@PathVariable Integer productId) {
+        Product product = productService.getProductWithStages(productId);
+        return ResponseEntity.ok(product);
+    }
+
+    // Create
+    @PostMapping("/create")
+    public ResponseEntity<Product> createProduct(@RequestBody CreateProductDTO productDTO) {
+        Product product = productService.createProduct(productDTO);
+        return ResponseEntity.ok(product);
+    }
+
+    // Update
+    @PutMapping("/update")
+    public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductDTO productDTO) {
+        Product product = productService.updateProduct(productDTO);
+        return ResponseEntity.ok(product);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok().build();
     }
 }
