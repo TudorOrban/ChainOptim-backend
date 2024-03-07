@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface OrganizationRequestService {
 
-    public OrganizationRequest createOrganizationRequest(OrganizationRequest organizationRequest);
-    public OrganizationRequest getOrganizationRequestById(Integer id);
-    public List<OrganizationRequest> getAllOrganizationRequests();
-    public OrganizationRequest updateOrganizationRequest(OrganizationRequest organizationRequest);
-    public void deleteOrganizationRequest(Integer id);
+    OrganizationRequest createOrganizationRequest(OrganizationRequest organizationRequest);
+    OrganizationRequest getOrganizationRequestById(Integer id);
+    List<OrganizationRequest> getAllOrganizationRequests();
+    OrganizationRequest updateOrganizationRequest(OrganizationRequest organizationRequest);
+    void deleteOrganizationRequest(Integer id);
 }

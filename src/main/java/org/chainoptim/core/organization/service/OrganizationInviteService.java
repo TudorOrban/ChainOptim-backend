@@ -6,9 +6,9 @@ import org.chainoptim.core.organization.model.OrganizationInvite;
 import java.util.List;
 
 public interface OrganizationInviteService {
-    public OrganizationInvite createOrganizationInvite(CreateOrganizationInviteDTO createOrganizationInviteDTO);
-    public OrganizationInvite getOrganizationInviteById(Integer id);
-    public List<OrganizationInvite> getAllOrganizationInvites();
-    public OrganizationInvite updateOrganizationInvite(OrganizationInvite organizationInvite);
-    public void deleteOrganizationInvite(Integer id);
+    OrganizationInvite createOrganizationInvite(CreateOrganizationInviteDTO createOrganizationInviteDTO);
+    OrganizationInvite getOrganizationInviteById(Integer id);
+    List<OrganizationInvite> getAllOrganizationInvites();
+    OrganizationInvite updateOrganizationInvite(OrganizationInvite organizationInvite);
+    void deleteOrganizationInvite(Integer id);
 }

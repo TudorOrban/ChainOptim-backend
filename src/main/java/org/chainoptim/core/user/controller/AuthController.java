@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDto) {
+    public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@RequestBody LoginDTO loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUsername(),
@@ -56,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDTO registrationDto) {
+    public ResponseEntity<JwtAuthenticationResponse> registerUser(@RequestBody UserRegistrationDTO registrationDto) {
         User registeredUser = userService.registerNewUser(registrationDto.getUsername(), registrationDto.getPassword(), registrationDto.getEmail());
 
         // Automatically log in user after registration and return JWT
@@ -75,7 +75,7 @@ public class AuthController {
     }
 
     @PostMapping("/validate-token")
-    public ResponseEntity<?> validateJWTToken(@RequestBody String jwtToken) {
+    public ResponseEntity<String> validateJWTToken(@RequestBody String jwtToken) {
         logger.info(jwtToken);
         boolean isValid = tokenProvider.validateToken(jwtToken);
         if (isValid) {

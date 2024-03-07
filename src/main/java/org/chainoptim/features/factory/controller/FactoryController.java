@@ -44,7 +44,7 @@ public class FactoryController {
     }
 
     @GetMapping("/organizations/advanced/{organizationId}")
-    public ResponseEntity<?> getFactoriesByOrganizationIdAdvanced(
+    public ResponseEntity<PaginatedResults<FactoriesSearchDTO>> getFactoriesByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,

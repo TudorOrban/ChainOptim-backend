@@ -14,8 +14,7 @@ import java.util.Set;
 public class StageDTO {
     private Integer id;
     private String name;
-    // other fields
-    private Integer productId; // Only the ID, not the entire Product object
+    private Integer productId;
     private Set<StageInput> stageInputs;
     private Set<StageOutput> stageOutputs;
 }

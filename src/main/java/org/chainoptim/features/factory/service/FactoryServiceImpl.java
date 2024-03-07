@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FactoryServiceImpl implements FactoryService {
@@ -36,10 +35,10 @@ public class FactoryServiceImpl implements FactoryService {
 
     public PaginatedResults<FactoriesSearchDTO> getFactoriesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         PaginatedResults<Factory> paginatedResults = factoryRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
-        return new PaginatedResults<FactoriesSearchDTO>(
+        return new PaginatedResults<>(
             paginatedResults.results.stream()
                 .map(this::convertToFactoriesSearchDTO)
-                .collect(Collectors.toList()),
+                    .toList(),
             paginatedResults.totalCount
         );
     }

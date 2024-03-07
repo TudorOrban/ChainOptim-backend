@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 public class OrganizationMapper {
 
+    private OrganizationMapper() {}
+
     public static OrganizationDTO mapOrganizationToDTO(Organization organization, boolean includeUsers) {
         OrganizationDTO dto = new OrganizationDTO();
         dto.setId(organization.getId());

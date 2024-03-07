@@ -12,6 +12,7 @@ public class RawMaterialServiceImpl implements RawMaterialService {
 
     private final RawMaterialRepository rawMaterialRepository;
 
+    @Autowired
     public RawMaterialServiceImpl(RawMaterialRepository rawMaterialRepository) {
         this.rawMaterialRepository = rawMaterialRepository;
     }

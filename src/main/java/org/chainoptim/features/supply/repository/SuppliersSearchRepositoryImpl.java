@@ -49,7 +49,7 @@ public class SuppliersSearchRepositoryImpl implements SuppliersSearchRepository 
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PaginatedResults<Supplier>(suppliers, totalCount);
+        return new PaginatedResults<>(suppliers, totalCount);
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<Supplier> root, Integer organizationId, String searchQuery) {

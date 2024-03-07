@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     public List<UserSearchResultDTO> searchUsersByUsername(String username) {
         return userRepository.findByUsernameContaining(username).stream()
                 .map(user -> new UserSearchResultDTO(user.getId(), user.getUsername(), user.getEmail()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<User> getAllUsers() {

@@ -1,6 +1,5 @@
 package org.chainoptim.core.user.util;
 
-import org.chainoptim.core.user.controller.AuthController;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -9,8 +8,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,21 +26,23 @@ import java.util.Collections;
 @EnableWebSecurity
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, UserRepository userRepository) {
+        this.tokenProvider = tokenProvider;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
         throws IOException, ServletException {
         try {
             String jwt = getJwtFromRequest((HttpServletRequest) request);
-            logger.info("JWT: {}", jwt);
 
+            // Validate token
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 String username = tokenProvider.getUsernameFromJWT(jwt);
 

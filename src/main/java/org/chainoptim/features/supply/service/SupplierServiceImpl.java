@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
@@ -35,10 +34,10 @@ public class SupplierServiceImpl implements SupplierService {
 
     public PaginatedResults<SuppliersSearchDTO> getSuppliersByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         PaginatedResults<Supplier> paginatedResults = supplierRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
-        return new PaginatedResults<SuppliersSearchDTO>(
+        return new PaginatedResults<>(
             paginatedResults.results.stream()
             .map(this::convertToSuppliersSearchDTO)
-            .collect(Collectors.toList()),
+            .toList(),
             paginatedResults.totalCount
         );
     }

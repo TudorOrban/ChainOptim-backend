@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -30,15 +29,15 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findByOrganizationId(organizationId);
         return products.stream()
                 .map(this::convertToProductsSearchDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public PaginatedResults<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         PaginatedResults<Product> paginatedResults = productRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
-        return new PaginatedResults<ProductsSearchDTO>(
+        return new PaginatedResults<>(
                 paginatedResults.results.stream()
                         .map(this::convertToProductsSearchDTO)
-                        .collect(Collectors.toList()),
+                        .toList(),
                 paginatedResults.totalCount
         );
     }

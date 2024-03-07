@@ -49,7 +49,7 @@ public class WarehousesSearchRepositoryImpl implements WarehousesSearchRepositor
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PaginatedResults<Warehouse>(warehouses, totalCount);
+        return new PaginatedResults<>(warehouses, totalCount);
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<Warehouse> root, Integer organizationId, String searchQuery) {

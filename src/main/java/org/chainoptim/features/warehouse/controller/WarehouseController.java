@@ -44,7 +44,7 @@ public class WarehouseController {
     }
 
     @GetMapping("/organizations/advanced/{organizationId}")
-    public ResponseEntity<?> getWarehousesByOrganizationIdAdvanced(
+    public ResponseEntity<PaginatedResults<WarehousesSearchDTO>> getWarehousesByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,

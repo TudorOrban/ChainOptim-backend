@@ -12,9 +12,9 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final String JWT_SECRET = "eXc1U00jSFRsdUQlMEhjU10sJDdqK31aQlNNXnVPcDEiUjRJQyNrY2hwJmBYZGc2LXpldkkjMm99SWg5XHcrXHhGeXZjfDZ6Q0AyU2YhY0V+d2doZDxdTA=="; // TODO: Move to environment variables
+    private final static String JWT_SECRET = "eXc1U00jSFRsdUQlMEhjU10sJDdqK31aQlNNXnVPcDEiUjRJQyNrY2hwJmBYZGc2LXpldkkjMm99SWg5XHcrXHhGeXZjfDZ6Q0AyU2YhY0V+d2doZDxdTA=="; // TODO: Move to environment variables
 
-    private final long JWT_EXPIRATION = 604800000L; // 1 week
+    private final static long JWT_EXPIRATION = 604800000L; // 1 week
 
     public String generateToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();

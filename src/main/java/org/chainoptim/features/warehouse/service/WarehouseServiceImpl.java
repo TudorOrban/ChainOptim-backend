@@ -36,10 +36,10 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     public PaginatedResults<WarehousesSearchDTO> getWarehousesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         PaginatedResults<Warehouse> paginatedResults = warehouseRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
-        return new PaginatedResults<WarehousesSearchDTO>(
+        return new PaginatedResults<>(
                 paginatedResults.results.stream()
                         .map(this::convertToWarehousesSearchDTO)
-                        .collect(Collectors.toList()),
+                        .toList(),
                 paginatedResults.totalCount
         );
     }

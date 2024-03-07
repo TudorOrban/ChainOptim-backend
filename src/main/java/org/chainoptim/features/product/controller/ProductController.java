@@ -28,12 +28,12 @@ public class ProductController {
     }
 
     @GetMapping("/organizations/{organizationId}")
-    public ResponseEntity<?> getProductsByOrganizationId(@PathVariable Integer organizationId) {
+    public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationId(@PathVariable Integer organizationId) {
         return ResponseEntity.ok(productService.getProductsByOrganizationId(organizationId));
     }
 
     @GetMapping("/organizations/advanced/{organizationId}")
-    public ResponseEntity<?> getProductsByOrganizationIdAdvanced(
+    public ResponseEntity<PaginatedResults<ProductsSearchDTO>> getProductsByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,

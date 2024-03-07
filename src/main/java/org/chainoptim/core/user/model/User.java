@@ -41,6 +41,17 @@ public class User {
     @JsonBackReference
     private Organization organization;
 
+    // Role
+    public enum Role {
+        ADMIN,
+        MEMBER,
+        NONE
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
 
     @Override
     public boolean equals(Object o) {
@@ -54,16 +65,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    // Role
-    public enum Role {
-        ADMIN,
-        MEMBER,
-        NONE
-    }
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
 
 }

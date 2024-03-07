@@ -1,15 +1,13 @@
 package org.chainoptim.core.user.controller;
 
+import org.chainoptim.core.user.dto.UserWithOrganizationDTO;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.service.UserService;
 import org.chainoptim.core.user.dto.UserSearchResultDTO;
-import org.chainoptim.core.organization.model.Organization;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +31,12 @@ public class UserController {
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<UserWithOrganizationDTO> getUserByUsername(@PathVariable String username) {
         Optional<User> userOptional = userService.getUserByUsername(username);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            UserDto userDto = new UserDto();
+            UserWithOrganizationDTO userDto = new UserWithOrganizationDTO();
 
             // Map all fields from User to UserDto
             userDto.setId(user.getId());
@@ -59,19 +57,6 @@ public class UserController {
     public ResponseEntity<List<UserSearchResultDTO>> searchUsers(@PathVariable String username) {
         List<UserSearchResultDTO> users = userService.searchUsersByUsername(username);
         return ResponseEntity.ok(users);
-    }
-
-
-    // TODO: Replace this
-    @Data
-    public class UserDto {
-        private String id;
-        private String username;
-        private String email;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private Organization organization;
-        private User.Role role;
     }
 
     @GetMapping()

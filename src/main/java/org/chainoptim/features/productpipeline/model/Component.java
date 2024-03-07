@@ -1,6 +1,5 @@
 package org.chainoptim.features.productpipeline.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,8 +39,4 @@ public class Component {
 
     @Column(name = "unit_id", nullable = false)
     private Integer unitId;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "stage_input_id", nullable = false)
-//    private StageInput stageInput;
 }

@@ -51,7 +51,7 @@ public class ProductsSearchRepositoryImpl implements ProductsSearchRepository {
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PaginatedResults<Product>(products, totalCount);
+        return new PaginatedResults<>(products, totalCount);
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<Product> root, Integer organizationId, String searchQuery) {

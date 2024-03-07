@@ -49,7 +49,7 @@ public class FactoriesSearchRepositoryImpl implements FactoriesSearchRepository 
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PaginatedResults<Factory>(factories, totalCount);
+        return new PaginatedResults<>(factories, totalCount);
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<Factory> root, Integer organizationId, String searchQuery) {

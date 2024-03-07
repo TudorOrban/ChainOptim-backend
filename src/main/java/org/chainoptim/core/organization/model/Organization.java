@@ -1,15 +1,12 @@
 package org.chainoptim.core.organization.model;
 
 import org.chainoptim.core.user.model.User;
-import org.chainoptim.features.supply.model.Supplier;
-import org.chainoptim.features.warehouse.model.Warehouse;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 

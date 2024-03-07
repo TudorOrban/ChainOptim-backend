@@ -1,7 +1,6 @@
 package org.chainoptim.core.organization.controller;
 
 import org.chainoptim.core.organization.service.OrganizationInviteService;
-import org.chainoptim.core.organization.service.OrganizationInviteServiceImpl;
 import org.chainoptim.core.organization.dto.CreateOrganizationInviteDTO;
 import org.chainoptim.core.organization.model.OrganizationInvite;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ public class OrganizationInviteController {
 
     private final OrganizationInviteService organizationInviteService;
 
+    @Autowired
     public OrganizationInviteController(OrganizationInviteService organizationInviteService) {
         this.organizationInviteService = organizationInviteService;
     }

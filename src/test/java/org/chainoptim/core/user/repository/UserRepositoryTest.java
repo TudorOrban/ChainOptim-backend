@@ -12,7 +12,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -21,7 +21,7 @@ public class UserRepositoryTest {
     private TestEntityManager entityManager;
 
     @Test
-    public void whenFindByUsername_thenReturnUser() {
+    void whenFindByUsername_thenReturnUser() {
         // given
         User newUser = new User();
         newUser.setUsername("testUser");
@@ -41,7 +41,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void whenFindByUsername_withNoUser_thenReturnEmpty() {
+    void whenFindByUsername_withNoUser_thenReturnEmpty() {
         Optional<User> foundUser = userRepository.findByUsername("nonExistingUser");
 
         assertFalse(foundUser.isPresent());

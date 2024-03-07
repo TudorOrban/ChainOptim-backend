@@ -44,7 +44,7 @@ public class SupplierController {
     }
 
     @GetMapping("/organizations/advanced/{organizationId}")
-    public ResponseEntity<?> getSuppliersByOrganizationIdAdvanced(
+    public ResponseEntity<PaginatedResults<SuppliersSearchDTO>> getSuppliersByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,

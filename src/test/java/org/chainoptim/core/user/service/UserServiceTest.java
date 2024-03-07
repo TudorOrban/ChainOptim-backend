@@ -31,7 +31,7 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    public void whenRegisterNewUser_thenSaveUser() {
+    void whenRegisterNewUser_thenSaveUser() {
         // given
         String username = "testuser";
         String password = "testpassword";
@@ -57,7 +57,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void whenGetUserById_thenReturnUser() {
+    void whenGetUserById_thenReturnUser() {
         // given
         String userId = "user-123";
         User mockUser = new User();
@@ -74,7 +74,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void whenGetUserById_withNonExistingId_thenReturnNull() {
+    void whenGetUserById_withNonExistingId_thenReturnNull() {
         // given
         String userId = "user-123";
 
@@ -88,7 +88,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void whenGetUserByUsername_thenReturnUser() {
+    void whenGetUserByUsername_thenReturnUser() {
         // given
         String username = "testuser";
         User mockUser = new User();
@@ -105,7 +105,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void whenGetUserByUsername_withNonExistingUsername_thenReturnEmpty() {
+    void whenGetUserByUsername_withNonExistingUsername_thenReturnEmpty() {
         // given
         String username = "nonExistingUser";
 
@@ -119,7 +119,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void whenDeleteUser_thenRepositoryDeleteCalled() {
+    void whenDeleteUser_thenRepositoryDeleteCalled() {
         // given
         String userId = "user-123";
 

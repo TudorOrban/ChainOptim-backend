@@ -1,5 +1,6 @@
 package org.chainoptim.core.organization.service;
 
+import org.chainoptim.core.organization.dto.CreateOrganizationUserDTO;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.organization.dto.CreateOrganizationDTO;
@@ -9,13 +10,12 @@ import org.chainoptim.core.organization.util.OrganizationMapper;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.core.user.service.UserService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
@@ -53,9 +53,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         // Handle users
         // - For new ones, use User service to register and tie to organization
-        Set<User> newUsers = createOrganizationDTO.getCreatedUsers().stream()
-                .map(createDto -> userService.registerNewOrganizationUser(createDto.getUsername(), createDto.getPassword(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole()))
-                .collect(Collectors.toSet());
+        for (CreateOrganizationUserDTO createDto: createOrganizationDTO.getCreatedUsers()) {
+            userService.registerNewOrganizationUser(createDto.getUsername(), createDto.getPassword(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole());
+        }
 
         // - For existing users, only send invites
         if (createOrganizationDTO.getExistingUserIds() != null) {
