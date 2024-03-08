@@ -4,8 +4,8 @@ import org.chainoptim.core.user.dto.LoginDTO;
 import org.chainoptim.core.user.dto.UserRegistrationDTO;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.service.UserService;
-import org.chainoptim.core.user.util.JwtAuthenticationResponse;
-import org.chainoptim.core.user.util.JwtTokenProvider;
+import org.chainoptim.core.user.jwt.JwtAuthenticationResponse;
+import org.chainoptim.core.user.jwt.JwtTokenProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

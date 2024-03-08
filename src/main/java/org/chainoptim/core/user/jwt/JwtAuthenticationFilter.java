@@ -1,13 +1,14 @@
-package org.chainoptim.core.user.util;
+package org.chainoptim.core.user.jwt;
 
-import org.chainoptim.core.user.model.User;
-import org.chainoptim.core.user.repository.UserRepository;
+import org.chainoptim.core.user.model.UserDetailsImpl;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.chainoptim.core.user.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,13 +28,15 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider tokenProvider;
-
-    private final UserRepository userRepository;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, UserRepository userRepository) {
+    public JwtAuthenticationFilter(
+            JwtTokenProvider tokenProvider,
+            UserDetailsServiceImpl userDetailsService
+    ) {
         this.tokenProvider = tokenProvider;
-        this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -44,13 +47,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             // Validate token
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+                // Get user details from token and set to SecurityContext
                 String username = tokenProvider.getUsernameFromJWT(jwt);
 
-                User user = userRepository.findByUsername(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+                UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        user, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                        userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (UsernameNotFoundException ex) {

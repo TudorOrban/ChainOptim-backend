@@ -1,6 +1,7 @@
 package org.chainoptim.core.user.service;
 
 import org.chainoptim.core.user.model.User;
+import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +26,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("Attempting to load user by username: {}", username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPasswordHash(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-        );
+        UserDetailsImpl userDetails = new UserDetailsImpl();
+        userDetails.setUsername(user.getUsername());
+        userDetails.setPassword(user.getPasswordHash());
+        userDetails.setOrganizationId(user.getOrganization().getId());
+        userDetails.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+
+        return userDetails;
     }
 
 

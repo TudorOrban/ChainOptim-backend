@@ -19,6 +19,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, Prod
     // Fetch all products for an organization without stages
     List<Product> findByOrganizationId(Integer organizationId);
 
+    @Query("SELECT p.organizationId FROM Product p WHERE p.id = :productId")
+    Optional<Integer> findOrganizationIdById(@Param("productId") Long productId);
+
     @Query("SELECT p FROM Product p " +
             "WHERE p.name = :productName")
     Optional<Product> findByName(@Param("productName") String productName);
