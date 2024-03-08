@@ -75,10 +75,10 @@ public class ProductController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#id, \"Product\")")
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
-        productService.deleteProduct(id);
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\")")
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) {
+        productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }
 }

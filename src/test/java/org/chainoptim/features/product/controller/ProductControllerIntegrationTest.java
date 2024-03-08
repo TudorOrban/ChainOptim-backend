@@ -1,9 +1,5 @@
 package org.chainoptim.features.product.controller;
 
-import org.chainoptim.core.organization.model.Organization;
-import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.user.jwt.JwtTokenProvider;
-import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
@@ -21,17 +17,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

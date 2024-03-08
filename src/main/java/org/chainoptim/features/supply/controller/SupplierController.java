@@ -1,5 +1,6 @@
 package org.chainoptim.features.supply.controller;
 
+import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.supply.dto.CreateSupplierDTO;
 import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
@@ -8,6 +9,7 @@ import org.chainoptim.features.supply.service.SupplierService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,26 +19,20 @@ import java.util.List;
 public class SupplierController {
 
     private final SupplierService supplierService;
+    private final SecurityService securityService;
 
     @Autowired
-    public SupplierController(SupplierService supplierService) {
+    public SupplierController(
+            SupplierService supplierService,
+            SecurityService securityService
+
+    ) {
         this.supplierService = supplierService;
+        this.securityService = securityService;
     }
 
     // Fetch
-    @GetMapping
-    public ResponseEntity<List<Supplier>> getAllSuppliers() {
-        List<Supplier> suppliers = supplierService.getAllSuppliers();
-        return ResponseEntity.ok(suppliers);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Supplier> getSupplierById(@PathVariable Integer id) {
-        return supplierService.getSupplierById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Supplier>> getSuppliersByOrganizationId(@PathVariable Integer organizationId) {
         List<Supplier> suppliers = supplierService.getSuppliersByOrganizationId(organizationId);
@@ -46,6 +42,7 @@ public class SupplierController {
         return ResponseEntity.ok(suppliers);
     }
 
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
     @GetMapping("/organizations/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<SuppliersSearchDTO>> getSuppliersByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
@@ -59,7 +56,16 @@ public class SupplierController {
         return ResponseEntity.ok(suppliers);
     }
 
+    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\")")
+    @GetMapping("/{supplierId}")
+    public ResponseEntity<Supplier> getSupplierById(@PathVariable Integer supplierId) {
+        return supplierService.getSupplierById(supplierId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     // Create
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#supplierDTO.getOrganizationId())")
     @PostMapping("/create")
     public ResponseEntity<Supplier> createSupplier(@RequestBody CreateSupplierDTO supplierDTO) {
         Supplier supplier = supplierService.createSupplier(supplierDTO);
@@ -67,15 +73,17 @@ public class SupplierController {
     }
 
     // Update
+    @PreAuthorize("@securityService.canAccessEntity(#supplierDTO.getId(), \"Supplier\")")
     @PutMapping("/update")
     public ResponseEntity<Supplier> updateSupplier(@RequestBody UpdateSupplierDTO supplierDTO) {
         Supplier supplier = supplierService.updateSupplier(supplierDTO);
         return ResponseEntity.ok(supplier);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteSupplier(@PathVariable Integer id) {
-        supplierService.deleteSupplier(id);
+    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\")")
+    @DeleteMapping("/delete/{supplierId}")
+    public ResponseEntity<Void> deleteSupplier(@PathVariable Integer supplierId) {
+        supplierService.deleteSupplier(supplierId);
         return ResponseEntity.ok().build();
     }
 }

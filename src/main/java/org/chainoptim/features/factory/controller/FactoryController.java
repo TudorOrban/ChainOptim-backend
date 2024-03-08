@@ -71,15 +71,18 @@ public class FactoryController {
     }
 
     // Update
+    @PreAuthorize("@securityService.canAccessEntity(#factoryDTO.getId(), \"Factory\")")
     @PutMapping("/update")
     public ResponseEntity<Factory> updateFactory(@RequestBody UpdateFactoryDTO factoryDTO) {
         Factory factory = factoryService.updateFactory(factoryDTO);
         return ResponseEntity.ok(factory);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteFactory(@PathVariable Integer id) {
-        factoryService.deleteFactory(id);
+    // Delete
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @DeleteMapping("/delete/{factoryId}")
+    public ResponseEntity<Void> deleteFactory(@PathVariable Integer factoryId) {
+        factoryService.deleteFactory(factoryId);
         return ResponseEntity.ok().build();
     }
 }
