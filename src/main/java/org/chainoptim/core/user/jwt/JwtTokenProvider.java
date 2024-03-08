@@ -1,8 +1,10 @@
-package org.chainoptim.core.user.util;
+package org.chainoptim.core.user.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.chainoptim.core.user.model.UserDetailsImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -12,20 +14,20 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final static String JWT_SECRET = "eXc1U00jSFRsdUQlMEhjU10sJDdqK31aQlNNXnVPcDEiUjRJQyNrY2hwJmBYZGc2LXpldkkjMm99SWg5XHcrXHhGeXZjfDZ6Q0AyU2YhY0V+d2doZDxdTA=="; // TODO: Move to environment variables
+    @Value("${jwt.secret}")
+    private String JWT_SECRET;
 
-    private final static long JWT_EXPIRATION = 604800000L; // 1 week
+    private static final long JWT_EXPIRATION = 604800000L; // 1 week
 
     public String generateToken(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        String username = userDetails.getUsername();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userDetails.getUsername())
+                .claim("organization_id", userDetails.getOrganizationId())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
@@ -33,17 +35,28 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromJWT(String token) {
-        Claims claims = Jwts.parser()
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(JWT_SECRET)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
 
         return claims.getSubject();
     }
 
+    public Integer getOrganizationIdFromJWT(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(JWT_SECRET)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("organization_id", Integer.class);
+    }
+
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken);
+            Jwts.parserBuilder().setSigningKey(JWT_SECRET).build().parseClaimsJws(authToken);
             return true;
         } catch (Exception ex) {
 

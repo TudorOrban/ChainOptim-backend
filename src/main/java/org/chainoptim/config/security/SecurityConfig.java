@@ -1,13 +1,15 @@
-package org.chainoptim.config;
+package org.chainoptim.config.security;
 
 import org.chainoptim.core.user.service.UserDetailsServiceImpl;
-import org.chainoptim.core.user.util.JwtAuthenticationFilter;
+import org.chainoptim.core.user.jwt.JwtAuthenticationFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,6 +22,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
