@@ -2,6 +2,7 @@ package org.chainoptim.config.security;
 
 import org.chainoptim.core.user.service.UserDetailsServiceImpl;
 import org.chainoptim.core.user.jwt.JwtAuthenticationFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

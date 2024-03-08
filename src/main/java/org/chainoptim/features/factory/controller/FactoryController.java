@@ -1,5 +1,6 @@
 package org.chainoptim.features.factory.controller;
 
+import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
@@ -8,6 +9,7 @@ import org.chainoptim.features.factory.service.FactoryService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,20 +19,19 @@ import java.util.List;
 public class FactoryController {
 
     private final FactoryService factoryService;
+    private final SecurityService securityService;
 
     @Autowired
-    public FactoryController(FactoryService factoryService) {
+    public FactoryController(
+            FactoryService factoryService,
+            SecurityService securityService
+    ) {
         this.factoryService = factoryService;
+        this.securityService = securityService;
     }
 
     // Fetch
-    @GetMapping("/{id}")
-    public ResponseEntity<Factory> getFactoryById(@PathVariable Integer id) {
-        return factoryService.getFactoryById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Factory>> getFactoriesByOrganizationId(@PathVariable Integer organizationId) {
         List<Factory> factories = factoryService.getFactoriesByOrganizationId(organizationId);
@@ -40,6 +41,7 @@ public class FactoryController {
         return ResponseEntity.ok(factories);
     }
 
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
     @GetMapping("/organizations/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<FactoriesSearchDTO>> getFactoriesByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
@@ -52,7 +54,16 @@ public class FactoryController {
         return ResponseEntity.ok(factories);
     }
 
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @GetMapping("/{factoryId}")
+    public ResponseEntity<Factory> getFactoryById(@PathVariable Integer factoryId) {
+        return factoryService.getFactoryById(factoryId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     // Create
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#factoryDTO.getOrganizationId())")
     @PostMapping("/create")
     public ResponseEntity<Factory> createFactory(@RequestBody CreateFactoryDTO factoryDTO) {
         Factory factory = factoryService.createFactory(factoryDTO);

@@ -2,6 +2,8 @@ package org.chainoptim.features.product.controller;
 
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
+import org.chainoptim.core.user.jwt.JwtTokenProvider;
+import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
@@ -11,17 +13,25 @@ import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.product.repository.UnitOfMeasurementRepository;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import org.chainoptim.testutil.TestDataSeederService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,28 +48,28 @@ class ProductControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // Seed data services
     @Autowired
-    private OrganizationRepository organizationRepository;
+    private TestDataSeederService seederService;
     @Autowired
     private UnitOfMeasurementRepository unitOfMeasurementRepository;
     @Autowired
     private ProductRepository productRepository;
 
+    // Necessary seed data
     Integer organizationId;
+    String jwtToken;
     Integer unitId;
     Integer productId;
 
     @BeforeEach
     void setUp() {
-        // Set up an organization and a unit of measurement
-        Organization organization = Organization.builder()
-                .name("Test Org")
-                .subscriptionPlan(Organization.SubscriptionPlan.PRO)
-                .build();
+        // Set up an organization, user, and JWT token for passing security checks
+        Pair<Integer, String> seedResult = seederService.seedDatabaseWithTenant();
+        organizationId = seedResult.getFirst();
+        jwtToken = seedResult.getSecond();
 
-        organization = organizationRepository.save(organization);
-        organizationId = organization.getId();
-
+        // Set up a unit of measurement for products
         UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement();
         unitOfMeasurement.setName("Test unit");
         unitOfMeasurement.setUnitType("Test unit type");
@@ -108,9 +118,17 @@ class ProductControllerIntegrationTest {
                 + "&ascending=true"
                 + "&page=1"
                 + "&itemsPerPage=2";
+        String invalidJWTToken = "Invalid";
+
+        // Act and assert error status for invalid credentials
+        MvcResult invalidMvcResult = mockMvc.perform(get(url)
+                .header("Authorization", "Bearer " + invalidJWTToken))
+                .andExpect(status().is(500))
+                .andReturn();
 
         // Act
-        MvcResult mvcResult = mockMvc.perform(get(url))
+        MvcResult mvcResult = mockMvc.perform(get(url)
+                        .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -131,12 +149,26 @@ class ProductControllerIntegrationTest {
         // Arrange
         CreateProductDTO productDTO = new CreateProductDTO("Test Product - Unique Title 123456789", "Test Description", organizationId, unitId);
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
+        String invalidJWTToken = "Invalid";
+
+        // Act (invalid security credentials)
+        mockMvc.perform(post("/api/products/create")
+                        .header("Authorization", "Bearer " + invalidJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(productDTOJson))
+                        .andExpect(status().is(500));
+
+        // Assert
+        Optional<Product> invalidCreatedProductOptional = productRepository.findByName(productDTO.getName());
+        if (invalidCreatedProductOptional.isPresent()) {
+            fail("Failed to prevent creation on invalid JWT token");
+        }
 
         // Act
         mockMvc.perform(post("/api/products/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(productDTOJson))
-                .andExpect(status().isOk());
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(productDTOJson));
 
         // Assert
         Optional<Product> createdProductOptional = productRepository.findByName(productDTO.getName());
@@ -157,12 +189,27 @@ class ProductControllerIntegrationTest {
         // Arrange
         UpdateProductDTO productDTO = new UpdateProductDTO(productId, "Test Product - Updated Unique Title 123456789", "Test Description", unitId);
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
+        String invalidJWTToken = "Invalid";
+
+        // Act (invalid security credentials)
+        mockMvc.perform(put("/api/products/update")
+                        .header("Authorization", "Bearer " + invalidJWTToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(productDTOJson))
+                        .andExpect(status().is(500));
+
+        // Assert
+        Optional<Product> invalidUpdatedProductOptional = productRepository.findByName(productDTO.getName());
+        if (invalidUpdatedProductOptional.isPresent()) {
+            fail("Failed to prevent update on invalid JWT token.");
+        }
 
         // Act
         mockMvc.perform(put("/api/products/update")
+                        .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(productDTOJson))
-                .andExpect(status().isOk());
+                        .andExpect(status().isOk());
 
         // Assert
         Optional<Product> updatedProductOptional = productRepository.findByName(productDTO.getName());
@@ -180,15 +227,28 @@ class ProductControllerIntegrationTest {
     void testDeleteProduct() throws Exception {
         // Arrange
         String url = "http://localhost:8080/api/products/delete/" + productId;
+        String invalidJWTToken = "Invalid";
+
+        // Act (invalid security credentials)
+        mockMvc.perform(delete(url)
+                        .header("Authorization", "Bearer " + invalidJWTToken))
+                        .andExpect(status().is(500));
+
+        // Assert
+        Optional<Product> invalidUpdatedProductOptional = productRepository.findById(productId);
+        if (invalidUpdatedProductOptional.isEmpty()) {
+            fail("Failed to prevent deletion on invalid JWT Token.");
+        }
 
         // Act
-        mockMvc.perform(delete(url))
+        mockMvc.perform(delete(url)
+                .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isOk());
 
         // Assert
         Optional<Product> updatedProductOptional = productRepository.findById(productId);
         if (updatedProductOptional.isPresent()) {
-            fail("Deleted product has been found");
+            fail("Product has not been deleted as expected.");
         }
     }
 
