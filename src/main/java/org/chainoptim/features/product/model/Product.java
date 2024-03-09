@@ -1,7 +1,9 @@
 package org.chainoptim.features.product.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -45,5 +47,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Stage> stages;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<FactoryInventoryItem> factoryInventoryItems;
 
 }

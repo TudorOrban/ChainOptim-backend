@@ -7,8 +7,10 @@ import org.chainoptim.features.factory.dto.FactoryDTOMapper;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.repository.FactoryRepository;
+import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,8 @@ public class FactoryServiceImpl implements FactoryService {
         this.factoryRepository = factoryRepository;
     }
 
-    public List<Factory> getAllFactories() {
-        return factoryRepository.findAll();
-    }
 
-    public Optional<Factory> getFactoryById(Integer id) {
-        return factoryRepository.findById(id);
-    }
-
+    // Fetch
     public List<Factory> getFactoriesByOrganizationId(Integer organizationId) {
         return factoryRepository.findByOrganizationId(organizationId);
     }
@@ -45,6 +41,27 @@ public class FactoryServiceImpl implements FactoryService {
                     .toList(),
             paginatedResults.totalCount
         );
+    }
+
+    public Optional<Factory> getFactoryById(Integer factoryId) {
+        return factoryRepository.findById(factoryId);
+    }
+
+    public Factory getFactoryWithStagesById(Integer factoryId) {
+        Optional<Factory> factoryOpt = factoryRepository.findFactoryWithStagesById(factoryId);
+        if (factoryOpt.isEmpty()) {
+            return null;
+        }
+        Factory factory = factoryOpt.get();
+        factory.getFactoryStages().forEach(fs -> {
+            Stage stage = fs.getStage();
+            stage.getProductId(); // Trigger lazy loading
+            Hibernate.initialize(stage.getStageInputs());
+            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
+            Hibernate.initialize(stage.getStageOutputs());
+            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
+        });
+        return factory;
     }
 
     public Factory createFactory(CreateFactoryDTO factoryDTO) {

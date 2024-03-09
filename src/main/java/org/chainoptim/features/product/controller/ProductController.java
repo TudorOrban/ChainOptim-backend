@@ -52,7 +52,7 @@ public class ProductController {
     }
 
     @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\")")
-    @GetMapping("/{productId}")
+    @GetMapping("/{productId}/stages")
     public ResponseEntity<Product> getProductWithStages(@PathVariable Integer productId) {
         Product product = productService.getProductWithStages(productId);
         return ResponseEntity.ok(product);

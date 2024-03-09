@@ -8,6 +8,7 @@ import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProductWithStages(Integer productId) {
-         return productRepository.findByIdWithStages(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isEmpty()) {
+            return null;
+        }
+        Product product = productOptional.get();
+        // Initialize stages and their nested collections
+        product.getStages().forEach(stage -> {
+            Hibernate.initialize(stage.getStageInputs());
+            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
+            Hibernate.initialize(stage.getStageOutputs());
+            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
+        });
+        return product;
+
     }
 
     public List<ProductsSearchDTO> getProductsByOrganizationId(Integer organizationId) {

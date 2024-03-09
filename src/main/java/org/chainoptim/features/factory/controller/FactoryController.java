@@ -62,6 +62,17 @@ public class FactoryController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @GetMapping("/{factoryId}/stages")
+    public ResponseEntity<Factory> getFactoryWithStages(@PathVariable Integer factoryId) {
+        Factory factory = factoryService.getFactoryWithStagesById(factoryId);
+        if (factory == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(factory);
+        }
+    }
+
     // Create
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#factoryDTO.getOrganizationId())")
     @PostMapping("/create")

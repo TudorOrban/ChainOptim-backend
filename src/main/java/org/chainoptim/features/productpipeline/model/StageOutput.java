@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -17,14 +20,11 @@ public class StageOutput {
     @Column(updatable = false, nullable = false)
     private Integer id;
 
-    @Column(name = "component_id")
-    private Integer componentId;
-
-    @Column(nullable = false)
-    private Float quantity;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "stage_id", nullable = false)
     @JsonIgnore
     private Stage stage;
+
+    @OneToMany(mappedBy = "stageOutput", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StageOutputComponent> components = new ArrayList<>();
 }

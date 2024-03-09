@@ -1,11 +1,14 @@
 package org.chainoptim.features.productpipeline.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,4 +42,16 @@ public class Component {
 
     @Column(name = "unit_id", nullable = false)
     private Integer unitId;
+
+    @OneToMany(mappedBy = "component", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<FactoryInventoryItem> factoryInventoryItems;
+
+    @OneToMany(mappedBy = "component", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<StageInputComponent> stageInputComponents;
+
+    @OneToMany(mappedBy = "component", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<StageOutputComponent> stageOutputComponents;
 }

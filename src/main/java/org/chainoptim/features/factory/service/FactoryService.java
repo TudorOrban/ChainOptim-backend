@@ -11,10 +11,16 @@ import java.util.Optional;
 
 public interface FactoryService {
     // Fetch
-    List<Factory> getAllFactories();
-    Optional<Factory> getFactoryById(Integer id);
     List<Factory> getFactoriesByOrganizationId(Integer organizationId);
-    PaginatedResults<FactoriesSearchDTO> getFactoriesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
+    PaginatedResults<FactoriesSearchDTO> getFactoriesByOrganizationIdAdvanced(
+            Integer organizationId,
+            String searchQuery,
+            String sortBy,
+            boolean ascending,
+            int page,
+            int itemsPerPage);
+    Optional<Factory> getFactoryById(Integer factoryId);
+    Factory getFactoryWithStagesById(Integer factoryId);
 
     // Create
     Factory createFactory(CreateFactoryDTO factoryDTO);
