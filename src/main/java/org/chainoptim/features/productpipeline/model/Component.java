@@ -46,4 +46,12 @@ public class Component {
     @OneToMany(mappedBy = "component", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<FactoryInventoryItem> factoryInventoryItems;
+
+    @OneToMany(mappedBy = "component", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<StageInputComponent> stageInputComponents;
+
+    @OneToMany(mappedBy = "component", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<StageOutputComponent> stageOutputComponents;
 }

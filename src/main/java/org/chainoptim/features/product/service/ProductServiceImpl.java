@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProductWithStages(Integer productId) {
-         return productRepository.findByIdWithStages(productId)
+         return productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
