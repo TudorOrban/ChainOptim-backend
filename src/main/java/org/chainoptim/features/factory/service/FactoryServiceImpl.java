@@ -7,6 +7,7 @@ import org.chainoptim.features.factory.dto.FactoryDTOMapper;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.repository.FactoryRepository;
+import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,8 @@ public class FactoryServiceImpl implements FactoryService {
         this.factoryRepository = factoryRepository;
     }
 
-    public List<Factory> getAllFactories() {
-        return factoryRepository.findAll();
-    }
 
-    public Optional<Factory> getFactoryById(Integer id) {
-        return factoryRepository.findById(id);
-    }
-
+    // Fetch
     public List<Factory> getFactoriesByOrganizationId(Integer organizationId) {
         return factoryRepository.findByOrganizationId(organizationId);
     }
@@ -45,6 +40,24 @@ public class FactoryServiceImpl implements FactoryService {
                     .toList(),
             paginatedResults.totalCount
         );
+    }
+
+    public Optional<Factory> getFactoryById(Integer factoryId) {
+        return factoryRepository.findById(factoryId);
+    }
+
+    public Factory getFactoryWithStagesById(Integer factoryId) {
+        Optional<Factory> factoryOpt = factoryRepository.findWithFactoryStagesById(factoryId);
+        if (factoryOpt.isEmpty()) {
+            return null;
+        }
+        Factory factory = factoryOpt.get();
+        factory.getFactoryStages().forEach(fs -> {
+                Stage stage = fs.getStage();
+                stage.getStageInputs().size(); // Trigger lazy loading
+                stage.getStageOutputs().size();
+        });
+        return factory;
     }
 
     public Factory createFactory(CreateFactoryDTO factoryDTO) {

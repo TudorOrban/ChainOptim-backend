@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,4 +41,7 @@ public class Factory {
 
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
+
+    @OneToMany(mappedBy = "factory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<FactoryStage> factoryStages;
 }
