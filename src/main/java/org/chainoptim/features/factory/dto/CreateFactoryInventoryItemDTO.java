@@ -8,6 +8,6 @@ public class CreateFactoryInventoryItemDTO {
     private Integer factoryId;
     private Integer productId;
     private Integer componentId;
-    private Double quantity;
-    private Double minimumRequiredQuantity;
+    private Float quantity;
+    private Float minimumRequiredQuantity;
 }

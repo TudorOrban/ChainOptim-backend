@@ -22,10 +22,10 @@ public class FactoryStage {
     private Long id;
 
     @Column(name = "capacity")
-    private Double capacity;
+    private float capacity;
 
     @Column(name = "duration")
-    private Double duration;
+    private float duration;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factory_id", referencedColumnName = "id")

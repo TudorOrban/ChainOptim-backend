@@ -44,8 +44,8 @@ public class FactoryInventoryItem {
     private LocalDateTime updatedAt;
 
     @Column(name = "quantity")
-    private Double quantity;
+    private Float quantity;
 
     @Column(name = "minimum_required_quantity")
-    private Double minimumRequiredQuantity;
+    private Float minimumRequiredQuantity;
 }

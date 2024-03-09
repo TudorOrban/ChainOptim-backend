@@ -10,6 +10,7 @@ import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,10 +54,12 @@ public class FactoryServiceImpl implements FactoryService {
         }
         Factory factory = factoryOpt.get();
         factory.getFactoryStages().forEach(fs -> {
-                Stage stage = fs.getStage();
-                stage.getProductId(); // Trigger lazy loading
-                stage.getStageInputs().size();
-                stage.getStageOutputs().size();
+            Stage stage = fs.getStage();
+            stage.getProductId(); // Trigger lazy loading
+            Hibernate.initialize(stage.getStageInputs());
+            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
+            Hibernate.initialize(stage.getStageOutputs());
+            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
         });
         return factory;
     }
