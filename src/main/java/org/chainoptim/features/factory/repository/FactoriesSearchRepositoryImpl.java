@@ -2,13 +2,15 @@ package org.chainoptim.features.factory.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.chainoptim.features.factory.model.Factory;
+import org.chainoptim.features.factory.model.FactoryInventoryItem;
+import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FactoriesSearchRepositoryImpl implements FactoriesSearchRepository {
@@ -23,7 +25,7 @@ public class FactoriesSearchRepositoryImpl implements FactoriesSearchRepository 
         Root<Factory> factory = query.from(Factory.class);
 
         // Add conditions (organizationId and searchQuery)
-        Predicate conditions = getConditions(builder, factory, organizationId, searchQuery);
+        Predicate conditions = getFactorySearchConditions(builder, factory, organizationId, searchQuery);
         query.where(conditions);
 
         // Add sorting
@@ -44,7 +46,7 @@ public class FactoriesSearchRepositoryImpl implements FactoriesSearchRepository 
         CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
         Root<Factory> countRoot = countQuery.from(Factory.class);
         countQuery.select(countBuilder.count(countRoot));
-        countQuery.where(getConditions(countBuilder, countRoot, organizationId, searchQuery));
+        countQuery.where(getFactorySearchConditions(countBuilder, countRoot, organizationId, searchQuery));
 
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
@@ -52,7 +54,7 @@ public class FactoriesSearchRepositoryImpl implements FactoriesSearchRepository 
         return new PaginatedResults<>(factories, totalCount);
     }
 
-    private Predicate getConditions(CriteriaBuilder builder, Root<Factory> root, Integer organizationId, String searchQuery) {
+    private Predicate getFactorySearchConditions(CriteriaBuilder builder, Root<Factory> root, Integer organizationId, String searchQuery) {
         Predicate conditions = builder.conjunction();
         if (organizationId != null) {
             conditions = builder.and(conditions, builder.equal(root.get("organizationId"), organizationId));

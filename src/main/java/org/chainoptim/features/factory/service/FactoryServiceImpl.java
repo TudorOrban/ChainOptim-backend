@@ -47,14 +47,15 @@ public class FactoryServiceImpl implements FactoryService {
     }
 
     public Factory getFactoryWithStagesById(Integer factoryId) {
-        Optional<Factory> factoryOpt = factoryRepository.findWithFactoryStagesById(factoryId);
+        Optional<Factory> factoryOpt = factoryRepository.findFactoryWithStagesById(factoryId);
         if (factoryOpt.isEmpty()) {
             return null;
         }
         Factory factory = factoryOpt.get();
         factory.getFactoryStages().forEach(fs -> {
                 Stage stage = fs.getStage();
-                stage.getStageInputs().size(); // Trigger lazy loading
+                stage.getProductId(); // Trigger lazy loading
+                stage.getStageInputs().size();
                 stage.getStageOutputs().size();
         });
         return factory;
