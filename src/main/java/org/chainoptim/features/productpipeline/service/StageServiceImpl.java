@@ -1,5 +1,6 @@
 package org.chainoptim.features.productpipeline.service;
 
+import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class StageServiceImpl implements StageService {
 
     @Override
     public Stage getStageById(Integer stageId) {
-        Optional<Stage> stageOptional = stageRepository.findById(stageId);
-        return stageOptional.orElse(null);
+        return stageRepository.findById(stageId)
+                .orElseThrow(() -> new ResourceNotFoundException("Stage with ID: " + stageId + " not found."));
     }
 }

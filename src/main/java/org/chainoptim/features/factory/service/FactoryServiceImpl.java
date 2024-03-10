@@ -48,18 +48,14 @@ public class FactoryServiceImpl implements FactoryService {
     }
 
     public Factory getFactoryWithStagesById(Integer factoryId) {
-        Optional<Factory> factoryOpt = factoryRepository.findFactoryWithStagesById(factoryId);
-        if (factoryOpt.isEmpty()) {
-            return null;
-        }
-        Factory factory = factoryOpt.get();
+        Factory factory = factoryRepository.findFactoryWithStagesById(factoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Factory not found with ID: " + factoryId));
+
         factory.getFactoryStages().forEach(fs -> {
             Stage stage = fs.getStage();
             stage.getProductId(); // Trigger lazy loading
             Hibernate.initialize(stage.getStageInputs());
-//            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
             Hibernate.initialize(stage.getStageOutputs());
-//            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
         });
         return factory;
     }

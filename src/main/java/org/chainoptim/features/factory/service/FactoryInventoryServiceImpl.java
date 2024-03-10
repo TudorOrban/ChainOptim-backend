@@ -36,8 +36,9 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
         return factoryInventoryRepository.findFactoryItemsById(factoryId, searchQuery, sortBy, ascending, page, itemsPerPage);
     }
 
-    public Optional<FactoryInventoryItem> getFactoryInventoryItemById(Integer itemId) {
-        return factoryInventoryRepository.findById(itemId);
+    public FactoryInventoryItem getFactoryInventoryItemById(Integer itemId) {
+        return factoryInventoryRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Factory inventory item with ID: " + itemId + " not found."));
     }
 
     // Create
@@ -47,15 +48,12 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
 
     // Update
     public FactoryInventoryItem updateFactoryInventoryItem(UpdateFactoryInventoryItemDTO itemDTO) {
-        Optional<FactoryInventoryItem> itemOptional = factoryInventoryRepository.findById(itemDTO.getId());
-        if (itemOptional.isEmpty()) {
-            throw new ResourceNotFoundException("The requested inventory item does not exist");
-        }
-        FactoryInventoryItem item = itemOptional.get();
+        FactoryInventoryItem item = factoryInventoryRepository.findById(itemDTO.getId()).
+                orElseThrow(() -> new ResourceNotFoundException("Factory inventory item with ID: " + itemDTO.getId() + " not found."));
+
         item.setQuantity(itemDTO.getQuantity());
 
         factoryInventoryRepository.save(item);
-
         return item;
     }
 

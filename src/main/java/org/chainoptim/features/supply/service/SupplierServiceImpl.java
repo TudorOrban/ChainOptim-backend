@@ -28,8 +28,9 @@ public class SupplierServiceImpl implements SupplierService {
         return supplierRepository.findAll();
     }
 
-    public Optional<Supplier> getSupplierById(Integer id) {
-        return supplierRepository.findById(id);
+    public Supplier getSupplierById(Integer supplierId) {
+        return supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + supplierId + " not found."));
     }
 
     public List<Supplier> getSuppliersByOrganizationId(Integer organizationId) {
@@ -51,15 +52,12 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     public Supplier updateSupplier(UpdateSupplierDTO supplierDTO) {
-        Optional<Supplier> supplierOptional = supplierRepository.findById(supplierDTO.getId());
-        if (supplierOptional.isEmpty()) {
-            throw new ResourceNotFoundException("The requested supplier does not exist");
-        }
-        Supplier supplier = supplierOptional.get();
+        Supplier supplier = supplierRepository.findById(supplierDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + supplierDTO.getId() + " not found."));
+
         supplier.setName(supplierDTO.getName());
 
         supplierRepository.save(supplier);
-
         return supplier;
     }
 

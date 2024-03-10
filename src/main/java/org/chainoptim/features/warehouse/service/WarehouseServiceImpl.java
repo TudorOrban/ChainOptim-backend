@@ -25,12 +25,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.warehouseRepository = warehouseRepository;
     }
 
-    public List<Warehouse> getAllWarehouses() {
-        return warehouseRepository.findAll();
-    }
 
-    public Optional<Warehouse> getWarehouseById(Integer id) {
-        return warehouseRepository.findById(id);
+    public Warehouse getWarehouseById(Integer warehouseId) {
+        return warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + warehouseId + " not found."));
     }
 
     public List<Warehouse> getWarehousesByOrganizationId(Integer organizationId) {
@@ -52,15 +50,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public Warehouse updateWarehouse(UpdateWarehouseDTO warehouseDTO) {
-        Optional<Warehouse> warehouseOptional = warehouseRepository.findById(warehouseDTO.getId());
-        if (warehouseOptional.isEmpty()) {
-            throw new ResourceNotFoundException("The requested warehouse does not exist");
-        }
-        Warehouse warehouse = warehouseOptional.get();
+        Warehouse warehouse = warehouseRepository.findById(warehouseDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + warehouseDTO.getId() + " not found."));
+
         warehouse.setName(warehouseDTO.getName());
 
         warehouseRepository.save(warehouse);
-
         return warehouse;
     }
 

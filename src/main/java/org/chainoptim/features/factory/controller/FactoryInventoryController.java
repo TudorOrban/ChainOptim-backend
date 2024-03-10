@@ -2,11 +2,10 @@ package org.chainoptim.features.factory.controller;
 
 import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.factory.dto.*;
-import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.factory.service.FactoryInventoryService;
-import org.chainoptim.features.factory.service.FactoryService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,9 +57,8 @@ public class FactoryInventoryController {
     // TODO: Secure endpoint
     @GetMapping("/{itemId}")
     public ResponseEntity<FactoryInventoryItem> getFactoryInventoryItemById(@PathVariable Integer itemId) {
-        return factoryInventoryService.getFactoryInventoryItemById(itemId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        FactoryInventoryItem item = factoryInventoryService.getFactoryInventoryItemById(itemId);
+        return ResponseEntity.ok(item);
     }
 
     // Create

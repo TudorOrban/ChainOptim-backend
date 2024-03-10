@@ -59,9 +59,8 @@ public class SupplierController {
     @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\")")
     @GetMapping("/{supplierId}")
     public ResponseEntity<Supplier> getSupplierById(@PathVariable Integer supplierId) {
-        return supplierService.getSupplierById(supplierId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Supplier supplier = supplierService.getSupplierById(supplierId);
+        return ResponseEntity.ok(supplier);
     }
 
     // Create

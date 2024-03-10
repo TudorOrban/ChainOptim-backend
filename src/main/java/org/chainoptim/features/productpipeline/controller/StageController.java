@@ -23,10 +23,6 @@ public class StageController {
     @GetMapping("/{stageId}")
     public ResponseEntity<Stage> getStageById(@PathVariable("stageId") Integer stageId) {
         Stage stage = stageService.getStageById(stageId);
-        if (stage == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(stage);
-        }
+        return ResponseEntity.ok(stage);
     }
 }

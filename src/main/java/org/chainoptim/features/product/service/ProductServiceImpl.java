@@ -26,20 +26,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProductWithStages(Integer productId) {
-        Optional<Product> productOptional = productRepository.findById(productId);
-        if (productOptional.isEmpty()) {
-            return null;
-        }
-        Product product = productOptional.get();
-        // Initialize stages and their nested collections
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productId + " not found."));
+
+        // Trigger lazy loading
         product.getStages().forEach(stage -> {
             Hibernate.initialize(stage.getStageInputs());
-//            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
             Hibernate.initialize(stage.getStageOutputs());
-//            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
         });
-        return product;
 
+        return product;
     }
 
     public List<ProductsSearchDTO> getProductsByOrganizationId(Integer organizationId) {
@@ -64,11 +60,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product updateProduct(UpdateProductDTO productDTO) {
-        Optional<Product> productOptional = productRepository.findById(productDTO.getId());
-        if (productOptional.isEmpty()) {
-            throw new ResourceNotFoundException("The requested product does not exist");
-        }
-        Product product = productOptional.get();
+        Product product = productRepository.findById(productDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productDTO.getId() + " not found."));
+
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setUnitId(productDTO.getUnitId());
