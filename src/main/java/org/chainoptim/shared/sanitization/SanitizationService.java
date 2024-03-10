@@ -18,6 +18,7 @@ public class SanitizationService {
     }
 
     public String sanitize(String input) {
+        if (input == null) return null;
         return Jsoup.clean(input, this.safelist);
     }
 

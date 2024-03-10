@@ -20,6 +20,7 @@ import java.util.List;
 public class Component {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Integer id;
 

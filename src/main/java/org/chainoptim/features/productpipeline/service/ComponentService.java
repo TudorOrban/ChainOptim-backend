@@ -5,5 +5,5 @@ import org.chainoptim.features.productpipeline.model.Component;
 import java.util.List;
 
 public interface ComponentService {
-    List<Component> getComponentsByOrganization(Integer organizationId);
+    List<Component> getComponentsByOrganizationId(Integer organizationId);
 }

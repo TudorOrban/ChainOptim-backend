@@ -20,6 +20,7 @@ import java.util.Set;
 public class Stage {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Integer id;
 

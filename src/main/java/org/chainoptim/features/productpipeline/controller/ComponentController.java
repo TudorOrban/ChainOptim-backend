@@ -21,7 +21,7 @@ public class ComponentController {
     }
 
     @GetMapping("/organizations/{organizationId}")
-    public List<Component> getComponentsByOrganization(@PathVariable Integer organizationId) {
-        return componentService.getComponentsByOrganization(organizationId);
+    public List<Component> getComponentsByOrganizationId(@PathVariable Integer organizationId) {
+        return componentService.getComponentsByOrganizationId(organizationId);
     }
 }
