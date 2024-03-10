@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/components")
+@RequestMapping("/api/v1/components")
 public class ComponentController {
 
     private final ComponentService componentService;

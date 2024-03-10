@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface StageRepository extends JpaRepository<Stage, Integer> {
 
-    @EntityGraph(attributePaths = {"stageInputs", "stageInputs.components", "stageOutputs", "stageOutputs.components"})
+    @EntityGraph(attributePaths = {"stageInputs", "stageInputs", "stageOutputs", "stageOutputs"})
     Optional<Stage> findById(Integer id);
 }

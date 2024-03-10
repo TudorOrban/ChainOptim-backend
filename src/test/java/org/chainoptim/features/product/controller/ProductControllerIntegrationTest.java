@@ -142,7 +142,7 @@ class ProductControllerIntegrationTest {
         String invalidJWTToken = "Invalid";
 
         // Act (invalid security credentials)
-        mockMvc.perform(post("/api/products/create")
+        mockMvc.perform(post("/api/v1/products/create")
                         .header("Authorization", "Bearer " + invalidJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(productDTOJson))
@@ -155,7 +155,7 @@ class ProductControllerIntegrationTest {
         }
 
         // Act
-        mockMvc.perform(post("/api/products/create")
+        mockMvc.perform(post("/api/v1/products/create")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(productDTOJson));
@@ -182,7 +182,7 @@ class ProductControllerIntegrationTest {
         String invalidJWTToken = "Invalid";
 
         // Act (invalid security credentials)
-        mockMvc.perform(put("/api/products/update")
+        mockMvc.perform(put("/api/v1/products/update")
                         .header("Authorization", "Bearer " + invalidJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(productDTOJson))
@@ -195,7 +195,7 @@ class ProductControllerIntegrationTest {
         }
 
         // Act
-        mockMvc.perform(put("/api/products/update")
+        mockMvc.perform(put("/api/v1/products/update")
                         .header("Authorization", "Bearer " + jwtToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(productDTOJson))
