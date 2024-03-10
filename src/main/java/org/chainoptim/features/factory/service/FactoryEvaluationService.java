@@ -1,5 +1,7 @@
 package org.chainoptim.features.factory.service;
 
+import org.chainoptim.features.factory.model.FactoryEvaluationReport;
+
 public interface FactoryEvaluationService {
-    public void evaluateFactory(Integer factoryId);
+    FactoryEvaluationReport evaluateFactory(Integer factoryId);
 }
