@@ -8,6 +8,7 @@ import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.productpipeline.model.Stage;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import org.hibernate.Hibernate;
@@ -21,10 +22,12 @@ import java.util.Optional;
 public class FactoryServiceImpl implements FactoryService {
 
     private final FactoryRepository factoryRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public FactoryServiceImpl(FactoryRepository factoryRepository) {
+    public FactoryServiceImpl(FactoryRepository factoryRepository, EntitySanitizerService entitySanitizerService) {
         this.factoryRepository = factoryRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
 
@@ -61,19 +64,19 @@ public class FactoryServiceImpl implements FactoryService {
     }
 
     public Factory createFactory(CreateFactoryDTO factoryDTO) {
-        return factoryRepository.save(FactoryDTOMapper.convertCreateFactoryDTOToFactory(factoryDTO));
+        CreateFactoryDTO sanitizedFactoryDTO = entitySanitizerService.sanitizeCreateFactoryDTO(factoryDTO);
+        return factoryRepository.save(FactoryDTOMapper.convertCreateFactoryDTOToFactory(sanitizedFactoryDTO));
     }
 
     public Factory updateFactory(UpdateFactoryDTO factoryDTO) {
-        Optional<Factory> factoryOptional = factoryRepository.findById(factoryDTO.getId());
-        if (factoryOptional.isEmpty()) {
-            throw new ResourceNotFoundException("The requested factory does not exist");
-        }
-        Factory factory = factoryOptional.get();
-        factory.setName(factoryDTO.getName());
+        UpdateFactoryDTO sanitizedFactoryDTO = entitySanitizerService.sanitizeUpdateFactoryDTO(factoryDTO);
+
+        Factory factory = factoryRepository.findById(sanitizedFactoryDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Factory with ID: " + sanitizedFactoryDTO.getId() + " not found."));
+
+        factory.setName(sanitizedFactoryDTO.getName());
 
         factoryRepository.save(factory);
-
         return factory;
     }
 

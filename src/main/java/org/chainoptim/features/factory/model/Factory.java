@@ -1,6 +1,6 @@
 package org.chainoptim.features.factory.model;
 
-import org.chainoptim.shared.location.model.Location;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 import jakarta.persistence.*;
 import lombok.*;

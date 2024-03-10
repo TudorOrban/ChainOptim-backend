@@ -4,6 +4,7 @@ import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.productpipeline.model.Component;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 public class FactoryDTOMapper {
 
@@ -23,6 +24,9 @@ public class FactoryDTOMapper {
         Factory factory = new Factory();
         factory.setName(factoryDTO.getName());
         factory.setOrganizationId(factoryDTO.getOrganizationId());
+        Location location = new Location();
+        location.setId(factoryDTO.getLocationId());
+        factory.setLocation(location);
 
         return factory;
     }

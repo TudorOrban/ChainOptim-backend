@@ -8,21 +8,23 @@ import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository) {
+    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, EntitySanitizerService entitySanitizerService) {
         this.warehouseRepository = warehouseRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
 
@@ -46,14 +48,16 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public Warehouse createWarehouse(CreateWarehouseDTO warehouseDTO) {
-        return warehouseRepository.save(WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(warehouseDTO));
+        CreateWarehouseDTO sanitizedWarehouseDTO = entitySanitizerService.sanitizeCreateWarehouseDTO(warehouseDTO);
+        return warehouseRepository.save(WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO));
     }
 
     public Warehouse updateWarehouse(UpdateWarehouseDTO warehouseDTO) {
-        Warehouse warehouse = warehouseRepository.findById(warehouseDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + warehouseDTO.getId() + " not found."));
+        UpdateWarehouseDTO sanitizedWarehouseDTO = entitySanitizerService.sanitizeUpdateWarehouseDTO(warehouseDTO);
+        Warehouse warehouse = warehouseRepository.findById(sanitizedWarehouseDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + sanitizedWarehouseDTO.getId() + " not found."));
 
-        warehouse.setName(warehouseDTO.getName());
+        warehouse.setName(sanitizedWarehouseDTO.getName());
 
         warehouseRepository.save(warehouse);
         return warehouse;

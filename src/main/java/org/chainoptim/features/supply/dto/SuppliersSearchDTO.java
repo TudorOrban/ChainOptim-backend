@@ -3,7 +3,7 @@ package org.chainoptim.features.supply.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.chainoptim.shared.location.model.Location;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 import java.time.LocalDateTime;
 

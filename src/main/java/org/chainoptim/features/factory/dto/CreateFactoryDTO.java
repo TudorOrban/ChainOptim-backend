@@ -7,4 +7,5 @@ public class CreateFactoryDTO {
 
     private String name;
     private Integer organizationId;
+    private Integer locationId;
 }

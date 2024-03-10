@@ -7,6 +7,7 @@ import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, EntitySanitizerService entitySanitizerService) {
         this.productRepository = productRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
     public Product getProductWithStages(Integer productId) {
@@ -56,16 +59,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product createProduct(CreateProductDTO productDTO) {
-        return productRepository.save(ProductDTOMapper.convertCreateProductDTOToProduct(productDTO));
+        CreateProductDTO sanitizedProductDTO = entitySanitizerService.sanitizeCreateProductDTO(productDTO);
+        return productRepository.save(ProductDTOMapper.convertCreateProductDTOToProduct(sanitizedProductDTO));
     }
 
     public Product updateProduct(UpdateProductDTO productDTO) {
-        Product product = productRepository.findById(productDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productDTO.getId() + " not found."));
+        UpdateProductDTO sanitizedProductDTO = entitySanitizerService.sanitizeUpdateProductDTO(productDTO);
+        Product product = productRepository.findById(sanitizedProductDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + sanitizedProductDTO.getId() + " not found."));
 
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription());
-        product.setUnitId(productDTO.getUnitId());
+        product.setName(sanitizedProductDTO.getName());
+        product.setDescription(sanitizedProductDTO.getDescription());
+        product.setUnitId(sanitizedProductDTO.getUnitId());
 
         productRepository.save(product);
 

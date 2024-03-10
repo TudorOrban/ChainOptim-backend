@@ -7,6 +7,7 @@ import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.supply.repository.SupplierRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,12 @@ import java.util.Optional;
 public class SupplierServiceImpl implements SupplierService {
 
     private final SupplierRepository supplierRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public SupplierServiceImpl(SupplierRepository supplierRepository) {
+    public SupplierServiceImpl(SupplierRepository supplierRepository, EntitySanitizerService entitySanitizerService) {
         this.supplierRepository = supplierRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
     public List<Supplier> getAllSuppliers() {
@@ -48,14 +51,16 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     public Supplier createSupplier(CreateSupplierDTO supplierDTO) {
-        return supplierRepository.save(SupplierDTOMapper.convertCreateSupplierDTOToSupplier(supplierDTO));
+        CreateSupplierDTO sanitizedSupplierDTO = entitySanitizerService.sanitizeCreateSupplierDTO(supplierDTO);
+        return supplierRepository.save(SupplierDTOMapper.convertCreateSupplierDTOToSupplier(sanitizedSupplierDTO));
     }
 
     public Supplier updateSupplier(UpdateSupplierDTO supplierDTO) {
-        Supplier supplier = supplierRepository.findById(supplierDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + supplierDTO.getId() + " not found."));
+        UpdateSupplierDTO sanitizedSupplierDTO = entitySanitizerService.sanitizeUpdateSupplierDTO(supplierDTO);
+        Supplier supplier = supplierRepository.findById(sanitizedSupplierDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + sanitizedSupplierDTO.getId() + " not found."));
 
-        supplier.setName(supplierDTO.getName());
+        supplier.setName(sanitizedSupplierDTO.getName());
 
         supplierRepository.save(supplier);
         return supplier;

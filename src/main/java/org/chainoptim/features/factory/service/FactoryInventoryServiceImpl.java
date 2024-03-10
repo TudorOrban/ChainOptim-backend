@@ -4,6 +4,7 @@ import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.factory.dto.*;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.factory.repository.FactoryInventoryRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class FactoryInventoryServiceImpl implements FactoryInventoryService {
 
     private final FactoryInventoryRepository factoryInventoryRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public FactoryInventoryServiceImpl(FactoryInventoryRepository factoryInventoryRepository) {
+    public FactoryInventoryServiceImpl(FactoryInventoryRepository factoryInventoryRepository, EntitySanitizerService entitySanitizerService) {
         this.factoryInventoryRepository = factoryInventoryRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
     // Fetch
@@ -43,15 +46,17 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
 
     // Create
     public FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO itemDTO) {
-        return factoryInventoryRepository.save(FactoryDTOMapper.convertCreateFactoryItemDTOToFactoryItem(itemDTO));
+        CreateFactoryInventoryItemDTO sanitizedItemDTO = entitySanitizerService.sanitizeCreateFactoryInventoryItemDTO(itemDTO);
+        return factoryInventoryRepository.save(FactoryDTOMapper.convertCreateFactoryItemDTOToFactoryItem(sanitizedItemDTO));
     }
 
     // Update
     public FactoryInventoryItem updateFactoryInventoryItem(UpdateFactoryInventoryItemDTO itemDTO) {
-        FactoryInventoryItem item = factoryInventoryRepository.findById(itemDTO.getId()).
-                orElseThrow(() -> new ResourceNotFoundException("Factory inventory item with ID: " + itemDTO.getId() + " not found."));
+        UpdateFactoryInventoryItemDTO sanitizedItemDTO = entitySanitizerService.sanitizeUpdateFactoryInventoryItemDTO(itemDTO);
+        FactoryInventoryItem item = factoryInventoryRepository.findById(sanitizedItemDTO.getId()).
+                orElseThrow(() -> new ResourceNotFoundException("Factory inventory item with ID: " + sanitizedItemDTO.getId() + " not found."));
 
-        item.setQuantity(itemDTO.getQuantity());
+        item.setQuantity(sanitizedItemDTO.getQuantity());
 
         factoryInventoryRepository.save(item);
         return item;
