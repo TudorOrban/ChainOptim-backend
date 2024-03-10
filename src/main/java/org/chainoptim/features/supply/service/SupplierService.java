@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface SupplierService {
     // Fetch
     List<Supplier> getAllSuppliers();
-    Optional<Supplier> getSupplierById(Integer id);
+    Supplier getSupplierById(Integer id);
     List<Supplier> getSuppliersByOrganizationId(Integer organizationId);
     PaginatedResults<SuppliersSearchDTO> getSuppliersByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
 

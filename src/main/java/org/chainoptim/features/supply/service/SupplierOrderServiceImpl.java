@@ -1,8 +1,10 @@
 package org.chainoptim.features.supply.service;
 
 import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.supply.dto.SupplierDTOMapper;
 import org.chainoptim.features.supply.model.SupplierOrder;
 import org.chainoptim.features.supply.repository.SupplierOrderRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +15,17 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
 
     private final SupplierOrderRepository supplierOrderRepository;
     private final KafkaSupplierOrderService kafkaSupplierOrderService;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public SupplierOrderServiceImpl(
             SupplierOrderRepository supplierOrderRepository,
-            KafkaSupplierOrderService kafkaSupplierOrderService
+            KafkaSupplierOrderService kafkaSupplierOrderService,
+            EntitySanitizerService entitySanitizerService
     ) {
         this.supplierOrderRepository = supplierOrderRepository;
         this.kafkaSupplierOrderService = kafkaSupplierOrderService;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
     public List<SupplierOrder> getSupplierOrdersByOrganizationId(Integer organizationId) {
@@ -32,26 +37,15 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     }
 
 
-    public SupplierOrder saveOrUpdateSupplierOrder(CreateSupplierOrderDTO order) {
-        System.out.println("Sending order: " + order.getSupplierId());
-        SupplierOrder supplierOrder = mapCreateDtoToSupplierOrder(order);
-//        SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
+    public SupplierOrder saveOrUpdateSupplierOrder(CreateSupplierOrderDTO orderDTO) {
+        System.out.println("Sending order: " + orderDTO.getSupplierId());
+        CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
+        SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
+        SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
         // Publish order to Kafka broker on create or update
-        kafkaSupplierOrderService.sendSupplierOrder(supplierOrder);
-        return supplierOrder;
+        kafkaSupplierOrderService.sendSupplierOrder(savedOrder);
+        return savedOrder;
     }
 
-    private SupplierOrder mapCreateDtoToSupplierOrder(CreateSupplierOrderDTO order) {
-        SupplierOrder supplierOrder = new SupplierOrder();
-        supplierOrder.setOrganizationId(order.getOrganizationId());
-        supplierOrder.setSupplierId(order.getSupplierId());
-        supplierOrder.setComponentId(order.getComponentId());
-        supplierOrder.setQuantity(order.getQuantity());
-        supplierOrder.setOrderDate(order.getOrderDate());
-        supplierOrder.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
-        supplierOrder.setDeliveryDate(order.getDeliveryDate());
-        supplierOrder.setStatus(order.getStatus());
 
-        return supplierOrder;
-    }
 }

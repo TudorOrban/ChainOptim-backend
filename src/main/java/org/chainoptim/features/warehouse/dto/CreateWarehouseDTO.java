@@ -7,4 +7,5 @@ public class CreateWarehouseDTO {
 
     private String name;
     private Integer organizationId;
+    private Integer locationId;
 }

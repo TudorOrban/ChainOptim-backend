@@ -59,9 +59,8 @@ public class WarehouseController {
     @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\")")
     @GetMapping("/{warehouseId}")
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable Integer warehouseId) {
-        return warehouseService.getWarehouseById(warehouseId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Warehouse warehouse = warehouseService.getWarehouseById(warehouseId);
+        return ResponseEntity.ok(warehouse);
     }
 
     // Create

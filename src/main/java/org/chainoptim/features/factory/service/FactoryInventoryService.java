@@ -18,7 +18,7 @@ public interface FactoryInventoryService {
             boolean ascending,
             int page,
             int itemsPerPage);
-    Optional<FactoryInventoryItem> getFactoryInventoryItemById(Integer inventoryItemId);
+    FactoryInventoryItem getFactoryInventoryItemById(Integer inventoryItemId);
 
     // Create
     FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO itemDTO);

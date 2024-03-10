@@ -57,9 +57,8 @@ public class FactoryController {
     @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
     @GetMapping("/{factoryId}")
     public ResponseEntity<Factory> getFactoryById(@PathVariable Integer factoryId) {
-        return factoryService.getFactoryById(factoryId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Factory factory = factoryService.getFactoryWithStagesById(factoryId);
+        return ResponseEntity.ok(factory);
     }
 
     @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")

@@ -9,7 +9,6 @@ import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.model.StageInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -45,11 +44,22 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
                 .filter(item -> item.getComponent() != null) // Only include items with a non-null component
                 .collect(Collectors.toMap(item -> item.getComponent().getId(), item -> item));
 
+        StringBuilder overallRecommendation = new StringBuilder();
+
         for(FactoryStage factoryStage : factory.getFactoryStages()) {
             FactoryEvaluationReport.StageReport stageReport = evaluateFactoryStage(factoryStage, inventoryMap);
 
             evaluationReport.getStageReports().add(stageReport);
+            if (stageReport.getCapacityUtilizationPercentage() < 1) {
+                overallRecommendation.append("Factory Stage ").append(factoryStage.getId()).append(" cannot work at full capacity\n");
+            }
+        }
 
+        // Get recommendation
+        if (overallRecommendation.isEmpty()) {
+            evaluationReport.setOverallRecommendation("All factory stages work at full capacity");
+        } else {
+            evaluationReport.setOverallRecommendation(overallRecommendation.toString());
         }
 
         return evaluationReport;
@@ -74,7 +84,7 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
                 .map(FactoryEvaluationReport.InputReport::getSurplusComponentRatio)
                 .min(Comparator.naturalOrder());
 
-        Float minimumSurplusRatio = 0.0f;
+        float minimumSurplusRatio = 0.0f;
         if (minSurplusRatio.isPresent()) {
             minimumSurplusRatio = minSurplusRatio.get();
         }
@@ -85,11 +95,15 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
         stageReport.setCapacityUtilizationPercentage(minimumSurplusRatio);
         if (minimumSurplusRatio > 1) {
             stageReport.setStageRecommendation(
-                    "Stage " + stage.getName() + " can work at full capacity"
+                    "Stage " + stage.getName() + " can work at full capacity for " + duration
+            );
+        } else if (minimumCapacity != null && minimumSurplusRatio > minimumCapacity) {
+            stageReport.setStageRecommendation(
+                    "Stage " + stage.getName() + " can work at minimum required capacity for " + duration + "but restock will be necessary afterwards"
             );
         } else {
             stageReport.setStageRecommendation(
-                    "Stage " + stage.getName() + " only works at " + (minimumSurplusRatio * 100) + " capacity"
+                    "Stage " + stage.getName() + " can only work at " + (minimumSurplusRatio * 100) + " capacity for " + duration
             );
         }
 
@@ -99,20 +113,20 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
     private FactoryEvaluationReport.InputReport evaluateFactoryStageInput(StageInput stageInput, Map<Integer, FactoryInventoryItem> inventoryMap, Float numberOfStagesCapacity, String stageName) {
         Float componentQuantityPerStage = stageInput.getQuantity();
         Component inputComponent = stageInput.getComponent();
-
-        // Find corresponding item in factory inventory
-        FactoryInventoryItem inventoryComponent = inventoryMap.get(inputComponent.getId());
-        if (inventoryComponent == null) return new FactoryEvaluationReport.InputReport();
-        Float inventoryComponentQuantity = inventoryComponent.getQuantity();
-        if (inventoryComponentQuantity == null) return new FactoryEvaluationReport.InputReport();
-
-        logger.info("Number of stages capacity: {}, Copmponent Quantity per stage: {}", numberOfStagesCapacity, componentQuantityPerStage);
         float neededComponentQuantity = numberOfStagesCapacity * componentQuantityPerStage;
+
+        // Set up missing component report
+        FactoryEvaluationReport.InputReport missingComponentReport = getMissingComponentReport(neededComponentQuantity, inputComponent);
+
+        // Find corresponding item in factory inventory or return missing report
+        FactoryInventoryItem inventoryComponent = inventoryMap.get(inputComponent.getId());
+        if (inventoryComponent == null) return missingComponentReport;
+        Float inventoryComponentQuantity = inventoryComponent.getQuantity();
+        if (inventoryComponentQuantity == null) return missingComponentReport;
+
+        // Compute surplus
         float surplusComponentQuantity = inventoryComponentQuantity - neededComponentQuantity;
         float surplusRatio = inventoryComponentQuantity / neededComponentQuantity;
-        float surplusPercentage = surplusRatio * 100;
-
-        logger.info("Able to work at {}% capacity for stage input {}, with surplus {}", surplusPercentage, inventoryComponent.getId(), surplusComponentQuantity);
 
         // Set up input report
         FactoryEvaluationReport.InputReport inputReport = new FactoryEvaluationReport.InputReport();
@@ -131,5 +145,15 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
         }
 
         return inputReport;
+    }
+
+    private FactoryEvaluationReport.InputReport getMissingComponentReport(float neededComponentQuantity, Component inputComponent) {
+        FactoryEvaluationReport.InputReport missingComponentReport = new FactoryEvaluationReport.InputReport();
+        missingComponentReport.setSurplusComponentQuantity(-neededComponentQuantity);
+        missingComponentReport.setSurplusComponentRatio(0.0f);
+        missingComponentReport.setInputRecommendation(
+                "Restock " + inputComponent.getName() + " immediately: factory requires " + (-neededComponentQuantity) + " to work at full capacity"
+        );
+        return missingComponentReport;
     }
 }

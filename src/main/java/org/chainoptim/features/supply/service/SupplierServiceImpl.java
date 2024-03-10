@@ -7,6 +7,7 @@ import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.supply.repository.SupplierRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,18 +19,21 @@ import java.util.Optional;
 public class SupplierServiceImpl implements SupplierService {
 
     private final SupplierRepository supplierRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public SupplierServiceImpl(SupplierRepository supplierRepository) {
+    public SupplierServiceImpl(SupplierRepository supplierRepository, EntitySanitizerService entitySanitizerService) {
         this.supplierRepository = supplierRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
     public List<Supplier> getAllSuppliers() {
         return supplierRepository.findAll();
     }
 
-    public Optional<Supplier> getSupplierById(Integer id) {
-        return supplierRepository.findById(id);
+    public Supplier getSupplierById(Integer supplierId) {
+        return supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + supplierId + " not found."));
     }
 
     public List<Supplier> getSuppliersByOrganizationId(Integer organizationId) {
@@ -47,19 +51,18 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     public Supplier createSupplier(CreateSupplierDTO supplierDTO) {
-        return supplierRepository.save(SupplierDTOMapper.convertCreateSupplierDTOToSupplier(supplierDTO));
+        CreateSupplierDTO sanitizedSupplierDTO = entitySanitizerService.sanitizeCreateSupplierDTO(supplierDTO);
+        return supplierRepository.save(SupplierDTOMapper.convertCreateSupplierDTOToSupplier(sanitizedSupplierDTO));
     }
 
     public Supplier updateSupplier(UpdateSupplierDTO supplierDTO) {
-        Optional<Supplier> supplierOptional = supplierRepository.findById(supplierDTO.getId());
-        if (supplierOptional.isEmpty()) {
-            throw new ResourceNotFoundException("The requested supplier does not exist");
-        }
-        Supplier supplier = supplierOptional.get();
-        supplier.setName(supplierDTO.getName());
+        UpdateSupplierDTO sanitizedSupplierDTO = entitySanitizerService.sanitizeUpdateSupplierDTO(supplierDTO);
+        Supplier supplier = supplierRepository.findById(sanitizedSupplierDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + sanitizedSupplierDTO.getId() + " not found."));
+
+        supplier.setName(sanitizedSupplierDTO.getName());
 
         supplierRepository.save(supplier);
-
         return supplier;
     }
 

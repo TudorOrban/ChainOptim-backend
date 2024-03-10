@@ -17,7 +17,7 @@ public class ComponentServiceImpl implements ComponentService {
         this.componentRepository = componentRepository;
     }
 
-    public List<Component> getComponentsByOrganization(Integer organizationId) {
+    public List<Component> getComponentsByOrganizationId(Integer organizationId) {
         return componentRepository.findByOrganizationId(organizationId);
     }
 }

@@ -1,6 +1,7 @@
 package org.chainoptim.features.supply.dto;
 
 import org.chainoptim.features.supply.model.Supplier;
+import org.chainoptim.features.supply.model.SupplierOrder;
 
 public class SupplierDTOMapper {
 
@@ -22,5 +23,19 @@ public class SupplierDTOMapper {
         supplier.setOrganizationId(supplierDTO.getOrganizationId());
 
         return supplier;
+    }
+
+    public static SupplierOrder mapCreateDtoToSupplierOrder(CreateSupplierOrderDTO order) {
+        SupplierOrder supplierOrder = new SupplierOrder();
+        supplierOrder.setOrganizationId(order.getOrganizationId());
+        supplierOrder.setSupplierId(order.getSupplierId());
+        supplierOrder.setComponentId(order.getComponentId());
+        supplierOrder.setQuantity(order.getQuantity());
+        supplierOrder.setOrderDate(order.getOrderDate());
+        supplierOrder.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
+        supplierOrder.setDeliveryDate(order.getDeliveryDate());
+        supplierOrder.setStatus(order.getStatus());
+
+        return supplierOrder;
     }
 }

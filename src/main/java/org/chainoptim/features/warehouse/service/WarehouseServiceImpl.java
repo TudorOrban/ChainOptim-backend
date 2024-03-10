@@ -8,29 +8,29 @@ import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository) {
+    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, EntitySanitizerService entitySanitizerService) {
         this.warehouseRepository = warehouseRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
-    public List<Warehouse> getAllWarehouses() {
-        return warehouseRepository.findAll();
-    }
 
-    public Optional<Warehouse> getWarehouseById(Integer id) {
-        return warehouseRepository.findById(id);
+    public Warehouse getWarehouseById(Integer warehouseId) {
+        return warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + warehouseId + " not found."));
     }
 
     public List<Warehouse> getWarehousesByOrganizationId(Integer organizationId) {
@@ -48,19 +48,18 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public Warehouse createWarehouse(CreateWarehouseDTO warehouseDTO) {
-        return warehouseRepository.save(WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(warehouseDTO));
+        CreateWarehouseDTO sanitizedWarehouseDTO = entitySanitizerService.sanitizeCreateWarehouseDTO(warehouseDTO);
+        return warehouseRepository.save(WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO));
     }
 
     public Warehouse updateWarehouse(UpdateWarehouseDTO warehouseDTO) {
-        Optional<Warehouse> warehouseOptional = warehouseRepository.findById(warehouseDTO.getId());
-        if (warehouseOptional.isEmpty()) {
-            throw new ResourceNotFoundException("The requested warehouse does not exist");
-        }
-        Warehouse warehouse = warehouseOptional.get();
-        warehouse.setName(warehouseDTO.getName());
+        UpdateWarehouseDTO sanitizedWarehouseDTO = entitySanitizerService.sanitizeUpdateWarehouseDTO(warehouseDTO);
+        Warehouse warehouse = warehouseRepository.findById(sanitizedWarehouseDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + sanitizedWarehouseDTO.getId() + " not found."));
+
+        warehouse.setName(sanitizedWarehouseDTO.getName());
 
         warehouseRepository.save(warehouse);
-
         return warehouse;
     }
 

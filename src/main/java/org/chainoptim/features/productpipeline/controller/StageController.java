@@ -1,32 +1,65 @@
 package org.chainoptim.features.productpipeline.controller;
 
+import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
+import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.service.StageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/stages")
 public class StageController {
 
     private final StageService stageService;
+    private final SecurityService securityService;
 
     @Autowired
-    public StageController(StageService stageService) {
+    public StageController(StageService stageService, SecurityService securityService) {
         this.stageService = stageService;
+        this.securityService = securityService;
     }
 
+    // Fetch
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\")")
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<Stage>> getStagesByProductId(@PathVariable Integer productId) {
+        return ResponseEntity.ok(stageService.getStagesByProductId(productId));
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\")")
     @GetMapping("/{stageId}")
     public ResponseEntity<Stage> getStageById(@PathVariable("stageId") Integer stageId) {
         Stage stage = stageService.getStageById(stageId);
-        if (stage == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(stage);
-        }
+        return ResponseEntity.ok(stage);
+    }
+
+    // Create
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#stageDTO.getOrganizationId())")
+    @PostMapping("/create")
+    public ResponseEntity<Stage> createStage(@RequestBody CreateStageDTO stageDTO) {
+        Stage stage = stageService.createStage(stageDTO);
+        return ResponseEntity.ok(stage);
+    }
+
+    // Update
+    @PreAuthorize("@securityService.canAccessEntity(#updateStageDTO.getId(), \"Stage\")")
+    @PutMapping("/update")
+    public ResponseEntity<Stage> updateStage(@RequestBody UpdateStageDTO updateStageDTO) {
+        Stage stage = stageService.updateStage(updateStageDTO);
+        return ResponseEntity.ok(stage);
+    }
+
+    // Delete
+    @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\")")
+    @DeleteMapping("/delete/{stageId}")
+    public ResponseEntity<Void> deleteStage(@PathVariable Integer stageId) {
+        stageService.deleteStage(stageId);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package org.chainoptim.shared.location.model;
+package org.chainoptim.shared.commonfeatures.location.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package org.chainoptim.features.supply.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.chainoptim.shared.location.model.Location;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 

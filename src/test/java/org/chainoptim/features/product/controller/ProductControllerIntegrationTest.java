@@ -102,7 +102,7 @@ class ProductControllerIntegrationTest {
     @Test
     void testSearchProducts() throws Exception {
         // Arrange
-        String url = "http://localhost:8080/api/products/organizations/advanced/" + organizationId.toString()
+        String url = "http://localhost:8080/api/v1/products/organizations/advanced/" + organizationId.toString()
                 + "?searchQuery=Test"
                 + "&sortOption=name"
                 + "&ascending=true"
@@ -216,7 +216,7 @@ class ProductControllerIntegrationTest {
     @Test
     void testDeleteProduct() throws Exception {
         // Arrange
-        String url = "http://localhost:8080/api/products/delete/" + productId;
+        String url = "http://localhost:8080/api/v1/products/delete/" + productId;
         String invalidJWTToken = "Invalid";
 
         // Act (invalid security credentials)
