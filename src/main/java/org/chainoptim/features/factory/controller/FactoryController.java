@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/factories")
+@RequestMapping("/api/v1/factories")
 public class FactoryController {
 
     private final FactoryService factoryService;

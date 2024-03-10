@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/factories/evaluation")
+@RequestMapping("/api/v1/factories/evaluation")
 public class FactoryEvaluationController {
 
     private final FactoryEvaluationService factoryEvaluationService;
