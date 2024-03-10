@@ -57,9 +57,9 @@ public class FactoryServiceImpl implements FactoryService {
             Stage stage = fs.getStage();
             stage.getProductId(); // Trigger lazy loading
             Hibernate.initialize(stage.getStageInputs());
-            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
+//            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
             Hibernate.initialize(stage.getStageOutputs());
-            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
+//            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
         });
         return factory;
     }

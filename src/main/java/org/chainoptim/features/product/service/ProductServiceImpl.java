@@ -34,9 +34,9 @@ public class ProductServiceImpl implements ProductService {
         // Initialize stages and their nested collections
         product.getStages().forEach(stage -> {
             Hibernate.initialize(stage.getStageInputs());
-            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
+//            stage.getStageInputs().forEach(input -> Hibernate.initialize(input.getComponents()));
             Hibernate.initialize(stage.getStageOutputs());
-            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
+//            stage.getStageOutputs().forEach(output -> Hibernate.initialize(output.getComponents()));
         });
         return product;
 

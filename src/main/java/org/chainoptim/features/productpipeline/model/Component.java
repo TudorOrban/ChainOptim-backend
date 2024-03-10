@@ -49,9 +49,9 @@ public class Component {
 
     @OneToMany(mappedBy = "component", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<StageInputComponent> stageInputComponents;
+    private List<StageInput> stageInputs;
 
     @OneToMany(mappedBy = "component", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<StageOutputComponent> stageOutputComponents;
+    private List<StageOutput> stageOutputs;
 }

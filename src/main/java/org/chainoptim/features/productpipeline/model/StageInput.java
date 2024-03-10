@@ -26,7 +26,11 @@ public class StageInput {
     @JsonIgnore
     private Stage stage;
 
-    @OneToMany(mappedBy = "stageInput", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StageInputComponent> components = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "component_id", nullable = false)
+    private Component component;
+
+    @Column(name = "quantity")
+    private Float quantity;
 
 }
