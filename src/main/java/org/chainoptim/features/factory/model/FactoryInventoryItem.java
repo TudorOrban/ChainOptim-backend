@@ -22,7 +22,7 @@ public class FactoryInventoryItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "factory_id", nullable = false)
     private Integer factoryId;

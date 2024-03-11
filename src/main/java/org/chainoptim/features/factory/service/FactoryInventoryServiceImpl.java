@@ -63,7 +63,7 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
     }
 
     // Delete
-    public void deleteFactoryInventoryItem(Long itemId) {
+    public void deleteFactoryInventoryItem(Integer itemId) {
         FactoryInventoryItem item = new FactoryInventoryItem();
         item.setId(itemId);
         factoryInventoryRepository.delete(item);

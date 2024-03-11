@@ -1,5 +1,9 @@
 package org.chainoptim.features.factory.service;
 
+import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
+import org.chainoptim.features.evaluation.production.model.FactoryStageConnection;
+import org.chainoptim.features.evaluation.production.services.FactoryStageConnectionService;
+import org.chainoptim.features.evaluation.production.services.GraphService;
 import org.chainoptim.features.factory.model.*;
 import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.productpipeline.model.Stage;
@@ -24,14 +28,20 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
 
     private final FactoryService factoryService;
     private final FactoryInventoryService factoryInventoryService;
+    private final GraphService graphService;
+    private final FactoryStageConnectionService factoryStageConnectionService;
     private static final Logger logger = LoggerFactory.getLogger(FactoryEvaluationServiceImpl.class);
 
     public FactoryEvaluationServiceImpl(
             FactoryService factoryService,
-            FactoryInventoryService factoryInventoryService
+            FactoryInventoryService factoryInventoryService,
+            GraphService graphService,
+            FactoryStageConnectionService factoryStageConnectionService
     ) {
         this.factoryService = factoryService;
         this.factoryInventoryService = factoryInventoryService;
+        this.graphService = graphService;
+        this.factoryStageConnectionService = factoryStageConnectionService;
     }
 
     public FactoryEvaluationReport evaluateFactory(Integer factoryId) {
@@ -39,6 +49,12 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
         List<FactoryInventoryItem> inventory = factoryInventoryService.getFactoryInventoryItemsByFactoryId(factoryId);
 
         return evaluateFactoryStatus(factory, inventory);
+    }
+
+    public FactoryGraph getFactoryPipelineGraph(Integer factoryId) {
+        Factory factory = factoryService.getFactoryWithStagesById(factoryId);
+        List<FactoryStageConnection> connections = factoryStageConnectionService.getConnectionsByFactoryId(factoryId);
+        return graphService.getStageGraph(factory, connections);
     }
 
     public FactoryEvaluationReport evaluateFactoryStatus(Factory factory, List<FactoryInventoryItem> inventory) {
@@ -234,7 +250,7 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
                                 (fs.getStage().getStageOutputs().stream()
                                         .anyMatch(so -> connectionIncomingOutputs.contains(so.getId())))
                         ).toList();
-        List<Long> indepStagesIds = independentStages.stream().map(s -> s.getId()).toList();
+        List<Integer> indepStagesIds = independentStages.stream().map(s -> s.getId()).toList();
         List<FactoryStage> dependentStages = factory.getFactoryStages().stream()
                 .filter(fs -> indepStagesIds.contains(fs.getId())).toList();
 
@@ -249,13 +265,14 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
         // Preparations
         FactoryEvaluationReport evaluationReport = new FactoryEvaluationReport();
 
-        Map<Integer, FactoryInventoryItem> inventoryMap = inventory.stream()
+        Map<Integer, FactoryInventoryItem> inventoryMap = inventory.stream() // Key: component ID, Value: item
                 .filter(item -> item.getComponent() != null) // Only include items with a non-null component
                 .collect(Collectors.toMap(item -> item.getComponent().getId(), item -> item));
 
         StringBuilder overallRecommendation = new StringBuilder();
 
         // Process independent stages separately
+        // TODO: Refactor for pipeline graphs
         for(FactoryStage factoryStage : independentStages) {
             FactoryEvaluationReport.StageReport stageReport = evaluateFactoryStage(factoryStage, inventoryMap);
 
@@ -265,7 +282,7 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
             }
         }
 
-        // Process depedent stages in bulk
+        // Process dependent stages in bulk
 
 
 
@@ -276,8 +293,6 @@ public class FactoryEvaluationServiceImpl implements FactoryEvaluationService {
         } else {
             evaluationReport.setOverallRecommendation(overallRecommendation.toString());
         }
-
-        return evaluationReport;
 
         return evaluationReport;
     }

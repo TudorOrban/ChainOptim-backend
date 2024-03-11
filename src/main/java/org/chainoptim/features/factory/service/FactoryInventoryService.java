@@ -27,5 +27,5 @@ public interface FactoryInventoryService {
     FactoryInventoryItem updateFactoryInventoryItem(UpdateFactoryInventoryItemDTO itemDTO);
 
     // Delete
-    void deleteFactoryInventoryItem(Long itemId);
+    void deleteFactoryInventoryItem(Integer itemId);
 }

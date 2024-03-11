@@ -1,4 +1,4 @@
-package org.chainoptim.features.factory.model;
+package org.chainoptim.features.evaluation.production.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +23,12 @@ public class FactoryStageConnection {
 
     @Column(name = "incoming_stage_output_id", nullable = false)
     private Integer incomingStageOutputId;
+
+    @Column(name = "outgoing_factory_stage_id", nullable = false)
+    private Integer outgoingFactoryStageId;
+
+    @Column(name = "incoming_factory_stage_id", nullable = false)
+    private Integer incomingFactoryStageId;
 
     @Column(name = "factory_id", nullable = false)
     private Integer factoryId;

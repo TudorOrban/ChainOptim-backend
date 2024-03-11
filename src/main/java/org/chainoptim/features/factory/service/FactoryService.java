@@ -4,7 +4,7 @@ import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
-import org.chainoptim.features.factory.model.FactoryStageConnection;
+import org.chainoptim.features.evaluation.production.model.FactoryStageConnection;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import java.util.List;
