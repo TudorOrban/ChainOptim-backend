@@ -82,7 +82,7 @@ public class FactoryInventoryController {
 //    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
     // TODO: Secure endpoint
     @DeleteMapping("/delete/{itemId}")
-    public ResponseEntity<Void> deleteFactory(@PathVariable Long itemId) {
+    public ResponseEntity<Void> deleteFactory(@PathVariable Integer itemId) {
         factoryInventoryService.deleteFactoryInventoryItem(itemId);
         return ResponseEntity.ok().build();
     }

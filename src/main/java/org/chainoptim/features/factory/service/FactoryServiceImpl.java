@@ -6,6 +6,7 @@ import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.factory.dto.FactoryDTOMapper;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
+import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
@@ -63,11 +64,17 @@ public class FactoryServiceImpl implements FactoryService {
         return factory;
     }
 
+    public List<FactoryStageConnection> getFactoryStageConnectionsByFactoryId(Integer factoryId) {
+        return factoryRepository.findFactoryStageConnectionsByFactoryId(factoryId);
+    }
+
+    // Create
     public Factory createFactory(CreateFactoryDTO factoryDTO) {
         CreateFactoryDTO sanitizedFactoryDTO = entitySanitizerService.sanitizeCreateFactoryDTO(factoryDTO);
         return factoryRepository.save(FactoryDTOMapper.convertCreateFactoryDTOToFactory(sanitizedFactoryDTO));
     }
 
+    // Update
     public Factory updateFactory(UpdateFactoryDTO factoryDTO) {
         UpdateFactoryDTO sanitizedFactoryDTO = entitySanitizerService.sanitizeUpdateFactoryDTO(factoryDTO);
 
@@ -80,6 +87,7 @@ public class FactoryServiceImpl implements FactoryService {
         return factory;
     }
 
+    // Delete
     public void deleteFactory(Integer factoryId) {
         Factory factory = new Factory();
         factory.setId(factoryId);

@@ -19,13 +19,16 @@ public class FactoryStage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "capacity")
     private Float capacity;
 
     @Column(name = "duration")
     private Float duration;
+
+    @Column(name = "priority")
+    private Integer priority;
 
     @Column(name = "minimum_required_capacity")
     private Float minimumRequiredCapacity;
