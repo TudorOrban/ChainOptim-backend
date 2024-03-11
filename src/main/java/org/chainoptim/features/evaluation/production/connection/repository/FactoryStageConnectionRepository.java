@@ -1,6 +1,6 @@
-package org.chainoptim.features.evaluation.production.repository;
+package org.chainoptim.features.evaluation.production.connection.repository;
 
-import org.chainoptim.features.evaluation.production.model.FactoryStageConnection;
+import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

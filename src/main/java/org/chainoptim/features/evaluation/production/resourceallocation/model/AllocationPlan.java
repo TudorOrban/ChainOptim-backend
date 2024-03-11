@@ -1,4 +1,4 @@
-package org.chainoptim.features.evaluation.production.repository;
+package org.chainoptim.features.evaluation.production.resourceallocation.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

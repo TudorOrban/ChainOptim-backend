@@ -1,25 +1,16 @@
-package org.chainoptim.features.evaluation.production.services;
+package org.chainoptim.features.evaluation.production.graph.service;
 
 import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
 import org.chainoptim.features.evaluation.production.graph.model.Node;
-import org.chainoptim.features.evaluation.production.graph.model.SmallStageInput;
-import org.chainoptim.features.evaluation.production.repository.AllocationPlan;
 import org.chainoptim.features.factory.model.Factory;
-import org.chainoptim.features.evaluation.production.model.FactoryStageConnection;
-import org.chainoptim.features.factory.model.FactoryInventoryItem;
+import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class GraphService {
-
-    private final GraphUtilsService graphUtilsService;
-
-    public GraphService(GraphUtilsService graphUtilsService) {
-        this.graphUtilsService = graphUtilsService;
-    }
+public class FactoryGraphService {
 
     public FactoryGraph getStageGraph(Factory factory, List<FactoryStageConnection> connections) {
         FactoryGraph graph = new FactoryGraph();

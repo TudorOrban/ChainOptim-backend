@@ -1,10 +1,12 @@
-package org.chainoptim.features.evaluation.production.services;
+package org.chainoptim.features.evaluation.production.evaluation.service;
 
 import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
 import org.chainoptim.features.evaluation.production.graph.model.Node;
-import org.chainoptim.features.evaluation.production.model.FactoryStageConnection;
-import org.chainoptim.features.evaluation.production.repository.AllocationPlan;
+import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
+import org.chainoptim.features.evaluation.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.evaluation.production.resourceallocation.service.ResourceAllocatorService;
+import org.chainoptim.features.evaluation.production.connection.service.FactoryStageConnectionService;
+import org.chainoptim.features.evaluation.production.graph.service.FactoryGraphService;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.factory.service.FactoryInventoryService;
@@ -17,29 +19,29 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class FactoryGraphEvaluationService {
+public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluationService {
 
     private final FactoryService factoryService;
     private final FactoryInventoryService factoryInventoryService;
     private final FactoryStageConnectionService factoryStageConnectionService;
-    private final GraphService graphService;
+    private final FactoryGraphService factoryGraphService;
     private final ResourceAllocatorService resourceAllocatorService;
 
     @Autowired
-    public FactoryGraphEvaluationService(
+    public FactoryGraphEvaluationServiceImpl(
             FactoryService factoryService,
             FactoryInventoryService factoryInventoryService,
             FactoryStageConnectionService factoryStageConnectionService,
-            GraphService graphService,
+            FactoryGraphService factoryGraphService,
             ResourceAllocatorService resourceAllocatorService) {
         this.factoryService = factoryService;
         this.factoryInventoryService = factoryInventoryService;
         this.factoryStageConnectionService = factoryStageConnectionService;
-        this.graphService = graphService;
+        this.factoryGraphService = factoryGraphService;
         this.resourceAllocatorService = resourceAllocatorService;
     }
 
-    public AllocationPlan getFactoryPipelines(Integer factoryId, Float duration) {
+    public AllocationPlan evaluateFactory(Integer factoryId, Float duration) {
         // Fetch factory with its stages, stage connections
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
         List<FactoryStageConnection> connections = factoryStageConnectionService.getConnectionsByFactoryId(factoryId);
@@ -51,16 +53,30 @@ public class FactoryGraphEvaluationService {
                 .collect(Collectors.toMap(item -> item.getComponent().getId(), item -> item));
 
         // Get data into FactoryGraph
-        FactoryGraph factoryGraph = graphService.getStageGraph(factory, connections);
+        FactoryGraph factoryGraph = factoryGraphService.getStageGraph(factory, connections);
 
         // Sort by priority
-        graphService.sortFactoryGraphNodesByPriority(factoryGraph);
+        factoryGraphService.sortFactoryGraphNodesByPriority(factoryGraph);
 
-        AllocationPlan allocationPlan = resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
+        return resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
+    }
 
+
+    // Independent pipeline: not in use for now
+    public void analyzeFactoryGraphWithPipelines(Integer factoryId, Float duration) {
+        Factory factory = factoryService.getFactoryWithStagesById(factoryId);
+        List<FactoryStageConnection> connections = factoryStageConnectionService.getConnectionsByFactoryId(factoryId);
+
+        // Create hashmap of component inventory levels
+        List<FactoryInventoryItem> inventory = factoryInventoryService.getFactoryInventoryItemsByFactoryId(factoryId);
+        Map<Integer, FactoryInventoryItem> inventoryMap = inventory.stream()
+                .filter(item -> item.getComponent() != null) // Only include items with a non-null component
+                .collect(Collectors.toMap(item -> item.getComponent().getId(), item -> item));
+
+        FactoryGraph factoryGraph = factoryGraphService.getStageGraph(factory, connections);
 
         // Split graph into connected components
-        List<FactoryGraph> independentPipelines = graphService.splitIntoIndependentPipelines(factoryGraph);
+        List<FactoryGraph> independentPipelines = factoryGraphService.splitIntoIndependentPipelines(factoryGraph);
 
         // Sort by pipeline priority
         independentPipelines.sort((p1, p2) -> Float.compare(p1.getPipelinePriority(), p2.getPipelinePriority()));
@@ -75,10 +91,7 @@ public class FactoryGraphEvaluationService {
         for (FactoryGraph pipeline : independentPipelines) {
             analyzeIndependentPipeline(pipeline, totalComponentsBalance);
         }
-
-        return allocationPlan;
     }
-
 
     public void analyzeIndependentPipeline(FactoryGraph pipeline, Map<Integer, Float> inventoryMap) {
         if (pipeline.getNodes().size() == 1) {

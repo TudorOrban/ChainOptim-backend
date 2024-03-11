@@ -1,4 +1,4 @@
-package org.chainoptim.features.factory.model;
+package org.chainoptim.features.evaluation.production.recommendation.model;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class FactoryEvaluationReport {
+public class FactoryRecommendationReport {
 
     private List<StageReport> stageReports = new ArrayList<>();
     private String overallRecommendation;
