@@ -9,8 +9,8 @@ import java.util.List;
 public class DeficitResolverPlan {
     private FactoryGraph factoryGraph;
 
-    private List<DeficitResolution> resolutions;
-
     private List<ResourceAllocation> allocationDeficits;
+
+    private List<DeficitResolution> resolutions;
 
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 import java.time.LocalDateTime;
 
@@ -41,14 +42,13 @@ public class SupplierShipment {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "source_location_id")
-    private Integer sourceLocationId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "source_location_id")
+    private Location sourceLocation;
 
-    @Column(name = "destination_location_id")
-    private Integer destinationLocationId;
-
-    @Column(name = "destination_location_type")
-    private String destinationLocationType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "destination_location_id")
+    private Location destinationLocation;
 
     @Column(name = "current_location_latitude")
     private Float currentLocationLatitude;

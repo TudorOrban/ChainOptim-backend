@@ -1,5 +1,6 @@
 package org.chainoptim.features.evaluation.production.evaluation.controller;
 
+import org.chainoptim.features.evaluation.production.evaluation.model.TemporaryEvaluationType;
 import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
 import org.chainoptim.features.evaluation.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.evaluation.production.evaluation.service.FactoryGraphEvaluationService;
@@ -41,7 +42,7 @@ public class FactoryEvaluationController {
     }
 
     @GetMapping("/graph/pipelines/{factoryId}")
-    public ResponseEntity<Pair<AllocationPlan, DeficitResolverPlan>> evaluateFactory(@PathVariable("factoryId") Integer factoryId) {
+    public ResponseEntity<TemporaryEvaluationType> evaluateFactory(@PathVariable("factoryId") Integer factoryId) {
         return ResponseEntity.ok(factoryGraphEvaluationService.evaluateFactory(factoryId, 10.0f));
     }
 

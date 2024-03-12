@@ -1,10 +1,15 @@
 package org.chainoptim.features.evaluation.production.evaluation.service;
 
+import org.chainoptim.features.evaluation.production.evaluation.model.TemporaryEvaluationType;
 import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
 import org.chainoptim.features.evaluation.production.graph.model.Node;
 import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
+import org.chainoptim.features.evaluation.production.recommendation.service.FactoryResolutionRecommendationService;
 import org.chainoptim.features.evaluation.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.evaluation.production.resourceallocation.model.DeficitResolverPlan;
+import org.chainoptim.features.evaluation.production.resourceallocation.model.ResolutionEvaluation;
+import org.chainoptim.features.evaluation.production.resourceallocation.model.ResolverPlanEvaluation;
+import org.chainoptim.features.evaluation.production.resourceallocation.service.ResolutionEvaluationService;
 import org.chainoptim.features.evaluation.production.resourceallocation.service.ResourceAllocatorService;
 import org.chainoptim.features.evaluation.production.connection.service.FactoryStageConnectionService;
 import org.chainoptim.features.evaluation.production.graph.service.FactoryGraphService;
@@ -22,6 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/*
+ * Service currently gathering all main evaluation components into a comprehensive flow.
+ * Will be broken down with time as the frontend needs become clearer.
+ *
+ */
 @Service
 public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluationService {
 
@@ -31,6 +41,9 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
     private final FactoryGraphService factoryGraphService;
     private final ResourceAllocatorService resourceAllocatorService;
     private final ResourceSeekerService resourceSeekerService;
+    private final ResolutionEvaluationService resolutionEvaluationService;
+    private final FactoryResolutionRecommendationService factoryResolutionRecommendationService;
+
 
     @Autowired
     public FactoryGraphEvaluationServiceImpl(
@@ -39,16 +52,20 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
             FactoryStageConnectionService factoryStageConnectionService,
             FactoryGraphService factoryGraphService,
             ResourceAllocatorService resourceAllocatorService,
-            ResourceSeekerService resourceSeekerService) {
+            ResourceSeekerService resourceSeekerService,
+            ResolutionEvaluationService resolutionEvaluationService,
+            FactoryResolutionRecommendationService factoryResolutionRecommendationService) {
         this.factoryService = factoryService;
         this.factoryInventoryService = factoryInventoryService;
         this.factoryStageConnectionService = factoryStageConnectionService;
         this.factoryGraphService = factoryGraphService;
         this.resourceAllocatorService = resourceAllocatorService;
         this.resourceSeekerService = resourceSeekerService;
+        this.resolutionEvaluationService = resolutionEvaluationService;
+        this.factoryResolutionRecommendationService = factoryResolutionRecommendationService;
     }
 
-    public Pair<AllocationPlan, DeficitResolverPlan> evaluateFactory(Integer factoryId, Float duration) {
+    public TemporaryEvaluationType evaluateFactory(Integer factoryId, Float duration) {
         // Fetch factory with its stages, stage connections
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
         List<FactoryStageConnection> connections = factoryStageConnectionService.getConnectionsByFactoryId(factoryId);
@@ -65,11 +82,19 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
         // Sort by priority
         factoryGraphService.sortFactoryGraphNodesByPriority(factoryGraph);
 
+        // Plan allocation
         AllocationPlan allocationPlan = resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
 
+        // Identify deficit resolutions
         DeficitResolverPlan resolverPlan = resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocationDeficit(), factory.getLocation());
 
-        return Pair.of(allocationPlan, resolverPlan);
+        // Evaluate plans
+        ResolverPlanEvaluation planEvaluation = resolutionEvaluationService.evaluateResolverPlan(resolverPlan);
+
+        // Make recommendations
+        Map<Integer, List<ResolutionEvaluation>> recommendedResolutions = factoryResolutionRecommendationService.recommendResolverPlanActions(planEvaluation);
+
+        return new TemporaryEvaluationType(allocationPlan, resolverPlan, planEvaluation, recommendedResolutions);
     }
 
 

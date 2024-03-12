@@ -5,7 +5,9 @@ import org.chainoptim.features.evaluation.production.resourceallocation.model.De
 import org.chainoptim.features.evaluation.production.resourceallocation.model.DeficitResolverPlan;
 import org.chainoptim.features.evaluation.production.resourceallocation.model.ResourceAllocation;
 import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supply.model.SupplierShipment;
 import org.chainoptim.features.supply.service.SupplierOrderService;
+import org.chainoptim.features.supply.service.SupplierShipmentService;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.chainoptim.features.warehouse.service.WarehouseInventoryService;
@@ -24,17 +26,19 @@ public class ResourceSeekerServiceImpl implements ResourceSeekerService {
     private final WarehouseService warehouseService;
     private final WarehouseInventoryService warehouseInventoryService;
     private final SupplierOrderService supplierOrderService;
+    private final SupplierShipmentService supplierShipmentService;
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceSeekerServiceImpl.class);
     @Autowired
     public ResourceSeekerServiceImpl(
             WarehouseService warehouseService,
             WarehouseInventoryService warehouseInventoryService,
-            SupplierOrderService supplierOrderService) {
+            SupplierOrderService supplierOrderService,
+            SupplierShipmentService supplierShipmentService) {
         this.warehouseService = warehouseService;
         this.warehouseInventoryService = warehouseInventoryService;
-
         this.supplierOrderService = supplierOrderService;
+        this.supplierShipmentService = supplierShipmentService;
     }
 
     public DeficitResolverPlan seekResources(Integer organizationId, List<ResourceAllocation> allocationDeficits, Location factoryLocation) {
@@ -104,20 +108,29 @@ public class ResourceSeekerServiceImpl implements ResourceSeekerService {
             float neededComponentQuantity = resourceAllocation.getRequestedAmount() - resourceAllocation.getAllocatedAmount();
 
             for (SupplierOrder potentialOrder : potentialSupplierOrders) {
-//                if (!areCloseEnough(potentialOrder.ge(), factoryLocation, 40.0f)) continue;
+                List<SupplierShipment> orderShipments = supplierShipmentService.getSupplierShipmentBySupplyOrderId(potentialOrder.getId());
 
-                float potentialQuantity = potentialOrder.getQuantity();
-                float surplusQuantity = potentialQuantity - neededComponentQuantity;
+                for (SupplierShipment shipment : orderShipments) {
+                    if (!areCloseEnough(shipment.getDestinationLocation(), factoryLocation, 80.0f)) continue;
 
-                float suppliedQuantity = surplusQuantity > 0 ? neededComponentQuantity : potentialQuantity;
+                    float potentialQuantity = shipment.getQuantity();
+                    float surplusQuantity = potentialQuantity - neededComponentQuantity;
 
-                // Set up resolution
-                DeficitResolution resolution = new DeficitResolution();
-                resolution.setNeededComponentId(resourceAllocation.getComponentId());
-                resolution.setNeededQuantity(neededComponentQuantity);
-                resolution.setSuppliedQuantity(suppliedQuantity);
+                    float suppliedQuantity = surplusQuantity > 0 ? neededComponentQuantity : potentialQuantity;
 
-                neededComponentQuantity -= suppliedQuantity;
+                    // Set up resolution
+                    DeficitResolution resolution = new DeficitResolution();
+                    resolution.setNeededComponentId(resourceAllocation.getComponentId());
+                    resolution.setSupplierOrderId(potentialOrder.getId());
+                    resolution.setOrderShipmentId(shipment.getId());
+                    resolution.setNeededQuantity(neededComponentQuantity);
+                    resolution.setSuppliedQuantity(suppliedQuantity);
+
+                    resolutions.add(resolution);
+
+                    // Update needed quantity accordingly
+//                    neededComponentQuantity -= suppliedQuantity;
+                }
             }
         }
     }
