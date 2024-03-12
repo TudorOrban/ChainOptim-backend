@@ -39,7 +39,7 @@ public class SupplierOrder {
     private Integer componentId;
 
     @Column(name = "quantity")
-    private Double quantity;
+    private Float quantity;
 
     @Column(name = "order_date", nullable = true)
     private LocalDateTime orderDate;

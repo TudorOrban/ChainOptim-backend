@@ -5,7 +5,9 @@ import org.chainoptim.features.evaluation.production.resourceallocation.model.Al
 import org.chainoptim.features.evaluation.production.evaluation.service.FactoryGraphEvaluationService;
 import org.chainoptim.features.evaluation.production.recommendation.model.FactoryRecommendationReport;
 import org.chainoptim.features.evaluation.production.recommendation.service.FactoryRecommendationService;
+import org.chainoptim.features.evaluation.production.resourceallocation.model.DeficitResolverPlan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +41,7 @@ public class FactoryEvaluationController {
     }
 
     @GetMapping("/graph/pipelines/{factoryId}")
-    public ResponseEntity<AllocationPlan> evaluateFactory(@PathVariable("factoryId") Integer factoryId) {
+    public ResponseEntity<Pair<AllocationPlan, DeficitResolverPlan>> evaluateFactory(@PathVariable("factoryId") Integer factoryId) {
         return ResponseEntity.ok(factoryGraphEvaluationService.evaluateFactory(factoryId, 10.0f));
     }
 

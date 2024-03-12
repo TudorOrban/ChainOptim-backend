@@ -1,5 +1,7 @@
 package org.chainoptim.features.factory.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.chainoptim.features.supply.model.SupplierOrder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 import jakarta.persistence.*;

@@ -4,6 +4,7 @@ import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
 import org.chainoptim.features.evaluation.production.graph.model.Node;
 import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
 import org.chainoptim.features.evaluation.production.resourceallocation.model.AllocationPlan;
+import org.chainoptim.features.evaluation.production.resourceallocation.model.DeficitResolverPlan;
 import org.chainoptim.features.evaluation.production.resourceallocation.service.ResourceAllocatorService;
 import org.chainoptim.features.evaluation.production.connection.service.FactoryStageConnectionService;
 import org.chainoptim.features.evaluation.production.graph.service.FactoryGraphService;
@@ -14,6 +15,7 @@ import org.chainoptim.features.factory.service.FactoryInventoryService;
 import org.chainoptim.features.factory.service.FactoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,7 +48,7 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
         this.resourceSeekerService = resourceSeekerService;
     }
 
-    public AllocationPlan evaluateFactory(Integer factoryId, Float duration) {
+    public Pair<AllocationPlan, DeficitResolverPlan> evaluateFactory(Integer factoryId, Float duration) {
         // Fetch factory with its stages, stage connections
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
         List<FactoryStageConnection> connections = factoryStageConnectionService.getConnectionsByFactoryId(factoryId);
@@ -65,9 +67,9 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
 
         AllocationPlan allocationPlan = resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
 
-        resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocationDeficit(), factory.getLocation());
+        DeficitResolverPlan resolverPlan = resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocationDeficit(), factory.getLocation());
 
-        return allocationPlan;
+        return Pair.of(allocationPlan, resolverPlan);
     }
 
 
