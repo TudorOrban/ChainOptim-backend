@@ -65,7 +65,7 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
 
         AllocationPlan allocationPlan = resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
 
-        resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocationDeficit());
+        resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocationDeficit(), factory.getLocation());
 
         return allocationPlan;
     }
