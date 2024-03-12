@@ -7,10 +7,12 @@ import org.chainoptim.features.evaluation.production.resourceallocation.model.Al
 import org.chainoptim.features.evaluation.production.resourceallocation.service.ResourceAllocatorService;
 import org.chainoptim.features.evaluation.production.connection.service.FactoryStageConnectionService;
 import org.chainoptim.features.evaluation.production.graph.service.FactoryGraphService;
+import org.chainoptim.features.evaluation.production.resourceallocation.service.ResourceSeekerService;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.factory.service.FactoryInventoryService;
 import org.chainoptim.features.factory.service.FactoryService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
     private final FactoryStageConnectionService factoryStageConnectionService;
     private final FactoryGraphService factoryGraphService;
     private final ResourceAllocatorService resourceAllocatorService;
+    private final ResourceSeekerService resourceSeekerService;
 
     @Autowired
     public FactoryGraphEvaluationServiceImpl(
@@ -33,12 +36,14 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
             FactoryInventoryService factoryInventoryService,
             FactoryStageConnectionService factoryStageConnectionService,
             FactoryGraphService factoryGraphService,
-            ResourceAllocatorService resourceAllocatorService) {
+            ResourceAllocatorService resourceAllocatorService,
+            ResourceSeekerService resourceSeekerService) {
         this.factoryService = factoryService;
         this.factoryInventoryService = factoryInventoryService;
         this.factoryStageConnectionService = factoryStageConnectionService;
         this.factoryGraphService = factoryGraphService;
         this.resourceAllocatorService = resourceAllocatorService;
+        this.resourceSeekerService = resourceSeekerService;
     }
 
     public AllocationPlan evaluateFactory(Integer factoryId, Float duration) {
@@ -58,7 +63,11 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
         // Sort by priority
         factoryGraphService.sortFactoryGraphNodesByPriority(factoryGraph);
 
-        return resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
+        AllocationPlan allocationPlan = resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
+
+        resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocationDeficit(), factory.getLocation());
+
+        return allocationPlan;
     }
 
 

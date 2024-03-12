@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /*
  * Service responsible for evaluating factory status, including
  * necessary component quantities vs inventory level, evaluation report, solutions
- * Work in progress
+ * Will be refactored soon to use the new graph system
  *
  */
 @Service

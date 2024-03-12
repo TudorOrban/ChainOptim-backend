@@ -99,3 +99,12 @@ INSERT INTO factory_stages (stage_id, factory_id, capacity, duration, minimum_de
 VALUES (8, 3, 20, 12, 0.9, 0.9, 2);
 
 UPDATE `chain_optimizer_schema`.`factory_stages` SET `priority` = '0' WHERE (`id` = '3');
+UPDATE `chain_optimizer_schema`.`factory_inventory_items` SET `component_id` = '3' WHERE (`id` = '4');
+UPDATE `chain_optimizer_schema`.`factory_inventory_items` SET `component_id` = '4', `quantity` = '91' WHERE (`id` = '5');
+
+INSERT INTO warehouse_inventory_items (warehouse_id, component_id, quantity, minimum_required_quantity)
+VALUES (6, 1, 341, 240);
+
+INSERT INTO warehouse_inventory_items (warehouse_id, component_id, quantity, minimum_required_quantity)
+VALUES (6, 4, 30, 240);
+
