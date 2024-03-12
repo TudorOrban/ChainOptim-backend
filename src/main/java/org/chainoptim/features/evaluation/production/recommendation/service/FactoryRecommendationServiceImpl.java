@@ -4,7 +4,7 @@ import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
 import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
 import org.chainoptim.features.evaluation.production.recommendation.model.FactoryRecommendationReport;
 import org.chainoptim.features.evaluation.production.connection.service.FactoryStageConnectionService;
-import org.chainoptim.features.evaluation.production.graph.service.FactoryGraphService;
+import org.chainoptim.features.evaluation.production.graph.service.FactoryPipelineService;
 import org.chainoptim.features.factory.model.*;
 import org.chainoptim.features.factory.service.FactoryInventoryService;
 import org.chainoptim.features.factory.service.FactoryService;
@@ -27,18 +27,18 @@ public class FactoryRecommendationServiceImpl implements FactoryRecommendationSe
 
     private final FactoryService factoryService;
     private final FactoryInventoryService factoryInventoryService;
-    private final FactoryGraphService factoryGraphService;
+    private final FactoryPipelineService factoryPipelineService;
     private final FactoryStageConnectionService factoryStageConnectionService;
 
     public FactoryRecommendationServiceImpl(
             FactoryService factoryService,
             FactoryInventoryService factoryInventoryService,
-            FactoryGraphService factoryGraphService,
+            FactoryPipelineService factoryPipelineService,
             FactoryStageConnectionService factoryStageConnectionService
     ) {
         this.factoryService = factoryService;
         this.factoryInventoryService = factoryInventoryService;
-        this.factoryGraphService = factoryGraphService;
+        this.factoryPipelineService = factoryPipelineService;
         this.factoryStageConnectionService = factoryStageConnectionService;
     }
 
@@ -52,7 +52,7 @@ public class FactoryRecommendationServiceImpl implements FactoryRecommendationSe
     public FactoryGraph getFactoryPipelineGraph(Integer factoryId) {
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
         List<FactoryStageConnection> connections = factoryStageConnectionService.getConnectionsByFactoryId(factoryId);
-        return factoryGraphService.getStageGraph(factory, connections);
+        return factoryPipelineService.getStageGraph(factory, connections);
     }
 
     public FactoryRecommendationReport evaluateFactoryStatus(Factory factory, List<FactoryInventoryItem> inventory) {

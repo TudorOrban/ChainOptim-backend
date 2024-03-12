@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class FactoryGraphService {
+public class FactoryPipelineService {
 
     public FactoryGraph getStageGraph(Factory factory, List<FactoryStageConnection> connections) {
         FactoryGraph graph = new FactoryGraph();
