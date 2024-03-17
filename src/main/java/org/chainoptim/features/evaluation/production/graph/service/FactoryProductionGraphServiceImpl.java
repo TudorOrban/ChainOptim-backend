@@ -7,6 +7,8 @@ import org.chainoptim.features.evaluation.production.graph.repository.FactoryPro
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FactoryProductionGraphServiceImpl implements FactoryProductionGraphService {
 
@@ -15,6 +17,11 @@ public class FactoryProductionGraphServiceImpl implements FactoryProductionGraph
     @Autowired
     public FactoryProductionGraphServiceImpl(FactoryProductionGraphRepository graphRepository) {
         this.graphRepository = graphRepository;
+    }
+
+
+    public List<FactoryProductionGraph> getProductionGraphByFactoryId(Integer factoryId) {
+        return graphRepository.findProductionGraphByFactoryId(factoryId);
     }
 
     public FactoryGraph createFactoryGraph(FactoryGraph factoryGraph, Integer factoryId) {

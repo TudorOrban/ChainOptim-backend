@@ -44,3 +44,5 @@ ADD FOREIGN KEY (factory_id) REFERENCES factories(id);
 
 INSERT INTO factory_production_graphs (factory_id, factory_graph)
 VALUES (3, '{}');
+
+DELETE FROM factory_production_graphs WHERE id = 1;

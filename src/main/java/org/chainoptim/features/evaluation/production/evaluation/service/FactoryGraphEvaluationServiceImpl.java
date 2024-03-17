@@ -4,6 +4,8 @@ import org.chainoptim.features.evaluation.production.evaluation.model.TemporaryE
 import org.chainoptim.features.evaluation.production.graph.model.FactoryGraph;
 import org.chainoptim.features.evaluation.production.graph.model.Node;
 import org.chainoptim.features.evaluation.production.connection.model.FactoryStageConnection;
+import org.chainoptim.features.evaluation.production.graph.service.FactoryProductionGraphService;
+import org.chainoptim.features.evaluation.production.graph.service.FactoryProductionGraphServiceImpl;
 import org.chainoptim.features.evaluation.production.recommendation.service.FactoryResolutionRecommendationService;
 import org.chainoptim.features.evaluation.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.evaluation.production.resourceallocation.model.DeficitResolverPlan;
@@ -42,6 +44,7 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
     private final ResourceSeekerService resourceSeekerService;
     private final ResolutionEvaluationService resolutionEvaluationService;
     private final FactoryResolutionRecommendationService factoryResolutionRecommendationService;
+    private final FactoryProductionGraphService factoryProductionGraphService;
 
     @Autowired
     public FactoryGraphEvaluationServiceImpl(
@@ -52,7 +55,8 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
             ResourceAllocatorService resourceAllocatorService,
             ResourceSeekerService resourceSeekerService,
             ResolutionEvaluationService resolutionEvaluationService,
-            FactoryResolutionRecommendationService factoryResolutionRecommendationService) {
+            FactoryResolutionRecommendationService factoryResolutionRecommendationService,
+            FactoryProductionGraphService factoryProductionGraphService) {
         this.factoryService = factoryService;
         this.factoryInventoryService = factoryInventoryService;
         this.factoryStageConnectionService = factoryStageConnectionService;
@@ -61,6 +65,7 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
         this.resourceSeekerService = resourceSeekerService;
         this.resolutionEvaluationService = resolutionEvaluationService;
         this.factoryResolutionRecommendationService = factoryResolutionRecommendationService;
+        this.factoryProductionGraphService = factoryProductionGraphService;
     }
 
     public TemporaryEvaluationType evaluateFactory(Integer factoryId, Float duration) {
@@ -77,14 +82,17 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
         // Get data into FactoryGraph
         FactoryGraph factoryGraph = factoryPipelineService.getStageGraph(factory, connections);
 
+        // Save graph
+        factoryProductionGraphService.createFactoryGraph(factoryGraph, factoryId);
+
         // Sort by priority
         factoryPipelineService.sortFactoryGraphNodesByPriority(factoryGraph);
 
         // Plan allocation
-        AllocationPlan allocationPlan = resourceAllocatorService.allocateResources(factoryGraph, inventoryMap, duration);
+        AllocationPlan allocationPlan = resourceAllocatorService.allocateResourcesFromInventory(factoryGraph, inventoryMap, duration);
 
         // Identify deficit resolutions
-        DeficitResolverPlan resolverPlan = resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocationDeficit(), factory.getLocation());
+        DeficitResolverPlan resolverPlan = resourceSeekerService.seekResources(factory.getOrganizationId(), allocationPlan.getAllocations(), factory.getLocation());
 
         // Evaluate plans
         ResolverPlanEvaluation planEvaluation = resolutionEvaluationService.evaluateResolverPlan(resolverPlan);
@@ -108,6 +116,7 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
                 .collect(Collectors.toMap(item -> item.getComponent().getId(), item -> item));
 
         FactoryGraph factoryGraph = factoryPipelineService.getStageGraph(factory, connections);
+
 
         // Split graph into connected components
         List<FactoryGraph> independentPipelines = factoryPipelineService.splitIntoIndependentPipelines(factoryGraph);
@@ -136,6 +145,6 @@ public class FactoryGraphEvaluationServiceImpl implements FactoryGraphEvaluation
     }
 
     public void analyzeIndepedentStage(Node node, Map<Integer, Float> inventoryMap) {
-        FactoryInventoryItem f = new FactoryInventoryItem();
+
     }
 }

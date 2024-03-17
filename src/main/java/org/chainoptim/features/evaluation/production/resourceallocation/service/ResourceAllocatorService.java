@@ -7,7 +7,7 @@ import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import java.util.Map;
 
 public interface ResourceAllocatorService {
-    AllocationPlan allocateResources(FactoryGraph factoryGraph,
+    AllocationPlan allocateResourcesFromInventory(FactoryGraph factoryGraph,
                                      Map<Integer, FactoryInventoryItem> inventoryMap,
                                      Float duration);
 }

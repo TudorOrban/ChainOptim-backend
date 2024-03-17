@@ -50,6 +50,7 @@ public class FactoryProductionGraph {
             try {
                 this.factoryGraph = mapper.readValue(this.factoryGraphJson, FactoryGraph.class);
             } catch (JsonProcessingException e) {
+                System.out.println("Failed to deserialize factoryGraphJson: " + factoryGraphJson + "Error: " + e);
                 throw new ValidationException("Invalid Factory Graph data");
             }
         }
