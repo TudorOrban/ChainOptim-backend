@@ -8,5 +8,5 @@ public class Node {
     Float numberOfStepsCapacity;
     Float perDuration;
     Integer priority;
-
+    Float allocationCapacityRatio;
 }

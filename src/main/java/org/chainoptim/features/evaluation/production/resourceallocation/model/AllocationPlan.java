@@ -13,7 +13,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class AllocationPlan {
 
-    private Map<Integer, FactoryInventoryItem> inventoryBalance;
+    private FactoryGraph factoryGraph;
+
+    private Map<Integer, FactoryInventoryItem> inventoryBalance; // Key: inventoryItemId, Value: corresponding item after allocation
 
     private List<ResourceAllocation> allocations;
 }

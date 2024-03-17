@@ -29,6 +29,8 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             float durationRatio = duration / perDuration;
             float totalNumberOfStepsCapacity = numberOfStepsCapacity * durationRatio;
 
+            List<Float> allocatedRequestedRatios = new ArrayList<>();
+
             // Allocate resources for each stage input
             for (SmallStageInput stageInput : node.getSmallStage().getStageInputs()) {
                 Float neededQuantity = stageInput.getQuantityPerStage() * totalNumberOfStepsCapacity;
@@ -55,6 +57,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                 // Compute and set allocated quantity
                 Float allocatedQuantity = isSurplus ? neededQuantity : componentItem.getQuantity();
                 stageInput.setAllocatedQuantity(allocatedQuantity);
+                stageInput.setRequestedQuantity(neededQuantity);
 
                 // Update the inventory balance
                 Float newQuantity = isSurplus ? surplus : 0.0f;
@@ -65,7 +68,13 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                 allocation.setAllocatorInventoryItemId(componentItem.getId());
                 allocation.setAllocatedAmount(allocatedQuantity);
                 allocations.add(allocation);
+
+                allocatedRequestedRatios.add(allocatedQuantity / neededQuantity);
             }
+
+            // Calculate how many steps can be executed
+            float minimumRatio =  allocatedRequestedRatios.stream().min(Float::compare).orElse(0.0f);
+            node.setAllocationCapacityRatio(minimumRatio);
 
             // Retrieve the outgoing resources
             // Calculate total input quantities based on allocated quantities
@@ -86,7 +95,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             }
         }
 
-        return new AllocationPlan(inventoryBalance, allocations);
+        return new AllocationPlan(factoryGraph, inventoryBalance, allocations);
     }
 
     private void computeExpectedStageOutputs(Node node, float durationRatio) {

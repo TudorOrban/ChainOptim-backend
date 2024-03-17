@@ -8,4 +8,5 @@ public class SmallStageInput {
     Integer componentId;
     Float quantityPerStage;
     Float allocatedQuantity;
+    Float requestedQuantity;
 }
