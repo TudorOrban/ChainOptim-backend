@@ -40,11 +40,9 @@ public class FactoryResolutionRecommendationServiceImpl implements FactoryResolu
         for (ResolutionEvaluation evaluation : evaluations) {
             neededQuantity -= evaluation.getResolution().getSuppliedQuantity();
 
-            if (neededQuantity > 0) {
-                recommendedEvaluations.add(evaluation);
-            } else {
-                break;
-            }
+            recommendedEvaluations.add(evaluation);
+
+            if (neededQuantity <= 0) break;
         }
 
         return recommendedEvaluations;

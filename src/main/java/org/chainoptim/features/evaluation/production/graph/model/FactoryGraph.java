@@ -61,6 +61,7 @@ public class FactoryGraph {
 
             // Set stage
             stage.setId(factoryStage.getId());
+            stage.setStageName(factoryStage.getStage().getName());
             stage.setStageInputs(stageInputs);
             stage.setStageOutputs(stageOutputs);
 

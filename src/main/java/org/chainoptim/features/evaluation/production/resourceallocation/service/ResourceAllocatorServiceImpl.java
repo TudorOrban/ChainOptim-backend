@@ -11,11 +11,12 @@ import java.util.*;
 @Service
 public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
 
-    public AllocationPlan allocateResources(FactoryGraph factoryGraph,
+
+    public AllocationPlan allocateResourcesFromInventory(FactoryGraph factoryGraph,
                                             Map<Integer, FactoryInventoryItem> inventoryMap,
                                             Float duration) {
         Map<Integer, FactoryInventoryItem> inventoryBalance = new HashMap<>(inventoryMap);
-        List<ResourceAllocation> allocationDeficit = new ArrayList<>();
+        List<ResourceAllocation> allocations = new ArrayList<>();
 
         // Allocate resources for each stage by priority
         for (Map.Entry<Integer, Node> nodeEntry : factoryGraph.getNodes().entrySet()) {
@@ -43,7 +44,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                 if (componentItem == null) {
                     allocation.setAllocatorInventoryItemId(-1);
                     allocation.setAllocatedAmount(0.0f);
-                    allocationDeficit.add(allocation);
+                    allocations.add(allocation);
                     continue; // Skip further processing for this stage input
                 }
 
@@ -60,11 +61,10 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                 componentItem.setQuantity(newQuantity);
                 inventoryBalance.put(stageInput.getComponentId(), componentItem);
 
-                if (!isSurplus) {
-                    allocation.setAllocatorInventoryItemId(componentItem.getId());
-                    allocation.setAllocatedAmount(componentItem.getQuantity());
-                    allocationDeficit.add(allocation);
-                }
+                // Add allocation
+                allocation.setAllocatorInventoryItemId(componentItem.getId());
+                allocation.setAllocatedAmount(allocatedQuantity);
+                allocations.add(allocation);
             }
 
             // Retrieve the outgoing resources
@@ -86,7 +86,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             }
         }
 
-        return new AllocationPlan(factoryGraph, inventoryBalance, allocationDeficit);
+        return new AllocationPlan(inventoryBalance, allocations);
     }
 
     private void computeExpectedStageOutputs(Node node, float durationRatio) {
