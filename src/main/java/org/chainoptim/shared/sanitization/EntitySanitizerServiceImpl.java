@@ -1,5 +1,8 @@
 package org.chainoptim.shared.sanitization;
 
+import org.chainoptim.features.client.dto.CreateClientDTO;
+import org.chainoptim.features.client.dto.CreateClientOrderDTO;
+import org.chainoptim.features.client.dto.UpdateClientDTO;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
@@ -91,6 +94,23 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
     }
 
     public CreateSupplierOrderDTO sanitizeCreateSupplierOrderDTO(CreateSupplierOrderDTO orderDTO) {
+        return orderDTO;
+    }
+
+    // Clients
+    public CreateClientDTO sanitizeCreateClientDTO(CreateClientDTO clientDTO) {
+        clientDTO.setName(sanitizationService.sanitize(clientDTO.getName()));
+
+        return clientDTO;
+    }
+
+    public UpdateClientDTO sanitizeUpdateClientDTO(UpdateClientDTO clientDTO) {
+        clientDTO.setName(sanitizationService.sanitize(clientDTO.getName()));
+
+        return clientDTO;
+    }
+
+    public CreateClientOrderDTO sanitizeCreateClientOrderDTO(CreateClientOrderDTO orderDTO) {
         return orderDTO;
     }
 

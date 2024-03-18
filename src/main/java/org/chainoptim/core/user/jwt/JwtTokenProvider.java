@@ -3,6 +3,7 @@ package org.chainoptim.core.user.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 @Component
 public class JwtTokenProvider {
@@ -18,6 +20,8 @@ public class JwtTokenProvider {
     private String JWT_SECRET;
 
     private static final long JWT_EXPIRATION = 604800000L; // 1 week
+
+    private static final Logger logger = Logger.getLogger(JwtTokenProvider.class.getName());
 
     public String generateToken(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -35,6 +39,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromJWT(String token) {
+        logger.info("Token: " + token);
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(JWT_SECRET)
                 .build()
@@ -59,8 +64,8 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(JWT_SECRET).build().parseClaimsJws(authToken);
             return true;
         } catch (Exception ex) {
-
+            logger.info("Invalid JWT token: " + ex);
+            return false;
         }
-        return false;
     }
 }

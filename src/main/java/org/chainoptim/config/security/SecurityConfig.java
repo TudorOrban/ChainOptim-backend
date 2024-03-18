@@ -46,12 +46,18 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/organization-invites/**").permitAll()
                         .requestMatchers("/api/v1/organization-requests/**").permitAll()
                         .requestMatchers("/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/stages/**").permitAll()
                         .requestMatchers("/api/v1/raw-materials/**").permitAll()
                         .requestMatchers("/api/v1/components/**").permitAll()
                         .requestMatchers("/api/v1/factories/**").permitAll()
                         .requestMatchers("/api/v1/warehouses/**").permitAll()
                         .requestMatchers("/api/v1/suppliers/**").permitAll()
                         .requestMatchers("/api/v1/supplier-orders/**").permitAll()
+                        .requestMatchers("/api/v1/suppliers/shipments/**").permitAll()
+                        .requestMatchers("/api/v1/clients/**").permitAll()
+                        .requestMatchers("/api/v1/client-orders/**").permitAll()
+                        .requestMatchers("/api/v1/clients/shipments/**").permitAll()
+                        .requestMatchers("/api/v1/graphs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -68,7 +74,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
+    public AuthenticationManager authenticationManagerBean() {
         return new ProviderManager(Collections.singletonList(daoAuthenticationProvider()));
     }
 

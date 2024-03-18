@@ -34,6 +34,9 @@ public class ClientOrder {
     @Column(name = "product_id", nullable = false)
     private Integer productId;
 
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
+
     @Column(name = "quantity")
     private Float quantity;
 
