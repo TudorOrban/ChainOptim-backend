@@ -1,0 +1,38 @@
+# MySQL properties
+spring.datasource.url=jdbc:mysql://localhost:3306/chain_optimizer_schema?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+spring.datasource.username=exampleuser
+spring.datasource.password=examplepassword
+
+# Hibernate properties
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+spring.jpa.properties.hibernate.format_sql=true
+
+# Enabling HikariCP connection pooling
+spring.datasource.hikari.maximum-pool-size=5
+spring.datasource.hikari.minimum-idle=5
+spring.datasource.hikari.connection-timeout=20000
+spring.datasource.hikari.idle-timeout=300000
+
+# Logging
+logging.level.org.springframework.security=DEBUG
+logging.level.org.chainoptim=DEBUG
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+logging.level.org.hibernate.type.descriptor.sql=TRACE
+
+# Kafka Configuration
+spring.kafka.producer.bootstrap-servers=172.29.201.153:9092
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+
+spring.kafka.consumer.bootstrap-servers=172.29.201.153:9092
+spring.kafka.consumer.group-id=supplier-order-consumer
+spring.kafka.consumer.auto-offset-reset=earliest
+spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.JsonDeserializer
+spring.kafka.consumer.properties.spring.json.trusted.packages=*
+
+# JWT secret
+jwt.secret=examplesecret
