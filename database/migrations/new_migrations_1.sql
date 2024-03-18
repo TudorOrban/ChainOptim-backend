@@ -46,3 +46,51 @@ INSERT INTO factory_production_graphs (factory_id, factory_graph)
 VALUES (3, '{}');
 
 DELETE FROM factory_production_graphs WHERE id = 1;
+
+CREATE TABLE clients (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    organization_id INT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    location_id INT,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id),
+    FOREIGN KEY (location_id) REFERENCES locations(id)
+);
+
+CREATE TABLE client_orders (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    client_id INT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    product_id INT NOT NULL,
+    quantity DECIMAL,
+    order_date TIMESTAMP,
+    estimated_delivery_date TIMESTAMP,
+    delivery_date TIMESTAMP,
+    status ENUM('Initiated', 'Negotiated', 'Placed', 'Delivered'),
+    FOREIGN KEY (client_id) REFERENCES clients(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+
+CREATE TABLE client_shipments (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    client_order_id INT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    quantity DECIMAL,
+    shipment_starting_date TIMESTAMP,
+    estimated_arrival_date TIMESTAMP,
+    arrival_date TIMESTAMP,
+    transporter_type VARCHAR(255),
+    status VARCHAR(255),
+    source_location_id INT,
+    destination_location_id INT,
+    current_location_latitude DECIMAL,
+    current_location_longitude DECIMAL,
+    FOREIGN KEY (client_order_id) REFERENCES client_orders(id),
+    FOREIGN KEY (source_location_id) REFERENCES locations(id),
+    FOREIGN KEY (destination_location_id) REFERENCES locations(id)
+);
+

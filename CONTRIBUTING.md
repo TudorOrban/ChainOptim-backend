@@ -7,7 +7,8 @@ At ChainOptim we believe in the value of the open-source, community-driven appro
 4. Submit a pull request (PR) to the main repository once you're ready to share your contributions. Describe the changes you've made and any additional context that might help the review process.
 
 ## Get started developing
-Follow the steps underline in the [README.md](https://github.com/TudorOrban/ChainOptim-backend/blob/main/README.md). Additionally, if you wish to work specifically on the Typescript code for the Production and Factory Graph, you will need to install Node and run `npm install` from the project root. Then run `npm run dev` for any change you make, so that it gets build into the bundle.js. 
+Follow the steps underline in the [README.md](https://github.com/TudorOrban/ChainOptim-backend/blob/main/README.md).
+
 ## Style guides
 We aim to maintain a clean and consistent codebase. Detailed style guides will be added soon. In the meantime, please adhere to the following general principles:
 

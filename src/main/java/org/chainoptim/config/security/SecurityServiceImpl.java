@@ -1,6 +1,7 @@
 package org.chainoptim.config.security;
 
 import org.chainoptim.core.user.model.UserDetailsImpl;
+import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
@@ -21,6 +22,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final FactoryRepository factoryRepository;
     private final WarehouseRepository warehouseRepository;
     private final SupplierRepository supplierRepository;
+    private final ClientRepository clientRepository;
 
     @Autowired
     public SecurityServiceImpl(
@@ -28,13 +30,15 @@ public class SecurityServiceImpl implements SecurityService {
             StageRepository stageRepository,
             FactoryRepository factoryRepository,
             WarehouseRepository warehouseRepository,
-            SupplierRepository supplierRepository
+            SupplierRepository supplierRepository,
+            ClientRepository clientRepository
     ) {
         this.productRepository = productRepository;
         this.stageRepository = stageRepository;
         this.factoryRepository = factoryRepository;
         this.warehouseRepository = warehouseRepository;
         this.supplierRepository = supplierRepository;
+        this.clientRepository = clientRepository;
     }
 
     public boolean canAccessEntity(Long entityId, String entityType) {
@@ -44,6 +48,7 @@ public class SecurityServiceImpl implements SecurityService {
             case "Warehouse" -> warehouseRepository.findOrganizationIdById(entityId);
             case "Supplier" -> supplierRepository.findOrganizationIdById(entityId);
             case "Stage" -> stageRepository.findOrganizationIdById(entityId);
+            case "Client" -> clientRepository.findOrganizationIdById(entityId);
             default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
         };
 
