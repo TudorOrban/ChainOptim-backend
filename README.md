@@ -24,9 +24,9 @@ ChainOptim allows registration of suppliers and clients, tracking orders and shi
 ### How to use
 ChainOptim is not yet deployed. To use it, you will have to set up locally the database, backend server and chosen frontend.
 1. Download the [database schema](https://github.com/SorinPopteanu/ChainOptim-DesktopApp/blob/main/database/schema/schema.sql) and import it into MySQL. Create a user and an organization for later login.
-2. Ensure you have JDK 21 installed and fetch the [Spring Boot backend](https://github.com/TudorOrban/ChainOptim-backend) repository.
+2. Ensure you have JDK 21 installed and fetch this repository.
 3. Create an application.properties from the [application.properties.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/src/main/resources/application.properties.example), replacing the database user and password appropriately, and the JWT secret as needed. Then run the project from your IDE of choice.
-4. Fetch this repository, run it and log in.
+4. Fetch the [JavaFX desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp), run it and log in. Alternatively, fetch the [Angular web frontend](https://github.com/TudorOrban/ChainOptim-frontend), run `ng serve` and log in.
 
 ### Status
 In mid stages of development.
