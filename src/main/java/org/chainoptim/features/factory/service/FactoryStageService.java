@@ -5,5 +5,5 @@ import org.chainoptim.features.factory.model.FactoryStage;
 
 public interface FactoryStageService {
 
-    FactoryStage createFactoryStage(CreateFactoryStageDTO factoryDTO);
+    FactoryStage createFactoryStage(CreateFactoryStageDTO factoryDTO, Boolean refreshGraph);
 }

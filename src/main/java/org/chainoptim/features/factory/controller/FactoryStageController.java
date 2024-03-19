@@ -8,10 +8,7 @@ import org.chainoptim.features.factory.service.FactoryStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/factory-stages")
@@ -29,9 +26,9 @@ public class FactoryStageController {
 
     // Create
     @PreAuthorize("@securityService.canAccessEntity(#stageDTO.getFactoryId(), 'Factory')")
-    @PostMapping("/create")
-    public ResponseEntity<FactoryStage> createFactoryStage(@RequestBody CreateFactoryStageDTO stageDTO) {
-        FactoryStage stage = factoryStageService.createFactoryStage(stageDTO);
+    @PostMapping("/create/{refreshGraph}")
+    public ResponseEntity<FactoryStage> createFactoryStage(@RequestBody CreateFactoryStageDTO stageDTO, @PathVariable("refreshGraph") Boolean refreshGraph) {
+        FactoryStage stage = factoryStageService.createFactoryStage(stageDTO, refreshGraph);
         return ResponseEntity.ok(stage);
     }
 }

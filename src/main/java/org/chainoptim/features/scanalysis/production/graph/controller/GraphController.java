@@ -1,5 +1,6 @@
 package org.chainoptim.features.scanalysis.production.graph.controller;
 
+import org.chainoptim.features.scanalysis.production.graph.model.FactoryGraph;
 import org.chainoptim.features.scanalysis.production.graph.model.FactoryProductionGraph;
 import org.chainoptim.features.scanalysis.production.graph.service.FactoryPipelineService;
 import org.chainoptim.features.scanalysis.production.graph.service.FactoryProductionGraphService;
@@ -20,7 +21,6 @@ public class GraphController {
 
     private final FactoryPipelineService factoryPipelineService;
     private final FactoryProductionGraphService graphService;
-    private static final Logger logger = LoggerFactory.getLogger(GraphController.class);
 
     @Autowired
     public GraphController(FactoryPipelineService factoryPipelineService, FactoryProductionGraphService graphService) {
@@ -28,11 +28,18 @@ public class GraphController {
         this.graphService = graphService;
     }
 
+    // TODO: Secure endpoint
     @GetMapping("/{factoryId}")
     public ResponseEntity<List<FactoryProductionGraph>> getFactoryGraph(@PathVariable("factoryId") Integer factoryId) {
         List<FactoryProductionGraph> graphs = graphService.getProductionGraphByFactoryId(factoryId);
-        logger.info("Graph: {}", graphs);
         return ResponseEntity.ok(graphs);
+    }
+
+    // TODO: Secure endpoint
+    @GetMapping("/update/{factoryId}/refresh")
+    public ResponseEntity<FactoryProductionGraph> updateFactoryGraph(@PathVariable("factoryId") Integer factoryId) {
+        FactoryProductionGraph graph = graphService.updateFactoryGraph(factoryId);
+        return ResponseEntity.ok(graph);
     }
 
 //    @GetMapping("/{factoryId}")

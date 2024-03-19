@@ -1,5 +1,6 @@
 package org.chainoptim.features.factory.service;
 
+import jakarta.transaction.Transactional;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
