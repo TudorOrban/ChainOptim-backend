@@ -2,8 +2,10 @@ package org.chainoptim.features.factory.dto;
 
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
+import org.chainoptim.features.factory.model.FactoryStage;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.productpipeline.model.Component;
+import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 public class FactoryDTOMapper {
@@ -50,5 +52,19 @@ public class FactoryDTOMapper {
         return item;
     }
 
+    public static FactoryStage convertCreateFactoryStageDTOToFactoryStage(CreateFactoryStageDTO stageDTO) {
+        FactoryStage factoryStage = new FactoryStage();
+        factoryStage.setCapacity(stageDTO.getCapacity());
+        factoryStage.setDuration(stageDTO.getDuration());
+        factoryStage.setPriority(stageDTO.getPriority());
+        factoryStage.setMinimumRequiredCapacity(stageDTO.getMinimumRequiredCapacity());
+        Factory factory = new Factory();
+        factory.setId(stageDTO.getFactoryId());
+        factoryStage.setFactory(factory);
+        Stage stage = new Stage();
+        stage.setId(stageDTO.getStageId());
+        factoryStage.setStage(stage);
 
+        return factoryStage;
+    }
 }

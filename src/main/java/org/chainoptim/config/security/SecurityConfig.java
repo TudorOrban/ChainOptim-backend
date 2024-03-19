@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/raw-materials/**").permitAll()
                         .requestMatchers("/api/v1/components/**").permitAll()
                         .requestMatchers("/api/v1/factories/**").permitAll()
+                        .requestMatchers("/api/v1/factory-stages/**").permitAll()
                         .requestMatchers("/api/v1/warehouses/**").permitAll()
                         .requestMatchers("/api/v1/suppliers/**").permitAll()
                         .requestMatchers("/api/v1/supplier-orders/**").permitAll()
