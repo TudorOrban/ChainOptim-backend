@@ -1,15 +1,12 @@
 package org.chainoptim.features.warehouse.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.chainoptim.features.supply.model.SupplierOrder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter

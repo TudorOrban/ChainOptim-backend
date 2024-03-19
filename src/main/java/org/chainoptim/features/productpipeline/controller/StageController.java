@@ -1,7 +1,9 @@
 package org.chainoptim.features.productpipeline.controller;
 
 import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
+import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.service.StageService;
@@ -26,6 +28,16 @@ public class StageController {
     }
 
     // Fetch
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @GetMapping("/organization/{organizationId}/small")
+    public ResponseEntity<List<StagesSearchDTO>> getStagesByOrganizationIdSmall(@PathVariable Integer organizationId) {
+        List<StagesSearchDTO> stages = stageService.getStagesByOrganizationIdSmall(organizationId);
+        if (stages.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(stages);
+    }
+
     @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\")")
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<Stage>> getStagesByProductId(@PathVariable Integer productId) {

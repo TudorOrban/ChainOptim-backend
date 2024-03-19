@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public interface FactoryService {
     // Fetch
+    List<FactoriesSearchDTO> getFactoriesByOrganizationIdSmall(Integer organizationId);
     List<Factory> getFactoriesByOrganizationId(Integer organizationId);
     PaginatedResults<FactoriesSearchDTO> getFactoriesByOrganizationIdAdvanced(
             Integer organizationId,

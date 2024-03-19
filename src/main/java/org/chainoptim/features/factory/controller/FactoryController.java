@@ -32,6 +32,16 @@ public class FactoryController {
 
     // Fetch
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @GetMapping("/organization/{organizationId}/small")
+    public ResponseEntity<List<FactoriesSearchDTO>> getFactoriesByOrganizationIdSmall(@PathVariable Integer organizationId) {
+        List<FactoriesSearchDTO> factories = factoryService.getFactoriesByOrganizationIdSmall(organizationId);
+        if (factories.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(factories);
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Factory>> getFactoriesByOrganizationId(@PathVariable Integer organizationId) {
         List<Factory> factories = factoryService.getFactoriesByOrganizationId(organizationId);

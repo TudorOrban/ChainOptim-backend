@@ -6,6 +6,7 @@ import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
 import org.chainoptim.features.productpipeline.dto.StageDTOMapper;
+import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
@@ -26,6 +27,11 @@ public class StageServiceImpl implements StageService {
     public StageServiceImpl(StageRepository stageRepository, EntitySanitizerService entitySanitizerService) {
         this.stageRepository = stageRepository;
         this.entitySanitizerService = entitySanitizerService;
+    }
+
+    // Fetch
+    public List<StagesSearchDTO> getStagesByOrganizationIdSmall(Integer organizationId) {
+        return stageRepository.findByOrganizationIdSmall(organizationId);
     }
 
     public Stage getStageById(Integer stageId) {

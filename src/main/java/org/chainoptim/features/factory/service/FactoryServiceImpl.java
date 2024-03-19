@@ -33,6 +33,10 @@ public class FactoryServiceImpl implements FactoryService {
 
 
     // Fetch
+    public List<FactoriesSearchDTO> getFactoriesByOrganizationIdSmall(Integer organizationId) {
+        return factoryRepository.findByOrganizationIdSmall(organizationId);
+    }
+
     public List<Factory> getFactoriesByOrganizationId(Integer organizationId) {
         return factoryRepository.findByOrganizationId(organizationId);
     }
