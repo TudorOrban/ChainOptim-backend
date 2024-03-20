@@ -1,5 +1,6 @@
 package org.chainoptim.features.factory.repository;
 
+import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.scanalysis.production.connection.model.FactoryStageConnection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,9 @@ import java.util.Optional;
 public interface FactoryRepository extends JpaRepository<Factory, Integer>, FactoriesSearchRepository {
 
     List<Factory> findByOrganizationId(Integer organizationId);
+
+    @Query("SELECT new org.chainoptim.features.factory.dto.FactoriesSearchDTO(f.id, f.name, f.createdAt, f.updatedAt, f.location) FROM Factory f WHERE f.organizationId = :organizationId")
+    List<FactoriesSearchDTO> findByOrganizationIdSmall(Integer organizationId);
 
     @Query("SELECT f.organizationId FROM Factory f WHERE f.id = :factoryId")
     Optional<Integer> findOrganizationIdById(@Param("factoryId") Long factoryId);

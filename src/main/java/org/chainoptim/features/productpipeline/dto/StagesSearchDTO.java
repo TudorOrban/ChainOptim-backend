@@ -1,10 +1,9 @@
-package org.chainoptim.features.factory.dto;
+package org.chainoptim.features.productpipeline.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 import java.time.LocalDateTime;
 
@@ -12,10 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FactoriesSearchDTO {
+public class StagesSearchDTO {
     private Integer id;
     private String name;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private Location location;
 }

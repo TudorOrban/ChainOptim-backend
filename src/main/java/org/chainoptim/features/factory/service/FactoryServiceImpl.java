@@ -1,5 +1,6 @@
 package org.chainoptim.features.factory.service;
 
+import jakarta.transaction.Transactional;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
@@ -33,6 +34,10 @@ public class FactoryServiceImpl implements FactoryService {
 
 
     // Fetch
+    public List<FactoriesSearchDTO> getFactoriesByOrganizationIdSmall(Integer organizationId) {
+        return factoryRepository.findByOrganizationIdSmall(organizationId);
+    }
+
     public List<Factory> getFactoriesByOrganizationId(Integer organizationId) {
         return factoryRepository.findByOrganizationId(organizationId);
     }
