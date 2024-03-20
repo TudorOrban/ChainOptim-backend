@@ -10,6 +10,7 @@ import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryP
 import org.chainoptim.features.scanalysis.production.factorygraph.repository.FactoryProductionGraphRepository;
 
 import jakarta.transaction.Transactional;
+import org.chainoptim.features.scanalysis.production.productgraph.model.ProductProductionGraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,8 +68,11 @@ public class FactoryProductionGraphServiceImpl implements FactoryProductionGraph
     // Update
     @Transactional
     public FactoryProductionGraph updateFactoryGraph(Integer factoryId) {
-        FactoryProductionGraph productionGraph = graphRepository.findById(factoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Production graph with ID: " + factoryId + " not found."));
+        List<FactoryProductionGraph> productionGraphs = graphRepository.findProductionGraphByFactoryId(factoryId);
+        if (productionGraphs.isEmpty()) {
+            throw new ResourceNotFoundException("Factory graph with ID: " + factoryId + " not found.");
+        }
+        FactoryProductionGraph productionGraph = productionGraphs.getFirst();
 
         // Fetch factory with its stages, stage connections
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);

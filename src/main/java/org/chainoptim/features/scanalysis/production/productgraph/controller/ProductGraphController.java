@@ -35,11 +35,11 @@ public class ProductGraphController {
     }
 
     // TODO: Secure endpoint
-//    @GetMapping("/update/{productId}/refresh")
-//    public ResponseEntity<ProductProductionGraph> updateProductGraph(@PathVariable("productId") Integer productId) {
-//        ProductProductionGraph graph = graphService.updateProductGraph(productId);
-//        return ResponseEntity.ok(graph);
-//    }
+    @GetMapping("/update/{productId}/refresh")
+    public ResponseEntity<ProductProductionGraph> updateProductGraph(@PathVariable("productId") Integer productId) {
+        ProductProductionGraph graph = graphService.updateProductGraph(productId);
+        return ResponseEntity.ok(graph);
+    }
 
 //    @GetMapping("/{productId}")
 //    public ResponseEntity<List<ProductGraph>> getIndependentPipelines(@PathVariable("productId") Integer productId) {

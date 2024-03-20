@@ -11,6 +11,7 @@ import java.util.List;
 public interface ProductService {
     // Fetch
     Product getProductWithStages(Integer productId);
+    List<ProductsSearchDTO> getProductsByOrganizationIdSmall(Integer organizationId);
     List<ProductsSearchDTO> getProductsByOrganizationId(Integer organizationId);
     PaginatedResults<ProductsSearchDTO> getProductsByOrganizationIdAdvanced(
             Integer organizationId,

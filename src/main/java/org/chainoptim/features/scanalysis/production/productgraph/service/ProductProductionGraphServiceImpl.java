@@ -69,8 +69,11 @@ public class ProductProductionGraphServiceImpl implements ProductProductionGraph
     // Update
     @Transactional
     public ProductProductionGraph updateProductGraph(Integer productId) {
-        ProductProductionGraph productionGraph = graphRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Production graph with ID: " + productId + " not found."));
+        List<ProductProductionGraph> productionGraphs = graphRepository.findProductionGraphByProductId(productId);
+        if (productionGraphs.isEmpty()) {
+            throw new ResourceNotFoundException("Production graph with ID: " + productId + " not found.");
+        }
+        ProductProductionGraph productionGraph = productionGraphs.getFirst();
 
         // Fetch product with its stages, stage connections
         Product product = productService.getProductWithStages(productId);
