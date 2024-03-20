@@ -1,16 +1,14 @@
-package org.chainoptim.features.scanalysis.production.graph.service;
+package org.chainoptim.features.scanalysis.production.factorygraph.service;
 
 import jakarta.transaction.Transactional;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.service.FactoryService;
-import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.scanalysis.production.connection.model.FactoryStageConnection;
 import org.chainoptim.features.scanalysis.production.connection.service.FactoryStageConnectionService;
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryGraph;
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryProductionGraph;
-import org.chainoptim.features.scanalysis.production.graph.repository.FactoryProductionGraphRepository;
-import org.hibernate.Hibernate;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.repository.FactoryProductionGraphRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

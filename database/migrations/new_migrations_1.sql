@@ -94,3 +94,56 @@ CREATE TABLE client_shipments (
     FOREIGN KEY (destination_location_id) REFERENCES locations(id)
 );
 
+INSERT INTO clients (name, organization_id, location_id)
+VALUES ("Viva Enterprises", 1, 5);
+
+INSERT INTO client_orders (client_id, product_id, quantity, status)
+VALUES (1, 3,  124, 'Initiated');
+
+INSERT INTO client_shipments (client_order_id, quantity, transporter_type, source_location_id, destination_location_id)
+VALUES (1, 40, 'Cargo Ship', 5, 6);
+
+ALTER TABLE client_orders
+ADD COLUMN organization_id INT NOT NULL;
+
+UPDATE client_orders
+SET organization_id = 1 WHERE id = 1;
+
+ALTER TABLE client_orders
+ADD FOREIGN KEY (organization_id) REFERENCES organizations(id);
+
+INSERT INTO stages (name, organization_id, product_id)
+VALUES ("Another Stage", 1, 6);
+
+INSERT INTO stage_inputs (stage_id, quantity, component_id)
+VALUES (9, 124, 4);
+
+INSERT INTO stage_outputs (stage_id, quantity, component_id)
+VALUES (9, 153, 5);
+
+DELETE FROM factory_stages
+WHERE id > 5;
+
+CREATE TABLE product_production_graphs (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    product_id INT NOT NULL,
+    product_graph JSON,
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+
+CREATE TABLE product_stage_connections (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    product_id INT NOT NULL,
+	outgoing_stage_input_id INT NOT NULL,
+	outgoing_stage_id INT NOT NULL,
+	incoming_stage_output_id INT NOT NULL,
+	incoming_stage_id INT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (outgoing_stage_input_id) REFERENCES stage_inputs(id),
+    FOREIGN KEY (outgoing_stage_id) REFERENCES stages(id),
+    FOREIGN KEY (incoming_stage_output_id) REFERENCES stage_outputs(id),
+    FOREIGN KEY (incoming_stage_id) REFERENCES stages(id)
+);

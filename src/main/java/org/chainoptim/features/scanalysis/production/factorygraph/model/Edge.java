@@ -1,4 +1,4 @@
-package org.chainoptim.features.scanalysis.production.graph.model;
+package org.chainoptim.features.scanalysis.production.factorygraph.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,11 +1,8 @@
-package org.chainoptim.features.scanalysis.production.graph.controller;
+package org.chainoptim.features.scanalysis.production.factorygraph.controller;
 
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryGraph;
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryProductionGraph;
-import org.chainoptim.features.scanalysis.production.graph.service.FactoryPipelineService;
-import org.chainoptim.features.scanalysis.production.graph.service.FactoryProductionGraphService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryPipelineService;
+import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/graphs")
-public class GraphController {
+public class FactoryGraphController {
 
     private final FactoryPipelineService factoryPipelineService;
     private final FactoryProductionGraphService graphService;
 
     @Autowired
-    public GraphController(FactoryPipelineService factoryPipelineService, FactoryProductionGraphService graphService) {
+    public FactoryGraphController(FactoryPipelineService factoryPipelineService, FactoryProductionGraphService graphService) {
         this.factoryPipelineService = factoryPipelineService;
         this.graphService = graphService;
     }

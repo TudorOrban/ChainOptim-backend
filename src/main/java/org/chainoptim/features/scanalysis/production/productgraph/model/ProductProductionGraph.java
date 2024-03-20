@@ -1,4 +1,4 @@
-package org.chainoptim.features.scanalysis.production.graph.model;
+package org.chainoptim.features.scanalysis.production.productgraph.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,16 +16,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "factory_production_graphs")
-public class FactoryProductionGraph {
+@Table(name = "product_production_graphs")
+public class ProductProductionGraph {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
 
-    @Column(name = "factory_id", nullable = false)
-    private Integer factoryId;
+    @Column(name = "product_id", nullable = false)
+    private Integer productId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
@@ -36,34 +36,34 @@ public class FactoryProductionGraph {
     private LocalDateTime updatedAt;
 
     // Manual deserialization and caching of JSON column
-    @Column(name = "factory_graph", columnDefinition = "json")
-    private String factoryGraphJson;
+    @Column(name = "product_graph", columnDefinition = "json")
+    private String productGraphJson;
 
     @Transient // Ignore field
-    private FactoryGraph factoryGraph;
+    private ProductGraph productGraph;
 
-    public FactoryGraph getFactoryGraph() {
-        if (this.factoryGraph == null && this.factoryGraphJson != null) {
+    public ProductGraph getProductGraph() {
+        if (this.productGraph == null && this.productGraphJson != null) {
             // Deserialize when accessed
             ObjectMapper mapper = new ObjectMapper();
             try {
-                this.factoryGraph = mapper.readValue(this.factoryGraphJson, FactoryGraph.class);
+                this.productGraph = mapper.readValue(this.productGraphJson, ProductGraph.class);
             } catch (JsonProcessingException e) {
-                System.out.println("Failed to deserialize factoryGraphJson: " + factoryGraphJson + "Error: " + e);
-                throw new ValidationException("Invalid Factory Graph data");
+                System.out.println("Failed to deserialize productGraphJson: " + productGraphJson + "Error: " + e);
+                throw new ValidationException("Invalid Product Graph data");
             }
         }
-        return this.factoryGraph;
+        return this.productGraph;
     }
 
-    public void setFactoryGraph(FactoryGraph factoryGraph) {
-        this.factoryGraph = factoryGraph;
+    public void setProductGraph(ProductGraph productGraph) {
+        this.productGraph = productGraph;
         // Serialize when setting the object
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.factoryGraphJson = mapper.writeValueAsString(factoryGraph);
+            this.productGraphJson = mapper.writeValueAsString(productGraph);
         } catch (JsonProcessingException e) {
-            throw new ValidationException("Invalid Factory Graph data");
+            throw new ValidationException("Invalid Product Graph data");
         }
     }
 

@@ -67,4 +67,12 @@ public class FactoryDTOMapper {
 
         return factoryStage;
     }
+
+    public static void updateFactoryStageWithUpdateFactoryStageDTO(FactoryStage factoryStage, UpdateFactoryStageDTO stageDTO) {
+        factoryStage.setId(stageDTO.getId());
+        factoryStage.setCapacity(stageDTO.getCapacity());
+        factoryStage.setDuration(stageDTO.getDuration());
+        factoryStage.setPriority(stageDTO.getPriority());
+        factoryStage.setMinimumRequiredCapacity(stageDTO.getMinimumRequiredCapacity());
+    }
 }

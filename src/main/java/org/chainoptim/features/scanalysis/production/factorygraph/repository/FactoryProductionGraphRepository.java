@@ -1,6 +1,6 @@
-package org.chainoptim.features.scanalysis.production.graph.repository;
+package org.chainoptim.features.scanalysis.production.factorygraph.repository;
 
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryProductionGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

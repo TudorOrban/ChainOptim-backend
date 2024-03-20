@@ -1,5 +1,6 @@
-package org.chainoptim.features.scanalysis.production.graph.model;
+package org.chainoptim.features.scanalysis.production.factorygraph.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.chainoptim.features.scanalysis.production.connection.model.FactoryStageConnection;
@@ -12,6 +13,7 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class FactoryGraph {
     private Map<Integer, Node> nodes = new HashMap<>(); // Key: factoryStageId
     private Map<Integer, List<Edge>> adjList = new HashMap<>(); // Key: factoryStageId

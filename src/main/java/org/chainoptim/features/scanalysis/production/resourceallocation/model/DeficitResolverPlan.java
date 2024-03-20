@@ -1,7 +1,7 @@
 package org.chainoptim.features.scanalysis.production.resourceallocation.model;
 
 import lombok.Data;
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
 
 import java.util.List;
 

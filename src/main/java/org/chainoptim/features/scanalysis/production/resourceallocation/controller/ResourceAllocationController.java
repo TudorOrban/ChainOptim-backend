@@ -1,7 +1,7 @@
 package org.chainoptim.features.scanalysis.production.resourceallocation.controller;
 
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryProductionGraph;
-import org.chainoptim.features.scanalysis.production.graph.service.FactoryProductionGraphService;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceAllocatorService;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;

@@ -1,7 +1,7 @@
-package org.chainoptim.features.scanalysis.production.graph.service;
+package org.chainoptim.features.scanalysis.production.factorygraph.service;
 
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryGraph;
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryProductionGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
 
 import java.util.List;
 
