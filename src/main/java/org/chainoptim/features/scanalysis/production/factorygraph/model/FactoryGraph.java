@@ -1,13 +1,14 @@
 package org.chainoptim.features.scanalysis.production.factorygraph.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.chainoptim.features.scanalysis.production.connection.model.FactoryStageConnection;
+import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.model.FactoryStage;
 import org.chainoptim.features.productpipeline.model.StageInput;
 import org.chainoptim.features.productpipeline.model.StageOutput;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.*;
 

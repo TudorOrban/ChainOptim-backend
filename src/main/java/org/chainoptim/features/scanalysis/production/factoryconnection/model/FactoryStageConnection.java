@@ -1,4 +1,4 @@
-package org.chainoptim.features.scanalysis.production.connection.model;
+package org.chainoptim.features.scanalysis.production.factoryconnection.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,10 +1,12 @@
 package org.chainoptim.features.scanalysis.production.evaluation.service;
 
 import org.chainoptim.features.scanalysis.production.evaluation.model.TemporaryEvaluationType;
+import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.Node;
-import org.chainoptim.features.scanalysis.production.connection.model.FactoryStageConnection;
-import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
+import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryPipelineService;
+import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
+import org.chainoptim.features.scanalysis.production.factoryconnection.service.FactoryStageConnectionService;
 import org.chainoptim.features.scanalysis.production.recommendation.service.FactoryResolutionRecommendationService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.DeficitResolverPlan;
@@ -12,8 +14,6 @@ import org.chainoptim.features.scanalysis.production.resourceallocation.model.Re
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.ResolverPlanEvaluation;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResolutionEvaluationService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceAllocatorService;
-import org.chainoptim.features.scanalysis.production.connection.service.FactoryStageConnectionService;
-import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryPipelineService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceSeekerService;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /*
- * Service currently gathering all main evaluation components into a comprehensive flow in evaluateFactory.
+ * Service currently gathering all main scanalysis components into a comprehensive flow in evaluateFactory.
  * Will be broken down with time as the frontend needs become clearer.
  *
  */

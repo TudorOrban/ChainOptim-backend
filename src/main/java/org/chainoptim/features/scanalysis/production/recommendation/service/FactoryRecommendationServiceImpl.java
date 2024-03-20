@@ -1,9 +1,9 @@
 package org.chainoptim.features.scanalysis.production.recommendation.service;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
-import org.chainoptim.features.scanalysis.production.connection.model.FactoryStageConnection;
+import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
 import org.chainoptim.features.scanalysis.production.recommendation.model.FactoryRecommendationReport;
-import org.chainoptim.features.scanalysis.production.connection.service.FactoryStageConnectionService;
+import org.chainoptim.features.scanalysis.production.factoryconnection.service.FactoryStageConnectionService;
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryPipelineService;
 import org.chainoptim.features.factory.model.*;
 import org.chainoptim.features.factory.service.FactoryInventoryService;

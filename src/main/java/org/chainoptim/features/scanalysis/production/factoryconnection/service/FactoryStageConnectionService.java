@@ -1,7 +1,7 @@
-package org.chainoptim.features.scanalysis.production.connection.service;
+package org.chainoptim.features.scanalysis.production.factoryconnection.service;
 
-import org.chainoptim.features.scanalysis.production.connection.model.FactoryStageConnection;
-import org.chainoptim.features.scanalysis.production.connection.repository.FactoryStageConnectionRepository;
+import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
+import org.chainoptim.features.scanalysis.production.factoryconnection.repository.FactoryStageConnectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
