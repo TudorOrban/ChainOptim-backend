@@ -10,6 +10,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static org.chainoptim.shared.util.ReflectionUtil.setPropertyWithNullCheck;
+
 public class LocationDTOMapper {
 
     private LocationDTOMapper() {}
@@ -38,20 +40,6 @@ public class LocationDTOMapper {
         setPropertyWithNullCheck(location, "longitude", locationDTO.getLongitude());
 
         return location;
-    }
-
-    public static <T> void setPropertyWithNullCheck(T object, String property, Object value) {
-        if (value != null) {
-            try {
-                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(property, object.getClass());
-                Method setter = propertyDescriptor.getWriteMethod();
-                if (setter != null) {
-                    setter.invoke(object, value);
-                }
-            } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }
