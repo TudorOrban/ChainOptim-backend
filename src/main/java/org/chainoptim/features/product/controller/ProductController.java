@@ -32,6 +32,12 @@ public class ProductController {
 
     // Fetch
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @GetMapping("/organizations/{organizationId}/small")
+    public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationIdSmall(@PathVariable Integer organizationId) {
+        return ResponseEntity.ok(productService.getProductsByOrganizationIdSmall(organizationId));
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
     @GetMapping("/organizations/{organizationId}")
     public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationId(@PathVariable Integer organizationId) {
         return ResponseEntity.ok(productService.getProductsByOrganizationId(organizationId));

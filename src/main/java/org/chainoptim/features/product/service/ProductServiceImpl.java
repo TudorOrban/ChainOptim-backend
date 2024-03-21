@@ -41,6 +41,10 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    public List<ProductsSearchDTO> getProductsByOrganizationIdSmall(Integer organizationId) {
+        return productRepository.findByOrganizationIdSmall(organizationId);
+    }
+
     public List<ProductsSearchDTO> getProductsByOrganizationId(Integer organizationId) {
         List<Product> products = productRepository.findByOrganizationId(organizationId);
         return products.stream()

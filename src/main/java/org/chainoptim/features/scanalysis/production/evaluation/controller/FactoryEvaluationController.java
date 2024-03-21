@@ -1,7 +1,7 @@
 package org.chainoptim.features.scanalysis.production.evaluation.controller;
 
 import org.chainoptim.features.scanalysis.production.evaluation.model.TemporaryEvaluationType;
-import org.chainoptim.features.scanalysis.production.graph.model.FactoryGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
 import org.chainoptim.features.scanalysis.production.evaluation.service.FactoryGraphEvaluationService;
 import org.chainoptim.features.scanalysis.production.recommendation.model.FactoryRecommendationReport;
 import org.chainoptim.features.scanalysis.production.recommendation.service.FactoryRecommendationService;
