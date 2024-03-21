@@ -1,6 +1,6 @@
-package org.chainoptim.features.supply.repository;
+package org.chainoptim.features.supplier.repository;
 
-import org.chainoptim.features.supply.model.Supplier;
+import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 public interface SuppliersSearchRepository {

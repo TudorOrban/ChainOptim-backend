@@ -1,6 +1,6 @@
-package org.chainoptim.features.supply.repository;
+package org.chainoptim.features.supplier.repository;
 
-import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

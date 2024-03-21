@@ -9,6 +9,8 @@ import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.productpipeline.model.Stage;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.chainoptim.shared.commonfeatures.location.service.LocationService;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -23,11 +25,15 @@ import java.util.Optional;
 public class FactoryServiceImpl implements FactoryService {
 
     private final FactoryRepository factoryRepository;
+    private final LocationService locationService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public FactoryServiceImpl(FactoryRepository factoryRepository, EntitySanitizerService entitySanitizerService) {
+    public FactoryServiceImpl(FactoryRepository factoryRepository,
+                                LocationService locationService,
+                                EntitySanitizerService entitySanitizerService) {
         this.factoryRepository = factoryRepository;
+        this.locationService = locationService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -75,7 +81,16 @@ public class FactoryServiceImpl implements FactoryService {
     // Create
     public Factory createFactory(CreateFactoryDTO factoryDTO) {
         CreateFactoryDTO sanitizedFactoryDTO = entitySanitizerService.sanitizeCreateFactoryDTO(factoryDTO);
-        return factoryRepository.save(FactoryDTOMapper.convertCreateFactoryDTOToFactory(sanitizedFactoryDTO));
+
+        // Create location if requested
+        if (sanitizedFactoryDTO.isCreateLocation() && sanitizedFactoryDTO.getLocation() != null) {
+            Location location = locationService.createLocation(sanitizedFactoryDTO.getLocation());
+            Factory factory = FactoryDTOMapper.convertCreateFactoryDTOToFactory(sanitizedFactoryDTO);
+            factory.setLocation(location);
+            return factoryRepository.save(factory);
+        } else {
+            return factoryRepository.save(FactoryDTOMapper.convertCreateFactoryDTOToFactory((sanitizedFactoryDTO)));
+        }
     }
 
     // Update

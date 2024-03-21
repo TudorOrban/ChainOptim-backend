@@ -1,6 +1,6 @@
-package org.chainoptim.features.supply.service;
+package org.chainoptim.features.supplier.service;
 
-import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;

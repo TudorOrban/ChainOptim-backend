@@ -3,10 +3,10 @@ package org.chainoptim.features.scanalysis.production.resourceallocation.service
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.DeficitResolution;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.DeficitResolverPlan;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.ResourceAllocation;
-import org.chainoptim.features.supply.model.SupplierOrder;
-import org.chainoptim.features.supply.model.SupplierShipment;
-import org.chainoptim.features.supply.service.SupplierOrderService;
-import org.chainoptim.features.supply.service.SupplierShipmentService;
+import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.features.supplier.model.SupplierShipment;
+import org.chainoptim.features.supplier.service.SupplierOrderService;
+import org.chainoptim.features.supplier.service.SupplierShipmentService;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.chainoptim.features.warehouse.service.WarehouseInventoryService;

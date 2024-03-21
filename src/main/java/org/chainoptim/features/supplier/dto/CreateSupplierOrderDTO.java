@@ -1,7 +1,7 @@
-package org.chainoptim.features.supply.dto;
+package org.chainoptim.features.supplier.dto;
 
 import lombok.Data;
-import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supplier.model.SupplierOrder;
 
 import java.time.LocalDateTime;
 

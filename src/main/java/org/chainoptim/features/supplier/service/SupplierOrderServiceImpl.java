@@ -1,9 +1,9 @@
-package org.chainoptim.features.supply.service;
+package org.chainoptim.features.supplier.service;
 
-import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
-import org.chainoptim.features.supply.dto.SupplierDTOMapper;
-import org.chainoptim.features.supply.model.SupplierOrder;
-import org.chainoptim.features.supply.repository.SupplierOrderRepository;
+import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
+import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package org.chainoptim.features.supply.dto;
+package org.chainoptim.features.supplier.dto;
 
 import lombok.Data;
 

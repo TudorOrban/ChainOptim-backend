@@ -1,4 +1,4 @@
-package org.chainoptim.features.supply.repository;
+package org.chainoptim.features.supplier.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -6,7 +6,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.chainoptim.features.supply.model.Supplier;
+import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import java.util.List;

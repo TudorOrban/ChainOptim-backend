@@ -6,6 +6,7 @@ import org.chainoptim.shared.commonfeatures.location.dto.LocationDTOMapper;
 import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,13 @@ import java.util.List;
 public class LocationServiceImpl implements LocationService {
 
     private final LocationRepository locationRepository;
+    private final EntitySanitizerService sanitizerService;
 
     @Autowired
-    public LocationServiceImpl(LocationRepository locationRepository) {
+    public LocationServiceImpl(LocationRepository locationRepository,
+                               EntitySanitizerService sanitizerService) {
         this.locationRepository = locationRepository;
+        this.sanitizerService = sanitizerService;
     }
 
     // Fetch
@@ -28,14 +32,16 @@ public class LocationServiceImpl implements LocationService {
 
     // Create
     public Location createLocation(CreateLocationDTO locationDTO) {
-        return locationRepository.save(LocationDTOMapper.convertCreateLocationDTOToLocation(locationDTO));
+        CreateLocationDTO sanitizedDTO = sanitizerService.sanitizeCreateLocationDTO(locationDTO);
+        return locationRepository.save(LocationDTOMapper.convertCreateLocationDTOToLocation(sanitizedDTO));
     }
 
     // Update
     public Location updateLocation(UpdateLocationDTO locationDTO) {
-        Location location = locationRepository.findById(locationDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Location with ID: " + locationDTO.getId() + " not found."));
-        Location location1 = LocationDTOMapper.updateLocationFromUpdateLocationDTO(location, locationDTO);
+        UpdateLocationDTO sanitizedDTO = sanitizerService.sanitizeUpdateLocationDTO(locationDTO);
+        Location location = locationRepository.findById(sanitizedDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Location with ID: " + sanitizedDTO.getId() + " not found."));
+        Location location1 = LocationDTOMapper.updateLocationFromUpdateLocationDTO(location, sanitizedDTO);
         return locationRepository.save(location1);
     }
 

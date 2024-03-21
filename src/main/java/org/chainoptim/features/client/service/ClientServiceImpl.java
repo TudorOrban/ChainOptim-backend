@@ -7,8 +7,11 @@ import org.chainoptim.features.client.dto.CreateClientDTO;
 import org.chainoptim.features.client.dto.UpdateClientDTO;
 import org.chainoptim.features.client.model.Client;
 import org.chainoptim.features.client.repository.ClientRepository;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.chainoptim.shared.commonfeatures.location.service.LocationService;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +21,15 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
+    private final LocationService locationService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public ClientServiceImpl(ClientRepository clientRepository, EntitySanitizerService entitySanitizerService) {
+    public ClientServiceImpl(ClientRepository clientRepository,
+                                LocationService locationService,
+                             EntitySanitizerService entitySanitizerService) {
         this.clientRepository = clientRepository;
+        this.locationService = locationService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -51,7 +58,16 @@ public class ClientServiceImpl implements ClientService {
 
     public Client createClient(CreateClientDTO clientDTO) {
         CreateClientDTO sanitizedClientDTO = entitySanitizerService.sanitizeCreateClientDTO(clientDTO);
-        return clientRepository.save(ClientDTOMapper.convertCreateClientDTOToClient(sanitizedClientDTO));
+
+        // Create location if requested
+        if (sanitizedClientDTO.isCreateLocation() && sanitizedClientDTO.getLocation() != null) {
+            Location location = locationService.createLocation(sanitizedClientDTO.getLocation());
+            Client client = ClientDTOMapper.convertCreateClientDTOToClient(sanitizedClientDTO);
+            client.setLocation(location);
+            return clientRepository.save(client);
+        } else {
+            return clientRepository.save(ClientDTOMapper.convertCreateClientDTOToClient((sanitizedClientDTO)));
+        }
     }
 
     public Client updateClient(UpdateClientDTO clientDTO) {

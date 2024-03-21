@@ -1,7 +1,7 @@
-package org.chainoptim.features.supply.controller;
+package org.chainoptim.features.supplier.controller;
 
-import org.chainoptim.features.supply.model.SupplierShipment;
-import org.chainoptim.features.supply.service.SupplierShipmentService;
+import org.chainoptim.features.supplier.model.SupplierShipment;
+import org.chainoptim.features.supplier.service.SupplierShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

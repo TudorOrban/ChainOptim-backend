@@ -1,7 +1,7 @@
-package org.chainoptim.features.supply.service;
+package org.chainoptim.features.supplier.service;
 
-import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
-import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.supplier.model.SupplierOrder;
 
 import java.util.List;
 

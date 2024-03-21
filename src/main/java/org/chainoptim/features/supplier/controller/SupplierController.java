@@ -1,11 +1,11 @@
-package org.chainoptim.features.supply.controller;
+package org.chainoptim.features.supplier.controller;
 
 import org.chainoptim.config.security.SecurityService;
-import org.chainoptim.features.supply.dto.CreateSupplierDTO;
-import org.chainoptim.features.supply.dto.SuppliersSearchDTO;
-import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
-import org.chainoptim.features.supply.model.Supplier;
-import org.chainoptim.features.supply.service.SupplierService;
+import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
+import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
+import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
+import org.chainoptim.features.supplier.model.Supplier;
+import org.chainoptim.features.supplier.service.SupplierService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

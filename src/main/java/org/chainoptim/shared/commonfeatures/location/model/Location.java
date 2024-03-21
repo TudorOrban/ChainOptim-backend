@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.chainoptim.features.factory.model.Factory;
-import org.chainoptim.features.productpipeline.model.StageInput;
-import org.chainoptim.features.supply.model.SupplierShipment;
+import org.chainoptim.features.supplier.model.SupplierShipment;
 import org.chainoptim.features.warehouse.model.Warehouse;
 
 import java.util.Set;

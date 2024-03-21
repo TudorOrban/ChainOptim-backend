@@ -1,8 +1,8 @@
-package org.chainoptim.features.supply.controller;
+package org.chainoptim.features.supplier.controller;
 
-import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
-import org.chainoptim.features.supply.model.SupplierOrder;
-import org.chainoptim.features.supply.service.SupplierOrderService;
+import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.features.supplier.service.SupplierOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

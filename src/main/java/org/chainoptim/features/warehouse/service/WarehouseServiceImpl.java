@@ -8,6 +8,8 @@ import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 
+import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.chainoptim.shared.commonfeatures.location.service.LocationService;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,15 @@ import java.util.List;
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final LocationService locationService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, EntitySanitizerService entitySanitizerService) {
+    public WarehouseServiceImpl(WarehouseRepository warehouseRepository,
+                                LocationService locationService,
+                                EntitySanitizerService entitySanitizerService) {
         this.warehouseRepository = warehouseRepository;
+        this.locationService = locationService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -49,7 +55,16 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     public Warehouse createWarehouse(CreateWarehouseDTO warehouseDTO) {
         CreateWarehouseDTO sanitizedWarehouseDTO = entitySanitizerService.sanitizeCreateWarehouseDTO(warehouseDTO);
-        return warehouseRepository.save(WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO));
+
+        // Create location if requested
+        if (sanitizedWarehouseDTO.isCreateLocation() && sanitizedWarehouseDTO.getLocation() != null) {
+            Location location = locationService.createLocation(sanitizedWarehouseDTO.getLocation());
+            Warehouse warehouse = WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO);
+            warehouse.setLocation(location);
+            return warehouseRepository.save(warehouse);
+        } else {
+            return warehouseRepository.save(WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO));
+        }
     }
 
     public Warehouse updateWarehouse(UpdateWarehouseDTO warehouseDTO) {

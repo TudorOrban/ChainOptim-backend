@@ -1,6 +1,6 @@
-package org.chainoptim.features.supply.service;
+package org.chainoptim.features.supplier.service;
 
-import org.chainoptim.features.supply.model.SupplierShipment;
+import org.chainoptim.features.supplier.model.SupplierShipment;
 
 import java.util.List;
 

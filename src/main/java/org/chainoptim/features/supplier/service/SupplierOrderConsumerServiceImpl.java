@@ -1,7 +1,6 @@
-package org.chainoptim.features.supply.service;
+package org.chainoptim.features.supplier.service;
 
-import org.chainoptim.features.supply.model.SupplierOrder;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.springframework.stereotype.Service;
 
 @Service

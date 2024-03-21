@@ -1,4 +1,4 @@
-package org.chainoptim.features.supply.model;
+package org.chainoptim.features.supplier.model;
 
 import jakarta.persistence.*;
 import lombok.*;

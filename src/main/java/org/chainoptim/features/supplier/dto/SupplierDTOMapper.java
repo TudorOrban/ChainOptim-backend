@@ -1,7 +1,8 @@
-package org.chainoptim.features.supply.dto;
+package org.chainoptim.features.supplier.dto;
 
-import org.chainoptim.features.supply.model.Supplier;
-import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supplier.model.Supplier;
+import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 public class SupplierDTOMapper {
 
@@ -21,6 +22,9 @@ public class SupplierDTOMapper {
         Supplier supplier = new Supplier();
         supplier.setName(supplierDTO.getName());
         supplier.setOrganizationId(supplierDTO.getOrganizationId());
+        Location location = new Location();
+        location.setId(supplierDTO.getLocationId());
+        supplier.setLocation(location);
 
         return supplier;
     }
