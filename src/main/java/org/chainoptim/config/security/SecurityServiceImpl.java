@@ -7,6 +7,7 @@ import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
 import org.chainoptim.features.supply.repository.SupplierRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
+import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final WarehouseRepository warehouseRepository;
     private final SupplierRepository supplierRepository;
     private final ClientRepository clientRepository;
+    private final LocationRepository locationRepository;
 
     @Autowired
     public SecurityServiceImpl(
@@ -31,7 +33,8 @@ public class SecurityServiceImpl implements SecurityService {
             FactoryRepository factoryRepository,
             WarehouseRepository warehouseRepository,
             SupplierRepository supplierRepository,
-            ClientRepository clientRepository
+            ClientRepository clientRepository,
+            LocationRepository locationRepository
     ) {
         this.productRepository = productRepository;
         this.stageRepository = stageRepository;
@@ -39,6 +42,8 @@ public class SecurityServiceImpl implements SecurityService {
         this.warehouseRepository = warehouseRepository;
         this.supplierRepository = supplierRepository;
         this.clientRepository = clientRepository;
+        this.locationRepository = locationRepository;
+
     }
 
     public boolean canAccessEntity(Long entityId, String entityType) {
@@ -49,6 +54,7 @@ public class SecurityServiceImpl implements SecurityService {
             case "Supplier" -> supplierRepository.findOrganizationIdById(entityId);
             case "Stage" -> stageRepository.findOrganizationIdById(entityId);
             case "Client" -> clientRepository.findOrganizationIdById(entityId);
+            case "Location" -> locationRepository.findOrganizationIdById(entityId);
             default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
         };
 

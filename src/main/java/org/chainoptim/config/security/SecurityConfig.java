@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/clients/shipments/**").permitAll()
                         .requestMatchers("/api/v1/graphs/**").permitAll()
                         .requestMatchers("/api/v1/product-graphs/**").permitAll()
+                        .requestMatchers("/api/v1/locations/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
