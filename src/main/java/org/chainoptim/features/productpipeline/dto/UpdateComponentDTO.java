@@ -1,4 +1,4 @@
-package org.chainoptim.features.product.dto;
+package org.chainoptim.features.productpipeline.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateProductDTO {
+public class UpdateComponentDTO {
 
+    private Integer id;
     private String name;
     private String description;
-    private Integer organizationId;
     private Integer unitId;
-    private CreateUnitOfMeasurementDTO unitDTO;
-    private boolean createUnit;
 }

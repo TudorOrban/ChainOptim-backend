@@ -1,10 +1,13 @@
 package org.chainoptim.features.product.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.chainoptim.features.productpipeline.model.Component;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,4 +36,11 @@ public class UnitOfMeasurement {
     @Column(name = "organization_id")
     private Integer organizationId;
 
+    @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Component> components;
+
+    @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Product> products;
 }

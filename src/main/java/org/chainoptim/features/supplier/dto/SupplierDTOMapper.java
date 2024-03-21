@@ -22,9 +22,11 @@ public class SupplierDTOMapper {
         Supplier supplier = new Supplier();
         supplier.setName(supplierDTO.getName());
         supplier.setOrganizationId(supplierDTO.getOrganizationId());
-        Location location = new Location();
-        location.setId(supplierDTO.getLocationId());
-        supplier.setLocation(location);
+        if (supplierDTO.getLocationId() != null) {
+            Location location = new Location();
+            location.setId(supplierDTO.getLocationId());
+            supplier.setLocation(location);
+        }
 
         return supplier;
     }

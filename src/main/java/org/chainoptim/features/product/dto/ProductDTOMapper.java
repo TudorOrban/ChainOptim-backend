@@ -1,6 +1,7 @@
 package org.chainoptim.features.product.dto;
 
 import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.model.UnitOfMeasurement;
 
 public class ProductDTOMapper {
 
@@ -22,7 +23,11 @@ public class ProductDTOMapper {
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setOrganizationId(productDTO.getOrganizationId());
-        product.setUnitId(productDTO.getUnitId());
+        if (productDTO.getUnitId() != null) {
+            UnitOfMeasurement unit = new UnitOfMeasurement();
+            unit.setId(productDTO.getUnitId());
+            product.setUnit(unit);
+        }
 
         return product;
     }

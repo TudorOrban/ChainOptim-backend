@@ -6,25 +6,30 @@ import org.chainoptim.features.product.dto.ProductDTOMapper;
 import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final UnitOfMeasurementService unitOfMeasurementService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, EntitySanitizerService entitySanitizerService) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                                UnitOfMeasurementService unitOfMeasurementService,
+                              EntitySanitizerService entitySanitizerService) {
         this.productRepository = productRepository;
+        this.unitOfMeasurementService = unitOfMeasurementService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -64,7 +69,16 @@ public class ProductServiceImpl implements ProductService {
 
     public Product createProduct(CreateProductDTO productDTO) {
         CreateProductDTO sanitizedProductDTO = entitySanitizerService.sanitizeCreateProductDTO(productDTO);
-        return productRepository.save(ProductDTOMapper.convertCreateProductDTOToProduct(sanitizedProductDTO));
+
+        // Create unit of measurement if requested
+        if (sanitizedProductDTO.isCreateUnit() && sanitizedProductDTO.getUnitDTO() != null) {
+            UnitOfMeasurement unitOfMeasurement = unitOfMeasurementService.createUnitOfMeasurement(sanitizedProductDTO.getUnitDTO());
+            Product product = ProductDTOMapper.convertCreateProductDTOToProduct(sanitizedProductDTO);
+            product.setUnit(unitOfMeasurement);
+            return productRepository.save(product);
+        } else {
+            return productRepository.save(ProductDTOMapper.convertCreateProductDTOToProduct(sanitizedProductDTO));
+        }
     }
 
     public Product updateProduct(UpdateProductDTO productDTO) {
@@ -74,7 +88,9 @@ public class ProductServiceImpl implements ProductService {
 
         product.setName(sanitizedProductDTO.getName());
         product.setDescription(sanitizedProductDTO.getDescription());
-        product.setUnitId(sanitizedProductDTO.getUnitId());
+        UnitOfMeasurement unit = new UnitOfMeasurement();
+        unit.setId(sanitizedProductDTO.getUnitId());
+        product.setUnit(unit);
 
         productRepository.save(product);
 

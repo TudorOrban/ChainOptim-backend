@@ -11,7 +11,9 @@ import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.dto.UpdateUnitOfMeasurementDTO;
+import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
+import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
@@ -165,5 +167,20 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         unitOfMeasurementDTO.setUnitType(sanitizationService.sanitize(unitOfMeasurementDTO.getUnitType()));
 
         return unitOfMeasurementDTO;
+    }
+
+    // Component
+    public CreateComponentDTO sanitizeCreateComponentDTO(CreateComponentDTO componentDTO) {
+        componentDTO.setName(sanitizationService.sanitize(componentDTO.getName()));
+        componentDTO.setDescription(sanitizationService.sanitize(componentDTO.getDescription()));
+
+        return componentDTO;
+    }
+
+    public UpdateComponentDTO sanitizeUpdateComponentDTO(UpdateComponentDTO componentDTO) {
+        componentDTO.setName(sanitizationService.sanitize(componentDTO.getName()));
+        componentDTO.setDescription(sanitizationService.sanitize(componentDTO.getDescription()));
+
+        return componentDTO;
     }
 }

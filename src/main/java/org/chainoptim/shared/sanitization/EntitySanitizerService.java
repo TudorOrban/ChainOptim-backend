@@ -11,7 +11,9 @@ import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.dto.UpdateUnitOfMeasurementDTO;
+import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
+import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
@@ -58,4 +60,8 @@ public interface EntitySanitizerService {
     // Unit of Measurement
     CreateUnitOfMeasurementDTO sanitizeCreateUnitOfMeasurementDTO(CreateUnitOfMeasurementDTO uomDTO);
     UpdateUnitOfMeasurementDTO sanitizeUpdateUnitOfMeasurementDTO(UpdateUnitOfMeasurementDTO uomDTO);
+
+    // Component
+    CreateComponentDTO sanitizeCreateComponentDTO(CreateComponentDTO componentDTO);
+    UpdateComponentDTO sanitizeUpdateComponentDTO(UpdateComponentDTO componentDTO);
 }

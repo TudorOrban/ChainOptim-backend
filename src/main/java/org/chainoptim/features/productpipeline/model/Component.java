@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
+import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -42,8 +43,9 @@ public class Component {
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
 
-    @Column(name = "unit_id", nullable = false)
-    private Integer unitId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = true)
+    private UnitOfMeasurement unit;
 
     @OneToMany(mappedBy = "component", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore

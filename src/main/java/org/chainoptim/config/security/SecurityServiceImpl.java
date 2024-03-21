@@ -5,6 +5,7 @@ import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.product.repository.UnitOfMeasurementRepository;
+import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
@@ -27,6 +28,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final ClientRepository clientRepository;
     private final LocationRepository locationRepository;
     private final UnitOfMeasurementRepository unitOfMeasurementRepository;
+    private final ComponentRepository componentRepository;
 
     @Autowired
     public SecurityServiceImpl(
@@ -37,7 +39,8 @@ public class SecurityServiceImpl implements SecurityService {
             SupplierRepository supplierRepository,
             ClientRepository clientRepository,
             LocationRepository locationRepository,
-            UnitOfMeasurementRepository unitOfMeasurementRepository
+            UnitOfMeasurementRepository unitOfMeasurementRepository,
+            ComponentRepository componentRepository
     ) {
         this.productRepository = productRepository;
         this.stageRepository = stageRepository;
@@ -47,6 +50,7 @@ public class SecurityServiceImpl implements SecurityService {
         this.clientRepository = clientRepository;
         this.locationRepository = locationRepository;
         this.unitOfMeasurementRepository = unitOfMeasurementRepository;
+        this.componentRepository = componentRepository;
 
     }
 
@@ -60,6 +64,7 @@ public class SecurityServiceImpl implements SecurityService {
             case "Client" -> clientRepository.findOrganizationIdById(entityId);
             case "Location" -> locationRepository.findOrganizationIdById(entityId);
             case "UnitOfMeasurement" -> unitOfMeasurementRepository.findOrganizationIdById(entityId);
+            case "Component" -> componentRepository.findOrganizationIdById(entityId);
             default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
         };
 
