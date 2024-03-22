@@ -43,8 +43,9 @@ public class Product {
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
 
-    @Column(name = "unit_id", nullable = false)
-    private Integer unitId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = true)
+    private UnitOfMeasurement unit;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Stage> stages;

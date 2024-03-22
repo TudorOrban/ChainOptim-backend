@@ -8,14 +8,20 @@ import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryInventoryItemDTO;
 import org.chainoptim.features.product.dto.CreateProductDTO;
+import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
+import org.chainoptim.features.product.dto.UpdateUnitOfMeasurementDTO;
+import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
+import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
-import org.chainoptim.features.supply.dto.CreateSupplierDTO;
-import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
-import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
+import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
+import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
+import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
+import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 
 public interface EntitySanitizerService {
 
@@ -46,4 +52,16 @@ public interface EntitySanitizerService {
     // Warehouse
     CreateWarehouseDTO sanitizeCreateWarehouseDTO(CreateWarehouseDTO warehouseDTO);
     UpdateWarehouseDTO sanitizeUpdateWarehouseDTO(UpdateWarehouseDTO warehouseDTO);
+
+    // Location
+    CreateLocationDTO sanitizeCreateLocationDTO(CreateLocationDTO locationDTO);
+    UpdateLocationDTO sanitizeUpdateLocationDTO(UpdateLocationDTO locationDTO);
+
+    // Unit of Measurement
+    CreateUnitOfMeasurementDTO sanitizeCreateUnitOfMeasurementDTO(CreateUnitOfMeasurementDTO uomDTO);
+    UpdateUnitOfMeasurementDTO sanitizeUpdateUnitOfMeasurementDTO(UpdateUnitOfMeasurementDTO uomDTO);
+
+    // Component
+    CreateComponentDTO sanitizeCreateComponentDTO(CreateComponentDTO componentDTO);
+    UpdateComponentDTO sanitizeUpdateComponentDTO(UpdateComponentDTO componentDTO);
 }

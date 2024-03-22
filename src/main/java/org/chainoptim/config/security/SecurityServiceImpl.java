@@ -4,9 +4,12 @@ import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.product.repository.ProductRepository;
+import org.chainoptim.features.product.repository.UnitOfMeasurementRepository;
+import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
-import org.chainoptim.features.supply.repository.SupplierRepository;
+import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
+import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +26,9 @@ public class SecurityServiceImpl implements SecurityService {
     private final WarehouseRepository warehouseRepository;
     private final SupplierRepository supplierRepository;
     private final ClientRepository clientRepository;
+    private final LocationRepository locationRepository;
+    private final UnitOfMeasurementRepository unitOfMeasurementRepository;
+    private final ComponentRepository componentRepository;
 
     @Autowired
     public SecurityServiceImpl(
@@ -31,7 +37,10 @@ public class SecurityServiceImpl implements SecurityService {
             FactoryRepository factoryRepository,
             WarehouseRepository warehouseRepository,
             SupplierRepository supplierRepository,
-            ClientRepository clientRepository
+            ClientRepository clientRepository,
+            LocationRepository locationRepository,
+            UnitOfMeasurementRepository unitOfMeasurementRepository,
+            ComponentRepository componentRepository
     ) {
         this.productRepository = productRepository;
         this.stageRepository = stageRepository;
@@ -39,6 +48,10 @@ public class SecurityServiceImpl implements SecurityService {
         this.warehouseRepository = warehouseRepository;
         this.supplierRepository = supplierRepository;
         this.clientRepository = clientRepository;
+        this.locationRepository = locationRepository;
+        this.unitOfMeasurementRepository = unitOfMeasurementRepository;
+        this.componentRepository = componentRepository;
+
     }
 
     public boolean canAccessEntity(Long entityId, String entityType) {
@@ -49,6 +62,9 @@ public class SecurityServiceImpl implements SecurityService {
             case "Supplier" -> supplierRepository.findOrganizationIdById(entityId);
             case "Stage" -> stageRepository.findOrganizationIdById(entityId);
             case "Client" -> clientRepository.findOrganizationIdById(entityId);
+            case "Location" -> locationRepository.findOrganizationIdById(entityId);
+            case "UnitOfMeasurement" -> unitOfMeasurementRepository.findOrganizationIdById(entityId);
+            case "Component" -> componentRepository.findOrganizationIdById(entityId);
             default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
         };
 

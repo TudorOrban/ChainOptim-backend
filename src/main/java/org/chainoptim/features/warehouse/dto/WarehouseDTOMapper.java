@@ -21,9 +21,11 @@ public class WarehouseDTOMapper {
         Warehouse warehouse = new Warehouse();
         warehouse.setName(warehouseDTO.getName());
         warehouse.setOrganizationId(warehouseDTO.getOrganizationId());
-        Location location = new Location();
-        location.setId(warehouseDTO.getLocationId());
-        warehouse.setLocation(location);
+        if (warehouseDTO.getLocationId() != null) {
+            Location location = new Location();
+            location.setId(warehouseDTO.getLocationId());
+            warehouse.setLocation(location);
+        }
 
         return warehouse;
     }

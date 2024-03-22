@@ -8,14 +8,20 @@ import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryInventoryItemDTO;
 import org.chainoptim.features.product.dto.CreateProductDTO;
+import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
+import org.chainoptim.features.product.dto.UpdateUnitOfMeasurementDTO;
+import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
+import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
-import org.chainoptim.features.supply.dto.CreateSupplierDTO;
-import org.chainoptim.features.supply.dto.CreateSupplierOrderDTO;
-import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
+import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
+import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
+import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
+import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -125,5 +131,56 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         warehouseDTO.setName(sanitizationService.sanitize(warehouseDTO.getName()));
 
         return warehouseDTO;
+    }
+
+    // Locations
+    public CreateLocationDTO sanitizeCreateLocationDTO(CreateLocationDTO locationDTO) {
+        locationDTO.setAddress(sanitizationService.sanitize(locationDTO.getAddress()));
+        locationDTO.setCity(sanitizationService.sanitize(locationDTO.getCity()));
+        locationDTO.setState(sanitizationService.sanitize(locationDTO.getState()));
+        locationDTO.setCountry(sanitizationService.sanitize(locationDTO.getCountry()));
+        locationDTO.setZipCode(sanitizationService.sanitize(locationDTO.getZipCode()));
+
+        return locationDTO;
+    }
+
+    public UpdateLocationDTO sanitizeUpdateLocationDTO(UpdateLocationDTO locationDTO) {
+        locationDTO.setAddress(sanitizationService.sanitize(locationDTO.getAddress()));
+        locationDTO.setCity(sanitizationService.sanitize(locationDTO.getCity()));
+        locationDTO.setState(sanitizationService.sanitize(locationDTO.getState()));
+        locationDTO.setCountry(sanitizationService.sanitize(locationDTO.getCountry()));
+        locationDTO.setZipCode(sanitizationService.sanitize(locationDTO.getZipCode()));
+
+        return locationDTO;
+    }
+
+    // Units of Measurement
+    public CreateUnitOfMeasurementDTO sanitizeCreateUnitOfMeasurementDTO(CreateUnitOfMeasurementDTO unitOfMeasurementDTO) {
+        unitOfMeasurementDTO.setName(sanitizationService.sanitize(unitOfMeasurementDTO.getName()));
+        unitOfMeasurementDTO.setUnitType(sanitizationService.sanitize(unitOfMeasurementDTO.getUnitType()));
+
+        return unitOfMeasurementDTO;
+    }
+
+    public UpdateUnitOfMeasurementDTO sanitizeUpdateUnitOfMeasurementDTO(UpdateUnitOfMeasurementDTO unitOfMeasurementDTO) {
+        unitOfMeasurementDTO.setName(sanitizationService.sanitize(unitOfMeasurementDTO.getName()));
+        unitOfMeasurementDTO.setUnitType(sanitizationService.sanitize(unitOfMeasurementDTO.getUnitType()));
+
+        return unitOfMeasurementDTO;
+    }
+
+    // Component
+    public CreateComponentDTO sanitizeCreateComponentDTO(CreateComponentDTO componentDTO) {
+        componentDTO.setName(sanitizationService.sanitize(componentDTO.getName()));
+        componentDTO.setDescription(sanitizationService.sanitize(componentDTO.getDescription()));
+
+        return componentDTO;
+    }
+
+    public UpdateComponentDTO sanitizeUpdateComponentDTO(UpdateComponentDTO componentDTO) {
+        componentDTO.setName(sanitizationService.sanitize(componentDTO.getName()));
+        componentDTO.setDescription(sanitizationService.sanitize(componentDTO.getDescription()));
+
+        return componentDTO;
     }
 }

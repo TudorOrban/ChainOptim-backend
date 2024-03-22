@@ -26,9 +26,11 @@ public class FactoryDTOMapper {
         Factory factory = new Factory();
         factory.setName(factoryDTO.getName());
         factory.setOrganizationId(factoryDTO.getOrganizationId());
-        Location location = new Location();
-        location.setId(factoryDTO.getLocationId());
-        factory.setLocation(location);
+        if (factoryDTO.getLocationId() != null) {
+            Location location = new Location();
+            location.setId(factoryDTO.getLocationId());
+            factory.setLocation(location);
+        }
 
         return factory;
     }

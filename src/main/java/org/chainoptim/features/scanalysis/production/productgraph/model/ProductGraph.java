@@ -20,11 +20,11 @@ import java.util.*;
 @AllArgsConstructor
 public class ProductGraph {
     private Map<Integer, SmallStage> nodes = new HashMap<>(); // Key: stageId
-    private Map<Integer, List<Edge>> adjList = new HashMap<>(); // Key: stageId
+    private Map<Integer, List<ProductEdge>> adjList = new HashMap<>(); // Key: stageId
 
     public void populateGraph(Product product, List<ProductStageConnection> connections) {
         for (Stage productStage : product.getStages()) {
-            List<Edge> newEdges = new ArrayList<>();
+            List<ProductEdge> newEdges = new ArrayList<>();
 
             SmallStage stage = new SmallStage();
             List<SmallStageInput> stageInputs = new ArrayList<>();
@@ -54,7 +54,7 @@ public class ProductGraph {
                         .filter(c -> Objects.equals(c.getIncomingStageOutputId(), stageOutput.getId())).toList();
 
                 for (ProductStageConnection productStageConnection : adjacentConnections) {
-                    Edge newEdge = new Edge(
+                    ProductEdge newEdge = new ProductEdge(
                             productStageConnection.getIncomingStageId(),
                             productStageConnection.getIncomingStageOutputId(),
                             productStageConnection.getOutgoingStageId(),

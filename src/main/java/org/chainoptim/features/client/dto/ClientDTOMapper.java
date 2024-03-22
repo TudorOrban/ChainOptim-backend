@@ -2,6 +2,7 @@ package org.chainoptim.features.client.dto;
 
 import org.chainoptim.features.client.model.Client;
 import org.chainoptim.features.client.model.ClientOrder;
+import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 public class ClientDTOMapper {
 
@@ -21,6 +22,11 @@ public class ClientDTOMapper {
         Client client = new Client();
         client.setName(clientDTO.getName());
         client.setOrganizationId(clientDTO.getOrganizationId());
+        if (clientDTO.getLocationId() != null) {
+            Location location = new Location();
+            location.setId(clientDTO.getLocationId());
+            client.setLocation(location);
+        }
 
         return client;
     }

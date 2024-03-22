@@ -14,6 +14,6 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>, 
 
     List<Warehouse> findByOrganizationId(Integer organizationId);
 
-    @Query("SELECT p.organizationId FROM Warehouse p WHERE p.id = :warehouseId")
+    @Query("SELECT w.organizationId FROM Warehouse w WHERE w.id = :warehouseId")
     Optional<Integer> findOrganizationIdById(@Param("warehouseId") Long warehouseId);
 }
