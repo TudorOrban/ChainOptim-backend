@@ -1,6 +1,7 @@
 package org.chainoptim.features.client.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.dto.ClientDTOMapper;
 import org.chainoptim.features.client.dto.ClientsSearchDTO;
 import org.chainoptim.features.client.dto.CreateClientDTO;
@@ -76,6 +77,18 @@ public class ClientServiceImpl implements ClientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID: " + sanitizedClientDTO.getId() + " not found."));
 
         client.setName(sanitizedClientDTO.getName());
+
+        // Create new location or use existing or throw if not provided
+        Location location;
+        if (sanitizedClientDTO.isCreateLocation() && sanitizedClientDTO.getLocation() != null) {
+            location = locationService.createLocation(sanitizedClientDTO.getLocation());
+        } else if (sanitizedClientDTO.getLocationId() != null){
+            location = new Location();
+            location.setId(sanitizedClientDTO.getLocationId());
+        } else {
+            throw new ValidationException("Location is required.");
+        }
+        client.setLocation(location);
 
         clientRepository.save(client);
         return client;

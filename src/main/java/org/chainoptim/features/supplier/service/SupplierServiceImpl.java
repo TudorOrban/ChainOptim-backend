@@ -1,6 +1,7 @@
 package org.chainoptim.features.supplier.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
 import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
 import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
@@ -72,10 +73,23 @@ public class SupplierServiceImpl implements SupplierService {
 
     public Supplier updateSupplier(UpdateSupplierDTO supplierDTO) {
         UpdateSupplierDTO sanitizedSupplierDTO = entitySanitizerService.sanitizeUpdateSupplierDTO(supplierDTO);
+
         Supplier supplier = supplierRepository.findById(sanitizedSupplierDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + sanitizedSupplierDTO.getId() + " not found."));
 
         supplier.setName(sanitizedSupplierDTO.getName());
+
+        // Create new supplier or use existing or throw if not provided
+        Location location;
+        if (sanitizedSupplierDTO.isCreateLocation() && sanitizedSupplierDTO.getLocation() != null) {
+            location = locationService.createLocation(sanitizedSupplierDTO.getLocation());
+        } else if (sanitizedSupplierDTO.getLocationId() != null) {
+            location = new Location();
+            location.setId(sanitizedSupplierDTO.getLocationId());
+        } else {
+            throw new ValidationException("Location is required.");
+        }
+        supplier.setLocation(location);
 
         supplierRepository.save(supplier);
         return supplier;
