@@ -1,6 +1,7 @@
 package org.chainoptim.features.warehouse.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
 import org.chainoptim.features.warehouse.dto.WarehouseDTOMapper;
@@ -73,6 +74,18 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + sanitizedWarehouseDTO.getId() + " not found."));
 
         warehouse.setName(sanitizedWarehouseDTO.getName());
+
+        // Create new location or use existing or throw if not provided
+        Location location;
+        if (sanitizedWarehouseDTO.isCreateLocation() && sanitizedWarehouseDTO.getLocation() != null) {
+            location = locationService.createLocation(sanitizedWarehouseDTO.getLocation());
+        } else if (sanitizedWarehouseDTO.getLocationId() != null){
+            location = new Location();
+            location.setId(sanitizedWarehouseDTO.getLocationId());
+        } else {
+            throw new ValidationException("Location is required.");
+        }
+        warehouse.setLocation(location);
 
         warehouseRepository.save(warehouse);
         return warehouse;

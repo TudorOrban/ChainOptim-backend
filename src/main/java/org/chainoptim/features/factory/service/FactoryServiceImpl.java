@@ -1,6 +1,7 @@
 package org.chainoptim.features.factory.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.factory.dto.FactoryDTOMapper;
@@ -101,6 +102,18 @@ public class FactoryServiceImpl implements FactoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Factory with ID: " + sanitizedFactoryDTO.getId() + " not found."));
 
         factory.setName(sanitizedFactoryDTO.getName());
+
+        // Create new location or use existing or throw if not provided
+        Location location;
+        if (sanitizedFactoryDTO.isCreateLocation() && sanitizedFactoryDTO.getLocation() != null) {
+            location = locationService.createLocation(sanitizedFactoryDTO.getLocation());
+        } else if (sanitizedFactoryDTO.getLocationId() != null){
+            location = new Location();
+            location.setId(sanitizedFactoryDTO.getLocationId());
+        } else {
+            throw new ValidationException("Location is required.");
+        }
+        factory.setLocation(location);
 
         factoryRepository.save(factory);
         return factory;
