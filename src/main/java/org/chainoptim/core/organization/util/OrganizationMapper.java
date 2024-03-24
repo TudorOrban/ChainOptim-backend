@@ -4,6 +4,7 @@ import org.chainoptim.core.organization.dto.OrganizationDTO;
 import org.chainoptim.core.user.dto.UserDTO;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.user.model.User;
+import org.hibernate.Hibernate;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 public class OrganizationMapper {
 
     private OrganizationMapper() {}
+
 
     public static OrganizationDTO mapOrganizationToDTO(Organization organization, boolean includeUsers) {
         OrganizationDTO dto = new OrganizationDTO();
@@ -33,11 +35,13 @@ public class OrganizationMapper {
 
     public static UserDTO mapUserToDTO(User user) {
         UserDTO dto = new UserDTO();
+        Hibernate.initialize(user.getCustomRole());
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         dto.setRole(user.getRole());
+        dto.setCustomRole(user.getCustomRole());
         return dto;
     }
 }

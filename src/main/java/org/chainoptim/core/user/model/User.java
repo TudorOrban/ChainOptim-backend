@@ -68,7 +68,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "custom_role_id", referencedColumnName = "id")
     private CustomRole customRole;
 
