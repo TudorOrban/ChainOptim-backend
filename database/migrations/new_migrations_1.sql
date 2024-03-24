@@ -147,3 +147,23 @@ CREATE TABLE product_stage_connections (
     FOREIGN KEY (incoming_stage_output_id) REFERENCES stage_outputs(id),
     FOREIGN KEY (incoming_stage_id) REFERENCES stages(id)
 );
+
+INSERT INTO product_stage_connections (product_id, outgoing_stage_input_id, outgoing_stage_id, incoming_stage_output_id, incoming_stage_id)
+VALUES (21, 8, 7, 6, 5);
+
+CREATE TABLE custom_roles (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    organization_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    permissions JSON NOT NULL,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
+);
+
+ALTER TABLE users 
+ADD COLUMN custom_role_id INT;
+
+ALTER TABLE users
+ADD FOREIGN KEY (custom_role_id) REFERENCES custom_roles(id);
+
+INSERT INTO custom_roles (organization_id, name, permissions)
+VALUES (1, 'Common Member', '{\"factories\": {\"read\": true, \"create\": false}}');

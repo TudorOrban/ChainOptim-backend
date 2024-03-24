@@ -1,31 +1,36 @@
-package org.chainoptim.features.scanalysis.production.factorygraph.model;
+package org.chainoptim.core.organization.model;
+
+import org.chainoptim.exception.ValidationException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.chainoptim.exception.ValidationException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
-@Table(name = "factory_production_graphs")
-public class FactoryProductionGraph {
+@Table(name = "custom_roles")
+public class CustomRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
 
-    @Column(name = "factory_id", nullable = false)
-    private Integer factoryId;
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
@@ -36,34 +41,33 @@ public class FactoryProductionGraph {
     private LocalDateTime updatedAt;
 
     // Manual deserialization and caching of JSON column
-    @Column(name = "factory_graph", columnDefinition = "json")
-    private String factoryGraphJson;
+    @Column(name = "permissions", columnDefinition = "json")
+    private String permissionsJson;
 
     @Transient // Ignore field
-    private FactoryGraph factoryGraph;
+    private Permissions permissions;
 
-    public FactoryGraph getFactoryGraph() {
-        if (this.factoryGraph == null && this.factoryGraphJson != null) {
+    public Permissions getPermissions() {
+        if (this.permissions == null && this.permissionsJson != null) {
             // Deserialize when accessed
             ObjectMapper mapper = new ObjectMapper();
             try {
-                this.factoryGraph = mapper.readValue(this.factoryGraphJson, FactoryGraph.class);
+                this.permissions = mapper.readValue(this.permissionsJson, Permissions.class);
             } catch (JsonProcessingException e) {
-                throw new ValidationException("Invalid Factory Graph data");
+                throw new ValidationException("Invalid Permissions json");
             }
         }
-        return this.factoryGraph;
+        return this.permissions;
     }
 
-    public void setFactoryGraph(FactoryGraph factoryGraph) {
-        this.factoryGraph = factoryGraph;
+    public void setPermissions(Permissions permissions) {
+        this.permissions = permissions;
         // Serialize when setting the object
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.factoryGraphJson = mapper.writeValueAsString(factoryGraph);
+            this.permissionsJson = mapper.writeValueAsString(permissions);
         } catch (JsonProcessingException e) {
-            throw new ValidationException("Invalid Factory Graph data");
+            throw new ValidationException("Invalid Permissions json");
         }
     }
-
 }

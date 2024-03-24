@@ -1,5 +1,6 @@
 package org.chainoptim.config.security;
 
+import org.chainoptim.core.organization.repository.CustomRoleRepository;
 import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
 
+    private final CustomRoleRepository customRoleRepository;
     private final ProductRepository productRepository;
     private final StageRepository stageRepository;
     private final FactoryRepository factoryRepository;
@@ -32,6 +34,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Autowired
     public SecurityServiceImpl(
+            CustomRoleRepository customRoleRepository,
             ProductRepository productRepository,
             StageRepository stageRepository,
             FactoryRepository factoryRepository,
@@ -42,6 +45,7 @@ public class SecurityServiceImpl implements SecurityService {
             UnitOfMeasurementRepository unitOfMeasurementRepository,
             ComponentRepository componentRepository
     ) {
+        this.customRoleRepository = customRoleRepository;
         this.productRepository = productRepository;
         this.stageRepository = stageRepository;
         this.factoryRepository = factoryRepository;
@@ -56,6 +60,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     public boolean canAccessEntity(Long entityId, String entityType) {
         Optional<Integer> entityOrganizationId = switch (entityType) {
+            case "CustomRole" -> customRoleRepository.findOrganizationIdById(entityId);
             case "Product" -> productRepository.findOrganizationIdById(entityId);
             case "Factory" -> factoryRepository.findOrganizationIdById(entityId);
             case "Warehouse" -> warehouseRepository.findOrganizationIdById(entityId);
