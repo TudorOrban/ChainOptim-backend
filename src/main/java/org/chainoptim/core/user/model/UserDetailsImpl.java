@@ -17,6 +17,8 @@ public class UserDetailsImpl implements UserDetails {
     @Getter
     private Integer organizationId;
     @Getter
+    private User.Role role;
+    @Getter
     private CustomRole customRole;
 
     @Override

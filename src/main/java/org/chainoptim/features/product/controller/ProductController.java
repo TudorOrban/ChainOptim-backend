@@ -31,19 +31,19 @@ public class ProductController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
     @GetMapping("/organizations/{organizationId}/small")
     public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationIdSmall(@PathVariable Integer organizationId) {
         return ResponseEntity.ok(productService.getProductsByOrganizationIdSmall(organizationId));
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
     @GetMapping("/organizations/{organizationId}")
     public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationId(@PathVariable Integer organizationId) {
         return ResponseEntity.ok(productService.getProductsByOrganizationId(organizationId));
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
     @GetMapping("/organizations/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<ProductsSearchDTO>> getProductsByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
@@ -57,7 +57,7 @@ public class ProductController {
         return ResponseEntity.ok(paginatedResults);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\")")
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Read\")")
     @GetMapping("/{productId}/stages")
     public ResponseEntity<Product> getProductWithStages(@PathVariable Integer productId) {
         Product product = productService.getProductWithStages(productId);
@@ -65,7 +65,7 @@ public class ProductController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#productDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#productDTO.getOrganizationId(), \"Product\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductDTO productDTO) {
         Product product = productService.createProduct(productDTO);
@@ -73,7 +73,7 @@ public class ProductController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#productDTO.getId(), \"Product\")")
+    @PreAuthorize("@securityService.canAccessEntity(#productDTO.getId(), \"Product\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductDTO productDTO) {
         Product product = productService.updateProduct(productDTO);
@@ -81,7 +81,7 @@ public class ProductController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\")")
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Delete\")")
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);

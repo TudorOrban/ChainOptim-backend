@@ -27,7 +27,7 @@ public class CustomRoleController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"CustomRole\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<CustomRole>> getCustomRolesByOrganizationId(@PathVariable("organizationId") Integer organizationId) {
         List<CustomRole> customRoles = customRoleService.getCustomRolesByOrganizationId(organizationId);
@@ -35,7 +35,7 @@ public class CustomRoleController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#roleDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#roleDTO.getOrganizationId(), \"CustomRole\", \"Create\")")
     @PostMapping("create")
     public ResponseEntity<CustomRole> createCustomRole(@RequestBody CreateCustomRoleDTO roleDTO) {
         CustomRole customRole = customRoleService.createCustomRole(roleDTO);
@@ -43,7 +43,7 @@ public class CustomRoleController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#roleDTO.getId(), \"CustomRole\")")
+    @PreAuthorize("@securityService.canAccessEntity(#roleDTO.getId(), \"CustomRole\", \"Update\")")
     @PutMapping("update")
     public ResponseEntity<CustomRole> updateCustomRole(@RequestBody UpdateCustomRoleDTO roleDTO) {
         CustomRole customRole = customRoleService.updateCustomRole(roleDTO.getId(), roleDTO);
@@ -51,7 +51,7 @@ public class CustomRoleController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#roleId, \"CustomRole\")")
+    @PreAuthorize("@securityService.canAccessEntity(#roleId, \"CustomRole\", \"Delete\")")
     @DeleteMapping("delete/{roleId}")
     public ResponseEntity<Void> deleteCustomRole(@PathVariable("roleId") Integer roleId) {
         customRoleService.deleteCustomRole(roleId);

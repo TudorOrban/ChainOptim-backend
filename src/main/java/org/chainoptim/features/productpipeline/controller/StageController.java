@@ -28,7 +28,7 @@ public class StageController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Stage\", \"Read\")")
     @GetMapping("/organization/{organizationId}/small")
     public ResponseEntity<List<StagesSearchDTO>> getStagesByOrganizationIdSmall(@PathVariable Integer organizationId) {
         List<StagesSearchDTO> stages = stageService.getStagesByOrganizationIdSmall(organizationId);
@@ -38,13 +38,13 @@ public class StageController {
         return ResponseEntity.ok(stages);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\")")
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Read\")")
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<Stage>> getStagesByProductId(@PathVariable Integer productId) {
         return ResponseEntity.ok(stageService.getStagesByProductId(productId));
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\")")
+    @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\", \"Read\")")
     @GetMapping("/{stageId}")
     public ResponseEntity<Stage> getStageById(@PathVariable("stageId") Integer stageId) {
         Stage stage = stageService.getStageById(stageId);
@@ -52,7 +52,7 @@ public class StageController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#stageDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#stageDTO.getOrganizationId(), \"Stage\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Stage> createStage(@RequestBody CreateStageDTO stageDTO) {
         Stage stage = stageService.createStage(stageDTO);
@@ -60,7 +60,7 @@ public class StageController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#updateStageDTO.getId(), \"Stage\")")
+    @PreAuthorize("@securityService.canAccessEntity(#updateStageDTO.getId(), \"Stage\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Stage> updateStage(@RequestBody UpdateStageDTO updateStageDTO) {
         Stage stage = stageService.updateStage(updateStageDTO);
@@ -68,7 +68,7 @@ public class StageController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\")")
+    @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\", \"Delete\")")
     @DeleteMapping("/delete/{stageId}")
     public ResponseEntity<Void> deleteStage(@PathVariable Integer stageId) {
         stageService.deleteStage(stageId);

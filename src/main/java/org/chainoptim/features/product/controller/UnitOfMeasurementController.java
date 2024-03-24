@@ -26,7 +26,7 @@ public class UnitOfMeasurementController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"UnitOfMeasurement\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<UnitOfMeasurement>> getUnitsOfMeasurementByOrganizationId(@PathVariable("organizationId") Integer organizationId) {
         List<UnitOfMeasurement> units = unitOfMeasurementService.getUnitsOfMeasurementByOrganizationId(organizationId);
@@ -34,7 +34,7 @@ public class UnitOfMeasurementController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#unitDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#unitDTO.getOrganizationId(), \"UnitOfMeasurement\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<UnitOfMeasurement> createUnitOfMeasurement(@RequestBody CreateUnitOfMeasurementDTO unitDTO) {
         UnitOfMeasurement newUnit = unitOfMeasurementService.createUnitOfMeasurement(unitDTO);
@@ -42,7 +42,7 @@ public class UnitOfMeasurementController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#unitDTO.getId(), \"UnitOfMeasurement\")")
+    @PreAuthorize("@securityService.canAccessEntity(#unitDTO.getId(), \"UnitOfMeasurement\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<UnitOfMeasurement> updateUnitOfMeasurement(@RequestBody UpdateUnitOfMeasurementDTO unitDTO) {
         UnitOfMeasurement updatedUnit = unitOfMeasurementService.updateUnitOfMeasurement(unitDTO);
@@ -50,7 +50,7 @@ public class UnitOfMeasurementController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#unitId, \"UnitOfMeasurement\")")
+    @PreAuthorize("@securityService.canAccessEntity(#unitId, \"UnitOfMeasurement\", \"Delete\")")
     @DeleteMapping("/delete/{unitId}")
     public ResponseEntity<Void> deleteUnitOfMeasurement(@PathVariable("unitId") Integer unitId) {
         unitOfMeasurementService.deleteUnitOfMeasurement(unitId);

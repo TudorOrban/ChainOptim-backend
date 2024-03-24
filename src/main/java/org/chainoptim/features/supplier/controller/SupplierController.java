@@ -32,7 +32,7 @@ public class SupplierController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Supplier\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Supplier>> getSuppliersByOrganizationId(@PathVariable Integer organizationId) {
         List<Supplier> suppliers = supplierService.getSuppliersByOrganizationId(organizationId);
@@ -42,7 +42,7 @@ public class SupplierController {
         return ResponseEntity.ok(suppliers);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Supplier\", \"Read\")")
     @GetMapping("/organizations/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<SuppliersSearchDTO>> getSuppliersByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
@@ -56,7 +56,7 @@ public class SupplierController {
         return ResponseEntity.ok(suppliers);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\")")
+    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
     @GetMapping("/{supplierId}")
     public ResponseEntity<Supplier> getSupplierById(@PathVariable Integer supplierId) {
         Supplier supplier = supplierService.getSupplierById(supplierId);
@@ -64,7 +64,7 @@ public class SupplierController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#supplierDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#supplierDTO.getOrganizationId(), \"Supplier\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Supplier> createSupplier(@RequestBody CreateSupplierDTO supplierDTO) {
         Supplier supplier = supplierService.createSupplier(supplierDTO);
@@ -72,14 +72,14 @@ public class SupplierController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#supplierDTO.getId(), \"Supplier\")")
+    @PreAuthorize("@securityService.canAccessEntity(#supplierDTO.getId(), \"Supplier\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Supplier> updateSupplier(@RequestBody UpdateSupplierDTO supplierDTO) {
         Supplier supplier = supplierService.updateSupplier(supplierDTO);
         return ResponseEntity.ok(supplier);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\")")
+    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Delete\")")
     @DeleteMapping("/delete/{supplierId}")
     public ResponseEntity<Void> deleteSupplier(@PathVariable Integer supplierId) {
         supplierService.deleteSupplier(supplierId);
