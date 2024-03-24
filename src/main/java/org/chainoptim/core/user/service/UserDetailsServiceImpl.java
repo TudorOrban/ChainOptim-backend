@@ -36,6 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetails.setPassword(user.getPasswordHash());
         userDetails.setOrganizationId(user.getOrganization().getId());
         userDetails.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        userDetails.setCustomRole(user.getCustomRole());
 
         return userDetails;
     }

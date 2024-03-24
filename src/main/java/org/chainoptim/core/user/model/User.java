@@ -1,5 +1,6 @@
 package org.chainoptim.core.user.model;
 
+import org.chainoptim.core.organization.model.CustomRole;
 import org.chainoptim.core.organization.model.Organization;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -67,6 +68,9 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @OneToOne
+    @JoinColumn(name = "custom_role_id", referencedColumnName = "id")
+    private CustomRole customRole;
 
     @Override
     public boolean equals(Object o) {

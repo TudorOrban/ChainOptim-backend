@@ -1,5 +1,7 @@
 package org.chainoptim.core.organization.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.chainoptim.core.user.model.User;
 import org.chainoptim.exception.ValidationException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,6 +41,10 @@ public class CustomRole {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToOne(mappedBy = "customRole", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
 
     // Manual deserialization and caching of JSON column
     @Column(name = "permissions", columnDefinition = "json")
