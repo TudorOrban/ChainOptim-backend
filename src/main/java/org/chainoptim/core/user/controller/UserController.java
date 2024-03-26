@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/users") // TODO: Secure all these endpoints
 public class UserController {
 
     private final UserService userService;
@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-
+    // Fetch
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
         Optional<User> userOptional = Optional.ofNullable(userService.getUserById(id));
@@ -65,11 +65,18 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping
+    // Update
+    @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.updateUser(user));
     }
 
+    @PutMapping("/{userId}/assign-role/{roleId}")
+    public ResponseEntity<User> assignCustomRoleToUser(@PathVariable("userId") String userId, @PathVariable("roleId") Integer roleId) {
+        return ResponseEntity.ok(userService.assignCustomRoleToUser(userId, roleId));
+    }
+
+    // Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);

@@ -1,11 +1,13 @@
 package org.chainoptim.core.user.service;
 
+import org.chainoptim.core.organization.model.CustomRole;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.dto.UserSearchResultDTO;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.user.repository.UserRepository;
 
+import org.chainoptim.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,22 +33,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerNewUser(String username, String password, String email) {
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("Username already taken");
-        }
-
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPasswordHash(passwordEncoder.encode(password));
-        newUser.setEmail(email);
-        newUser.setCreatedAt(LocalDateTime.now());
-        newUser.setUpdatedAt(LocalDateTime.now());
-        newUser.setRole(User.Role.NONE);
-
-        return userRepository.save(newUser);
-    }
-
+    // Fetch
     public User getUserById(String id) {
         return userRepository.findById(id).orElse(null);
     }
@@ -67,12 +54,20 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    public User updateUser(User user) {
-        return userRepository.save(user);
-    }
+    public User registerNewUser(String username, String password, String email) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("Username already taken");
+        }
 
-    public void deleteUser(String id) {
-        userRepository.deleteById(id);
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPasswordHash(passwordEncoder.encode(password));
+        newUser.setEmail(email);
+        newUser.setCreatedAt(LocalDateTime.now());
+        newUser.setUpdatedAt(LocalDateTime.now());
+        newUser.setRole(User.Role.NONE);
+
+        return userRepository.save(newUser);
     }
 
     public User registerNewOrganizationUser(String username, String password, String email, Integer organizationId, User.Role role) {
@@ -99,4 +94,25 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(newUser);
     }
+
+    // Update
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User assignCustomRoleToUser(String userId, Integer roleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + userId + " not found"));
+        CustomRole customRole = new CustomRole();
+        customRole.setId(roleId);
+        user.setCustomRole(customRole);
+        return userRepository.save(user);
+    }
+
+    // Delete
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
+    }
+
+
 }

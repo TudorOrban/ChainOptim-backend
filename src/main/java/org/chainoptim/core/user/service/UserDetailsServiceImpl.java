@@ -3,6 +3,7 @@ package org.chainoptim.core.user.service;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.core.user.repository.UserRepository;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
