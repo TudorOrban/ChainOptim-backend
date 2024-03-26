@@ -27,7 +27,7 @@ public class ComponentController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Component\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Component>> getComponentsByOrganizationId(@PathVariable Integer organizationId) {
         List<Component> components = componentService.getComponentsByOrganizationId(organizationId);
@@ -35,7 +35,7 @@ public class ComponentController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#componentDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#componentDTO.getOrganizationId(), \"Component\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Component> createComponent(@RequestBody CreateComponentDTO componentDTO) {
         Component component =  componentService.createComponent(componentDTO);
@@ -43,7 +43,7 @@ public class ComponentController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#componentDTO.getId(), \"Component\")")
+    @PreAuthorize("@securityService.canAccessEntity(#componentDTO.getId(), \"Component\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Component> updateComponent(@RequestBody UpdateComponentDTO componentDTO) {
         Component component =  componentService.updateComponent(componentDTO);
@@ -51,7 +51,7 @@ public class ComponentController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#id, \"Component\")")
+    @PreAuthorize("@securityService.canAccessEntity(#id, \"Component\", \"Delete\")")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteComponent(@PathVariable Integer id) {
         componentService.deleteComponent(id);

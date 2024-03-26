@@ -12,7 +12,7 @@ public interface UserService {
     User getUserById(String id);
     Optional<User> getUserByUsername(String username);
     List<UserSearchResultDTO> searchUsersByUsername(String username);
-    List<User> getAllUsers();
+    List<UserSearchResultDTO> searchUsersByCustomRoleId(Integer roleId);
     User updateUser(User user);
     void deleteUser(String id);
     User registerNewOrganizationUser(String username, String password, String email, Integer organizationId, User.Role role);

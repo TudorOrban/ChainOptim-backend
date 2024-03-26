@@ -52,7 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization savedOrganization = organizationRepository.save(organization);
 
         // Handle users
-        // - For new ones, use User service to register and tie to organization
+        // - For new user, use User service to register and tie to organization
         for (CreateOrganizationUserDTO createDto: createOrganizationDTO.getCreatedUsers()) {
             userService.registerNewOrganizationUser(createDto.getUsername(), createDto.getPassword(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole());
         }

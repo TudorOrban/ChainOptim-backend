@@ -2,6 +2,7 @@ package org.chainoptim.core.user.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.chainoptim.core.organization.model.CustomRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,7 +15,11 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     @Getter
-    Integer organizationId;
+    private Integer organizationId;
+    @Getter
+    private User.Role role;
+    @Getter
+    private CustomRole customRole;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

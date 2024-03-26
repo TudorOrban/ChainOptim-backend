@@ -61,8 +61,10 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserSearchResultDTO> searchUsersByCustomRoleId(Integer roleId) {
+        return userRepository.findByCustomRoleId(roleId).stream()
+                .map(user -> new UserSearchResultDTO(user.getId(), user.getUsername(), user.getEmail()))
+                .toList();
     }
 
     public User updateUser(User user) {

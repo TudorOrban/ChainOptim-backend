@@ -32,7 +32,7 @@ public class WarehouseController {
 
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Warehouse\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Warehouse>> getWarehousesByOrganizationId(@PathVariable Integer organizationId) {
         List<Warehouse> warehouses = warehouseService.getWarehousesByOrganizationId(organizationId);
@@ -42,7 +42,7 @@ public class WarehouseController {
         return ResponseEntity.ok(warehouses);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Warehouse\", \"Read\")")
     @GetMapping("/organizations/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<WarehousesSearchDTO>> getWarehousesByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
@@ -56,7 +56,7 @@ public class WarehouseController {
         return ResponseEntity.ok(warehouses);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\")")
+    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\", \"Read\")")
     @GetMapping("/{warehouseId}")
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable Integer warehouseId) {
         Warehouse warehouse = warehouseService.getWarehouseById(warehouseId);
@@ -64,7 +64,7 @@ public class WarehouseController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#warehouseDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#warehouseDTO.getOrganizationId(), \"Warehouse\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Warehouse> createWarehouse(@RequestBody CreateWarehouseDTO warehouseDTO) {
         Warehouse warehouse = warehouseService.createWarehouse(warehouseDTO);
@@ -72,7 +72,7 @@ public class WarehouseController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#warehouseDTO.getId(), \"Warehouse\")")
+    @PreAuthorize("@securityService.canAccessEntity(#warehouseDTO.getId(), \"Warehouse\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Warehouse> updateWarehouse(@RequestBody UpdateWarehouseDTO warehouseDTO) {
         Warehouse warehouse = warehouseService.updateWarehouse(warehouseDTO);
@@ -80,7 +80,7 @@ public class WarehouseController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\")")
+    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\", \"Delete\")")
     @DeleteMapping("/delete/{warehouseId}")
     public ResponseEntity<Void> deleteWarehouse(@PathVariable Integer warehouseId) {
         warehouseService.deleteWarehouse(warehouseId);

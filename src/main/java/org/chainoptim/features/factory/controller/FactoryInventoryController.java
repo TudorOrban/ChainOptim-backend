@@ -30,7 +30,7 @@ public class FactoryInventoryController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Read\")")
     @GetMapping("/factory/{factoryId}")
     public ResponseEntity<List<FactoryInventoryItem>> getFactoryInventoryByFactoryId(@PathVariable Integer factoryId) {
         List<FactoryInventoryItem> items = factoryInventoryService.getFactoryInventoryItemsByFactoryId(factoryId);
@@ -40,7 +40,7 @@ public class FactoryInventoryController {
         return ResponseEntity.ok(items);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Read\")")
     @GetMapping("/factory/advanced/{factoryId}")
     public ResponseEntity<PaginatedResults<FactoryInventoryItem>> getFactoryInventoryItemsByFactoryId(
             @PathVariable Integer factoryId,
@@ -62,7 +62,7 @@ public class FactoryInventoryController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessEntity(#itemDTO.getFactoryId(), \"Factory\")")
+    @PreAuthorize("@securityService.canAccessEntity(#itemDTO.getFactoryId(), \"Factory\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<FactoryInventoryItem> createFactory(@RequestBody CreateFactoryInventoryItemDTO itemDTO) {
         FactoryInventoryItem item = factoryInventoryService.createFactoryInventoryItem(itemDTO);

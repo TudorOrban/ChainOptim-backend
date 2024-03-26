@@ -59,9 +59,10 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping()
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @GetMapping("/search/custom-role/{roleId}")
+    public ResponseEntity<List<UserSearchResultDTO>> searchUsersByCustomRoleId(@PathVariable Integer roleId) {
+        List<UserSearchResultDTO> users = userService.searchUsersByCustomRoleId(roleId);
+        return ResponseEntity.ok(users);
     }
 
     @PutMapping

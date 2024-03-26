@@ -26,7 +26,7 @@ public class LocationController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Location\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Location>> getLocationsByOrganizationId(@PathVariable("organizationId") Integer organizationId) {
         List<Location> locations = locationService.getLocationsByOrganizationId(organizationId);
@@ -34,7 +34,7 @@ public class LocationController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#locationDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#locationDTO.getOrganizationId(), \"Location\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Location> createLocation(@RequestBody CreateLocationDTO locationDTO) {
         Location newLocation = locationService.createLocation(locationDTO);
@@ -42,7 +42,7 @@ public class LocationController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#locationDTO.getId(), \"Location\")")
+    @PreAuthorize("@securityService.canAccessEntity(#locationDTO.getId(), \"Location\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Location> updateLocation(@RequestBody UpdateLocationDTO locationDTO) {
         Location updatedLocation = locationService.updateLocation(locationDTO);
@@ -50,7 +50,7 @@ public class LocationController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#locationId, \"Location\")")
+    @PreAuthorize("@securityService.canAccessEntity(#locationId, \"Location\", \"Delete\")")
     @DeleteMapping("/delete/{locationId}")
     public ResponseEntity<Void> deleteLocation(@PathVariable("locationId") Integer locationId) {
         locationService.deleteLocation(locationId);

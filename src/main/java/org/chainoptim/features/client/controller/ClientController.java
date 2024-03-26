@@ -32,7 +32,7 @@ public class ClientController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Client\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Client>> getClientsByOrganizationId(@PathVariable Integer organizationId) {
         List<Client> clients = clientService.getClientsByOrganizationId(organizationId);
@@ -42,7 +42,7 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Client\", \"Read\")")
     @GetMapping("/organizations/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<ClientsSearchDTO>> getClientsByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
@@ -56,7 +56,7 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\")")
+    @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Read\")")
     @GetMapping("/{clientId}")
     public ResponseEntity<Client> getClientById(@PathVariable Long clientId) {
         Client client = clientService.getClientById(clientId);
@@ -64,7 +64,7 @@ public class ClientController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#clientDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#clientDTO.getOrganizationId(), \"Client\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Client> createClient(@RequestBody CreateClientDTO clientDTO) {
         Client client = clientService.createClient(clientDTO);
@@ -72,14 +72,14 @@ public class ClientController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#clientDTO.getId(), \"Client\")")
+    @PreAuthorize("@securityService.canAccessEntity(#clientDTO.getId(), \"Client\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Client> updateClient(@RequestBody UpdateClientDTO clientDTO) {
         Client client = clientService.updateClient(clientDTO);
         return ResponseEntity.ok(client);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\")")
+    @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Delete\")")
     @DeleteMapping("/delete/{clientId}")
     public ResponseEntity<Void> deleteClient(@PathVariable Integer clientId) {
         clientService.deleteClient(clientId);

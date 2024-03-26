@@ -31,7 +31,7 @@ public class FactoryController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Factory\", \"Read\")")
     @GetMapping("/organization/{organizationId}/small")
     public ResponseEntity<List<FactoriesSearchDTO>> getFactoriesByOrganizationIdSmall(@PathVariable Integer organizationId) {
         List<FactoriesSearchDTO> factories = factoryService.getFactoriesByOrganizationIdSmall(organizationId);
@@ -41,7 +41,7 @@ public class FactoryController {
         return ResponseEntity.ok(factories);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Factory\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Factory>> getFactoriesByOrganizationId(@PathVariable Integer organizationId) {
         List<Factory> factories = factoryService.getFactoriesByOrganizationId(organizationId);
@@ -51,7 +51,7 @@ public class FactoryController {
         return ResponseEntity.ok(factories);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId)")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Factory\", \"Read\")")
     @GetMapping("/organizations/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<FactoriesSearchDTO>> getFactoriesByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
@@ -64,14 +64,14 @@ public class FactoryController {
         return ResponseEntity.ok(factories);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Read\")")
     @GetMapping("/{factoryId}")
     public ResponseEntity<Factory> getFactoryById(@PathVariable Integer factoryId) {
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
         return ResponseEntity.ok(factory);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Read\")")
     @GetMapping("/{factoryId}/stages")
     public ResponseEntity<Factory> getFactoryWithStages(@PathVariable Integer factoryId) {
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
@@ -83,7 +83,7 @@ public class FactoryController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#factoryDTO.getOrganizationId())")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#factoryDTO.getOrganizationId(), \"Factory\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Factory> createFactory(@RequestBody CreateFactoryDTO factoryDTO) {
         Factory factory = factoryService.createFactory(factoryDTO);
@@ -91,7 +91,7 @@ public class FactoryController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessEntity(#factoryDTO.getId(), \"Factory\")")
+    @PreAuthorize("@securityService.canAccessEntity(#factoryDTO.getId(), \"Factory\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Factory> updateFactory(@RequestBody UpdateFactoryDTO factoryDTO) {
         Factory factory = factoryService.updateFactory(factoryDTO);
@@ -99,7 +99,7 @@ public class FactoryController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Delete\")")
     @DeleteMapping("/delete/{factoryId}")
     public ResponseEntity<Void> deleteFactory(@PathVariable Integer factoryId) {
         factoryService.deleteFactory(factoryId);
