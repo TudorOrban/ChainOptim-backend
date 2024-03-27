@@ -1,6 +1,7 @@
 package org.chainoptim.core.user.service;
 
 import org.chainoptim.core.organization.model.CustomRole;
+import org.chainoptim.core.organization.repository.CustomRoleRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.dto.UserSearchResultDTO;
 import org.chainoptim.core.organization.model.Organization;
@@ -23,13 +24,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final OrganizationRepository organizationRepository;
+    private final CustomRoleRepository customRoleRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, OrganizationRepository organizationRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           OrganizationRepository organizationRepository,
+                            CustomRoleRepository customRoleRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
+        this.customRoleRepository = customRoleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -103,11 +109,17 @@ public class UserServiceImpl implements UserService {
     public User assignCustomRoleToUser(String userId, Integer roleId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + userId + " not found"));
-        CustomRole customRole = new CustomRole();
-        customRole.setId(roleId);
+
+        CustomRole customRole = null;
+        if (roleId != null) { // Allow null roleId
+            customRole = customRoleRepository.findById(roleId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Role with ID: " + roleId + " not found"));
+        }
         user.setCustomRole(customRole);
+
         return userRepository.save(user);
     }
+
 
     // Delete
     public void deleteUser(String id) {
