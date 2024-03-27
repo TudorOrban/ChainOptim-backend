@@ -9,6 +9,7 @@ import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.user.repository.UserRepository;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,16 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    public PaginatedResults<UserSearchResultDTO> searchPublicUsers(String searchQuery, Integer page, Integer pageSize) {
+        PaginatedResults<User> paginatedResults = userRepository.searchPublicUsers(searchQuery, page, pageSize);
+        List<UserSearchResultDTO> mappedResults = paginatedResults.results.stream()
+                .map(user -> new UserSearchResultDTO(user.getId(), user.getUsername(), user.getEmail()))
+                .toList();
+
+        return new PaginatedResults<>(mappedResults, paginatedResults.totalCount);
+    }
+
+    // Create
     public User registerNewUser(String username, String password, String email) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already taken");
@@ -129,6 +140,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    public User removeUserFromOrganization(String userId, Integer organizationId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + userId + " not found"));
+
+        if (user.getOrganization() != null && user.getOrganization().getId().equals(organizationId)) {
+            user.setOrganization(null);
+            user.setRole(User.Role.NONE);
+            user.setCustomRole(null);
+        }
+
+        return userRepository.save(user);
+    }
 
     // Delete
     public void deleteUser(String id) {

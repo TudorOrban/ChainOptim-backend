@@ -6,6 +6,7 @@ import org.chainoptim.core.user.dto.UserWithOrganizationDTO;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.service.UserService;
 import org.chainoptim.core.user.dto.UserSearchResultDTO;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +68,15 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/search/public")
+    public ResponseEntity<PaginatedResults<UserSearchResultDTO>> searchPublicUsers(
+            @RequestParam(defaultValue = "") String searchQuery,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "20") Integer itemsPerPage) {
+        PaginatedResults<UserSearchResultDTO> users = userService.searchPublicUsers(searchQuery, page, itemsPerPage);
+        return ResponseEntity.ok(users);
+    }
+
     // Update
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
@@ -81,6 +91,11 @@ public class UserController {
     @PutMapping("/{userId}/assign-custom-role")
     public ResponseEntity<User> assignCustomRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignCustomRoleDTO roleDTO) {
         return ResponseEntity.ok(userService.assignCustomRoleToUser(userId, roleDTO.getRoleId()));
+    }
+
+    @PutMapping("/{userId}/remove-from-organization/{organizationId}")
+    public ResponseEntity<User> removeUserFromOrganization(@PathVariable("userId") String userId, @PathVariable("organizationId") Integer organizationId) {
+        return ResponseEntity.ok(userService.removeUserFromOrganization(userId, organizationId));
     }
 
     // Delete

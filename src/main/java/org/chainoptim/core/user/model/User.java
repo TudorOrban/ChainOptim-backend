@@ -72,6 +72,9 @@ public class User {
     @JoinColumn(name = "custom_role_id", referencedColumnName = "id")
     private CustomRole customRole;
 
+    @Column(name = "is_profile_public")
+    private boolean isProfilePublic;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -2,6 +2,7 @@ package org.chainoptim.core.user.service;
 
 import org.chainoptim.core.user.dto.UserSearchResultDTO;
 import org.chainoptim.core.user.model.User;
+import org.chainoptim.shared.search.model.PaginatedResults;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ public interface UserService {
     Optional<User> getUserByUsername(String username);
     List<UserSearchResultDTO> searchUsersByUsername(String username);
     List<UserSearchResultDTO> searchUsersByCustomRoleId(Integer roleId);
+    PaginatedResults<UserSearchResultDTO> searchPublicUsers(String searchQuery, Integer page, Integer pageSize);
 
     /// Create
     User registerNewUser(String username, String password, String email);
@@ -22,6 +24,7 @@ public interface UserService {
     User updateUser(User user);
     User assignBasicRoleToUser(String userId, User.Role role);
     User assignCustomRoleToUser(String userId, Integer roleId);
+    User removeUserFromOrganization(String userId, Integer organizationId);
 
     // Delete
     void deleteUser(String id);
