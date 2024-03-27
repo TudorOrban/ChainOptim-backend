@@ -9,10 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateClientOrderDTO {
+public class UpdateClientOrderDTO {
 
-    private Integer clientId;
-    private Integer productId;
+    private Integer id;
     private Integer organizationId;
     private Float quantity;
     private LocalDateTime orderDate;

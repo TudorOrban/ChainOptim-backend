@@ -1,10 +1,11 @@
 package org.chainoptim.features.supplier.controller;
 
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
-import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
+import org.chainoptim.features.supplier.dto.UpdateSupplierOrderDTO;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.service.SupplierOrderService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,9 +44,25 @@ public class SupplierOrderController {
         return ResponseEntity.ok(supplierOrders);
     }
 
+    // Create
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#order.getOrganizationId(), \"Supplier\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<SupplierOrder> createSupplierOrder(@RequestBody CreateSupplierOrderDTO order) {
         SupplierOrder supplierOrder = supplierOrderService.saveOrUpdateSupplierOrder(order);
         return ResponseEntity.ok(supplierOrder);
+    }
+
+    // TODO: Secure endpoint
+    @PostMapping("/create/bulk")
+    public ResponseEntity<List<SupplierOrder>> createSupplierOrdersInBulk(@RequestBody List<CreateSupplierOrderDTO> orders) {
+        List<SupplierOrder> clientOrders = supplierOrderService.createSupplierOrdersInBulk(orders);
+        return ResponseEntity.ok(clientOrders);
+    }
+
+    // TODO: Secure endpoint
+    @PutMapping("/update/bulk")
+    public ResponseEntity<List<SupplierOrder>> updateSupplierOrdersInBulk(@RequestBody List<UpdateSupplierOrderDTO> orders) {
+        List<SupplierOrder> clientOrders = supplierOrderService.updateSuppliersOrdersInBulk(orders);
+        return ResponseEntity.ok(clientOrders);
     }
 }

@@ -61,6 +61,6 @@ public class SupplierOrder {
     @Column(name = "status", nullable = false)
     private Status status;
 
-    @Column(name = "company_id", nullable = false)
+    @Column(name = "company_id")
     private String companyId;
 }
