@@ -58,7 +58,9 @@ class ProductRepositoryTest {
         product.setName("Test Product");
         product.setDescription("Test Description");
         product.setOrganizationId(organizationId);
-        product.setUnitId(unitId);
+        UnitOfMeasurement unit = new UnitOfMeasurement();
+        unit.setId(unitId);
+        product.setUnit(unit);
 
         entityManager.persist(product);
         entityManager.flush();
@@ -72,7 +74,9 @@ class ProductRepositoryTest {
         newProduct.setName("Test Product 2");
         newProduct.setDescription("Test Description 2");
         newProduct.setOrganizationId(organizationId);
-        newProduct.setUnitId(unitId);
+        UnitOfMeasurement unit = new UnitOfMeasurement();
+        unit.setId(unitId);
+        newProduct.setUnit(unit);
 
         // Act
         Product savedProduct = productRepository.save(newProduct);
@@ -88,7 +92,7 @@ class ProductRepositoryTest {
         assertEquals(newProduct.getName(), foundProduct.getName());
         assertEquals(newProduct.getDescription(), foundProduct.getDescription());
         assertEquals(newProduct.getOrganizationId(), foundProduct.getOrganizationId());
-        assertEquals(newProduct.getUnitId(), foundProduct.getUnitId());
+        assertEquals(newProduct.getUnit().getId(), foundProduct.getUnit().getId());
     }
 
     @Test

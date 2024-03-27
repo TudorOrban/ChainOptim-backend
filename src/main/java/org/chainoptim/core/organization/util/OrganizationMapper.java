@@ -38,6 +38,7 @@ public class OrganizationMapper {
         Hibernate.initialize(user.getCustomRole());
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         dto.setRole(user.getRole());

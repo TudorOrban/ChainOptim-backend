@@ -1,5 +1,7 @@
 package org.chainoptim.core.user.controller;
 
+import org.chainoptim.core.user.dto.AssignBasicRoleDTO;
+import org.chainoptim.core.user.dto.AssignCustomRoleDTO;
 import org.chainoptim.core.user.dto.UserWithOrganizationDTO;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.service.UserService;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/users") // TODO: Secure all these endpoints
 public class UserController {
 
     private final UserService userService;
@@ -22,7 +24,7 @@ public class UserController {
         this.userService = userService;
     }
 
-
+    // Fetch
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
         Optional<User> userOptional = Optional.ofNullable(userService.getUserById(id));
@@ -65,11 +67,23 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping
+    // Update
+    @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.updateUser(user));
     }
 
+    @PutMapping("/{userId}/assign-basic-role")
+    public ResponseEntity<User> assignBasicRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignBasicRoleDTO roleDTO) {
+        return ResponseEntity.ok(userService.assignBasicRoleToUser(userId, roleDTO.getRole()));
+    }
+
+    @PutMapping("/{userId}/assign-custom-role")
+    public ResponseEntity<User> assignCustomRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignCustomRoleDTO roleDTO) {
+        return ResponseEntity.ok(userService.assignCustomRoleToUser(userId, roleDTO.getRoleId()));
+    }
+
+    // Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);

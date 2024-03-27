@@ -41,7 +41,18 @@ public class SupplierDTOMapper {
         supplierOrder.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
         supplierOrder.setDeliveryDate(order.getDeliveryDate());
         supplierOrder.setStatus(order.getStatus());
+        supplierOrder.setCompanyId(order.getCompanyId());
 
         return supplierOrder;
+    }
+
+    public static void setUpdateSupplierOrderDTOToClientOrder(SupplierOrder supplierOrder, UpdateSupplierOrderDTO orderDTO) {
+        supplierOrder.setQuantity(orderDTO.getQuantity());
+        supplierOrder.setOrderDate(orderDTO.getOrderDate());
+        supplierOrder.setEstimatedDeliveryDate(orderDTO.getEstimatedDeliveryDate());
+        supplierOrder.setDeliveryDate(orderDTO.getDeliveryDate());
+        supplierOrder.setStatus(orderDTO.getStatus());
+        supplierOrder.setComponentId(orderDTO.getComponentId());
+        supplierOrder.setCompanyId(orderDTO.getCompanyId());
     }
 }

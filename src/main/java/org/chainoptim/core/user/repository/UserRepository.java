@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.customRole cr WHERE u.username = :username")
     Optional<User> findByUsername(String username);
     List<User> findByOrganizationId(Integer organizationId);
     @Query("SELECT u FROM User u WHERE u.customRole.id = :roleId")

@@ -10,6 +10,7 @@ import lombok.Setter;
 public class UserDTO {
     private String id;
     private String username;
+    private String email;
     private java.time.LocalDateTime createdAt;
     private java.time.LocalDateTime updatedAt;
     private User.Role role;

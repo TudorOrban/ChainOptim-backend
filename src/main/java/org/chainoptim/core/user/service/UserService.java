@@ -8,13 +8,22 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User registerNewUser(String username, String password, String email);
+    // Fetch
     User getUserById(String id);
     Optional<User> getUserByUsername(String username);
     List<UserSearchResultDTO> searchUsersByUsername(String username);
     List<UserSearchResultDTO> searchUsersByCustomRoleId(Integer roleId);
-    User updateUser(User user);
-    void deleteUser(String id);
+
+    /// Create
+    User registerNewUser(String username, String password, String email);
     User registerNewOrganizationUser(String username, String password, String email, Integer organizationId, User.Role role);
+
+    // Update
+    User updateUser(User user);
+    User assignBasicRoleToUser(String userId, User.Role role);
+    User assignCustomRoleToUser(String userId, Integer roleId);
+
+    // Delete
+    void deleteUser(String id);
 
 }

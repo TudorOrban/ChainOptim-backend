@@ -15,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -42,9 +43,9 @@ public class CustomRole {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "customRole", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customRole", fetch = FetchType.LAZY)
     @JsonIgnore
-    private User user;
+    private Set<User> users;
 
     // Manual deserialization and caching of JSON column
     @Column(name = "permissions", columnDefinition = "json")

@@ -51,4 +51,7 @@ public class ClientOrder {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "company_id")
+    private String companyId;
 }

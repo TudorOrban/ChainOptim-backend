@@ -60,4 +60,7 @@ public class SupplierOrder {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @Column(name = "company_id")
+    private String companyId;
 }

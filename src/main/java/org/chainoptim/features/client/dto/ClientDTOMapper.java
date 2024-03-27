@@ -34,6 +34,7 @@ public class ClientDTOMapper {
     public static ClientOrder mapCreateDtoToClientOrder(CreateClientOrderDTO order) {
         ClientOrder clientOrder = new ClientOrder();
         clientOrder.setClientId(order.getClientId());
+        clientOrder.setOrganizationId(order.getOrganizationId());
         clientOrder.setProductId(order.getProductId());
         clientOrder.setQuantity(order.getQuantity());
         clientOrder.setOrderDate(order.getOrderDate());
@@ -41,5 +42,12 @@ public class ClientDTOMapper {
         clientOrder.setDeliveryDate(order.getDeliveryDate());
 
         return clientOrder;
+    }
+
+    public static void setUpdateClientOrderDTOToClientOrder(ClientOrder clientOrder, UpdateClientOrderDTO orderDTO) {
+        clientOrder.setQuantity(orderDTO.getQuantity());
+        clientOrder.setOrderDate(orderDTO.getOrderDate());
+        clientOrder.setEstimatedDeliveryDate(orderDTO.getEstimatedDeliveryDate());
+        clientOrder.setDeliveryDate(orderDTO.getDeliveryDate());
     }
 }

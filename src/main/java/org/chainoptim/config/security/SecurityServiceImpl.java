@@ -1,5 +1,6 @@
 package org.chainoptim.config.security;
 
+import jakarta.transaction.Transactional;
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.model.UserDetailsImpl;
@@ -12,6 +13,7 @@ import org.chainoptim.features.productpipeline.repository.StageRepository;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -81,6 +83,7 @@ public class SecurityServiceImpl implements SecurityService {
         return canAccessOrganizationEntity(entityOrganizationId, entityType, operationType);
     }
 
+    @Transactional
     public boolean canAccessOrganizationEntity(Optional<Integer> organizationId, String entityType, String operationType) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
