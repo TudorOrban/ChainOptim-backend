@@ -5,6 +5,8 @@ import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.model.PaginatedResults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,11 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return supplierOrderRepository.findBySupplierId(supplierId);
     }
 
+    public PaginatedResults<SupplierOrder> getSuppliersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        return supplierOrderRepository.findBySupplierIdAdvanced(supplierId, searchQuery, sortBy, ascending, page, itemsPerPage);
+    }
 
+    // Create
     public SupplierOrder saveOrUpdateSupplierOrder(CreateSupplierOrderDTO orderDTO) {
         System.out.println("Sending order: " + orderDTO.getSupplierId());
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);

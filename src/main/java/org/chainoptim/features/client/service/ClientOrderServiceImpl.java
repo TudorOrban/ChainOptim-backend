@@ -5,6 +5,7 @@ import org.chainoptim.features.client.dto.CreateClientOrderDTO;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         this.entitySanitizerService = entitySanitizerService;
     }
 
+    // Fetch
     public List<ClientOrder> getClientOrdersByOrganizationId(Integer organizationId) {
         return clientOrderRepository.findByOrganizationId(organizationId);
     }
@@ -33,7 +35,12 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return clientOrderRepository.findByClientId(clientId);
     }
 
+    public PaginatedResults<ClientOrder> getClientOrdersByClientIdAdvanced(Integer clientId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        return clientOrderRepository.findByClientIdAdvanced(clientId, searchQuery, sortBy, ascending, page, itemsPerPage);
+    }
 
+
+    // Create
     public ClientOrder saveOrUpdateClientOrder(CreateClientOrderDTO orderDTO) {
         System.out.println("Sending order: " + orderDTO.getClientId());
         CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);

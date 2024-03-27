@@ -20,6 +20,7 @@ public interface UserService {
 
     // Update
     User updateUser(User user);
+    User assignBasicRoleToUser(String userId, User.Role role);
     User assignCustomRoleToUser(String userId, Integer roleId);
 
     // Delete

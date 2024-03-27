@@ -106,6 +106,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    public User assignBasicRoleToUser(String userId, User.Role role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + userId + " not found"));
+
+        user.setRole(role);
+
+        return userRepository.save(user);
+    }
+
     public User assignCustomRoleToUser(String userId, Integer roleId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + userId + " not found"));

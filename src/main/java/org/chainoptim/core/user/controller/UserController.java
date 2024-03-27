@@ -1,6 +1,7 @@
 package org.chainoptim.core.user.controller;
 
-import org.chainoptim.core.user.dto.AssignRoleDTO;
+import org.chainoptim.core.user.dto.AssignBasicRoleDTO;
+import org.chainoptim.core.user.dto.AssignCustomRoleDTO;
 import org.chainoptim.core.user.dto.UserWithOrganizationDTO;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.service.UserService;
@@ -72,8 +73,13 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user));
     }
 
-    @PutMapping("/{userId}/assign-role")
-    public ResponseEntity<User> assignCustomRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignRoleDTO roleDTO) {
+    @PutMapping("/{userId}/assign-basic-role")
+    public ResponseEntity<User> assignBasicRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignBasicRoleDTO roleDTO) {
+        return ResponseEntity.ok(userService.assignBasicRoleToUser(userId, roleDTO.getRole()));
+    }
+
+    @PutMapping("/{userId}/assign-custom-role")
+    public ResponseEntity<User> assignCustomRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignCustomRoleDTO roleDTO) {
         return ResponseEntity.ok(userService.assignCustomRoleToUser(userId, roleDTO.getRoleId()));
     }
 

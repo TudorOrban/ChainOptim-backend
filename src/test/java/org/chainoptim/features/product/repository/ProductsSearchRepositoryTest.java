@@ -1,6 +1,7 @@
 package org.chainoptim.features.product.repository;
 
 import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,8 @@ class ProductsSearchRepositoryTest {
 
     void createTestProduct(Integer id, String name, String description, String createdAt, String updatedAt) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        UnitOfMeasurement unit = new UnitOfMeasurement();
+        unit.setId(1);
 
         Product product = Product.builder()
                 .id(id)
@@ -38,7 +41,7 @@ class ProductsSearchRepositoryTest {
                 .description(description)
                 .createdAt(LocalDateTime.parse(createdAt, formatter))
                 .updatedAt(LocalDateTime.parse(updatedAt, formatter))
-                .unitId(1)
+                .unit(unit)
                 .build();
 
         entityManager.persist(product);

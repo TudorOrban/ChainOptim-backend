@@ -1,8 +1,6 @@
 package org.chainoptim.features.product.controller;
 
-import org.chainoptim.features.product.dto.CreateProductDTO;
-import org.chainoptim.features.product.dto.ProductsSearchDTO;
-import org.chainoptim.features.product.dto.UpdateProductDTO;
+import org.chainoptim.features.product.dto.*;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
@@ -49,7 +47,8 @@ class ProductControllerIntegrationTest {
     // Necessary seed data
     Integer organizationId;
     String jwtToken;
-    Integer unitId;
+    CreateUnitOfMeasurementDTO unitDTO;
+    UnitOfMeasurement unit;
     Integer productId;
 
     @BeforeEach
@@ -60,13 +59,12 @@ class ProductControllerIntegrationTest {
         jwtToken = seedResult.getSecond();
 
         // Set up a unit of measurement for products
-        UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement();
-        unitOfMeasurement.setName("Test unit");
-        unitOfMeasurement.setUnitType("Test unit type");
-        unitOfMeasurement.setOrganizationId(organizationId);
+        unitDTO = new CreateUnitOfMeasurementDTO();
+        unitDTO.setName("Test unit");
+        unitDTO.setUnitType("Test unit type");
+        unitDTO.setOrganizationId(organizationId);
 
-        unitOfMeasurement = unitOfMeasurementRepository.save(unitOfMeasurement);
-        unitId = unitOfMeasurement.getId();
+        unit = unitOfMeasurementRepository.save(UnitDTOMapper.convertCreateUnitDTOToUnit(unitDTO));
 
         // Set up product for search, update and delete tests
         createTestProducts();
@@ -77,7 +75,7 @@ class ProductControllerIntegrationTest {
         product1.setName("Test Product 1");
         product1.setDescription("Test Description 1");
         product1.setOrganizationId(organizationId);
-        product1.setUnitId(unitId);
+        product1.setUnit(unit);
 
         product1 = productRepository.save(product1);
         productId = product1.getId();
@@ -86,7 +84,7 @@ class ProductControllerIntegrationTest {
         product2.setName("Test Product 2");
         product2.setDescription("Test Description 2");
         product2.setOrganizationId(organizationId);
-        product2.setUnitId(unitId);
+        product2.setUnit(unit);
 
         productRepository.save(product2);
 
@@ -94,7 +92,7 @@ class ProductControllerIntegrationTest {
         product3.setName("Test Product 3");
         product3.setDescription("Test Description 3");
         product3.setOrganizationId(organizationId);
-        product3.setUnitId(unitId);
+        product3.setUnit(unit);
 
         productRepository.save(product3);
     }
@@ -137,7 +135,7 @@ class ProductControllerIntegrationTest {
     @Test
     void testCreateProduct() throws Exception {
         // Arrange
-        CreateProductDTO productDTO = new CreateProductDTO("Test Product - Unique Title 123456789", "Test Description", organizationId, unitId);
+        CreateProductDTO productDTO = new CreateProductDTO("Test Product - Unique Title 123456789", "Test Description", organizationId, unit.getId(), unitDTO, false);
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
         String invalidJWTToken = "Invalid";
 
@@ -170,14 +168,14 @@ class ProductControllerIntegrationTest {
         assertEquals(productDTO.getName(), createdProduct.getName());
         assertEquals(productDTO.getDescription(), createdProduct.getDescription());
         assertEquals(productDTO.getOrganizationId(), createdProduct.getOrganizationId());
-        assertEquals(productDTO.getUnitId(), createdProduct.getUnitId());
+        assertEquals(productDTO.getUnitId(), createdProduct.getUnit().getId());
 
     }
 
     @Test
     void testUpdateProduct() throws Exception {
         // Arrange
-        UpdateProductDTO productDTO = new UpdateProductDTO(productId, "Test Product - Updated Unique Title 123456789", "Test Description", unitId);
+        UpdateProductDTO productDTO = new UpdateProductDTO(productId, "Test Product - Updated Unique Title 123456789", "Test Description", unit.getId());
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
         String invalidJWTToken = "Invalid";
 
@@ -210,7 +208,7 @@ class ProductControllerIntegrationTest {
         assertNotNull(updatedProduct);
         assertEquals(productDTO.getName(), updatedProduct.getName());
         assertEquals(productDTO.getDescription(), updatedProduct.getDescription());
-        assertEquals(productDTO.getUnitId(), updatedProduct.getUnitId());
+        assertEquals(productDTO.getUnitId(), updatedProduct.getUnit().getId());
     }
 
     @Test

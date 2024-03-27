@@ -2,9 +2,11 @@ package org.chainoptim.features.product.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.dto.CreateProductDTO;
+import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.product.dto.ProductDTOMapper;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +32,7 @@ class ProductServiceTest {
     @Test
     void testCreateProduct() {
         // Arrange
-        CreateProductDTO productDTO = new CreateProductDTO("Test product", "Test description", 1, 1);
+        CreateProductDTO productDTO = new CreateProductDTO("Test product", "Test description", 1, 1, new CreateUnitOfMeasurementDTO(), false);
         Product expectedProduct = ProductDTOMapper.convertCreateProductDTOToProduct(productDTO);
 
         when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
@@ -43,7 +45,7 @@ class ProductServiceTest {
         assertEquals(expectedProduct.getName(), createdProduct.getName());
         assertEquals(expectedProduct.getDescription(), createdProduct.getDescription());
         assertEquals(expectedProduct.getOrganizationId(), createdProduct.getOrganizationId());
-        assertEquals(expectedProduct.getUnitId(), createdProduct.getUnitId());
+        assertEquals(expectedProduct.getUnit().getId(), createdProduct.getUnit().getId());
 
         verify(productRepository, times(1)).save(any(Product.class));
     }
@@ -56,7 +58,9 @@ class ProductServiceTest {
         existingProduct.setId(1);
         existingProduct.setName("Test Product");
         existingProduct.setDescription("Test Description");
-        existingProduct.setUnitId(1);
+        UnitOfMeasurement unit = new UnitOfMeasurement();
+        unit.setId(1);
+        existingProduct.setUnit(unit);
 
         when(productRepository.findById(productDTO.getId())).thenReturn(Optional.of(existingProduct));
         when(productRepository.save(any(Product.class))).thenReturn(existingProduct);
@@ -68,7 +72,7 @@ class ProductServiceTest {
         assertNotNull(updatedProduct);
         assertEquals(productDTO.getName(), updatedProduct.getName());
         assertEquals(productDTO.getDescription(), updatedProduct.getDescription());
-        assertEquals(productDTO.getUnitId(), updatedProduct.getUnitId());
+        assertEquals(productDTO.getUnitId(), updatedProduct.getUnit().getId());
 
         verify(productRepository, times(1)).findById(productDTO.getId());
         verify(productRepository, times(1)).save(any(Product.class));
@@ -82,7 +86,9 @@ class ProductServiceTest {
         existingProduct.setId(2); // Different id
         existingProduct.setName("Test Product");
         existingProduct.setDescription("Test Description");
-        existingProduct.setUnitId(1);
+        UnitOfMeasurement unit = new UnitOfMeasurement();
+        unit.setId(1);
+        existingProduct.setUnit(unit);
 
         when(productRepository.findById(productDTO.getId())).thenReturn(Optional.empty());
 
