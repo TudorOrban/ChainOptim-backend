@@ -6,10 +6,15 @@ import org.chainoptim.core.organization.model.CustomRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 
 @Setter
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String username;
     private String password;

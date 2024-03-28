@@ -22,6 +22,14 @@ logging.level.org.hibernate.SQL=DEBUG
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 logging.level.org.hibernate.type.descriptor.sql=TRACE
 
+# Redis Configuration
+spring.redis.host=localhost
+spring.redis.port=6379
+
+#DevTools
+#restart.exclude.userdetailsimpl=/org/chainoptim/core/user/model/UserDetailsImpl.class
+spring.devtools.restart.enabled=false
+
 # Kafka Configuration
 spring.kafka.producer.bootstrap-servers=172.29.201.153:9092
 spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
