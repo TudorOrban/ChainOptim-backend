@@ -20,6 +20,7 @@ public class SupplyChainSnapshotServiceImpl implements SupplyChainSnapshotServic
     private final SupplierRepository supplierRepository;
     private final ClientRepository clientRepository;
 
+
     @Autowired
     public SupplyChainSnapshotServiceImpl(UserRepository userRepository,
                                           ProductRepository productRepository,

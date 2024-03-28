@@ -1,9 +1,7 @@
 package org.chainoptim.features.product.repository;
 
-import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.product.model.Product;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

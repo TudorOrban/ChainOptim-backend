@@ -30,7 +30,7 @@ public class SupplierOrderController {
         return ResponseEntity.ok(supplierOrders);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
+//    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
     @GetMapping("/organization/advanced/{supplierId}")
     public ResponseEntity<PaginatedResults<SupplierOrder>> getSupplierOrdersBySupplierIdAdvanced(
             @PathVariable Integer supplierId,
