@@ -1,6 +1,5 @@
 package org.chainoptim.core.user.repository;
 
-import org.chainoptim.core.user.dto.UserSearchResultDTO;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.shared.search.model.PaginatedResults;
 

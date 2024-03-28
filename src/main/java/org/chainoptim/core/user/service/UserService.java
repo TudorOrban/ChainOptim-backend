@@ -16,17 +16,6 @@ public interface UserService {
     List<UserSearchResultDTO> searchUsersByCustomRoleId(Integer roleId);
     PaginatedResults<UserSearchResultDTO> searchPublicUsers(String searchQuery, Integer page, Integer pageSize);
 
-    /// Create
-    User registerNewUser(String username, String password, String email);
-    User registerNewOrganizationUser(String username, String password, String email, Integer organizationId, User.Role role);
 
-    // Update
-    User updateUser(User user);
-    User assignBasicRoleToUser(String userId, User.Role role);
-    User assignCustomRoleToUser(String userId, Integer roleId);
-    User removeUserFromOrganization(String userId, Integer organizationId);
-
-    // Delete
-    void deleteUser(String id);
 
 }

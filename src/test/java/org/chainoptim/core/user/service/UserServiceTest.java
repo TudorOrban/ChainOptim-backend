@@ -27,34 +27,6 @@ class UserServiceTest {
     @MockBean
     private OrganizationRepository organizationRepository;
 
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
-    @Test
-    void whenRegisterNewUser_thenSaveUser() {
-        // given
-        String username = "testuser";
-        String password = "testpassword";
-        String email = "newuser@example.com";
-
-        // when
-        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-
-        User user = new User();
-        user.setUsername(username);
-        user.setPasswordHash("encodedPassword");
-        user.setEmail(email);
-
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        User savedUser = userService.registerNewUser(username, password, email);
-
-        // then
-        assertEquals(username, savedUser.getUsername());
-        assertEquals("encodedPassword", savedUser.getPasswordHash());
-        assertEquals(email, savedUser.getEmail());
-    }
 
     @Test
     void whenGetUserById_thenReturnUser() {
@@ -118,16 +90,5 @@ class UserServiceTest {
         assertFalse(foundUser.isPresent());
     }
 
-    @Test
-    void whenDeleteUser_thenRepositoryDeleteCalled() {
-        // given
-        String userId = "user-123";
 
-        doNothing().when(userRepository).deleteById(userId);
-
-        userService.deleteUser(userId);
-
-        // then
-        verify(userRepository, times(1)).deleteById(userId);
-    }
 }

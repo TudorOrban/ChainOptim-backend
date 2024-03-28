@@ -3,7 +3,7 @@ package org.chainoptim.core.user.controller;
 import org.chainoptim.core.user.dto.LoginDTO;
 import org.chainoptim.core.user.dto.UserRegistrationDTO;
 import org.chainoptim.core.user.model.User;
-import org.chainoptim.core.user.service.UserService;
+import org.chainoptim.core.user.service.UserWriteService;
 import org.chainoptim.core.user.jwt.JwtAuthenticationResponse;
 import org.chainoptim.core.user.jwt.JwtTokenProvider;
 
@@ -28,17 +28,17 @@ import java.util.Collections;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-
-    private final UserService userService;
-
+    private final UserWriteService userWriteService;
     private final JwtTokenProvider tokenProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtTokenProvider tokenProvider) {
+    public AuthController(AuthenticationManager authenticationManager,
+                          UserWriteService userWriteService,
+                          JwtTokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
-        this.userService = userService;
+        this.userWriteService = userWriteService;
         this.tokenProvider = tokenProvider;
     }
 
@@ -57,7 +57,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<JwtAuthenticationResponse> registerUser(@RequestBody UserRegistrationDTO registrationDto) {
-        User registeredUser = userService.registerNewUser(registrationDto.getUsername(), registrationDto.getPassword(), registrationDto.getEmail());
+        User registeredUser = userWriteService.registerNewUser(registrationDto.getUsername(), registrationDto.getPassword(), registrationDto.getEmail());
 
         // Automatically log in user after registration and return JWT
         Authentication authentication = new UsernamePasswordAuthenticationToken(

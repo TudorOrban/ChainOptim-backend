@@ -1,11 +1,13 @@
 package org.chainoptim.core.user.service;
 
 import org.chainoptim.core.user.model.User;
-import org.chainoptim.core.user.model.UserDetailsImpl;
 
-public interface CachedUserService {
+public interface UserUpdateService {
 
-    UserDetailsImpl cachedLoadUserByUsername(String username);
+    // Update
+    User updateUser(User user);
     User assignBasicRoleToUser(String userId, User.Role role);
     User assignCustomRoleToUser(String userId, Integer roleId);
+    User removeUserFromOrganization(String userId, Integer organizationId);
+
 }
