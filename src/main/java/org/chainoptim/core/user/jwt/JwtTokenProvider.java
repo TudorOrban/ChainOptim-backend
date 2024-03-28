@@ -3,11 +3,9 @@ package org.chainoptim.core.user.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -39,7 +37,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromJWT(String token) {
-        logger.info("Token: " + token);
+        logger.info("Token: {}" + token);
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(JWT_SECRET)
                 .build()

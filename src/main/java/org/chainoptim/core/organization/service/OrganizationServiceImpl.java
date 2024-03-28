@@ -9,7 +9,9 @@ import org.chainoptim.core.organization.dto.OrganizationDTO;
 import org.chainoptim.core.organization.util.OrganizationMapper;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
+import org.chainoptim.core.user.service.UserWriteService;
 import org.chainoptim.core.user.service.UserService;
+import org.chainoptim.core.user.service.UserUpdateService;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,9 @@ import java.util.List;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
-
     private final UserRepository userRepository;
-
     private final UserService userService;
+    private final UserWriteService userWriteService;
 
     private final OrganizationInviteService organizationInviteService;
 
@@ -32,11 +33,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationServiceImpl(OrganizationRepository organizationRepository,
                                    UserRepository userRepository,
                                    UserService userService,
+                                   UserWriteService userWriteService,
                                    OrganizationInviteService organizationInviteService
                                    ) {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.userWriteService = userWriteService;
         this.organizationInviteService = organizationInviteService;
     }
 
@@ -54,14 +57,14 @@ public class OrganizationServiceImpl implements OrganizationService {
         // Handle users
         // - For new user, use User service to register and tie to organization
         for (CreateOrganizationUserDTO createDto: createOrganizationDTO.getCreatedUsers()) {
-            userService.registerNewOrganizationUser(createDto.getUsername(), createDto.getPassword(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole());
+            userWriteService.registerNewOrganizationUser(createDto.getUsername(), createDto.getPassword(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole());
         }
+
 
         // - For existing users, only send invites
         if (createOrganizationDTO.getExistingUserIds() != null) {
             createOrganizationDTO.getExistingUserIds().forEach(userId -> {
-                User existingUser = userRepository.findById(userId)
-                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                User existingUser = userService.getUserById(userId);
                 CreateOrganizationInviteDTO inviteDTO = new CreateOrganizationInviteDTO(
                         savedOrganization.getId(), createOrganizationDTO.getCreatorId(), existingUser.getId());
                 organizationInviteService.createOrganizationInvite(inviteDTO);
@@ -69,8 +72,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         // - For creator, set role to admin and tie to organization
-        User creator = userRepository.findById(createOrganizationDTO.getCreatorId())
-                .orElseThrow(() -> new IllegalArgumentException("Creator not found"));
+        User creator = userService.getUserById(createOrganizationDTO.getCreatorId());
         creator.setRole(User.Role.ADMIN);
         creator.setOrganization(savedOrganization);
         userRepository.save(creator);

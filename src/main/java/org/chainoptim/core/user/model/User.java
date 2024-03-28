@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -58,7 +59,7 @@ public class User {
     private Organization organization;
 
     // Role
-    public enum Role {
+    public enum Role implements Serializable {
         ADMIN,
         MEMBER,
         NONE
@@ -71,6 +72,9 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "custom_role_id", referencedColumnName = "id")
     private CustomRole customRole;
+
+    @Column(name = "is_profile_public")
+    private Boolean isProfilePublic;
 
     @Override
     public boolean equals(Object o) {

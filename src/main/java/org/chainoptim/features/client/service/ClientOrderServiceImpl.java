@@ -43,7 +43,6 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return clientOrderRepository.findByClientIdAdvanced(clientId, searchQuery, sortBy, ascending, page, itemsPerPage);
     }
 
-
     // Create
     public ClientOrder saveOrUpdateClientOrder(CreateClientOrderDTO orderDTO) {
         System.out.println("Sending order: " + orderDTO.getClientId());
