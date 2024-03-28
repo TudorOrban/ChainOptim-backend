@@ -24,4 +24,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, Prod
     @Query("SELECT p FROM Product p " +
             "WHERE p.name = :productName")
     Optional<Product> findByName(@Param("productName") String productName);
+
+    long countByOrganizationId(Integer organizationId);
 }

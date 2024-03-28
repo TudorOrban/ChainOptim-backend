@@ -31,4 +31,6 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
     @Query("SELECT c FROM FactoryStageConnection c " +
             "WHERE c.factoryId = :factoryId")
     List<FactoryStageConnection> findFactoryStageConnectionsByFactoryId(@Param("factoryId") Integer factoryId);
+
+    long countByOrganizationId(Integer organizationId);
 }

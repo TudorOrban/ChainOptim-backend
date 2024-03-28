@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, String>, UserSearchR
     List<User> findByCustomRoleId(Integer roleId);
     List<UserSearchResultDTO> findByUsernameContaining(String username);
 
+    long countByOrganizationId(Integer organizationId);
+
 }
