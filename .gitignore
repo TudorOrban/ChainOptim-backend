@@ -34,3 +34,5 @@ build/
 
 ### App properties ###
 application.properties
+application-docker.properties
+mysql/
