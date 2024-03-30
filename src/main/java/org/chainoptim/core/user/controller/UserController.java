@@ -1,15 +1,13 @@
 package org.chainoptim.core.user.controller;
 
+import org.chainoptim.core.redis.service.RedisService;
 import org.chainoptim.core.user.dto.AssignBasicRoleDTO;
 import org.chainoptim.core.user.dto.AssignCustomRoleDTO;
 import org.chainoptim.core.user.dto.UserSearchResultDTO;
 import org.chainoptim.core.user.dto.UserWithOrganizationDTO;
+import org.chainoptim.core.user.service.*;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.chainoptim.core.user.model.User;
-import org.chainoptim.core.user.service.CachedUserService;
-import org.chainoptim.core.user.service.UserWriteService;
-import org.chainoptim.core.user.service.UserService;
-import org.chainoptim.core.user.service.UserUpdateService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,19 +25,19 @@ public class UserController {
     private final UserWriteService userWriteService;
     private final CachedUserService cachedUserService;
 
-    private final boolean isRedisAvailable;
+    private final RedisService redisService;
 
     @Autowired
     public UserController(UserService userService,
                           UserWriteService userWriteService,
                           UserUpdateService userUpdateService,
                           CachedUserService cachedUserService,
-                          boolean isRedisAvailable) {
+                          RedisService redisService) {
         this.userService = userService;
         this.userWriteService = userWriteService;
         this.userUpdateService = userUpdateService;
         this.cachedUserService = cachedUserService;
-        this.isRedisAvailable = isRedisAvailable;
+        this.redisService = redisService;
     }
 
     // Fetch
@@ -102,7 +100,7 @@ public class UserController {
 
     @PutMapping("/{userId}/assign-basic-role")
     public ResponseEntity<User> assignBasicRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignBasicRoleDTO roleDTO) {
-        if (isRedisAvailable) {
+        if (redisService.isRedisAvailable()) {
             System.out.println("Redis is available");
             return ResponseEntity.ok(cachedUserService.assignBasicRoleToUser(userId, roleDTO.getRole()));
         } else {
@@ -113,7 +111,7 @@ public class UserController {
 
     @PutMapping("/{userId}/assign-custom-role")
     public ResponseEntity<User> assignCustomRoleToUser(@PathVariable("userId") String userId, @RequestBody AssignCustomRoleDTO roleDTO) {
-        if (isRedisAvailable) {
+        if (redisService.isRedisAvailable()) {
             return ResponseEntity.ok(cachedUserService.assignCustomRoleToUser(userId, roleDTO.getRoleId()));
         } else {
             return ResponseEntity.ok(userUpdateService.assignCustomRoleToUser(userId, roleDTO.getRoleId()));

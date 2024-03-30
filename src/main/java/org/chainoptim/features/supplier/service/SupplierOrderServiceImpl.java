@@ -20,13 +20,13 @@ import java.util.List;
 public class SupplierOrderServiceImpl implements SupplierOrderService {
 
     private final SupplierOrderRepository supplierOrderRepository;
-    private final KafkaSupplierOrderService kafkaSupplierOrderService;
+    private final KafkaSupplierOrderServiceImpl kafkaSupplierOrderService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public SupplierOrderServiceImpl(
             SupplierOrderRepository supplierOrderRepository,
-            KafkaSupplierOrderService kafkaSupplierOrderService,
+            KafkaSupplierOrderServiceImpl kafkaSupplierOrderService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.supplierOrderRepository = supplierOrderRepository;
@@ -47,8 +47,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     }
 
     // Create
-    public SupplierOrder saveOrUpdateSupplierOrder(CreateSupplierOrderDTO orderDTO) {
-        System.out.println("Sending order: " + orderDTO.getSupplierId());
+    public SupplierOrder createSupplierOrder(CreateSupplierOrderDTO orderDTO) {
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
         SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
         SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);

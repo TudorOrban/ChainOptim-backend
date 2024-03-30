@@ -30,7 +30,7 @@ public class SupplierOrderController {
         return ResponseEntity.ok(supplierOrders);
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
+//    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
     @GetMapping("/organization/advanced/{supplierId}")
     public ResponseEntity<PaginatedResults<SupplierOrder>> getSupplierOrdersBySupplierIdAdvanced(
             @PathVariable Integer supplierId,
@@ -48,7 +48,7 @@ public class SupplierOrderController {
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#order.getOrganizationId(), \"Supplier\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<SupplierOrder> createSupplierOrder(@RequestBody CreateSupplierOrderDTO order) {
-        SupplierOrder supplierOrder = supplierOrderService.saveOrUpdateSupplierOrder(order);
+        SupplierOrder supplierOrder = supplierOrderService.createSupplierOrder(order);
         return ResponseEntity.ok(supplierOrder);
     }
 

@@ -16,4 +16,6 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>, 
 
     @Query("SELECT w.organizationId FROM Warehouse w WHERE w.id = :warehouseId")
     Optional<Integer> findOrganizationIdById(@Param("warehouseId") Long warehouseId);
+
+    long countByOrganizationId(Integer organizationId);
 }

@@ -14,4 +14,6 @@ public interface ClientRepository extends JpaRepository<Client, Long>, ClientsSe
 
     @Query("SELECT c.organizationId FROM Client c WHERE c.id = :clientId")
     Optional<Integer> findOrganizationIdById(@Param("clientId") Long clientId);
+
+    long countByOrganizationId(Integer organizationId);
 }

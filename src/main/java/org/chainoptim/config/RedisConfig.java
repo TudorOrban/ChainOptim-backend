@@ -2,18 +2,17 @@ package org.chainoptim.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
 @Configuration
 public class RedisConfig {
 
+    /*
+     * Configure Redis to use the redis service defined in docker-compose.yml
+     */
     @Bean
-    public boolean isRedisAvailable(RedisConnectionFactory redisConnectionFactory) {
-        try {
-            redisConnectionFactory.getConnection().ping();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public LettuceConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration("redis", 6379));
     }
 }
