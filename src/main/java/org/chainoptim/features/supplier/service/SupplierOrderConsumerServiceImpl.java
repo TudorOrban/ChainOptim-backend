@@ -12,8 +12,8 @@ public class SupplierOrderConsumerServiceImpl implements SupplierOrderConsumerSe
 
     private final Logger logger = Logger.getLogger(SupplierOrderConsumerServiceImpl.class.getName());
 
-//    @KafkaListener(topics = "supplier-order-events", groupId = "supplier-order-consumer")
-//    public void listenSupplierOrderEvent(String message) {
-//        logger.info("Received message: " + message);
-//    }
+    @KafkaListener(topics = "supplier-order-events", groupId = "supplier-order-consumer")
+    public void listenSupplierOrderEvent(SupplierOrder supplierOrder) {
+        logger.info("Received Kafka message: " + supplierOrder);
+    }
 }

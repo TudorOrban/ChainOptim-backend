@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaSupplierOrderService {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, SupplierOrder> kafkaTemplate;
 
     @Autowired
-    public KafkaSupplierOrderService(KafkaTemplate<String, String> kafkaTemplate) {
+    public KafkaSupplierOrderService(KafkaTemplate<String, SupplierOrder> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     @Value("${supplier.order.topic.name:supplier-order-events}")
     private String supplierOrderTopicName;
 
-    public void sendSupplierOrder(String order) {
-        kafkaTemplate.send(supplierOrderTopicName, "Supplier order message");
+    public void sendSupplierOrder(SupplierOrder order) {
+        kafkaTemplate.send(supplierOrderTopicName, order);
     }
 }
