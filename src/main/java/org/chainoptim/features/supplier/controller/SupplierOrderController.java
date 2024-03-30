@@ -48,7 +48,7 @@ public class SupplierOrderController {
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#order.getOrganizationId(), \"Supplier\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<SupplierOrder> createSupplierOrder(@RequestBody CreateSupplierOrderDTO order) {
-        SupplierOrder supplierOrder = supplierOrderService.saveOrUpdateSupplierOrder(order);
+        SupplierOrder supplierOrder = supplierOrderService.createSupplierOrder(order);
         return ResponseEntity.ok(supplierOrder);
     }
 

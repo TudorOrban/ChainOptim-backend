@@ -13,7 +13,7 @@ public interface SupplierOrderService {
     List<SupplierOrder> getSupplierOrdersBySupplierId(Integer supplierId);
     PaginatedResults<SupplierOrder> getSuppliersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
 
-    SupplierOrder saveOrUpdateSupplierOrder(CreateSupplierOrderDTO order);
+    SupplierOrder createSupplierOrder(CreateSupplierOrderDTO order);
     List<SupplierOrder> createSupplierOrdersInBulk(List<CreateSupplierOrderDTO> orderDTOs);
     List<SupplierOrder> updateSuppliersOrdersInBulk(List<UpdateSupplierOrderDTO> orderDTOs);
 }
