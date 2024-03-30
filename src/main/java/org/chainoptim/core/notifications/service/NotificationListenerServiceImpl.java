@@ -18,6 +18,5 @@ public class NotificationListenerServiceImpl implements NotificationListenerServ
     @KafkaListener(topics = "supplier-order-events", groupId = "notification-group")
     public void listenSupplierOrderEvent(SupplierOrder supplierOrder) {
         notificationService.processEvent(supplierOrder);
-
     }
 }
