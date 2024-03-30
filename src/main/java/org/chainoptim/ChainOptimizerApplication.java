@@ -9,5 +9,4 @@ public class ChainOptimizerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ChainOptimizerApplication.class, args);
 	}
-
 }

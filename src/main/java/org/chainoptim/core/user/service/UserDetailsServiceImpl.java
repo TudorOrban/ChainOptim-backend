@@ -1,5 +1,6 @@
 package org.chainoptim.core.user.service;
 
+import org.chainoptim.core.redis.service.RedisService;
 import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,15 +11,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final AuthenticationService authenticationService;
     private final CachedUserService cachedUserService;
-    private final boolean isRedisAvailable;
+    private final RedisService redisService;
 
     @Autowired
     public UserDetailsServiceImpl(AuthenticationService authenticationService,
-                                    CachedUserService cachedUserService,
-                                  boolean isRedisAvailable) {
+                                  CachedUserService cachedUserService,
+                                  RedisService redisService) {
         this.authenticationService = authenticationService;
         this.cachedUserService = cachedUserService;
-        this.isRedisAvailable = isRedisAvailable;
+        this.redisService = redisService;
     }
 
     /*
@@ -27,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetailsImpl loadUserByUsername(String username) {
-        if (isRedisAvailable) {
+        if (redisService.isRedisAvailable()) {
             System.out.println("Redis is Available");
             return cachedUserService.cachedLoadUserByUsername(username);
         } else {

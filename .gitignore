@@ -35,4 +35,10 @@ build/
 ### App properties ###
 application.properties
 application-docker.properties
+
+### MySQL ###
 mysql/
+
+### Docker ###
+docker-compose.yml
+docker-compose.override.yml

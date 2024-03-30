@@ -1,13 +1,19 @@
 package org.chainoptim.features.supplier.service;
 
 import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.logging.Logger;
+
+@Component
 public class SupplierOrderConsumerServiceImpl implements SupplierOrderConsumerService {
 
+    private final Logger logger = Logger.getLogger(SupplierOrderConsumerServiceImpl.class.getName());
+
 //    @KafkaListener(topics = "supplier-order-events", groupId = "supplier-order-consumer")
-    public void listenSupplierOrderEvent(SupplierOrder order) {
-        System.out.println("Received Supplier Order: " + order);
-    }
+//    public void listenSupplierOrderEvent(String message) {
+//        logger.info("Received message: " + message);
+//    }
 }

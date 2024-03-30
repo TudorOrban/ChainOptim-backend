@@ -53,7 +53,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
         SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
         // Publish order to Kafka broker on create or update
-        kafkaSupplierOrderService.sendSupplierOrder(savedOrder);
+        kafkaSupplierOrderService.sendSupplierOrder("Supplier order message sent");
         return savedOrder;
     }
 
