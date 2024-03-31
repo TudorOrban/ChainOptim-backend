@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddNotificationDTO {
 
-    private String userId;
+    private List<String> userIds;
     private String title;
     private Integer entityId;
     private String entityType;

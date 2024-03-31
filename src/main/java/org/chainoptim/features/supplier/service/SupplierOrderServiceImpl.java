@@ -51,7 +51,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
         SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
         SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
-        // Publish order to Kafka broker on create or update
+        // Publish order to Kafka broker
         kafkaSupplierOrderService.sendSupplierOrder(savedOrder);
         return savedOrder;
     }

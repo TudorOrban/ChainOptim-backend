@@ -1,12 +1,12 @@
 package org.chainoptim.core.notifications.dto;
 
 import org.chainoptim.core.notifications.model.Notification;
+import org.chainoptim.core.user.model.User;
 
 public class NotificationDTOMapper {
 
     public static Notification mapAddNotificationDTOToNotification(AddNotificationDTO addNotificationDTO) {
         Notification notification = new Notification();
-        notification.setUserId(addNotificationDTO.getUserId());
         notification.setTitle(addNotificationDTO.getTitle());
         notification.setEntityId(addNotificationDTO.getEntityId());
         notification.setEntityType(addNotificationDTO.getEntityType());
@@ -17,8 +17,19 @@ public class NotificationDTOMapper {
         return notification;
     }
 
+    public static AddNotificationDTO mapNotificationToAddNotificationDTO(Notification notification) {
+        AddNotificationDTO addNotificationDTO = new AddNotificationDTO();
+        addNotificationDTO.setTitle(notification.getTitle());
+        addNotificationDTO.setEntityId(notification.getEntityId());
+        addNotificationDTO.setEntityType(notification.getEntityType());
+        addNotificationDTO.setMessage(notification.getMessage());
+        addNotificationDTO.setReadStatus(notification.getReadStatus());
+        addNotificationDTO.setType(notification.getType());
+
+        return addNotificationDTO;
+    }
+
     public static Notification setUpdateNotificationDTOToNotification(UpdateNotificationDTO updateNotificationDTO, Notification notification) {
-        notification.setUserId(updateNotificationDTO.getUserId());
         notification.setTitle(updateNotificationDTO.getTitle());
         notification.setEntityId(updateNotificationDTO.getEntityId());
         notification.setEntityType(updateNotificationDTO.getEntityType());

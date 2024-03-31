@@ -1,4 +1,4 @@
-package org.chainoptim.config;
+package org.chainoptim.core.notifications.websocket;
 
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -15,8 +15,9 @@ public class UserHandshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         String uri = request.getURI().toString();
         String userId = extractUserIdFromUri(uri);
-        System.out.println("URI: " + uri);
-        System.out.println("User ID: " + userId);
+        if (userId == null) {
+            return false;
+        }
         attributes.put("userId", userId);
         return true;
     }
@@ -46,10 +47,10 @@ public class UserHandshakeInterceptor implements HandshakeInterceptor {
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return null; // Handle error or log appropriately
+            return null;
         }
 
-        return null; // If the userId parameter isn't found or an error occurs
+        return null;
     }
 
 }

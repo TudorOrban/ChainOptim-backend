@@ -3,6 +3,7 @@ package org.chainoptim.core.notifications.controller;
 import org.chainoptim.core.notifications.dto.AddNotificationDTO;
 import org.chainoptim.core.notifications.dto.UpdateNotificationDTO;
 import org.chainoptim.core.notifications.model.Notification;
+import org.chainoptim.core.notifications.model.NotificationUser;
 import org.chainoptim.core.notifications.service.NotificationPersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class NotificationPersistenceController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Notification> getNotificationsByUserId(@PathVariable("userId") String userId) {
+    public List<NotificationUser> getNotificationsByUserId(@PathVariable("userId") String userId) {
         return notificationPersistenceService.getNotificationsByUserId(userId);
     }
 

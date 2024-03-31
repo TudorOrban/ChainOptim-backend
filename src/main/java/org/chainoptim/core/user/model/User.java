@@ -1,14 +1,18 @@
 package org.chainoptim.core.user.model;
 
+import org.chainoptim.core.notifications.model.NotificationUser;
 import org.chainoptim.core.organization.model.CustomRole;
 import org.chainoptim.core.organization.model.Organization;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -75,6 +79,10 @@ public class User {
 
     @Column(name = "is_profile_public")
     private Boolean isProfilePublic;
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private Set<NotificationUser> notificationUsers = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

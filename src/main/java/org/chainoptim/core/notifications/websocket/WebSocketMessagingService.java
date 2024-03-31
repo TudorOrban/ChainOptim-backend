@@ -1,5 +1,6 @@
-package org.chainoptim.config;
+package org.chainoptim.core.notifications.websocket;
 
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -7,6 +8,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 @Service
 public class WebSocketMessagingService {
 
@@ -24,12 +26,13 @@ public class WebSocketMessagingService {
     public void sendMessageToUser(String userId, String message) {
         System.out.println("Sending message to user: " + userId);
         WebSocketSession session = sessions.get(userId);
-        if (session != null && session.isOpen()) {
-            try {
-                session.sendMessage(new TextMessage(message));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (session == null || !session.isOpen()) {
+            return;
+        }
+        try {
+            session.sendMessage(new TextMessage(message));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

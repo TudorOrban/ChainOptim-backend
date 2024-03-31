@@ -19,14 +19,17 @@ import java.util.List;
 public class ClientOrderServiceImpl implements ClientOrderService {
 
     private final ClientOrderRepository clientOrderRepository;
+    private final KafkaClientOrderService kafkaClientOrderService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public ClientOrderServiceImpl(
             ClientOrderRepository clientOrderRepository,
+            KafkaClientOrderService kafkaClientOrderService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.clientOrderRepository = clientOrderRepository;
+        this.kafkaClientOrderService = kafkaClientOrderService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -44,11 +47,15 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     }
 
     // Create
-    public ClientOrder saveOrUpdateClientOrder(CreateClientOrderDTO orderDTO) {
-        System.out.println("Sending order: " + orderDTO.getClientId());
+    public ClientOrder createClientOrder(CreateClientOrderDTO orderDTO) {
         CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);
         ClientOrder clientOrder = ClientDTOMapper.mapCreateDtoToClientOrder(sanitizedOrderDTO);
-        return clientOrderRepository.save(clientOrder);
+        ClientOrder savedOrder = clientOrderRepository.save(clientOrder);
+
+        // Publish order to Kafka broker
+        kafkaClientOrderService.sendClientOrder(savedOrder);
+
+        return savedOrder;
     }
 
     public List<ClientOrder> createClientOrdersInBulk(List<CreateClientOrderDTO> orderDTOs) {

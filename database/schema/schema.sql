@@ -426,6 +426,36 @@ INSERT INTO `locations` VALUES (1,'Hemingway Boulevard no. 13','New Jersey','New
 UNLOCK TABLES;
 
 --
+-- Table structure for table `notification_users`
+--
+
+DROP TABLE IF EXISTS `notification_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notification_users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `notification_id` int NOT NULL,
+  `user_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `read_status` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `notification_id` (`notification_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `notification_users_ibfk_1` FOREIGN KEY (`notification_id`) REFERENCES `notifications` (`id`),
+  CONSTRAINT `notification_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notification_users`
+--
+
+LOCK TABLES `notification_users` WRITE;
+/*!40000 ALTER TABLE `notification_users` DISABLE KEYS */;
+INSERT INTO `notification_users` VALUES (1,1,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(2,2,'086e9e96-a8ef-11ee-bffa-00155de90539',1);
+/*!40000 ALTER TABLE `notification_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `notifications`
 --
 
@@ -434,7 +464,6 @@ DROP TABLE IF EXISTS `notifications`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `notifications` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `title` varchar(255) DEFAULT NULL,
   `entity_id` int DEFAULT NULL,
   `entity_type` varchar(255) DEFAULT NULL,
@@ -443,9 +472,7 @@ CREATE TABLE `notifications` (
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `read_status` tinyint(1) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -455,7 +482,7 @@ CREATE TABLE `notifications` (
 
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (1,'086e9e96-a8ef-11ee-bffa-00155de90539','Supplier Order 1 Alert',21,'Factory','The Supplier Order 1 has arrived at the Factory','2024-03-28 22:18:36','2024-03-29 00:18:36',0,'Alert'),(2,'086e9e96-a8ef-11ee-bffa-00155de90539','Client Order #213 Alert',2,'Client Order','The Client Akia Motors has published an order','2024-03-28 22:20:51','2024-03-29 00:20:51',0,'Alert');
+INSERT INTO `notifications` VALUES (1,'Supplier Order 1 Alert',21,'Factory','The Supplier Order 1 has arrived at the Factory','2024-03-28 22:18:36','2024-03-29 00:18:36',0,'Alert'),(2,'Client Order #213 Alert',2,'Client Order','The Client Akia Motors has published an order','2024-03-28 22:20:51','2024-03-29 00:20:51',0,'Alert');
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1114,4 +1141,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-30 15:18:21
+-- Dump completed on 2024-03-31 14:32:33

@@ -1,6 +1,5 @@
-package org.chainoptim.config;
+package org.chainoptim.core.notifications.websocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -32,7 +31,7 @@ public class SimpleTextWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-//        super.afterConnectionClosed(session, status);
+        super.afterConnectionClosed(session, status);
         String userId = session.getAttributes().get("userId").toString();
         System.out.println("User disconnected: " + userId + " - " + status);
         messagingService.unregisterSession(userId);
