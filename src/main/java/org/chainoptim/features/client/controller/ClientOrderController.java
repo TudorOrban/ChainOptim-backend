@@ -48,7 +48,7 @@ public class ClientOrderController {
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#order.getOrganizationId(), \"Client\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<ClientOrder> createClientOrder(@RequestBody CreateClientOrderDTO order) {
-        ClientOrder clientOrder = clientOrderService.saveOrUpdateClientOrder(order);
+        ClientOrder clientOrder = clientOrderService.createClientOrder(order);
         return ResponseEntity.ok(clientOrder);
     }
 

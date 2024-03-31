@@ -1,5 +1,6 @@
 package org.chainoptim.features.client.service;
 
+import org.chainoptim.core.notifications.model.KafkaEvent;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.client.dto.ClientDTOMapper;
 import org.chainoptim.features.client.dto.CreateClientOrderDTO;
@@ -19,14 +20,17 @@ import java.util.List;
 public class ClientOrderServiceImpl implements ClientOrderService {
 
     private final ClientOrderRepository clientOrderRepository;
+    private final KafkaClientOrderService kafkaClientOrderService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public ClientOrderServiceImpl(
             ClientOrderRepository clientOrderRepository,
+            KafkaClientOrderService kafkaClientOrderService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.clientOrderRepository = clientOrderRepository;
+        this.kafkaClientOrderService = kafkaClientOrderService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -44,19 +48,31 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     }
 
     // Create
-    public ClientOrder saveOrUpdateClientOrder(CreateClientOrderDTO orderDTO) {
-        System.out.println("Sending order: " + orderDTO.getClientId());
+    public ClientOrder createClientOrder(CreateClientOrderDTO orderDTO) {
         CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);
         ClientOrder clientOrder = ClientDTOMapper.mapCreateDtoToClientOrder(sanitizedOrderDTO);
-        return clientOrderRepository.save(clientOrder);
+        ClientOrder savedOrder = clientOrderRepository.save(clientOrder);
+
+        // Publish order to Kafka broker
+        kafkaClientOrderService.sendClientOrderEvent(savedOrder, KafkaEvent.EventType.CREATE);
+
+        return savedOrder;
     }
 
     public List<ClientOrder> createClientOrdersInBulk(List<CreateClientOrderDTO> orderDTOs) {
         List<ClientOrder> orders = orderDTOs.stream()
-                .map(ClientDTOMapper::mapCreateDtoToClientOrder)
+                .map(orderDTO -> {
+                    CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);
+                    return ClientDTOMapper.mapCreateDtoToClientOrder(sanitizedOrderDTO);
+                })
                 .toList();
 
-        return clientOrderRepository.saveAll(orders);
+        List<ClientOrder> savedOrders = clientOrderRepository.saveAll(orders);
+
+        // Publish orders to Kafka broker
+        kafkaClientOrderService.sendClientOrderEventsInBulk(savedOrders, KafkaEvent.EventType.CREATE);
+
+        return savedOrders;
     }
 
     @Transactional

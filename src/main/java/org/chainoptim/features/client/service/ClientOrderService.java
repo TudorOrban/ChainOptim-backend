@@ -12,7 +12,7 @@ public interface ClientOrderService {
     List<ClientOrder> getClientOrdersByOrganizationId(Integer organizationId);
     List<ClientOrder> getClientOrdersByClientId(Integer clientId);
     PaginatedResults<ClientOrder> getClientOrdersByClientIdAdvanced(Integer clientId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
-    ClientOrder saveOrUpdateClientOrder(CreateClientOrderDTO order);
+    ClientOrder createClientOrder(CreateClientOrderDTO order);
     List<ClientOrder> createClientOrdersInBulk(List<CreateClientOrderDTO> orderDTOs);
     List<ClientOrder> updateClientOrdersInBulk(List<UpdateClientOrderDTO> orderDTOs);
 }

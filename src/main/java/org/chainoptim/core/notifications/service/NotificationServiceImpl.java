@@ -1,11 +1,81 @@
 package org.chainoptim.core.notifications.service;
 
+import org.chainoptim.core.notifications.dto.AddNotificationDTO;
+import org.chainoptim.core.notifications.dto.NotificationDTOMapper;
+import org.chainoptim.core.notifications.model.Notification;
+import org.chainoptim.core.notifications.websocket.WebSocketMessagingService;
+import org.chainoptim.features.client.model.ClientOrderEvent;
+import org.chainoptim.features.supplier.model.SupplierOrderEvent;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
-    public <T> void processEvent(T event) {
-        System.out.println("Processing event: " + event);
+    private final WebSocketMessagingService messagingService;
+    private final NotificationFormatterService notificationFormatterService;
+    private final NotificationPersistenceService notificationPersistenceService;
+    private final NotificationDistributionService notificationDistributionService;
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public NotificationServiceImpl(WebSocketMessagingService messagingService,
+                                   NotificationFormatterService notificationFormatterService,
+                                   NotificationPersistenceService notificationPersistenceService,
+                                   NotificationDistributionService notificationDistributionService,
+                                   ObjectMapper objectMapper) {
+        this.messagingService = messagingService;
+        this.notificationFormatterService = notificationFormatterService;
+        this.notificationPersistenceService = notificationPersistenceService;
+        this.notificationDistributionService = notificationDistributionService;
+        this.objectMapper = objectMapper;
+    }
+
+    public void createNotification(SupplierOrderEvent event) {
+        System.out.println("Creating notification for SupplierOrderEvent: " + event);
+
+        Notification notification = notificationFormatterService.formatEvent(event);
+
+        List<String> userIds = notificationDistributionService.distributeEventToUsers(event);
+
+        sendNotification(notification, userIds);
+
+        // Persist the notification in the database
+        AddNotificationDTO notificationDTO = NotificationDTOMapper.mapNotificationToAddNotificationDTO(notification, userIds);
+        notificationDTO.setUserIds(userIds);
+        notificationPersistenceService.addNotification(notificationDTO);
+    }
+
+    public void createNotification(ClientOrderEvent event) {
+        Notification notification = notificationFormatterService.formatEvent(event);
+
+        List<String> userIds = notificationDistributionService.distributeEventToUsers(event);
+
+        sendNotification(notification, userIds);
+
+        // Persist the notification in the database
+        AddNotificationDTO notificationDTO = NotificationDTOMapper.mapNotificationToAddNotificationDTO(notification, userIds);
+        notificationDTO.setUserIds(userIds);
+        notificationPersistenceService.addNotification(notificationDTO);
+    }
+
+    private void sendNotification(Notification notification, List<String> userIds) {
+        System.out.println("Sending notification: " + notification);
+        try {
+            String serializedNotification = objectMapper.writeValueAsString(notification);
+
+            // Send the event to all users
+            for (String userId : userIds) {
+                if (messagingService.getSessions().containsKey(userId)) {
+                    messagingService.sendMessageToUser(userId, serializedNotification);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
