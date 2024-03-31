@@ -1,7 +1,8 @@
 package org.chainoptim.core.notifications.dto;
 
 import org.chainoptim.core.notifications.model.Notification;
-import org.chainoptim.core.user.model.User;
+
+import java.util.List;
 
 public class NotificationDTOMapper {
 
@@ -17,7 +18,7 @@ public class NotificationDTOMapper {
         return notification;
     }
 
-    public static AddNotificationDTO mapNotificationToAddNotificationDTO(Notification notification) {
+    public static AddNotificationDTO mapNotificationToAddNotificationDTO(Notification notification, List<String> userIds) {
         AddNotificationDTO addNotificationDTO = new AddNotificationDTO();
         addNotificationDTO.setTitle(notification.getTitle());
         addNotificationDTO.setEntityId(notification.getEntityId());
@@ -25,6 +26,7 @@ public class NotificationDTOMapper {
         addNotificationDTO.setMessage(notification.getMessage());
         addNotificationDTO.setReadStatus(notification.getReadStatus());
         addNotificationDTO.setType(notification.getType());
+        addNotificationDTO.setUserIds(userIds);
 
         return addNotificationDTO;
     }

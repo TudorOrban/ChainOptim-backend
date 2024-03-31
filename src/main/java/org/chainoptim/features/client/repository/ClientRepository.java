@@ -8,12 +8,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ClientRepository extends JpaRepository<Client, Long>, ClientsSearchRepository {
+public interface ClientRepository extends JpaRepository<Client, Integer>, ClientsSearchRepository {
 
     List<Client> findByOrganizationId(Integer organizationId);
 
     @Query("SELECT c.organizationId FROM Client c WHERE c.id = :clientId")
-    Optional<Integer> findOrganizationIdById(@Param("clientId") Long clientId);
+    Optional<Integer> findOrganizationIdById(@Param("clientId") Integer clientId);
 
     long countByOrganizationId(Integer organizationId);
 }

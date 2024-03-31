@@ -1,10 +1,10 @@
 package org.chainoptim.core.notifications.service;
 
-import org.chainoptim.features.client.model.ClientOrder;
-import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.features.client.model.ClientOrderEvent;
+import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 
 public interface NotificationListenerService {
 
-    void listenSupplierOrderEvent(SupplierOrder supplierOrder);
-    void listenClientOrderEvent(ClientOrder clientOrder);
+    void listenSupplierOrderEvent(SupplierOrderEvent event);
+    void listenClientOrderEvent(ClientOrderEvent event);
 }

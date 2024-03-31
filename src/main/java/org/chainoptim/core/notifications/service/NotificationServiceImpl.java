@@ -4,6 +4,8 @@ import org.chainoptim.core.notifications.dto.AddNotificationDTO;
 import org.chainoptim.core.notifications.dto.NotificationDTOMapper;
 import org.chainoptim.core.notifications.model.Notification;
 import org.chainoptim.core.notifications.websocket.WebSocketMessagingService;
+import org.chainoptim.features.client.model.ClientOrderEvent;
+import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +35,36 @@ public class NotificationServiceImpl implements NotificationService {
         this.objectMapper = objectMapper;
     }
 
-    public <T> void processEvent(T event, String entityType) {
-        System.out.println("Processing event: " + event);
+    public void createNotification(SupplierOrderEvent event) {
+        System.out.println("Creating notification for SupplierOrderEvent: " + event);
 
-        Notification notification = notificationFormatterService.formatEvent(event, entityType);
+        Notification notification = notificationFormatterService.formatEvent(event);
 
-        List<String> userIds = notificationDistributionService.distributeEventToUsers(event, entityType);
+        List<String> userIds = notificationDistributionService.distributeEventToUsers(event);
 
-        // Send the notification to active session users
+        sendNotification(notification, userIds);
+
+        // Persist the notification in the database
+        AddNotificationDTO notificationDTO = NotificationDTOMapper.mapNotificationToAddNotificationDTO(notification, userIds);
+        notificationDTO.setUserIds(userIds);
+        notificationPersistenceService.addNotification(notificationDTO);
+    }
+
+    public void createNotification(ClientOrderEvent event) {
+        Notification notification = notificationFormatterService.formatEvent(event);
+
+        List<String> userIds = notificationDistributionService.distributeEventToUsers(event);
+
+        sendNotification(notification, userIds);
+
+        // Persist the notification in the database
+        AddNotificationDTO notificationDTO = NotificationDTOMapper.mapNotificationToAddNotificationDTO(notification, userIds);
+        notificationDTO.setUserIds(userIds);
+        notificationPersistenceService.addNotification(notificationDTO);
+    }
+
+    private void sendNotification(Notification notification, List<String> userIds) {
+        System.out.println("Sending notification: " + notification);
         try {
             String serializedNotification = objectMapper.writeValueAsString(notification);
 
@@ -53,10 +77,5 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // Persist the notification in the database
-        AddNotificationDTO notificationDTO = NotificationDTOMapper.mapNotificationToAddNotificationDTO(notification);
-        notificationDTO.setUserIds(userIds);
-        notificationPersistenceService.addNotification(notificationDTO);
     }
 }
