@@ -10,13 +10,10 @@ import org.springframework.stereotype.Service;
 public class NotificationListenerServiceImpl implements NotificationListenerService {
 
     private final NotificationService notificationService;
-    private final NotificationFormatterService notificationFormatterService;
 
     @Autowired
-    public NotificationListenerServiceImpl(NotificationService notificationService,
-                                           NotificationFormatterService notificationFormatterService) {
+    public NotificationListenerServiceImpl(NotificationService notificationService) {
         this.notificationService = notificationService;
-        this.notificationFormatterService = notificationFormatterService;
     }
 
     @KafkaListener(topics = "supplier-order-events", groupId = "notification-group")

@@ -12,4 +12,11 @@ public interface OrganizationRepository extends JpaRepository<Organization, Inte
     @Query("SELECT o FROM Organization o LEFT JOIN FETCH o.users u WHERE o.id = :id")
     Optional<Organization> findByIdWithUsers(@Param("id") Integer id);
 
+    @Query("SELECT o FROM Organization o " +
+            "LEFT JOIN FETCH o.users u " +
+            "LEFT JOIN FETCH u.customRole cr " +
+            "WHERE o.id = :id")
+    Optional<Organization> findByIdWithUsersAndCustomRoles(@Param("id") Integer id);
+
+
 }

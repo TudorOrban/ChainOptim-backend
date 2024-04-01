@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/v1/login", "/api/v1/validate-token", "/api/v1/get-username-from-token").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
+                        .requestMatchers("/api/v1/user-settings/**").permitAll()
                         .requestMatchers("/api/v1/organizations/**").permitAll()
                         .requestMatchers("/api/v1/organization-invites/**").permitAll()
                         .requestMatchers("/api/v1/organization-requests/**").permitAll()
