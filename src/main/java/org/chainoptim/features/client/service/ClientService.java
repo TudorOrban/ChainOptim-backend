@@ -12,7 +12,7 @@ public interface ClientService {
     // Fetch
     List<Client> getClientsByOrganizationId(Integer organizationId);
     PaginatedResults<ClientsSearchDTO> getClientsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
-    Client getClientById(Long id);
+    Client getClientById(Integer id);
 
     // Create
     Client createClient(CreateClientDTO clientDTO);

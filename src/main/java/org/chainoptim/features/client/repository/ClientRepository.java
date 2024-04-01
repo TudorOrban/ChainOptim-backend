@@ -13,7 +13,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer>, Client
     List<Client> findByOrganizationId(Integer organizationId);
 
     @Query("SELECT c.organizationId FROM Client c WHERE c.id = :clientId")
-    Optional<Integer> findOrganizationIdById(@Param("clientId") Integer clientId);
+    Optional<Integer> findOrganizationIdById(@Param("clientId") Long clientId);
 
     long countByOrganizationId(Integer organizationId);
 }

@@ -38,7 +38,7 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findAll();
     }
 
-    public Client getClientById(Long clientId) {
+    public Client getClientById(Integer clientId) {
         return clientRepository.findById(clientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID: " + clientId + " not found."));
     }
@@ -73,7 +73,7 @@ public class ClientServiceImpl implements ClientService {
 
     public Client updateClient(UpdateClientDTO clientDTO) {
         UpdateClientDTO sanitizedClientDTO = entitySanitizerService.sanitizeUpdateClientDTO(clientDTO);
-        Client client = clientRepository.findById(Long.valueOf(sanitizedClientDTO.getId()))
+        Client client = clientRepository.findById(sanitizedClientDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID: " + sanitizedClientDTO.getId() + " not found."));
 
         client.setName(sanitizedClientDTO.getName());
