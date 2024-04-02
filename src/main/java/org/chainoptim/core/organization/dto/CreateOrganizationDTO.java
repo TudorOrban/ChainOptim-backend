@@ -15,5 +15,5 @@ public class CreateOrganizationDTO {
     private String creatorId;
     private Set<CreateOrganizationUserDTO> createdUsers;
     private Set<String> existingUserIds;
-    private Organization.SubscriptionPlan subscriptionPlan;
+    private Organization.SubscriptionPlanTier subscriptionPlanTier;
 }
