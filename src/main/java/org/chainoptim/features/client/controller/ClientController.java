@@ -58,7 +58,7 @@ public class ClientController {
 
     @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Read\")")
     @GetMapping("/{clientId}")
-    public ResponseEntity<Client> getClientById(@PathVariable Long clientId) {
+    public ResponseEntity<Client> getClientById(@PathVariable Integer clientId) {
         Client client = clientService.getClientById(clientId);
         return ResponseEntity.ok(client);
     }
