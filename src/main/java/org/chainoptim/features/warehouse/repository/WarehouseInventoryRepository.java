@@ -15,6 +15,6 @@ public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInv
 
     List<WarehouseInventoryItem> findByWarehouseId(Integer warehouseId);
 
-    @Query("SELECT COUNT(ii) FROM FactoryInventoryItem ii WHERE ii.organizationId = :organizationId")
+    @Query("SELECT COUNT(ii) FROM WarehouseInventoryItem ii WHERE ii.organizationId = :organizationId")
     long findCountByOrganizationId(@Param("organizationId") Integer organizationId);
 }

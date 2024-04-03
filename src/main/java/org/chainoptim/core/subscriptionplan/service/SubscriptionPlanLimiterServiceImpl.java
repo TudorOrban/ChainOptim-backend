@@ -2,8 +2,8 @@ package org.chainoptim.core.subscriptionplan.service;
 
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.overview.model.SupplyChainSnapshot;
-import org.chainoptim.core.overview.service.SupplyChainSnapshotService;
+import org.chainoptim.core.overview.model.Snapshot;
+import org.chainoptim.core.overview.service.SnapshotFinderService;
 import org.chainoptim.core.subscriptionplan.model.PlanDetails;
 import org.chainoptim.core.subscriptionplan.model.SubscriptionPlans;
 import org.chainoptim.exception.ResourceNotFoundException;
@@ -13,18 +13,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimiterService {
 
-    private final SupplyChainSnapshotService supplyChainSnapshotService;
+    private final SnapshotFinderService snapshotFinderService;
     private final OrganizationRepository organizationRepository;
 
     @Autowired
-    public SubscriptionPlanLimiterServiceImpl(SupplyChainSnapshotService supplyChainSnapshotService,
+    public SubscriptionPlanLimiterServiceImpl(SnapshotFinderService snapshotFinderService,
                                               OrganizationRepository organizationRepository) {
-        this.supplyChainSnapshotService = supplyChainSnapshotService;
+        this.snapshotFinderService = snapshotFinderService;
         this.organizationRepository = organizationRepository;
     }
 
     public boolean isLimitReached(Integer organizationId, String featureName) {
-        SupplyChainSnapshot snapshot = supplyChainSnapshotService.getSupplyChainSnapshot(organizationId);
+        Snapshot snapshot = snapshotFinderService.getSnapshotByOrganizationId(organizationId);
         Organization.SubscriptionPlanTier planTier = organizationRepository.getSubscriptionPlanTierById(organizationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
         PlanDetails planDetails = SubscriptionPlans.getPlans().get(planTier);
