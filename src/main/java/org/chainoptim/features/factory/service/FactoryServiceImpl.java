@@ -1,5 +1,7 @@
 package org.chainoptim.features.factory.service;
 
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
@@ -27,14 +29,17 @@ public class FactoryServiceImpl implements FactoryService {
 
     private final FactoryRepository factoryRepository;
     private final LocationService locationService;
+    private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public FactoryServiceImpl(FactoryRepository factoryRepository,
                                 LocationService locationService,
+                                SubscriptionPlanLimiterService planLimiterService,
                                 EntitySanitizerService entitySanitizerService) {
         this.factoryRepository = factoryRepository;
         this.locationService = locationService;
+        this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -81,6 +86,12 @@ public class FactoryServiceImpl implements FactoryService {
 
     // Create
     public Factory createFactory(CreateFactoryDTO factoryDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(factoryDTO.getOrganizationId(), "Factories")) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed factories for the current Subscription Plan.");
+        }
+
+        // Sanitize input
         CreateFactoryDTO sanitizedFactoryDTO = entitySanitizerService.sanitizeCreateFactoryDTO(factoryDTO);
 
         // Create location if requested

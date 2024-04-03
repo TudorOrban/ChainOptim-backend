@@ -1,5 +1,7 @@
 package org.chainoptim.features.client.service;
 
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.dto.ClientDTOMapper;
@@ -23,19 +25,18 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
     private final LocationService locationService;
+    private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public ClientServiceImpl(ClientRepository clientRepository,
-                                LocationService locationService,
+                             LocationService locationService,
+                             SubscriptionPlanLimiterService planLimiterService,
                              EntitySanitizerService entitySanitizerService) {
         this.clientRepository = clientRepository;
         this.locationService = locationService;
+        this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
-    }
-
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
     }
 
     public Client getClientById(Integer clientId) {
@@ -58,6 +59,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     public Client createClient(CreateClientDTO clientDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(clientDTO.getOrganizationId(), "Clients")) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed clients for the current Subscription Plan.");
+        }
+
+        // Sanitize
         CreateClientDTO sanitizedClientDTO = entitySanitizerService.sanitizeCreateClientDTO(clientDTO);
 
         // Create location if requested

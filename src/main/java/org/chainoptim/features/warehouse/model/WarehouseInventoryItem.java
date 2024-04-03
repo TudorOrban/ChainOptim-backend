@@ -27,6 +27,9 @@ public class WarehouseInventoryItem {
     @Column(name = "warehouse_id", nullable = false)
     private Integer warehouseId;
 
+    @Column(name = "organization_id")
+    private Integer organizationId;
+
     @ManyToOne
     @JoinColumn(name = "component_id")
     private Component component;

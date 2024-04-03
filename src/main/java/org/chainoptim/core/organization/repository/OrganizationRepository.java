@@ -18,5 +18,8 @@ public interface OrganizationRepository extends JpaRepository<Organization, Inte
             "WHERE o.id = :id")
     Optional<Organization> findByIdWithUsersAndCustomRoles(@Param("id") Integer id);
 
+    @Query("SELECT o.subscriptionPlanTier FROM Organization o WHERE o.id = :id")
+    Optional<Organization.SubscriptionPlanTier> getSubscriptionPlanTierById(Integer id);
+
 
 }

@@ -1,5 +1,7 @@
 package org.chainoptim.features.product.service;
 
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.ProductDTOMapper;
@@ -22,14 +24,17 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final UnitOfMeasurementService unitOfMeasurementService;
+    private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
-                                UnitOfMeasurementService unitOfMeasurementService,
+                              UnitOfMeasurementService unitOfMeasurementService,
+                              SubscriptionPlanLimiterService planLimiterService,
                               EntitySanitizerService entitySanitizerService) {
         this.productRepository = productRepository;
         this.unitOfMeasurementService = unitOfMeasurementService;
+        this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -68,6 +73,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product createProduct(CreateProductDTO productDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(productDTO.getOrganizationId(), "Products")) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed products for the current Subscription Plan.");
+        }
+
+        // Sanitize input
         CreateProductDTO sanitizedProductDTO = entitySanitizerService.sanitizeCreateProductDTO(productDTO);
 
         // Create unit of measurement if requested

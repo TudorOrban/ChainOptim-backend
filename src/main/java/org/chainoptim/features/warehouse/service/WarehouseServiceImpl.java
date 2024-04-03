@@ -1,5 +1,7 @@
 package org.chainoptim.features.warehouse.service;
 
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
@@ -23,14 +25,17 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final LocationService locationService;
+    private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public WarehouseServiceImpl(WarehouseRepository warehouseRepository,
                                 LocationService locationService,
+                                SubscriptionPlanLimiterService planLimiterService,
                                 EntitySanitizerService entitySanitizerService) {
         this.warehouseRepository = warehouseRepository;
         this.locationService = locationService;
+        this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -55,6 +60,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public Warehouse createWarehouse(CreateWarehouseDTO warehouseDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(warehouseDTO.getOrganizationId(), "Warehouses")) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed warehouses for the current Subscription Plan.");
+        }
+
+        // Sanitize input
         CreateWarehouseDTO sanitizedWarehouseDTO = entitySanitizerService.sanitizeCreateWarehouseDTO(warehouseDTO);
 
         // Create location if requested
