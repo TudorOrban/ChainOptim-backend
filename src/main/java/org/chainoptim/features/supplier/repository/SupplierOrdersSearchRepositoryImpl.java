@@ -5,10 +5,7 @@ import org.chainoptim.shared.search.model.PaginatedResults;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 
 import java.util.List;
 
@@ -22,6 +19,9 @@ public class SupplierOrdersSearchRepositoryImpl implements SupplierOrdersSearchR
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<SupplierOrder> query = builder.createQuery(SupplierOrder.class);
         Root<SupplierOrder> supplierOrder = query.from(SupplierOrder.class);
+
+        // Perform a fetch join to load components eagerly
+        supplierOrder.fetch("component", JoinType.LEFT);
 
         // Add conditions (supplierId and searchQuery)
         Predicate conditions = getConditions(builder, supplierOrder, supplierId, searchQuery);

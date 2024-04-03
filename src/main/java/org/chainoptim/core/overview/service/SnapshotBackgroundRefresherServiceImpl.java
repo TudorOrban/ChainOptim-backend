@@ -19,7 +19,7 @@ public class SnapshotBackgroundRefresherServiceImpl implements SnapshotBackgroun
     private final SnapshotPersistenceService snapshotPersistenceService;
     private final OrganizationRepository organizationRepository;
 
-    private static final int REFRESH_INTERVAL = 20000; // 24 hours
+    private static final int REFRESH_INTERVAL = 60000 * 60 * 24; // 24 hours
 
     @Autowired
     public SnapshotBackgroundRefresherServiceImpl(SnapshotFinderService snapshotFinderService,

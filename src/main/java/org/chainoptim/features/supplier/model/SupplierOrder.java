@@ -1,5 +1,6 @@
 package org.chainoptim.features.supplier.model;
 
+import org.chainoptim.features.productpipeline.model.Component;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,8 +36,9 @@ public class SupplierOrder {
     @Column(name = "supplier_id", nullable = false)
     private Integer supplierId;
 
-    @Column(name = "component_id", nullable = false)
-    private Integer componentId;
+    @ManyToOne
+    @JoinColumn(name = "component_id", nullable = false)
+    private Component component;
 
     @Column(name = "quantity")
     private Float quantity;

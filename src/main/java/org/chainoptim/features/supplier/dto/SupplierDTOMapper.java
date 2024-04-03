@@ -1,5 +1,6 @@
 package org.chainoptim.features.supplier.dto;
 
+import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
@@ -35,7 +36,9 @@ public class SupplierDTOMapper {
         SupplierOrder supplierOrder = new SupplierOrder();
         supplierOrder.setOrganizationId(order.getOrganizationId());
         supplierOrder.setSupplierId(order.getSupplierId());
-        supplierOrder.setComponentId(order.getComponentId());
+        Component component = new Component();
+        component.setId(order.getComponentId());
+        supplierOrder.setComponent(component);
         supplierOrder.setQuantity(order.getQuantity());
         supplierOrder.setOrderDate(order.getOrderDate());
         supplierOrder.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
@@ -52,7 +55,9 @@ public class SupplierDTOMapper {
         supplierOrder.setEstimatedDeliveryDate(orderDTO.getEstimatedDeliveryDate());
         supplierOrder.setDeliveryDate(orderDTO.getDeliveryDate());
         supplierOrder.setStatus(orderDTO.getStatus());
-        supplierOrder.setComponentId(orderDTO.getComponentId());
+        Component component = new Component();
+        component.setId(orderDTO.getComponentId());
+        supplierOrder.setComponent(component);
         supplierOrder.setCompanyId(orderDTO.getCompanyId());
     }
 }

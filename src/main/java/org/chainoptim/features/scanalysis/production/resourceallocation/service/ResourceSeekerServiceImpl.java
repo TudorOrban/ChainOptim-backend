@@ -99,7 +99,7 @@ public class ResourceSeekerServiceImpl implements ResourceSeekerService {
         for (ResourceAllocation resourceAllocation : allocationDeficits) {
             // Find potential resolvers of current needed component
             List<SupplierOrder> potentialSupplierOrders = new ArrayList<>(supplierOrders.stream()
-                    .filter(so -> Objects.equals(so.getComponentId(), resourceAllocation.getComponentId())).toList());
+                    .filter(so -> Objects.equals(so.getComponent().getId(), resourceAllocation.getComponentId())).toList());
 
             // Sort by quantity to find the least amount of supplier order solutions
             potentialSupplierOrders.sort((so1, so2) -> Float.compare(so2.getQuantity(), so1.getQuantity()));
