@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Product createProduct(CreateProductDTO productDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(productDTO.getOrganizationId(), "Products")) {
+        if (planLimiterService.isLimitReached(productDTO.getOrganizationId(), "Products", 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed products for the current Subscription Plan.");
         }
 

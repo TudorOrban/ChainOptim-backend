@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface FactoryInventoryService {
     // Fetch
     List<FactoryInventoryItem> getFactoryInventoryItemsByFactoryId(Integer factoryId);
-    PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsByFactoryId(
+    PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsByFactoryIdAdvanced(
             Integer factoryId,
             String searchQuery,
             String sortBy,
@@ -22,9 +22,11 @@ public interface FactoryInventoryService {
 
     // Create
     FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO itemDTO);
+    List<FactoryInventoryItem> createFactoryInventoryItemsInBulk(List<CreateFactoryInventoryItemDTO> itemDTOs);
 
     // Update
     FactoryInventoryItem updateFactoryInventoryItem(UpdateFactoryInventoryItemDTO itemDTO);
+    List<FactoryInventoryItem> updateFactoryInventoryItemsInBulk(List<UpdateFactoryInventoryItemDTO> itemDTOs);
 
     // Delete
     void deleteFactoryInventoryItem(Integer itemId);

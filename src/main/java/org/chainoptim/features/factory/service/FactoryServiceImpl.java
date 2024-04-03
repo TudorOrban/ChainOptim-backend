@@ -87,7 +87,7 @@ public class FactoryServiceImpl implements FactoryService {
     // Create
     public Factory createFactory(CreateFactoryDTO factoryDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(factoryDTO.getOrganizationId(), "Factories")) {
+        if (planLimiterService.isLimitReached(factoryDTO.getOrganizationId(), "Factories", 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed factories for the current Subscription Plan.");
         }
 

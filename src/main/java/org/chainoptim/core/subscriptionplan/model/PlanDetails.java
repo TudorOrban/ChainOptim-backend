@@ -20,27 +20,27 @@ public class PlanDetails {
     // Products
     private int maxProducts;
     private int maxComponents;
-    private int maxStagesPerProduct;
+    private int maxProductStages;
 
     // Factories
     private int maxFactories;
-    private int maxStagesPerFactory;
-    private int maxInventoryItemsPerFactory;
+    private int maxFactoryStages;
+    private int maxFactoryInventoryItems;
     private boolean factoryPerformanceOn;
 
     // Warehouses
     private int maxWarehouses;
-    private int maxInventoryItemsPerWarehouse;
+    private int maxWarehouseInventoryItems;
 
     // Suppliers
     private int maxSuppliers;
-    private int maxOrdersPerSupplier;
-    private int maxShipmentsPerSupplierOrder;
+    private int maxSupplierOrders;
+    private int maxSupplierShipments;
     private boolean supplierPerformanceOn;
 
     // Clients
     private int maxClients;
-    private int maxOrdersPerClient;
-    private int maxShipmentsPerClientOrder;
+    private int maxClientOrders;
+    private int maxClientShipments;
     private boolean clientPerformanceOn;
 }

@@ -60,11 +60,11 @@ public class ClientServiceImpl implements ClientService {
 
     public Client createClient(CreateClientDTO clientDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(clientDTO.getOrganizationId(), "Clients")) {
+        if (planLimiterService.isLimitReached(clientDTO.getOrganizationId(), "Clients", 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed clients for the current Subscription Plan.");
         }
 
-        // Sanitize
+        // Sanitize input
         CreateClientDTO sanitizedClientDTO = entitySanitizerService.sanitizeCreateClientDTO(clientDTO);
 
         // Create location if requested

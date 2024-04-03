@@ -1,12 +1,14 @@
 package org.chainoptim.features.supplier.service;
 
 import org.chainoptim.core.notifications.model.KafkaEvent;
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
 import org.chainoptim.features.supplier.dto.UpdateSupplierOrderDTO;
 import org.chainoptim.features.supplier.model.SupplierOrder;
-import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -23,16 +25,19 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
 
     private final SupplierOrderRepository supplierOrderRepository;
     private final KafkaSupplierOrderService kafkaSupplierOrderService;
+    private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public SupplierOrderServiceImpl(
             SupplierOrderRepository supplierOrderRepository,
             KafkaSupplierOrderService kafkaSupplierOrderService,
+            SubscriptionPlanLimiterService planLimiterService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.supplierOrderRepository = supplierOrderRepository;
         this.kafkaSupplierOrderService = kafkaSupplierOrderService;
+        this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -50,6 +55,12 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
 
     // Create
     public SupplierOrder createSupplierOrder(CreateSupplierOrderDTO orderDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), "Supplier Orders", 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
+        }
+
+        // Sanitize input and map to entity
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
         SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
 
@@ -61,7 +72,18 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return savedOrder;
     }
 
+    @Transactional
     public List<SupplierOrder> createSupplierOrdersInBulk(List<CreateSupplierOrderDTO> orderDTOs) {
+        // Ensure same organizationId
+        if (orderDTOs.stream().map(CreateSupplierOrderDTO::getOrganizationId).distinct().count() > 1) {
+            throw new ValidationException("All orders must belong to the same organization.");
+        }
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), "Supplier Orders", orderDTOs.size())) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
+        }
+
+        // Sanitize and map to entity
         List<SupplierOrder> orders = orderDTOs.stream()
                 .map(orderDTO -> {
                     CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
@@ -74,7 +96,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         // Publish order events to Kafka broker
         kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(savedOrders, KafkaEvent.EventType.CREATE);
 
-        return supplierOrderRepository.saveAll(orders);
+        return savedOrders;
     }
 
     @Transactional

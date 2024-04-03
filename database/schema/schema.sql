@@ -1018,7 +1018,7 @@ CREATE TABLE `supply_chain_snapshots` (
 
 LOCK TABLES `supply_chain_snapshots` WRITE;
 /*!40000 ALTER TABLE `supply_chain_snapshots` DISABLE KEYS */;
-INSERT INTO `supply_chain_snapshots` VALUES (1,1,'{\"clientsCount\": 4, \"membersCount\": 5, \"productsCount\": 24, \"factoriesCount\": 7, \"suppliersCount\": 5, \"componentsCount\": 6, \"warehousesCount\": 6, \"clientOrdersCount\": 5, \"supplierOrdersCount\": 5, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-03 08:59:03'),(2,2,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 2, \"factoriesCount\": 2, \"suppliersCount\": 1, \"componentsCount\": 1, \"warehousesCount\": 1, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-03 08:59:04'),(3,3,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-03 08:59:04'),(4,5,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 08:59:04'),(5,6,'{\"clientsCount\": 0, \"membersCount\": 2, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 08:59:04'),(6,10,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 08:59:04'),(7,12,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 08:59:04'),(8,16,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 08:59:04'),(9,17,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 08:59:04'),(10,18,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 08:59:04');
+INSERT INTO `supply_chain_snapshots` VALUES (1,1,'{\"clientsCount\": 4, \"membersCount\": 5, \"productsCount\": 24, \"factoriesCount\": 7, \"suppliersCount\": 5, \"componentsCount\": 6, \"warehousesCount\": 6, \"clientOrdersCount\": 5, \"supplierOrdersCount\": 5, \"factoryInventoryItemsCount\": 5, \"warehouseInventoryItemsCount\": 2}','2024-04-03 08:56:16','2024-04-03 11:41:52'),(2,2,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 2, \"factoriesCount\": 2, \"suppliersCount\": 1, \"componentsCount\": 1, \"warehousesCount\": 1, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-03 11:41:53'),(3,3,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-03 11:41:53'),(4,5,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:53'),(5,6,'{\"clientsCount\": 0, \"membersCount\": 2, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(6,10,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(7,12,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(8,16,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(9,17,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:55'),(10,18,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:55');
 /*!40000 ALTER TABLE `supply_chain_snapshots` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1049,6 +1049,35 @@ LOCK TABLES `units_of_measurement` WRITE;
 /*!40000 ALTER TABLE `units_of_measurement` DISABLE KEYS */;
 INSERT INTO `units_of_measurement` VALUES (1,'Unit','2024-01-13 23:06:01','Integer',NULL),(2,'Kilogram','2024-01-13 23:06:21','Decimal',NULL),(3,'Liters','2024-01-13 23:06:29','Decimal',NULL),(5,'grams','2024-03-21 13:29:57','discrete',1),(6,'Create Unit Test','2024-03-22 07:01:57','',1);
 /*!40000 ALTER TABLE `units_of_measurement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_settings`
+--
+
+DROP TABLE IF EXISTS `user_settings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_settings` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `notification_settings` json DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `user_settings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_settings`
+--
+
+LOCK TABLES `user_settings` WRITE;
+/*!40000 ALTER TABLE `user_settings` DISABLE KEYS */;
+INSERT INTO `user_settings` VALUES (1,'04badd68-29b7-4798-853b-a70cb727ac77','{}','2024-04-03 11:47:41','2024-04-03 11:47:41'),(2,'086e9e96-a8ef-11ee-bffa-00155de90539','{}','2024-04-03 11:48:13','2024-04-03 11:48:13');
+/*!40000 ALTER TABLE `user_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1174,4 +1203,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-03 11:59:15
+-- Dump completed on 2024-04-03 14:48:26

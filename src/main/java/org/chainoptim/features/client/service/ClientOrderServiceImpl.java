@@ -1,7 +1,10 @@
 package org.chainoptim.features.client.service;
 
 import org.chainoptim.core.notifications.model.KafkaEvent;
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.dto.ClientDTOMapper;
 import org.chainoptim.features.client.dto.CreateClientOrderDTO;
 import org.chainoptim.features.client.dto.UpdateClientOrderDTO;
@@ -21,16 +24,19 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
     private final ClientOrderRepository clientOrderRepository;
     private final KafkaClientOrderService kafkaClientOrderService;
+    private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public ClientOrderServiceImpl(
             ClientOrderRepository clientOrderRepository,
             KafkaClientOrderService kafkaClientOrderService,
+            SubscriptionPlanLimiterService planLimiterService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.clientOrderRepository = clientOrderRepository;
         this.kafkaClientOrderService = kafkaClientOrderService;
+        this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -49,8 +55,15 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
     // Create
     public ClientOrder createClientOrder(CreateClientOrderDTO orderDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), "Client Orders", 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed clients for the current Subscription Plan.");
+        }
+
+        // Sanitize input and map to entity
         CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);
         ClientOrder clientOrder = ClientDTOMapper.mapCreateDtoToClientOrder(sanitizedOrderDTO);
+
         ClientOrder savedOrder = clientOrderRepository.save(clientOrder);
 
         // Publish order to Kafka broker
@@ -59,7 +72,18 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return savedOrder;
     }
 
+    @Transactional
     public List<ClientOrder> createClientOrdersInBulk(List<CreateClientOrderDTO> orderDTOs) {
+        // Ensure same organizationId
+        if (orderDTOs.stream().map(CreateClientOrderDTO::getOrganizationId).distinct().count() > 1) {
+            throw new ValidationException("All orders must belong to the same organization.");
+        }
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), "Client Orders", orderDTOs.size())) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed Client Orders for the current Subscription Plan.");
+        }
+
+        // Sanitize and map to entity
         List<ClientOrder> orders = orderDTOs.stream()
                 .map(orderDTO -> {
                     CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);

@@ -19,7 +19,9 @@ import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
+import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
+import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 
@@ -39,6 +41,12 @@ public interface EntitySanitizerService {
     CreateFactoryInventoryItemDTO sanitizeCreateFactoryInventoryItemDTO(CreateFactoryInventoryItemDTO itemDTO);
     UpdateFactoryInventoryItemDTO sanitizeUpdateFactoryInventoryItemDTO(UpdateFactoryInventoryItemDTO itemDTO);
 
+    // Warehouse
+    CreateWarehouseDTO sanitizeCreateWarehouseDTO(CreateWarehouseDTO warehouseDTO);
+    UpdateWarehouseDTO sanitizeUpdateWarehouseDTO(UpdateWarehouseDTO warehouseDTO);
+    CreateWarehouseInventoryItemDTO sanitizeCreateWarehouseInventoryItemDTO(CreateWarehouseInventoryItemDTO itemDTO);
+    UpdateWarehouseInventoryItemDTO sanitizeUpdateWarehouseInventoryItemDTO(UpdateWarehouseInventoryItemDTO itemDTO);
+
     // Supplier
     CreateSupplierDTO sanitizeCreateSupplierDTO(CreateSupplierDTO supplierDTO);
     UpdateSupplierDTO sanitizeUpdateSupplierDTO(UpdateSupplierDTO supplierDTO);
@@ -48,10 +56,6 @@ public interface EntitySanitizerService {
     CreateClientDTO sanitizeCreateClientDTO(CreateClientDTO supplierDTO);
     UpdateClientDTO sanitizeUpdateClientDTO(UpdateClientDTO supplierDTO);
     CreateClientOrderDTO sanitizeCreateClientOrderDTO(CreateClientOrderDTO orderDTO);
-
-    // Warehouse
-    CreateWarehouseDTO sanitizeCreateWarehouseDTO(CreateWarehouseDTO warehouseDTO);
-    UpdateWarehouseDTO sanitizeUpdateWarehouseDTO(UpdateWarehouseDTO warehouseDTO);
 
     // Location
     CreateLocationDTO sanitizeCreateLocationDTO(CreateLocationDTO locationDTO);

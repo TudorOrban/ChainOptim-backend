@@ -61,7 +61,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     public Warehouse createWarehouse(CreateWarehouseDTO warehouseDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(warehouseDTO.getOrganizationId(), "Warehouses")) {
+        if (planLimiterService.isLimitReached(warehouseDTO.getOrganizationId(), "Warehouses", 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed warehouses for the current Subscription Plan.");
         }
 

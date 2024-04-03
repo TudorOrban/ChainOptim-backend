@@ -1,12 +1,12 @@
-package org.chainoptim.features.factory.dto;
+package org.chainoptim.features.warehouse.dto;
 
 import lombok.Data;
 
 @Data
-public class CreateFactoryInventoryItemDTO {
+public class UpdateWarehouseInventoryItemDTO {
 
-    private Integer factoryId;
-    private Integer organizationId;
+    private Integer id;
+    private Integer warehouseId;
     private Integer productId;
     private Integer componentId;
     private Float quantity;
