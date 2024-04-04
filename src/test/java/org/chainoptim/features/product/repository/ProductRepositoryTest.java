@@ -37,7 +37,7 @@ class ProductRepositoryTest {
         // Set up an organization and a unit of measurement
         Organization organization = Organization.builder()
                 .name("Test Org")
-                .subscriptionPlan(Organization.SubscriptionPlan.PRO)
+                .subscriptionPlanTier(Organization.SubscriptionPlanTier.PRO)
                 .build();
 
         entityManager.persist(organization);

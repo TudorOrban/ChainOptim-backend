@@ -19,7 +19,9 @@ import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
+import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
+import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +88,27 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         return itemDTO;
     }
 
+    // Warehouses
+    public CreateWarehouseDTO sanitizeCreateWarehouseDTO(CreateWarehouseDTO warehouseDTO) {
+        warehouseDTO.setName(sanitizationService.sanitize(warehouseDTO.getName()));
+
+        return warehouseDTO;
+    }
+
+    public UpdateWarehouseDTO sanitizeUpdateWarehouseDTO(UpdateWarehouseDTO warehouseDTO) {
+        warehouseDTO.setName(sanitizationService.sanitize(warehouseDTO.getName()));
+
+        return warehouseDTO;
+    }
+
+    public CreateWarehouseInventoryItemDTO sanitizeCreateWarehouseInventoryItemDTO(CreateWarehouseInventoryItemDTO itemDTO) {
+        return itemDTO;
+    }
+
+    public UpdateWarehouseInventoryItemDTO sanitizeUpdateWarehouseInventoryItemDTO(UpdateWarehouseInventoryItemDTO itemDTO) {
+        return itemDTO;
+    }
+
     // Suppliers
     public CreateSupplierDTO sanitizeCreateSupplierDTO(CreateSupplierDTO supplierDTO) {
         supplierDTO.setName(sanitizationService.sanitize(supplierDTO.getName()));
@@ -120,18 +143,6 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         return orderDTO;
     }
 
-    // Warehouses
-    public CreateWarehouseDTO sanitizeCreateWarehouseDTO(CreateWarehouseDTO warehouseDTO) {
-        warehouseDTO.setName(sanitizationService.sanitize(warehouseDTO.getName()));
-
-        return warehouseDTO;
-    }
-
-    public UpdateWarehouseDTO sanitizeUpdateWarehouseDTO(UpdateWarehouseDTO warehouseDTO) {
-        warehouseDTO.setName(sanitizationService.sanitize(warehouseDTO.getName()));
-
-        return warehouseDTO;
-    }
 
     // Locations
     public CreateLocationDTO sanitizeCreateLocationDTO(CreateLocationDTO locationDTO) {

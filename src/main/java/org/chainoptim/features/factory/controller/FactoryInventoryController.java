@@ -49,7 +49,7 @@ public class FactoryInventoryController {
             @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage) {
-        PaginatedResults<FactoryInventoryItem> factoryItems = factoryInventoryService.getFactoryInventoryItemsByFactoryId(factoryId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<FactoryInventoryItem> factoryItems = factoryInventoryService.getFactoryInventoryItemsByFactoryIdAdvanced(factoryId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(factoryItems);
     }
 
@@ -64,9 +64,16 @@ public class FactoryInventoryController {
     // Create
     @PreAuthorize("@securityService.canAccessEntity(#itemDTO.getFactoryId(), \"Factory\", \"Create\")")
     @PostMapping("/create")
-    public ResponseEntity<FactoryInventoryItem> createFactory(@RequestBody CreateFactoryInventoryItemDTO itemDTO) {
+    public ResponseEntity<FactoryInventoryItem> createFactoryInventoryItem(@RequestBody CreateFactoryInventoryItemDTO itemDTO) {
         FactoryInventoryItem item = factoryInventoryService.createFactoryInventoryItem(itemDTO);
         return ResponseEntity.ok(item);
+    }
+
+    // TODO: Secure endpoint
+    @PostMapping("/create/bulk")
+    public ResponseEntity<List<FactoryInventoryItem>> createFactoryInventoryItemsInBulk(@RequestBody List<CreateFactoryInventoryItemDTO> itemDTOs) {
+        List<FactoryInventoryItem> items = factoryInventoryService.createFactoryInventoryItemsInBulk(itemDTOs);
+        return ResponseEntity.ok(items);
     }
 
     // Update
@@ -78,11 +85,17 @@ public class FactoryInventoryController {
         return ResponseEntity.ok(item);
     }
 
+    @PutMapping("/update/bulk")
+    public ResponseEntity<List<FactoryInventoryItem>> updateFactoryInventoryItemsInBulk(@RequestBody List<UpdateFactoryInventoryItemDTO> itemDTOs) {
+        List<FactoryInventoryItem> items = factoryInventoryService.updateFactoryInventoryItemsInBulk(itemDTOs);
+        return ResponseEntity.ok(items);
+    }
+
     // Delete
 //    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\")")
     // TODO: Secure endpoint
     @DeleteMapping("/delete/{itemId}")
-    public ResponseEntity<Void> deleteFactory(@PathVariable Integer itemId) {
+    public ResponseEntity<Void> deleteFactoryInventoryItem(@PathVariable Integer itemId) {
         factoryInventoryService.deleteFactoryInventoryItem(itemId);
         return ResponseEntity.ok().build();
     }

@@ -43,7 +43,7 @@ CREATE TABLE `client_orders` (
   CONSTRAINT `client_orders_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `clients` (`id`),
   CONSTRAINT `client_orders_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `client_orders_ibfk_3` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +52,7 @@ CREATE TABLE `client_orders` (
 
 LOCK TABLES `client_orders` WRITE;
 /*!40000 ALTER TABLE `client_orders` DISABLE KEYS */;
-INSERT INTO `client_orders` VALUES (1,1,'2024-03-18 14:44:45','2024-03-18 15:40:37',3,124,NULL,NULL,NULL,'Initiated',1,NULL,NULL),(2,4,'2024-03-27 14:48:07','2024-03-27 14:48:07',NULL,125,NULL,NULL,NULL,NULL,1,'#123',NULL),(3,4,'2024-03-27 14:48:38','2024-03-27 14:48:38',NULL,1125,NULL,NULL,NULL,NULL,1,'#124123',NULL),(5,4,'2024-03-27 13:33:45','2024-03-27 13:42:50',3,1123,NULL,NULL,NULL,NULL,1,NULL,NULL),(6,4,'2024-03-27 13:33:45','2024-03-27 13:42:50',3,5315,NULL,NULL,NULL,NULL,1,NULL,NULL),(7,1,'2024-03-31 19:25:49','2024-03-31 19:25:49',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(8,1,'2024-03-31 20:07:32','2024-03-31 20:07:32',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(9,1,'2024-03-31 20:31:16','2024-03-31 20:31:16',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(10,1,'2024-03-31 20:31:36','2024-03-31 20:31:36',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(11,1,'2024-03-31 20:32:15','2024-03-31 20:32:15',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(12,1,'2024-03-31 20:32:36','2024-03-31 20:32:36',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(13,1,'2024-03-31 20:34:35','2024-03-31 20:34:35',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(14,1,'2024-03-31 20:49:03','2024-03-31 20:49:03',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(15,1,'2024-03-31 20:52:06','2024-03-31 20:52:06',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(16,1,'2024-04-01 09:10:46','2024-04-01 09:10:46',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(17,1,'2024-04-01 09:10:48','2024-04-01 09:10:48',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(18,1,'2024-04-01 11:33:25','2024-04-01 11:33:25',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(19,1,'2024-04-01 11:33:29','2024-04-01 11:33:29',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(20,1,'2024-04-01 11:35:17','2024-04-01 11:35:17',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(21,1,'2024-04-01 11:35:20','2024-04-01 11:35:20',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(22,1,'2024-04-01 11:35:22','2024-04-01 11:35:22',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(23,1,'2024-04-01 11:57:22','2024-04-01 11:57:22',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(24,1,'2024-04-01 11:57:25','2024-04-01 11:57:25',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(25,1,'2024-04-01 11:57:32','2024-04-01 11:57:32',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(26,1,'2024-04-01 12:03:24','2024-04-01 12:03:24',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(27,1,'2024-04-01 12:03:42','2024-04-01 12:03:42',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(28,1,'2024-04-01 12:12:47','2024-04-01 12:12:47',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(29,1,'2024-04-01 12:17:36','2024-04-01 12:17:36',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(30,1,'2024-04-01 12:17:40','2024-04-01 12:17:40',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL),(31,1,'2024-04-01 12:39:50','2024-04-01 12:39:50',1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL);
+INSERT INTO `client_orders` VALUES (1,1,'2024-03-18 14:44:45','2024-03-18 15:40:37',3,124,NULL,NULL,NULL,'Initiated',1,NULL,NULL),(2,4,'2024-03-27 14:48:07','2024-03-27 14:48:07',NULL,125,NULL,NULL,NULL,NULL,1,'#123',NULL),(3,4,'2024-03-27 14:48:38','2024-03-27 14:48:38',NULL,1125,NULL,NULL,NULL,NULL,1,'#124123',NULL),(5,4,'2024-03-27 13:33:45','2024-03-27 13:42:50',3,1123,NULL,NULL,NULL,NULL,1,NULL,NULL),(6,4,'2024-03-27 13:33:45','2024-03-27 13:42:50',3,5315,NULL,NULL,NULL,NULL,1,NULL,NULL);
 /*!40000 ALTER TABLE `client_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -269,6 +269,7 @@ CREATE TABLE `factory_inventory_items` (
   `minimum_required_quantity` double DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `organization_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `factory_id` (`factory_id`),
   KEY `raw_material_id` (`raw_material_id`),
@@ -287,7 +288,7 @@ CREATE TABLE `factory_inventory_items` (
 
 LOCK TABLES `factory_inventory_items` WRITE;
 /*!40000 ALTER TABLE `factory_inventory_items` DISABLE KEYS */;
-INSERT INTO `factory_inventory_items` VALUES (1,3,NULL,1,NULL,231,1421,'2024-03-09 13:28:41','2024-03-09 15:28:41'),(3,3,NULL,2,1,2391,141,'2024-03-09 13:29:04','2024-03-09 22:51:40'),(4,3,NULL,3,2,211,1400,'2024-03-09 13:29:13','2024-03-11 23:46:46'),(5,3,NULL,4,3,91,414000,'2024-03-09 13:29:25','2024-03-11 23:46:46'),(9,3,NULL,NULL,3,200.5,214.12,'2024-03-09 12:33:03','2024-03-09 14:33:03');
+INSERT INTO `factory_inventory_items` VALUES (1,3,NULL,1,NULL,231,1421,'2024-03-09 13:28:41','2024-04-03 08:58:58',1),(3,3,NULL,2,1,2391,141,'2024-03-09 13:29:04','2024-04-03 08:58:58',1),(4,3,NULL,3,2,211,1400,'2024-03-09 13:29:13','2024-04-03 08:58:58',1),(5,3,NULL,4,3,91,414000,'2024-03-09 13:29:25','2024-04-03 08:58:58',1),(9,3,NULL,NULL,3,200.5,214.12,'2024-03-09 12:33:03','2024-04-03 08:58:58',1);
 /*!40000 ALTER TABLE `factory_inventory_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -442,7 +443,7 @@ CREATE TABLE `notification_users` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `notification_users_ibfk_1` FOREIGN KEY (`notification_id`) REFERENCES `notifications` (`id`),
   CONSTRAINT `notification_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -451,7 +452,7 @@ CREATE TABLE `notification_users` (
 
 LOCK TABLES `notification_users` WRITE;
 /*!40000 ALTER TABLE `notification_users` DISABLE KEYS */;
-INSERT INTO `notification_users` VALUES (1,1,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(2,2,'086e9e96-a8ef-11ee-bffa-00155de90539',1),(4,15,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(5,16,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(6,17,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(7,18,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(8,19,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(9,20,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(10,21,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(11,22,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(12,23,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(13,24,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(14,25,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(15,26,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(16,27,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(17,28,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(18,29,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(19,30,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(20,31,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(21,32,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(22,33,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(23,34,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(24,35,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(25,36,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(26,37,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(27,38,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(28,39,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(29,40,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(30,41,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(31,42,'086e9e96-a8ef-11ee-bffa-00155de90539',0);
+INSERT INTO `notification_users` VALUES (1,1,'086e9e96-a8ef-11ee-bffa-00155de90539',0),(2,2,'086e9e96-a8ef-11ee-bffa-00155de90539',1);
 /*!40000 ALTER TABLE `notification_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -473,7 +474,7 @@ CREATE TABLE `notifications` (
   `read_status` tinyint(1) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -482,7 +483,7 @@ CREATE TABLE `notifications` (
 
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
-INSERT INTO `notifications` VALUES (1,'Supplier Order 1 Alert',21,'Factory','The Supplier Order 1 has arrived at the Factory','2024-03-28 22:18:36','2024-03-29 00:18:36',0,'Alert'),(2,'Client Order #213 Alert',2,'Client Order','The Client Akia Motors has published an order','2024-03-28 22:20:51','2024-03-29 00:20:51',0,'Alert'),(4,'Test intermediate',NULL,NULL,NULL,'2024-03-31 12:08:46','2024-03-31 12:08:46',NULL,NULL),(5,'Test intermediate',NULL,NULL,NULL,'2024-03-31 12:08:58','2024-03-31 12:08:58',NULL,NULL),(6,'Test intermediate',NULL,NULL,NULL,'2024-03-31 12:18:17','2024-03-31 12:18:17',NULL,NULL),(7,'Test intermediate',NULL,NULL,NULL,'2024-03-31 12:23:35','2024-03-31 12:23:35',NULL,NULL),(15,'Test intermediate',NULL,NULL,NULL,'2024-03-31 13:37:09','2024-03-31 13:37:09',NULL,NULL),(16,'Event title',NULL,'Supplier Order','A new Supplier Order has been created','2024-03-31 13:57:20','2024-03-31 13:57:20',0,NULL),(17,'Event title',NULL,'Supplier Order','A new Supplier Order has been created','2024-03-31 19:22:37','2024-03-31 19:22:37',0,NULL),(18,'Event title',NULL,'Client Order','A new Client Order has been created','2024-03-31 19:25:49','2024-03-31 19:25:49',0,NULL),(19,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:07:33','2024-03-31 20:07:33',0,NULL),(20,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:31:16','2024-03-31 20:31:16',0,NULL),(21,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:31:36','2024-03-31 20:31:36',0,NULL),(22,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:32:16','2024-03-31 20:32:16',0,NULL),(23,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:32:36','2024-03-31 20:32:36',0,NULL),(24,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:34:35','2024-03-31 20:34:35',0,NULL),(25,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:49:03','2024-03-31 20:49:03',0,NULL),(26,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-03-31 20:52:06','2024-03-31 20:52:06',0,NULL),(27,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 09:10:47','2024-04-01 09:10:47',0,NULL),(28,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 09:10:48','2024-04-01 09:10:48',0,NULL),(29,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:33:26','2024-04-01 11:33:26',0,NULL),(30,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:33:30','2024-04-01 11:33:30',0,NULL),(31,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:35:17','2024-04-01 11:35:17',0,NULL),(32,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:35:20','2024-04-01 11:35:20',0,NULL),(33,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:35:22','2024-04-01 11:35:22',0,NULL),(34,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:57:22','2024-04-01 11:57:22',0,NULL),(35,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:57:25','2024-04-01 11:57:25',0,NULL),(36,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 11:57:32','2024-04-01 11:57:32',0,NULL),(37,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 12:03:25','2024-04-01 12:03:25',0,NULL),(38,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 12:03:42','2024-04-01 12:03:42',0,NULL),(39,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 12:12:47','2024-04-01 12:12:47',0,NULL),(40,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 12:17:36','2024-04-01 12:17:36',0,NULL),(41,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 12:17:40','2024-04-01 12:17:40',0,NULL),(42,'Client Order',NULL,'Client Order','A new Client Order has been created','2024-04-01 12:39:50','2024-04-01 12:39:50',0,NULL);
+INSERT INTO `notifications` VALUES (1,'Supplier Order 1 Alert',21,'Factory','The Supplier Order 1 has arrived at the Factory','2024-03-28 22:18:36','2024-03-29 00:18:36',0,'Alert'),(2,'Client Order #213 Alert',2,'Client Order','The Client Akia Motors has published an order','2024-03-28 22:20:51','2024-03-29 00:20:51',0,'Alert');
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -905,7 +906,7 @@ CREATE TABLE `supplier_orders` (
   CONSTRAINT `supplier_orders_ibfk_4` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`),
   CONSTRAINT `supplier_orders_ibfk_5` FOREIGN KEY (`delivery_warehouse_id`) REFERENCES `warehouses` (`id`),
   CONSTRAINT `supplier_orders_ibfk_6` FOREIGN KEY (`delivery_factory_id`) REFERENCES `factories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -914,7 +915,7 @@ CREATE TABLE `supplier_orders` (
 
 LOCK TABLES `supplier_orders` WRITE;
 /*!40000 ALTER TABLE `supplier_orders` DISABLE KEYS */;
-INSERT INTO `supplier_orders` VALUES (1,1,NULL,1,124,'2024-02-28 09:07:56','2023-08-28 08:07:56','2023-01-28 09:07:56','Initiated',1,'2024-03-06 20:03:10','2024-03-27 16:09:49',NULL,NULL,'#124'),(2,3,NULL,1,1123,NULL,NULL,NULL,'Initiated',1,'2024-03-27 14:04:55','2024-03-27 15:56:06',NULL,NULL,'#5323'),(3,4,NULL,1,5315,NULL,NULL,NULL,'Initiated',1,'2024-03-27 14:12:45','2024-03-27 15:56:06',NULL,NULL,'#123'),(4,3,NULL,1,23,NULL,NULL,NULL,'Initiated',1,'2024-03-27 13:58:51','2024-03-27 15:58:51',NULL,NULL,NULL),(5,3,NULL,1,512315,NULL,NULL,NULL,'Initiated',1,'2024-03-27 13:58:52','2024-03-27 15:58:52',NULL,NULL,NULL),(6,3,NULL,1,NULL,NULL,NULL,NULL,'Initiated',1,'2024-03-31 13:57:19','2024-03-31 13:57:19',NULL,NULL,NULL),(7,3,NULL,1,NULL,NULL,NULL,NULL,'Initiated',1,'2024-03-31 19:04:05','2024-03-31 19:04:05',NULL,NULL,NULL),(8,3,NULL,1,NULL,NULL,NULL,NULL,'Initiated',1,'2024-03-31 19:22:37','2024-03-31 19:22:37',NULL,NULL,NULL);
+INSERT INTO `supplier_orders` VALUES (1,1,NULL,1,124,'2024-02-28 09:07:56','2023-08-28 08:07:56','2023-01-28 09:07:56','Initiated',1,'2024-03-06 20:03:10','2024-03-27 16:09:49',NULL,NULL,'#124'),(2,3,NULL,1,1123,NULL,NULL,NULL,'Initiated',1,'2024-03-27 14:04:55','2024-03-27 15:56:06',NULL,NULL,'#5323'),(3,4,NULL,1,5315,NULL,NULL,NULL,'Initiated',1,'2024-03-27 14:12:45','2024-03-27 15:56:06',NULL,NULL,'#123'),(4,3,NULL,1,23,NULL,NULL,NULL,'Initiated',1,'2024-03-27 13:58:51','2024-03-27 15:58:51',NULL,NULL,NULL),(5,3,NULL,1,512315,NULL,NULL,NULL,'Initiated',1,'2024-03-27 13:58:52','2024-03-27 15:58:52',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `supplier_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -993,6 +994,35 @@ INSERT INTO `suppliers` VALUES (1,'LA Supplier 1',2,'2024-03-04 21:07:43','2024-
 UNLOCK TABLES;
 
 --
+-- Table structure for table `supply_chain_snapshots`
+--
+
+DROP TABLE IF EXISTS `supply_chain_snapshots`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `supply_chain_snapshots` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `organization_id` int NOT NULL,
+  `snapshot` json DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `organization_id` (`organization_id`),
+  CONSTRAINT `supply_chain_snapshots_ibfk_1` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `supply_chain_snapshots`
+--
+
+LOCK TABLES `supply_chain_snapshots` WRITE;
+/*!40000 ALTER TABLE `supply_chain_snapshots` DISABLE KEYS */;
+INSERT INTO `supply_chain_snapshots` VALUES (1,1,'{\"clientsCount\": 4, \"membersCount\": 5, \"productsCount\": 24, \"factoriesCount\": 7, \"suppliersCount\": 5, \"componentsCount\": 6, \"warehousesCount\": 6, \"clientOrdersCount\": 5, \"supplierOrdersCount\": 5, \"factoryInventoryItemsCount\": 5, \"warehouseInventoryItemsCount\": 2}','2024-04-03 08:56:16','2024-04-03 11:41:52'),(2,2,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 2, \"factoriesCount\": 2, \"suppliersCount\": 1, \"componentsCount\": 1, \"warehousesCount\": 1, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-03 11:41:53'),(3,3,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-03 11:41:53'),(4,5,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:53'),(5,6,'{\"clientsCount\": 0, \"membersCount\": 2, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(6,10,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(7,12,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(8,16,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:54'),(9,17,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:55'),(10,18,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-03 11:41:55');
+/*!40000 ALTER TABLE `supply_chain_snapshots` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `units_of_measurement`
 --
 
@@ -1030,14 +1060,14 @@ DROP TABLE IF EXISTS `user_settings`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_settings` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `user_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `notification_settings` json DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_settings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1046,7 +1076,7 @@ CREATE TABLE `user_settings` (
 
 LOCK TABLES `user_settings` WRITE;
 /*!40000 ALTER TABLE `user_settings` DISABLE KEYS */;
-INSERT INTO `user_settings` VALUES (1,'086e9e96-a8ef-11ee-bffa-00155de90539','{\"clientOrders\": false, \"supplierOrders\": true}','2024-04-01 13:22:46','2024-04-01 13:22:46');
+INSERT INTO `user_settings` VALUES (1,'04badd68-29b7-4798-853b-a70cb727ac77','{}','2024-04-03 11:47:41','2024-04-03 11:47:41'),(2,'086e9e96-a8ef-11ee-bffa-00155de90539','{}','2024-04-03 11:48:13','2024-04-03 11:48:13');
 /*!40000 ALTER TABLE `user_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1085,7 +1115,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('04badd68-29b7-4798-853b-a70cb727ac77','MatthewJonson','$2a$10$M8wcgZJEglAJq6gwqC6ZFu8h.EtwR3QaT4p0MtRooBvZeYC4eaiyK','mjonson@gmail.com','2024-01-05 08:17:24','2024-01-05 08:17:24',6,'ADMIN',NULL,NULL,NULL),('086e9e96-a8ef-11ee-bffa-00155de90539','TudorAOrban1','$2y$10$VfHMNhpQ1WOnrReNTySMvOqGggHd5MoXsfCpOkQx2s5Cp6vVmOWhy','tudororban3@gmail.com','2024-01-01 21:45:08','2024-03-28 12:53:34',1,'ADMIN',NULL,NULL,NULL),('1caaef49-e9fb-480c-9371-b932139d6c80','Jensen Huang','$2a$10$XV67s/5/D/Xq2O1BdIhc/uwpT4HjZA7zw0Q74GjmJeuVe6UyW3.we','huang@outlook.com','2024-01-05 11:28:00','2024-03-27 21:05:03',NULL,'NONE',NULL,NULL,_binary ''),('1f6d88dd-325b-4124-b393-71926bcbd2cb','Bill Gates','$2a$10$SoM.XQoRbwMtEd9KnI18vuNh6EP4cv81gZA0r2DaAtnRm32cgwXZ2','bg@outlook.com','2024-01-05 11:18:48','2024-01-05 11:18:48',6,'MEMBER',NULL,NULL,NULL),('229a84d6-ee6d-4e53-af42-5ee859c871c6','GabrielMajeri1','$2a$10$39CZd5cByMUENWFh3P6YRO6EruFcBo77alQED7Gz9xjEgoR/fneKO','anotheruser@example.com','2024-01-04 11:46:54','2024-03-27 14:55:29',1,'MEMBER',2,NULL,NULL),('322f2f9c-8b7a-4274-942c-13536394f1b8','Josh Hinton','$2a$10$5ohVUzHTwHvUvCZ7g3sH3uNsDlMTGZ6F8TTmNTqTRXqFGkttDsA02','jhint79@gmail.com','2024-01-05 07:56:47','2024-01-13 21:29:36',2,'ADMIN',NULL,NULL,NULL),('430f3a7b-6d9b-411e-95a3-eb794ba3c430','newuser','$2a$10$RvmBaBdPD0vfAyqSy6kaquDdB.90liiqY9n./GfIV1T8Fsdsrpl6O','newuser@example.com','2024-01-03 08:12:13','2024-01-04 20:00:08',10,'ADMIN',NULL,NULL,NULL),('43b836ac-a8e8-11ee-bffa-00155de90539','TudorAOrban','$2y$10$3Lsc1LeiiTLzZOgtVp7g/uJKM7VtcdYVCxT2A7DBggTy97fOkSAam','tudororban2@gmail.com','2024-01-01 20:56:41','2024-03-28 11:45:44',1,'NONE',16,NULL,NULL),('5cafa54a-74ea-4149-b245-c11c64d1361e','New-Test-User','$2a$10$gahZkePcBkQcy0BzX6Zu5.9tjq9GYp3ZrlFSFGe9prjBw3/bI/S4O','New-Test-Email','2024-02-16 07:21:16','2024-02-16 07:21:16',18,'MEMBER',NULL,NULL,NULL),('7dfa2892-673a-4fd2-8fc1-1330b084f909','notempty','$2a$10$n1GdvrTWL5XhG0mrjuMNoOYuXtwa4ooCLZeSiS4hAvZsKxI1H7KJW','','2024-01-03 12:54:08','2024-03-27 21:06:24',NULL,'NONE',NULL,NULL,_binary ''),('9af23564-a8c1-11ee-bffa-00155de90539','myusername','hashed_password','user@example.com','2024-01-01 16:19:57','2024-03-27 19:44:49',NULL,'NONE',NULL,NULL,_binary ''),('b880508b-b12f-4a25-8578-fa9d1d997394','user','$2a$10$mWDG.NhUdsvJkugVqsDTPeSVpdkrugP1X.qIPHzudHb7OhVkZfjm.','user@yahoo.com','2024-01-03 08:25:51','2024-03-27 19:44:49',NULL,'NONE',NULL,NULL,_binary ''),('bc3dfdde-a8ef-11ee-bffa-00155de90539','TudorAOrban2','$2a$10$5frWFt.qXudTyLvDhQzAQOh26ThALaiiMsR0Ir9WykuO8NyOctzCC','tudororban4@gmail.com','2024-01-01 21:50:10','2024-03-27 21:04:45',1,'ADMIN',1,NULL,_binary '');
+INSERT INTO `users` VALUES ('04badd68-29b7-4798-853b-a70cb727ac77','MatthewJonson','$2a$10$M8wcgZJEglAJq6gwqC6ZFu8h.EtwR3QaT4p0MtRooBvZeYC4eaiyK','mjonson@gmail.com','2024-01-05 08:17:24','2024-01-05 08:17:24',6,'ADMIN',NULL,NULL,NULL),('086e9e96-a8ef-11ee-bffa-00155de90539','TudorAOrban1','$2y$10$VfHMNhpQ1WOnrReNTySMvOqGggHd5MoXsfCpOkQx2s5Cp6vVmOWhy','tudororban3@gmail.com','2024-01-01 21:45:08','2024-03-28 12:53:34',1,'ADMIN',NULL,NULL,NULL),('1caaef49-e9fb-480c-9371-b932139d6c80','Jensen Huang','$2a$10$XV67s/5/D/Xq2O1BdIhc/uwpT4HjZA7zw0Q74GjmJeuVe6UyW3.we','huang@outlook.com','2024-01-05 11:28:00','2024-03-27 21:05:03',NULL,'NONE',NULL,NULL,_binary ''),('1f6d88dd-325b-4124-b393-71926bcbd2cb','Bill Gates','$2a$10$SoM.XQoRbwMtEd9KnI18vuNh6EP4cv81gZA0r2DaAtnRm32cgwXZ2','bg@outlook.com','2024-01-05 11:18:48','2024-01-05 11:18:48',6,'MEMBER',NULL,NULL,NULL),('229a84d6-ee6d-4e53-af42-5ee859c871c6','GabrielMajeri1','$2a$10$39CZd5cByMUENWFh3P6YRO6EruFcBo77alQED7Gz9xjEgoR/fneKO','anotheruser@example.com','2024-01-04 11:46:54','2024-03-27 14:55:29',1,'MEMBER',2,NULL,NULL),('322f2f9c-8b7a-4274-942c-13536394f1b8','Josh Hinton','$2a$10$5ohVUzHTwHvUvCZ7g3sH3uNsDlMTGZ6F8TTmNTqTRXqFGkttDsA02','jhint79@gmail.com','2024-01-05 07:56:47','2024-01-13 21:29:36',2,'ADMIN',NULL,NULL,NULL),('430f3a7b-6d9b-411e-95a3-eb794ba3c430','Sorin','$2y$10$UwhB6/PGfI.LeEBIXJQoEOIaRZOGsDQA3vwIu1tCMEww3uYIDb98i','newuser@example.com','2024-01-03 08:12:13','2024-04-03 08:58:05',1,'ADMIN',NULL,NULL,NULL),('43b836ac-a8e8-11ee-bffa-00155de90539','TudorAOrban','$2y$10$3Lsc1LeiiTLzZOgtVp7g/uJKM7VtcdYVCxT2A7DBggTy97fOkSAam','tudororban2@gmail.com','2024-01-01 20:56:41','2024-03-28 11:45:44',1,'NONE',16,NULL,NULL),('5cafa54a-74ea-4149-b245-c11c64d1361e','New-Test-User','$2a$10$gahZkePcBkQcy0BzX6Zu5.9tjq9GYp3ZrlFSFGe9prjBw3/bI/S4O','New-Test-Email','2024-02-16 07:21:16','2024-02-16 07:21:16',18,'MEMBER',NULL,NULL,NULL),('7dfa2892-673a-4fd2-8fc1-1330b084f909','notempty','$2a$10$n1GdvrTWL5XhG0mrjuMNoOYuXtwa4ooCLZeSiS4hAvZsKxI1H7KJW','','2024-01-03 12:54:08','2024-03-27 21:06:24',NULL,'NONE',NULL,NULL,_binary ''),('9af23564-a8c1-11ee-bffa-00155de90539','myusername','hashed_password','user@example.com','2024-01-01 16:19:57','2024-03-27 19:44:49',NULL,'NONE',NULL,NULL,_binary ''),('b880508b-b12f-4a25-8578-fa9d1d997394','user','$2a$10$mWDG.NhUdsvJkugVqsDTPeSVpdkrugP1X.qIPHzudHb7OhVkZfjm.','user@yahoo.com','2024-01-03 08:25:51','2024-03-27 19:44:49',NULL,'NONE',NULL,NULL,_binary ''),('bc3dfdde-a8ef-11ee-bffa-00155de90539','TudorAOrban2','$2a$10$5frWFt.qXudTyLvDhQzAQOh26ThALaiiMsR0Ir9WykuO8NyOctzCC','tudororban4@gmail.com','2024-01-01 21:50:10','2024-03-27 21:04:45',1,'ADMIN',1,NULL,_binary '');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1106,16 +1136,19 @@ CREATE TABLE `warehouse_inventory_items` (
   `minimum_required_quantity` float DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `organization_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `raw_material_id` (`raw_material_id`),
   KEY `component_id` (`component_id`),
   KEY `product_id` (`product_id`),
   KEY `warehouse_id` (`warehouse_id`),
+  KEY `organization_id` (`organization_id`),
   CONSTRAINT `warehouse_inventory_items_ibfk_1` FOREIGN KEY (`warehouse_id`) REFERENCES `factories` (`id`),
   CONSTRAINT `warehouse_inventory_items_ibfk_2` FOREIGN KEY (`raw_material_id`) REFERENCES `raw_materials` (`id`),
   CONSTRAINT `warehouse_inventory_items_ibfk_3` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
   CONSTRAINT `warehouse_inventory_items_ibfk_4` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-  CONSTRAINT `warehouse_inventory_items_ibfk_5` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`)
+  CONSTRAINT `warehouse_inventory_items_ibfk_5` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`),
+  CONSTRAINT `warehouse_inventory_items_ibfk_6` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1125,7 +1158,7 @@ CREATE TABLE `warehouse_inventory_items` (
 
 LOCK TABLES `warehouse_inventory_items` WRITE;
 /*!40000 ALTER TABLE `warehouse_inventory_items` DISABLE KEYS */;
-INSERT INTO `warehouse_inventory_items` VALUES (1,6,NULL,1,NULL,341,240,'2024-03-12 16:38:07','2024-03-12 18:38:07'),(2,6,NULL,4,NULL,30,240,'2024-03-12 16:38:07','2024-03-12 18:38:07');
+INSERT INTO `warehouse_inventory_items` VALUES (1,6,NULL,1,NULL,341,240,'2024-03-12 16:38:07','2024-04-03 08:58:43',1),(2,6,NULL,4,NULL,30,240,'2024-03-12 16:38:07','2024-04-03 08:58:43',1);
 /*!40000 ALTER TABLE `warehouse_inventory_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1170,4 +1203,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-01 16:23:27
+-- Dump completed on 2024-04-03 14:48:26

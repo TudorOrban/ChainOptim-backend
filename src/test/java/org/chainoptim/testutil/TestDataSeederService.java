@@ -43,7 +43,7 @@ public class TestDataSeederService {
         // Create organization
         Organization organization = Organization.builder()
                 .name("Test Org")
-                .subscriptionPlan(Organization.SubscriptionPlan.PRO)
+                .subscriptionPlanTier(Organization.SubscriptionPlanTier.PRO)
                 .build();
 
         organization = organizationRepository.save(organization);

@@ -1,5 +1,7 @@
 package org.chainoptim.features.supplier.service;
 
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
@@ -23,14 +25,17 @@ public class SupplierServiceImpl implements SupplierService {
 
     private final SupplierRepository supplierRepository;
     private final LocationService locationService;
+    private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public SupplierServiceImpl(SupplierRepository supplierRepository,
                                LocationService locationService,
+                               SubscriptionPlanLimiterService planLimiterService,
                                EntitySanitizerService entitySanitizerService) {
         this.supplierRepository = supplierRepository;
         this.locationService = locationService;
+        this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
@@ -58,6 +63,12 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     public Supplier createSupplier(CreateSupplierDTO supplierDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(supplierDTO.getOrganizationId(), "Suppliers", 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed suppliers for the current Subscription Plan.");
+        }
+
+        // Sanitize input
         CreateSupplierDTO sanitizedSupplierDTO = entitySanitizerService.sanitizeCreateSupplierDTO(supplierDTO);
 
         // Create location if requested

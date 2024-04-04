@@ -1,5 +1,7 @@
 package org.chainoptim.core.organization.model;
 
+import org.chainoptim.core.subscriptionplan.model.PlanDetails;
+import org.chainoptim.core.subscriptionplan.model.SubscriptionPlans;
 import org.chainoptim.core.user.model.User;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -66,7 +68,7 @@ public class Organization {
         return Objects.hash(id);
     }
 
-    public enum SubscriptionPlan {
+    public enum SubscriptionPlanTier {
         NONE,
         BASIC,
         PRO
@@ -74,5 +76,9 @@ public class Organization {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "subscription_plan", nullable = false)
-    private SubscriptionPlan subscriptionPlan;
+    private SubscriptionPlanTier subscriptionPlanTier;
+
+    public PlanDetails getSubscriptionPlan() {
+        return SubscriptionPlans.getPlans().get(subscriptionPlanTier);
+    }
 }

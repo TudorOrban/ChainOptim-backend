@@ -15,7 +15,7 @@ public class OrganizationDTO {
     private String name;
     private String address;
     private String contactInfo;
-    private Organization.SubscriptionPlan subscriptionPlan;
+    private Organization.SubscriptionPlanTier subscriptionPlanTier;
     private java.time.LocalDateTime createdAt;
     private java.time.LocalDateTime updatedAt;
     private Set<UserDTO> users;

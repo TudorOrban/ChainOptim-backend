@@ -11,7 +11,6 @@ import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.core.user.service.UserWriteService;
 import org.chainoptim.core.user.service.UserService;
-import org.chainoptim.core.user.service.UserUpdateService;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         organization.setName(createOrganizationDTO.getName());
         organization.setAddress(createOrganizationDTO.getAddress());
         organization.setContactInfo(createOrganizationDTO.getContactInfo());
-        organization.setSubscriptionPlan(createOrganizationDTO.getSubscriptionPlan());
+        organization.setSubscriptionPlanTier(createOrganizationDTO.getSubscriptionPlanTier());
 
         // Save the organization
         Organization savedOrganization = organizationRepository.save(organization);

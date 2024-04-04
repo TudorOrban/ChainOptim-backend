@@ -1,5 +1,11 @@
 package org.chainoptim.features.warehouse.dto;
 
+import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
+import org.chainoptim.features.warehouse.model.Warehouse;
+import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
+import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.productpipeline.model.Component;
+import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
@@ -28,5 +34,24 @@ public class WarehouseDTOMapper {
         }
 
         return warehouse;
+    }
+
+    public static WarehouseInventoryItem convertCreateWarehouseItemDTOToWarehouseItem(CreateWarehouseInventoryItemDTO itemDTO) {
+        WarehouseInventoryItem item = new WarehouseInventoryItem();
+        item.setWarehouseId(itemDTO.getWarehouseId());
+        if (itemDTO.getComponentId() != null) {
+            Component component = new Component();
+            component.setId(itemDTO.getComponentId());
+            item.setComponent(component);
+        }
+        if (itemDTO.getProductId() != null) {
+            Product product = new Product();
+            product.setId(itemDTO.getProductId());
+            item.setProduct(product);
+        }
+        item.setQuantity(itemDTO.getQuantity());
+        item.setMinimumRequiredQuantity(itemDTO.getMinimumRequiredQuantity());
+
+        return item;
     }
 }

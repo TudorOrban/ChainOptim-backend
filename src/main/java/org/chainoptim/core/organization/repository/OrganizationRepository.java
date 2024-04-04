@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrganizationRepository extends JpaRepository<Organization, Integer> {
@@ -17,6 +18,12 @@ public interface OrganizationRepository extends JpaRepository<Organization, Inte
             "LEFT JOIN FETCH u.customRole cr " +
             "WHERE o.id = :id")
     Optional<Organization> findByIdWithUsersAndCustomRoles(@Param("id") Integer id);
+
+    @Query("SELECT o.subscriptionPlanTier FROM Organization o WHERE o.id = :id")
+    Optional<Organization.SubscriptionPlanTier> getSubscriptionPlanTierById(Integer id);
+
+    @Query("SELECT o.id FROM Organization o")
+    List<Integer> getAllOrganizationIds();
 
 
 }

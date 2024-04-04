@@ -20,7 +20,7 @@ public class OrganizationMapper {
         dto.setName(organization.getName());
         dto.setAddress(organization.getAddress());
         dto.setContactInfo(organization.getContactInfo());
-        dto.setSubscriptionPlan(organization.getSubscriptionPlan());
+        dto.setSubscriptionPlanTier(organization.getSubscriptionPlanTier());
         dto.setCreatedAt(organization.getCreatedAt());
         dto.setUpdatedAt(organization.getUpdatedAt());
 
