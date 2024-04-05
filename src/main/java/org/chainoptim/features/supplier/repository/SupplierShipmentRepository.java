@@ -14,4 +14,8 @@ public interface SupplierShipmentRepository extends JpaRepository<SupplierShipme
     @Query("SELECT ss FROM SupplierShipment ss " +
             "WHERE ss.supplierOrderId = :orderId")
     List<SupplierShipment> findBySupplyOrderId(@Param("orderId") Integer orderId);
+
+    @Query("SELECT ss FROM SupplierShipment ss " +
+            "WHERE ss.supplierOrderId IN :orderIds")
+    List<SupplierShipment> findBySupplierOrderIds(@Param("orderIds") List<Integer> supplierOrderIds);
 }
