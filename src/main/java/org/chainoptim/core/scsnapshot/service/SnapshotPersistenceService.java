@@ -1,8 +1,8 @@
-package org.chainoptim.core.overview.service;
+package org.chainoptim.core.scsnapshot.service;
 
-import org.chainoptim.core.overview.dto.CreateSnapshotDTO;
-import org.chainoptim.core.overview.dto.UpdateSnapshotDTO;
-import org.chainoptim.core.overview.model.SupplyChainSnapshot;
+import org.chainoptim.core.scsnapshot.dto.CreateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.dto.UpdateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
 
 import java.util.Optional;
 

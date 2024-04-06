@@ -21,18 +21,14 @@ import java.util.List;
 public class SupplierController {
 
     private final SupplierService supplierService;
-    private final SupplierPerformanceService supplierPerformanceService;
     private final SecurityService securityService;
 
     @Autowired
     public SupplierController(
             SupplierService supplierService,
-            SupplierPerformanceService supplierPerformanceService,
             SecurityService securityService
-
     ) {
         this.supplierService = supplierService;
-        this.supplierPerformanceService = supplierPerformanceService;
         this.securityService = securityService;
     }
 
@@ -90,13 +86,5 @@ public class SupplierController {
     public ResponseEntity<Void> deleteSupplier(@PathVariable Integer supplierId) {
         supplierService.deleteSupplier(supplierId);
         return ResponseEntity.ok().build();
-    }
-
-    // Evaluate performance
-    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
-    @GetMapping("/performance/{supplierId}")
-    public ResponseEntity<SupplierPerformanceReport> evaluateSupplierPerformance(@PathVariable Integer supplierId) {
-        SupplierPerformanceReport supplierPerformanceReport = supplierPerformanceService.computeSupplierPerformanceReport(supplierId);
-        return ResponseEntity.ok(supplierPerformanceReport);
     }
 }

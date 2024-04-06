@@ -1,11 +1,11 @@
-package org.chainoptim.core.overview.controller;
+package org.chainoptim.core.scsnapshot.controller;
 
-import org.chainoptim.core.overview.dto.CreateSnapshotDTO;
-import org.chainoptim.core.overview.dto.UpdateSnapshotDTO;
-import org.chainoptim.core.overview.model.Snapshot;
-import org.chainoptim.core.overview.model.SupplyChainSnapshot;
-import org.chainoptim.core.overview.service.SnapshotFinderService;
-import org.chainoptim.core.overview.service.SnapshotPersistenceService;
+import org.chainoptim.core.scsnapshot.dto.CreateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.dto.UpdateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.model.Snapshot;
+import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
+import org.chainoptim.core.scsnapshot.service.SnapshotFinderService;
+import org.chainoptim.core.scsnapshot.service.SnapshotPersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

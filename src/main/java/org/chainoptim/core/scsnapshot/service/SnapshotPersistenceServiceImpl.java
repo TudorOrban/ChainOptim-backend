@@ -1,10 +1,10 @@
-package org.chainoptim.core.overview.service;
+package org.chainoptim.core.scsnapshot.service;
 
-import org.chainoptim.core.overview.dto.CreateSnapshotDTO;
-import org.chainoptim.core.overview.dto.SnapshotDTOMapper;
-import org.chainoptim.core.overview.dto.UpdateSnapshotDTO;
-import org.chainoptim.core.overview.model.SupplyChainSnapshot;
-import org.chainoptim.core.overview.repository.SupplyChainSnapshotRepository;
+import org.chainoptim.core.scsnapshot.dto.CreateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.dto.SnapshotDTOMapper;
+import org.chainoptim.core.scsnapshot.dto.UpdateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
+import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
 import org.chainoptim.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;

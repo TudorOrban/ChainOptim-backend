@@ -1,4 +1,4 @@
-package org.chainoptim.core.overview.service;
+package org.chainoptim.core.scsnapshot.service;
 
 public interface SnapshotBackgroundRefresherService {
 

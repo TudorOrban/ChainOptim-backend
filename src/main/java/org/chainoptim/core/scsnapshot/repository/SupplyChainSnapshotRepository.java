@@ -1,6 +1,6 @@
-package org.chainoptim.core.overview.repository;
+package org.chainoptim.core.scsnapshot.repository;
 
-import org.chainoptim.core.overview.model.SupplyChainSnapshot;
+import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

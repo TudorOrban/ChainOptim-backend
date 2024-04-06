@@ -1,6 +1,6 @@
-package org.chainoptim.core.overview.service;
+package org.chainoptim.core.scsnapshot.service;
 
-import org.chainoptim.core.overview.model.Snapshot;
+import org.chainoptim.core.scsnapshot.model.Snapshot;
 
 public interface SnapshotFinderService {
 

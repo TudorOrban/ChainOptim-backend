@@ -1,9 +1,9 @@
-package org.chainoptim.core.overview.service;
+package org.chainoptim.core.scsnapshot.service;
 
 import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.overview.dto.CreateSnapshotDTO;
-import org.chainoptim.core.overview.dto.UpdateSnapshotDTO;
-import org.chainoptim.core.overview.model.Snapshot;
+import org.chainoptim.core.scsnapshot.dto.CreateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.dto.UpdateSnapshotDTO;
+import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;

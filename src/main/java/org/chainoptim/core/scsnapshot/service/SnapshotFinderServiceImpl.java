@@ -1,6 +1,6 @@
-package org.chainoptim.core.overview.service;
+package org.chainoptim.core.scsnapshot.service;
 
-import org.chainoptim.core.overview.model.Snapshot;
+import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.client.repository.ClientRepository;

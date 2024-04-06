@@ -1,4 +1,4 @@
-package org.chainoptim.core.overview.model;
+package org.chainoptim.core.scsnapshot.model;
 
 import org.chainoptim.exception.ValidationException;
 

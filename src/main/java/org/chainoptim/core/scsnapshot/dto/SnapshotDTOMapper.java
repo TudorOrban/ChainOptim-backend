@@ -1,6 +1,6 @@
-package org.chainoptim.core.overview.dto;
+package org.chainoptim.core.scsnapshot.dto;
 
-import org.chainoptim.core.overview.model.SupplyChainSnapshot;
+import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
 
 public class SnapshotDTOMapper {
 
