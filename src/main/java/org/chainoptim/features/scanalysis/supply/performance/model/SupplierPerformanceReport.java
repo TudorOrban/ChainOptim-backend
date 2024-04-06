@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -24,7 +23,7 @@ public class SupplierPerformanceReport { // All time periods in days
     private float averageTimeToShipOrder;
 
     // Quantity
-    private List<ComponentDeliveryPerformance> componentPerformances;
+    private Map<Integer, ComponentDeliveryPerformance> componentPerformances;
 
 
 }

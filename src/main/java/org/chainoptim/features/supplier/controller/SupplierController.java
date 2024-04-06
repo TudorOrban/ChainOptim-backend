@@ -1,6 +1,8 @@
 package org.chainoptim.features.supplier.controller;
 
 import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
+import org.chainoptim.features.scanalysis.supply.performance.service.SupplierPerformanceService;
 import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
 import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
@@ -19,15 +21,18 @@ import java.util.List;
 public class SupplierController {
 
     private final SupplierService supplierService;
+    private final SupplierPerformanceService supplierPerformanceService;
     private final SecurityService securityService;
 
     @Autowired
     public SupplierController(
             SupplierService supplierService,
+            SupplierPerformanceService supplierPerformanceService,
             SecurityService securityService
 
     ) {
         this.supplierService = supplierService;
+        this.supplierPerformanceService = supplierPerformanceService;
         this.securityService = securityService;
     }
 
@@ -79,10 +84,19 @@ public class SupplierController {
         return ResponseEntity.ok(supplier);
     }
 
+    // Delete
     @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Delete\")")
     @DeleteMapping("/delete/{supplierId}")
     public ResponseEntity<Void> deleteSupplier(@PathVariable Integer supplierId) {
         supplierService.deleteSupplier(supplierId);
         return ResponseEntity.ok().build();
+    }
+
+    // Evaluate performance
+    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
+    @GetMapping("/performance/{supplierId}")
+    public ResponseEntity<SupplierPerformanceReport> evaluateSupplierPerformance(@PathVariable Integer supplierId) {
+        SupplierPerformanceReport supplierPerformanceReport = supplierPerformanceService.computeSupplierPerformanceReport(supplierId);
+        return ResponseEntity.ok(supplierPerformanceReport);
     }
 }
