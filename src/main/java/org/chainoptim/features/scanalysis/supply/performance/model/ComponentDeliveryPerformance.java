@@ -13,6 +13,7 @@ import java.util.Map;
 public class ComponentDeliveryPerformance {
 
     private int componentId;
+    private String componentName;
     private float totalDeliveredOrders;
     private float totalDeliveredQuantity;
     private float averageDeliveredQuantity;

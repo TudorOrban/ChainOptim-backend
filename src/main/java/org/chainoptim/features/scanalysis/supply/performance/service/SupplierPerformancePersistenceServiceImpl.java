@@ -25,7 +25,7 @@ public class SupplierPerformancePersistenceServiceImpl implements SupplierPerfor
     }
 
     public SupplierPerformance getSupplierPerformance(Integer supplierId) {
-        return supplierPerformanceRepository.findById(supplierId)
+        return supplierPerformanceRepository.findBySupplierId(supplierId)
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier performance for supplier ID: " + supplierId + " not found"));
     }
 

@@ -74,7 +74,7 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
             float averageOrderQuantity = 0;
             float averageShipmentQuantity = 0;
             float deliveredPerOrderedRatio = 0;
-            LocalDateTime firstDeliveryDate = supplierOrders.stream()
+            LocalDateTime firstDeliveryDate = componentOrders.stream()
                     .map(SupplierOrder::getDeliveryDate).filter(Objects::nonNull) // Filter out null delivery dates
                     .min(LocalDateTime::compareTo).orElse(null);
             Map<Float, Float> deliveredQuantityOverTime = new HashMap<>();
@@ -85,7 +85,7 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
                 totalDeliveredComponentOrders++;
 
                 if (supplierOrder.getEstimatedDeliveryDate() != null) {
-                    Duration orderDelay = Duration.between(supplierOrder.getDeliveryDate(), supplierOrder.getEstimatedDeliveryDate());
+                    Duration orderDelay = Duration.between(supplierOrder.getEstimatedDeliveryDate(), supplierOrder.getDeliveryDate());
                     totalDelaysComponent += orderDelay.toDays();
                     if (totalDelaysComponent <= 0) {
                         ratioOfOnTimeOrderDeliveriesComponent++;
@@ -126,6 +126,7 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
             // Get component performance
             ComponentDeliveryPerformance componentPerformance = new ComponentDeliveryPerformance();
             componentPerformance.setComponentId(componentId);
+            componentPerformance.setComponentName(componentOrders.getFirst().getComponent().getName());
             componentPerformance.setTotalDeliveredOrders(totalDeliveredComponentOrders);
             componentPerformance.setTotalDeliveredQuantity(totalDeliveredQuantity);
             if (totalDeliveredComponentOrders > 0) {
