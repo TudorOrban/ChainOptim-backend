@@ -16,4 +16,5 @@ public interface SupplierOrderService {
     SupplierOrder createSupplierOrder(CreateSupplierOrderDTO order);
     List<SupplierOrder> createSupplierOrdersInBulk(List<CreateSupplierOrderDTO> orderDTOs);
     List<SupplierOrder> updateSuppliersOrdersInBulk(List<UpdateSupplierOrderDTO> orderDTOs);
+    List<Integer> deleteSupplierOrdersInBulk(List<Integer> orders);
 }

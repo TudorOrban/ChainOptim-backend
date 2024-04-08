@@ -113,4 +113,26 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return supplierOrderRepository.saveAll(orders);
     }
 
+    @Transactional
+    public List<Integer> deleteSupplierOrdersInBulk(List<Integer> orderIds) {
+        List<SupplierOrder> orders = supplierOrderRepository.findAllById(orderIds);
+        supplierOrderRepository.deleteAll(orders);
+
+        kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(orders, KafkaEvent.EventType.DELETE);
+
+        return orderIds;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
