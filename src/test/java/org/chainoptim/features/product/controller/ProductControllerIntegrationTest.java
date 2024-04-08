@@ -100,7 +100,7 @@ class ProductControllerIntegrationTest {
     @Test
     void testSearchProducts() throws Exception {
         // Arrange
-        String url = "http://localhost:8080/api/v1/products/organizations/advanced/" + organizationId.toString()
+        String url = "http://localhost:8080/api/v1/products/organization/advanced/" + organizationId.toString()
                 + "?searchQuery=Test"
                 + "&sortOption=name"
                 + "&ascending=true"

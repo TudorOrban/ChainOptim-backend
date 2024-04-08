@@ -1,12 +1,17 @@
 package org.chainoptim.features.scanalysis.production.factorygraph.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SmallStageInput {
-    Integer id;
-    Integer componentId;
-    Float quantityPerStage;
-    Float allocatedQuantity;
-    Float requestedQuantity;
+    private Integer id;
+    private Integer componentId;
+    private String componentName;
+    private Float quantityPerStage;
+    private Float allocatedQuantity;
+    private Float requestedQuantity;
 }

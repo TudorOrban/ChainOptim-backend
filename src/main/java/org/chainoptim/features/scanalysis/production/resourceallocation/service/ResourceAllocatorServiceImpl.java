@@ -41,6 +41,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                 ResourceAllocation allocation = new ResourceAllocation();
                 allocation.setStageInputId(stageInput.getId());
                 allocation.setComponentId(stageInput.getComponentId());
+                allocation.setComponentName(stageInput.getComponentName());
                 allocation.setRequestedAmount(neededQuantity);
 
                 if (componentItem == null) {

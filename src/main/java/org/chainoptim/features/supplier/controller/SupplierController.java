@@ -44,7 +44,7 @@ public class SupplierController {
     }
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Supplier\", \"Read\")")
-    @GetMapping("/organizations/advanced/{organizationId}")
+    @GetMapping("/organization/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<SuppliersSearchDTO>> getSuppliersByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,

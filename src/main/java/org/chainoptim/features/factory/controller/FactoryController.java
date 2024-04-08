@@ -52,7 +52,7 @@ public class FactoryController {
     }
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Factory\", \"Read\")")
-    @GetMapping("/organizations/advanced/{organizationId}")
+    @GetMapping("/organization/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<FactoriesSearchDTO>> getFactoriesByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,

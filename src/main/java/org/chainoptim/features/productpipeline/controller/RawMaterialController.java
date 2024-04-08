@@ -21,7 +21,7 @@ public class RawMaterialController {
         this.rawMaterialService = rawMaterialService;
     }
 
-    @GetMapping("/organizations/{organizationId}")
+    @GetMapping("/organization/{organizationId}")
     public List<RawMaterial> getRawMaterialsByOrganization(@PathVariable Integer organizationId) {
         return rawMaterialService.getRawMaterialsByOrganization(organizationId);
     }
