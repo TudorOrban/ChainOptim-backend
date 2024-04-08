@@ -1,6 +1,7 @@
 package org.chainoptim.features.scanalysis.production.productionhistory.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.features.scanalysis.production.productionhistory.dto.AddDayToFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.CreateFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.FactoryProductionHistoryDTOMapper;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.UpdateFactoryProductionHistoryDTO;
@@ -56,6 +57,14 @@ public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryPr
         FactoryProductionHistory history = productionHistoryRepository.findById(historyDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Production history with ID: " + historyDTO.getId() + " not found"));
         FactoryProductionHistoryDTOMapper.setUpdateFactoryProductionHistoryDTOToFactoryProductionHistory(historyDTO, history);
+
+        return productionHistoryRepository.save(history);
+    }
+
+    public FactoryProductionHistory addDayToFactoryProductionHistory(AddDayToFactoryProductionHistoryDTO addDayDTO) {
+        FactoryProductionHistory history = productionHistoryRepository.findById(addDayDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Production history with ID: " + addDayDTO.getId() + " not found"));
+        FactoryProductionHistoryDTOMapper.addDayToFactoryProductionHistory(addDayDTO, history);
 
         return productionHistoryRepository.save(history);
     }

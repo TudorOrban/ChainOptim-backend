@@ -1,6 +1,7 @@
 package org.chainoptim.features.scanalysis.production.productionhistory.controller;
 
 import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.scanalysis.production.productionhistory.dto.AddDayToFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.CreateFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.UpdateFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
@@ -51,9 +52,16 @@ public class FactoryProductionHistoryController {
         return ResponseEntity.ok(updatedHistory);
     }
 
+    @PreAuthorize("@securityService.canAccessEntity(#addDayDTO.getFactoryId(), \"Factory\", \"Update\")")
+    @PutMapping("/add-day")
+    public ResponseEntity<FactoryProductionHistory> addDayToFactoryProductionHistory(@RequestBody AddDayToFactoryProductionHistoryDTO addDayDTO) {
+        FactoryProductionHistory updatedHistory = historyPersistenceService.addDayToFactoryProductionHistory(addDayDTO);
+        return ResponseEntity.ok(updatedHistory);
+    }
+
     // Delete
     // TODO: Secure this endpoint
-//    @PreAuthorize("@securityService.canAccessEntity(#id, \"Factory\", \"Delete\")")
+    // @PreAuthorize("@securityService.canAccessEntity(#id, \"Factory\", \"Delete\")")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteFactoryProductionHistory(@PathVariable Integer id) {
         historyPersistenceService.deleteFactoryProductionHistory(id);

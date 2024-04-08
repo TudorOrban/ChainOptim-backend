@@ -13,6 +13,6 @@ import java.util.Map;
 public class ProductionHistory {
 
     private LocalDateTime startDate;
-    private Map<Integer, DailyProductionRecord> dailyProductionRecords;
+    private Map<Float, DailyProductionRecord> dailyProductionRecords;
 
 }
