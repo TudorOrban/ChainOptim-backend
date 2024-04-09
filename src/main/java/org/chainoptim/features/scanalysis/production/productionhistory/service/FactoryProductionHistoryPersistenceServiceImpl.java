@@ -7,6 +7,8 @@ import org.chainoptim.features.scanalysis.production.productionhistory.dto.Facto
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.UpdateFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
 import org.chainoptim.features.scanalysis.production.productionhistory.repository.FactoryProductionHistoryRepository;
+import org.chainoptim.features.scanalysis.production.resourceallocation.model.ResourceAllocationPlan;
+import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceAllocationPlanPersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,13 @@ import org.springframework.stereotype.Service;
 public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryProductionHistoryPersistenceService {
 
     private final FactoryProductionHistoryRepository productionHistoryRepository;
+    private final ResourceAllocationPlanPersistenceService planPersistenceService;
 
     @Autowired
-    public FactoryProductionHistoryPersistenceServiceImpl(FactoryProductionHistoryRepository productionHistoryRepository) {
+    public FactoryProductionHistoryPersistenceServiceImpl(FactoryProductionHistoryRepository productionHistoryRepository,
+                                                          ResourceAllocationPlanPersistenceService planPersistenceService) {
         this.productionHistoryRepository = productionHistoryRepository;
+        this.planPersistenceService = planPersistenceService;
     }
 
     public FactoryProductionHistory getFactoryProductionHistoryByFactoryId(Integer factoryId) {
@@ -64,6 +69,13 @@ public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryPr
     public FactoryProductionHistory addDayToFactoryProductionHistory(AddDayToFactoryProductionHistoryDTO addDayDTO) {
         FactoryProductionHistory history = productionHistoryRepository.findById(addDayDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Production history with ID: " + addDayDTO.getId() + " not found"));
+
+        // Determined planned resource allocations and planned results
+        ResourceAllocationPlan plan = planPersistenceService.getResourceAllocationPlan(history.getFactoryId());
+        plan.getAllocationPlan().adjustForDuration(addDayDTO.getDailyProductionRecord().getDurationDays());
+        addDayDTO.getDailyProductionRecord().setPlannedResourceAllocations(plan.getAllocationPlan().getAllocations());
+        addDayDTO.getDailyProductionRecord().setPlannedResults(plan.getAllocationPlan().getResults());
+
         FactoryProductionHistoryDTOMapper.addDayToFactoryProductionHistory(addDayDTO, history);
 
         return productionHistoryRepository.save(history);

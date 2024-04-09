@@ -38,6 +38,12 @@ public class ResourceAllocationPlan {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "activation_date")
+    private LocalDateTime activationDate;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     // Manual deserialization and caching of JSON column
     @Column(name = "allocation_plan", columnDefinition = "json")
     private String allocationPlanJson;

@@ -2,6 +2,7 @@ package org.chainoptim.features.scanalysis.production.resourceallocation.service
 
 import org.chainoptim.features.scanalysis.production.factorygraph.model.*;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationPlan;
+import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationResult;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.ResourceAllocation;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                                             Float duration) {
         Map<Integer, FactoryInventoryItem> inventoryBalance = new HashMap<>(inventoryMap);
         List<ResourceAllocation> allocations = new ArrayList<>();
+        List<AllocationResult> results = new ArrayList<>();
 
         // Allocate resources for each stage by priority
         for (Map.Entry<Integer, StageNode> nodeEntry : factoryGraph.getNodes().entrySet()) {
@@ -80,7 +82,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
 
             // Retrieve the outgoing resources
             // - Calculate total input quantities based on allocated quantities
-            computeExpectedAndRequestedStageOutputs(node, durationRatio);
+            computeExpectedAndRequestedStageOutputs(node, factoryStageId, durationRatio, results);
 
             List<Edge> nodeNeighbors = factoryGraph.getAdjList().get(factoryStageId);
 
@@ -96,10 +98,10 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             }
         }
 
-        return new AllocationPlan(factoryGraph, inventoryBalance, allocations);
+        return new AllocationPlan(factoryGraph, inventoryBalance, allocations, results, duration);
     }
 
-    private void computeExpectedAndRequestedStageOutputs(StageNode node, float durationRatio) {
+    private void computeExpectedAndRequestedStageOutputs(StageNode node, Integer factoryStageId, float durationRatio, List<AllocationResult> results) {
         float totalAllocatedInput = node.getSmallStage().getStageInputs().stream()
                 .map(SmallStageInput::getAllocatedQuantity)
                 .reduce(0.0f, Float::sum);
@@ -130,6 +132,15 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
 
             output.setExpectedOutputPerAllocation(expectedOutputPerAllocation);
             output.setOutputPerRequest(outputRequest);
+
+            // Add result
+            AllocationResult result = new AllocationResult();
+            result.setStageOutputId(output.getId());
+            result.setFactoryStageId(factoryStageId);
+            result.setComponentId(output.getComponentId());
+            result.setComponentName(output.getComponentName());
+            result.setResultedAmount(expectedOutputPerAllocation);
+            result.setFullAmount(requestedOutput);
         }
     }
 }
