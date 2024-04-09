@@ -30,11 +30,13 @@ public class FactoryGraph {
             List<SmallStageOutput> stageOutputs = new ArrayList<>();
 
             for (StageInput stageInput : factoryStage.getStage().getStageInputs()) {
+                System.out.println("Stage Input: " + stageInput);
                 // Transform to small stage input and add
                 SmallStageInput smallStageInput = new SmallStageInput();
                 smallStageInput.setId(stageInput.getId());
                 smallStageInput.setQuantityPerStage(stageInput.getQuantity());
                 smallStageInput.setComponentId(stageInput.getComponent().getId());
+                smallStageInput.setComponentName(stageInput.getComponent().getName());
 
                 stageInputs.add(smallStageInput);
             }
@@ -45,6 +47,7 @@ public class FactoryGraph {
                 smallStageOutput.setId(stageOutput.getId());
                 smallStageOutput.setQuantityPerStage(stageOutput.getQuantity());
                 smallStageOutput.setComponentId(stageOutput.getComponent().getId());
+                smallStageOutput.setComponentName(stageOutput.getComponent().getName());
 
                 stageOutputs.add(smallStageOutput);
 

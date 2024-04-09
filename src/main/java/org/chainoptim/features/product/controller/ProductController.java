@@ -32,19 +32,19 @@ public class ProductController {
 
     // Fetch
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
-    @GetMapping("/organizations/{organizationId}/small")
+    @GetMapping("/organization/{organizationId}/small")
     public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationIdSmall(@PathVariable Integer organizationId) {
         return ResponseEntity.ok(productService.getProductsByOrganizationIdSmall(organizationId));
     }
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
-    @GetMapping("/organizations/{organizationId}")
+    @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationId(@PathVariable Integer organizationId) {
         return ResponseEntity.ok(productService.getProductsByOrganizationId(organizationId));
     }
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
-    @GetMapping("/organizations/advanced/{organizationId}")
+    @GetMapping("/organization/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<ProductsSearchDTO>> getProductsByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,

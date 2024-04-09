@@ -2,8 +2,8 @@ package org.chainoptim.core.subscriptionplan.service;
 
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.overview.model.Snapshot;
-import org.chainoptim.core.overview.service.SnapshotPersistenceService;
+import org.chainoptim.core.scsnapshot.model.Snapshot;
+import org.chainoptim.core.scsnapshot.service.SnapshotPersistenceService;
 import org.chainoptim.core.subscriptionplan.model.PlanDetails;
 import org.chainoptim.core.subscriptionplan.model.SubscriptionPlans;
 import org.chainoptim.exception.ResourceNotFoundException;
