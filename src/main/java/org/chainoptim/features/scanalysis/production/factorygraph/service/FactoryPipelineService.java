@@ -1,7 +1,7 @@
 package org.chainoptim.features.scanalysis.production.factorygraph.service;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
-import org.chainoptim.features.scanalysis.production.factorygraph.model.Node;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.StageNode;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ public class FactoryPipelineService {
     }
 
     public List<FactoryGraph> splitIntoIndependentPipelines(FactoryGraph factoryGraph) {
-        List<Node> allNodes = new ArrayList<>(factoryGraph.getNodes().values());
-        Set<Node> visited = new HashSet<>();
+        List<StageNode> allNodes = new ArrayList<>(factoryGraph.getNodes().values());
+        Set<StageNode> visited = new HashSet<>();
         List<FactoryGraph> independentPipelines = new ArrayList<>();
 
         List<Integer> sinkNodeIds = allNodes.stream()
@@ -36,7 +36,7 @@ public class FactoryPipelineService {
                 exploreNode(factoryGraph, sinkNodeId, visited, subGraph);
                 // Calculate and set pipeline_priority after the subgraph is fully constructed
                 float averagePriority = (float) subGraph.getNodes().values().stream()
-                        .mapToInt(Node::getPriority)
+                        .mapToInt(StageNode::getPriority)
                         .average()
                         .orElse(0); // Use 0 as default if there are no nodes or priorities are null
                 subGraph.setPipelinePriority(averagePriority / subGraph.getNodes().size());
@@ -47,8 +47,8 @@ public class FactoryPipelineService {
         return independentPipelines;
     }
 
-    private void exploreNode(FactoryGraph factoryGraph, Integer nodeId, Set<Node> visited, FactoryGraph subGraph) {
-        Node currentNode = factoryGraph.getNodes().get(nodeId);
+    private void exploreNode(FactoryGraph factoryGraph, Integer nodeId, Set<StageNode> visited, FactoryGraph subGraph) {
+        StageNode currentNode = factoryGraph.getNodes().get(nodeId);
         if (visited.contains(currentNode)) return;
         visited.add(currentNode);
         subGraph.getNodes().put(nodeId, currentNode);
@@ -70,7 +70,7 @@ public class FactoryPipelineService {
     }
 
     public void sortFactoryGraphNodesByPriority(FactoryGraph factoryGraph) {
-        LinkedHashMap<Integer, Node> sortedMap = factoryGraph.getNodes().entrySet().stream()
+        LinkedHashMap<Integer, StageNode> sortedMap = factoryGraph.getNodes().entrySet().stream()
                 .sorted((entry1, entry2) -> {
                     Integer priority1 = entry1.getValue().getPriority();
                     Integer priority2 = entry2.getValue().getPriority();

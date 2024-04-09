@@ -19,9 +19,9 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
         List<ResourceAllocation> allocations = new ArrayList<>();
 
         // Allocate resources for each stage by priority
-        for (Map.Entry<Integer, Node> nodeEntry : factoryGraph.getNodes().entrySet()) {
-            Integer stageId = nodeEntry.getKey();
-            Node node = nodeEntry.getValue();
+        for (Map.Entry<Integer, StageNode> nodeEntry : factoryGraph.getNodes().entrySet()) {
+            Integer factoryStageId = nodeEntry.getKey();
+            StageNode node = nodeEntry.getValue();
 
             // Compute number of steps in prescribed duration
             Float numberOfStepsCapacity = node.getNumberOfStepsCapacity();
@@ -40,6 +40,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                 // Start allocating resource
                 ResourceAllocation allocation = new ResourceAllocation();
                 allocation.setStageInputId(stageInput.getId());
+                allocation.setFactoryStageId(factoryStageId);
                 allocation.setComponentId(stageInput.getComponentId());
                 allocation.setComponentName(stageInput.getComponentName());
                 allocation.setRequestedAmount(neededQuantity);
@@ -81,11 +82,11 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             // - Calculate total input quantities based on allocated quantities
             computeExpectedAndRequestedStageOutputs(node, durationRatio);
 
-            List<Edge> nodeNeighbors = factoryGraph.getAdjList().get(stageId);
+            List<Edge> nodeNeighbors = factoryGraph.getAdjList().get(factoryStageId);
 
-            // - Updated inventoryBalance with expected outputs for connected stages
+            // - Update inventoryBalance with expected outputs for connected stages
             for (SmallStageOutput stageOutput : node.getSmallStage().getStageOutputs()) {
-                FactoryInventoryItem inventoryItem = inventoryBalance.get(stageId);
+                FactoryInventoryItem inventoryItem = inventoryBalance.get(factoryStageId);
                 List<Edge> outputNeighbors = nodeNeighbors.stream()
                         .filter(nn -> Objects.equals(nn.getIncomingStageOutputId(), stageOutput.getId())).toList();
 
@@ -98,7 +99,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
         return new AllocationPlan(factoryGraph, inventoryBalance, allocations);
     }
 
-    private void computeExpectedAndRequestedStageOutputs(Node node, float durationRatio) {
+    private void computeExpectedAndRequestedStageOutputs(StageNode node, float durationRatio) {
         float totalAllocatedInput = node.getSmallStage().getStageInputs().stream()
                 .map(SmallStageInput::getAllocatedQuantity)
                 .reduce(0.0f, Float::sum);

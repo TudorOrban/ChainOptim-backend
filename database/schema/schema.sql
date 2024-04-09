@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `active_resource_allocation_plans`
+--
+
+DROP TABLE IF EXISTS `active_resource_allocation_plans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `active_resource_allocation_plans` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `factory_id` int NOT NULL,
+  `allocation_plan` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `factory_id` (`factory_id`),
+  CONSTRAINT `active_resource_allocation_plans_ibfk_1` FOREIGN KEY (`factory_id`) REFERENCES `factories` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `active_resource_allocation_plans`
+--
+
+LOCK TABLES `active_resource_allocation_plans` WRITE;
+/*!40000 ALTER TABLE `active_resource_allocation_plans` DISABLE KEYS */;
+/*!40000 ALTER TABLE `active_resource_allocation_plans` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `client_orders`
 --
 
@@ -293,6 +321,34 @@ INSERT INTO `factory_inventory_items` VALUES (1,3,NULL,1,NULL,231,1421,'2024-03-
 UNLOCK TABLES;
 
 --
+-- Table structure for table `factory_performances`
+--
+
+DROP TABLE IF EXISTS `factory_performances`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `factory_performances` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `factory_id` int NOT NULL,
+  `factory_performance_report` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `factory_id` (`factory_id`),
+  CONSTRAINT `factory_performances_ibfk_1` FOREIGN KEY (`factory_id`) REFERENCES `factories` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `factory_performances`
+--
+
+LOCK TABLES `factory_performances` WRITE;
+/*!40000 ALTER TABLE `factory_performances` DISABLE KEYS */;
+/*!40000 ALTER TABLE `factory_performances` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `factory_production_graphs`
 --
 
@@ -337,7 +393,7 @@ CREATE TABLE `factory_production_histories` (
   PRIMARY KEY (`id`),
   KEY `factory_id` (`factory_id`),
   CONSTRAINT `factory_production_histories_ibfk_1` FOREIGN KEY (`factory_id`) REFERENCES `factories` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,6 +402,7 @@ CREATE TABLE `factory_production_histories` (
 
 LOCK TABLES `factory_production_histories` WRITE;
 /*!40000 ALTER TABLE `factory_production_histories` DISABLE KEYS */;
+INSERT INTO `factory_production_histories` VALUES (1,3,'{\"startDate\": [2023, 2, 28, 9, 7, 56], \"dailyProductionRecords\": {\"214.0\": {\"durationDays\": 4.5, \"actualResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 199.0, \"requestedAmount\": 214.0, \"allocatorInventoryItemId\": 1}], \"plannedResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 200.0, \"requestedAmount\": 214.0, \"allocatorInventoryItemId\": 1}]}, \"270.0\": {\"durationDays\": 6.2, \"actualResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 330.0, \"requestedAmount\": 340.0, \"allocatorInventoryItemId\": 1}], \"plannedResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 340.0, \"requestedAmount\": 340.0, \"allocatorInventoryItemId\": 1}]}, \"300.0\": {\"durationDays\": 5.3, \"actualResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 420.0, \"requestedAmount\": 440.0, \"allocatorInventoryItemId\": 1}], \"plannedResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 412.0, \"requestedAmount\": 440.0, \"allocatorInventoryItemId\": 1}]}, \"320.0\": {\"durationDays\": 8.0, \"actualResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 430.0, \"requestedAmount\": 440.0, \"allocatorInventoryItemId\": 1}], \"plannedResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 440.0, \"requestedAmount\": 440.0, \"allocatorInventoryItemId\": 1}]}, \"380.0\": {\"durationDays\": 2.0, \"actualResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 240.0, \"requestedAmount\": 340.0, \"allocatorInventoryItemId\": 1}], \"plannedResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 240.0, \"requestedAmount\": 340.0, \"allocatorInventoryItemId\": 1}]}, \"400.0\": {\"durationDays\": 20.0, \"actualResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 420.0, \"requestedAmount\": 440.0, \"allocatorInventoryItemId\": 1}], \"plannedResourceAllocations\": [{\"componentId\": 1, \"stageInputId\": 1, \"componentName\": \"Chip\", \"factoryStageId\": null, \"allocatedAmount\": 412.0, \"requestedAmount\": 440.0, \"allocatorInventoryItemId\": 1}]}}}','2024-04-08 18:25:10','2024-04-09 09:31:30');
 /*!40000 ALTER TABLE `factory_production_histories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1076,7 +1133,7 @@ CREATE TABLE `supply_chain_snapshots` (
 
 LOCK TABLES `supply_chain_snapshots` WRITE;
 /*!40000 ALTER TABLE `supply_chain_snapshots` DISABLE KEYS */;
-INSERT INTO `supply_chain_snapshots` VALUES (1,1,'{\"clientsCount\": 4, \"membersCount\": 5, \"productsCount\": 24, \"factoriesCount\": 7, \"suppliersCount\": 5, \"componentsCount\": 6, \"warehousesCount\": 6, \"clientOrdersCount\": 5, \"supplierOrdersCount\": 27, \"factoryInventoryItemsCount\": 5, \"warehouseInventoryItemsCount\": 2}','2024-04-03 08:56:16','2024-04-08 16:09:19'),(2,2,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 2, \"factoriesCount\": 2, \"suppliersCount\": 1, \"componentsCount\": 1, \"warehousesCount\": 1, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-08 16:09:19'),(3,3,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-08 16:09:20'),(4,5,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-08 16:09:20'),(5,6,'{\"clientsCount\": 0, \"membersCount\": 2, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-08 16:09:20'),(6,10,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-08 16:09:20'),(7,12,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-08 16:09:21'),(8,16,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-08 16:09:21'),(9,17,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-08 16:09:21'),(10,18,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-08 16:09:21');
+INSERT INTO `supply_chain_snapshots` VALUES (1,1,'{\"clientsCount\": 4, \"membersCount\": 5, \"productsCount\": 24, \"factoriesCount\": 7, \"suppliersCount\": 5, \"componentsCount\": 6, \"warehousesCount\": 6, \"clientOrdersCount\": 5, \"supplierOrdersCount\": 27, \"factoryInventoryItemsCount\": 5, \"warehouseInventoryItemsCount\": 2}','2024-04-03 08:56:16','2024-04-09 19:24:37'),(2,2,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 2, \"factoriesCount\": 2, \"suppliersCount\": 1, \"componentsCount\": 1, \"warehousesCount\": 1, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-09 19:24:37'),(3,3,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:16','2024-04-09 19:24:37'),(4,5,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-09 19:24:38'),(5,6,'{\"clientsCount\": 0, \"membersCount\": 2, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-09 19:24:38'),(6,10,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-09 19:24:38'),(7,12,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-09 19:24:39'),(8,16,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-09 19:24:39'),(9,17,'{\"clientsCount\": 0, \"membersCount\": 0, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-09 19:24:39'),(10,18,'{\"clientsCount\": 0, \"membersCount\": 1, \"productsCount\": 0, \"factoriesCount\": 0, \"suppliersCount\": 0, \"componentsCount\": 0, \"warehousesCount\": 0, \"clientOrdersCount\": 0, \"supplierOrdersCount\": 0, \"factoryInventoryItemsCount\": 0, \"warehouseInventoryItemsCount\": 0}','2024-04-03 08:56:17','2024-04-09 19:24:39');
 /*!40000 ALTER TABLE `supply_chain_snapshots` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1261,4 +1318,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-08 19:43:31
+-- Dump completed on 2024-04-09 22:42:14

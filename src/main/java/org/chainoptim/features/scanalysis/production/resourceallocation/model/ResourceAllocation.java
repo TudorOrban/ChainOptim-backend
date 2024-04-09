@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ResourceAllocation {
     private Integer stageInputId;
+    private Integer factoryStageId;
     private Integer componentId;
     private String componentName;
     private Integer allocatorInventoryItemId;

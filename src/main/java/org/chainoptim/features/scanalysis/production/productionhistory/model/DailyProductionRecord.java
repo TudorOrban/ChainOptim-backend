@@ -1,5 +1,6 @@
 package org.chainoptim.features.scanalysis.production.productionhistory.model;
 
+import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationResult;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.ResourceAllocation;
 
 import lombok.AllArgsConstructor;
@@ -14,4 +15,7 @@ import java.util.List;
 public class DailyProductionRecord {
     private List<ResourceAllocation> plannedResourceAllocations;
     private List<ResourceAllocation> actualResourceAllocations;
+    private List<AllocationResult> plannedResults;
+    private List<AllocationResult> actualResults;
+    private float durationDays;
 }
