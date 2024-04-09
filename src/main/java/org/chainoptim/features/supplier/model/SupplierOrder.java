@@ -43,6 +43,9 @@ public class SupplierOrder {
     @Column(name = "quantity")
     private Float quantity;
 
+    @Column(name = "delivered_quantity")
+    private Float deliveredQuantity;
+
     @Column(name = "order_date", nullable = true)
     private LocalDateTime orderDate;
 

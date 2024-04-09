@@ -1,6 +1,8 @@
 package org.chainoptim.features.supplier.controller;
 
 import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
+import org.chainoptim.features.scanalysis.supply.performance.service.SupplierPerformanceService;
 import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
 import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
@@ -25,7 +27,6 @@ public class SupplierController {
     public SupplierController(
             SupplierService supplierService,
             SecurityService securityService
-
     ) {
         this.supplierService = supplierService;
         this.securityService = securityService;
@@ -43,7 +44,7 @@ public class SupplierController {
     }
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Supplier\", \"Read\")")
-    @GetMapping("/organizations/advanced/{organizationId}")
+    @GetMapping("/organization/advanced/{organizationId}")
     public ResponseEntity<PaginatedResults<SuppliersSearchDTO>> getSuppliersByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
@@ -79,6 +80,7 @@ public class SupplierController {
         return ResponseEntity.ok(supplier);
     }
 
+    // Delete
     @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Delete\")")
     @DeleteMapping("/delete/{supplierId}")
     public ResponseEntity<Void> deleteSupplier(@PathVariable Integer supplierId) {

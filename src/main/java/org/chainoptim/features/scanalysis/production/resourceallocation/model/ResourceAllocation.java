@@ -6,6 +6,7 @@ import lombok.Data;
 public class ResourceAllocation {
     private Integer stageInputId;
     private Integer componentId;
+    private String componentName;
     private Integer allocatorInventoryItemId;
     private Float allocatedAmount;
     private Float requestedAmount;
