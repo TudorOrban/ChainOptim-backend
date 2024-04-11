@@ -3,9 +3,8 @@ package org.chainoptim.features.scanalysis.supply.performance.controller;
 import org.chainoptim.features.scanalysis.supply.performance.dto.CreateSupplierPerformanceDTO;
 import org.chainoptim.features.scanalysis.supply.performance.dto.UpdateSupplierPerformanceDTO;
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformance;
-import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
 import org.chainoptim.features.scanalysis.supply.performance.service.SupplierPerformancePersistenceService;
-import org.chainoptim.features.scanalysis.supply.performance.service.SupplierPerformanceService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,15 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/supplier-performance")
 public class SupplierPerformanceController {
 
-    private final SupplierPerformanceService supplierPerformanceService;
     private final SupplierPerformancePersistenceService supplierPerformancePersistenceService;
 
     @Autowired
     public SupplierPerformanceController(
-            SupplierPerformanceService supplierPerformanceService,
             SupplierPerformancePersistenceService supplierPerformancePersistenceService
     ) {
-        this.supplierPerformanceService = supplierPerformanceService;
         this.supplierPerformancePersistenceService = supplierPerformancePersistenceService;
     }
 

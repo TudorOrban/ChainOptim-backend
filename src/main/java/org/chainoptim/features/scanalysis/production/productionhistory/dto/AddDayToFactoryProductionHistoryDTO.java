@@ -14,4 +14,5 @@ public class AddDayToFactoryProductionHistoryDTO {
     private Integer factoryId;
     private float daysSinceStart;
     private DailyProductionRecord dailyProductionRecord;
+    private boolean shouldComputeResults;
 }
