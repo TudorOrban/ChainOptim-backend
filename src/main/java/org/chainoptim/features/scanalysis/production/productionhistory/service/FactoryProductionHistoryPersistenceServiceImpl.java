@@ -73,8 +73,8 @@ public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryPr
         // Determined planned resource allocations and planned results
         ResourceAllocationPlan plan = planPersistenceService.getResourceAllocationPlan(history.getFactoryId());
         plan.getAllocationPlan().adjustForDuration(addDayDTO.getDailyProductionRecord().getDurationDays());
-        addDayDTO.getDailyProductionRecord().setPlannedResourceAllocations(plan.getAllocationPlan().getAllocations());
-        addDayDTO.getDailyProductionRecord().setPlannedResults(plan.getAllocationPlan().getResults());
+        addDayDTO.getDailyProductionRecord().setAllocations(plan.getAllocationPlan().getAllocations());
+        addDayDTO.getDailyProductionRecord().setResults(plan.getAllocationPlan().getResults());
 
         FactoryProductionHistoryDTOMapper.addDayToFactoryProductionHistory(addDayDTO, history);
 

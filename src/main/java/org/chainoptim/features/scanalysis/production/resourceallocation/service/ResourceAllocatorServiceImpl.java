@@ -43,6 +43,7 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
                 ResourceAllocation allocation = new ResourceAllocation();
                 allocation.setStageInputId(stageInput.getId());
                 allocation.setFactoryStageId(factoryStageId);
+                allocation.setStageName(node.getSmallStage().getStageName());
                 allocation.setComponentId(stageInput.getComponentId());
                 allocation.setComponentName(stageInput.getComponentName());
                 allocation.setRequestedAmount(neededQuantity);
@@ -137,10 +138,13 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             AllocationResult result = new AllocationResult();
             result.setStageOutputId(output.getId());
             result.setFactoryStageId(factoryStageId);
+            result.setStageName(node.getSmallStage().getStageName());
             result.setComponentId(output.getComponentId());
             result.setComponentName(output.getComponentName());
             result.setResultedAmount(expectedOutputPerAllocation);
             result.setFullAmount(requestedOutput);
+
+            results.add(result);
         }
     }
 }

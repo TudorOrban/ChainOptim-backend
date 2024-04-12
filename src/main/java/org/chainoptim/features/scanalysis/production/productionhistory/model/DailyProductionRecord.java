@@ -13,9 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DailyProductionRecord {
-    private List<ResourceAllocation> plannedResourceAllocations;
-    private List<ResourceAllocation> actualResourceAllocations;
-    private List<AllocationResult> plannedResults;
-    private List<AllocationResult> actualResults;
+    private List<ResourceAllocation> allocations;
+    private List<AllocationResult> results;
     private float durationDays;
 }
