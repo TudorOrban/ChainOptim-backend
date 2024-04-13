@@ -1,6 +1,8 @@
 package org.chainoptim.features.scanalysis.production.performance.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.features.scanalysis.production.performance.dto.CreateFactoryPerformanceDTO;
 import org.chainoptim.features.scanalysis.production.performance.dto.FactoryPerformanceDTOMapper;
 import org.chainoptim.features.scanalysis.production.performance.dto.UpdateFactoryPerformanceDTO;
@@ -18,14 +20,17 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
     private final FactoryPerformanceRepository factoryPerformanceRepository;
     private final FactoryPerformanceService factoryPerformanceService;
     private final FactoryProductionHistoryPersistenceService historyPersistenceService;
+    private final FactoryProductionGraphService factoryProductionGraphService;
 
     @Autowired
     public FactoryPerformancePersistenceServiceImpl(FactoryPerformanceRepository factoryPerformanceRepository,
                                                     FactoryPerformanceService factoryPerformanceService,
-                                                    FactoryProductionHistoryPersistenceService historyPersistenceService) {
+                                                    FactoryProductionHistoryPersistenceService historyPersistenceService,
+                                                    FactoryProductionGraphService factoryProductionGraphService) {
         this.factoryPerformanceRepository = factoryPerformanceRepository;
         this.factoryPerformanceService = factoryPerformanceService;
         this.historyPersistenceService = historyPersistenceService;
+        this.factoryProductionGraphService = factoryProductionGraphService;
     }
 
     public FactoryPerformance getFactoryPerformance(Integer factoryId) {
@@ -37,7 +42,9 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
         // Compute fresh factory performance report
         FactoryProductionHistory productionHistory = historyPersistenceService.getFactoryProductionHistoryByFactoryId(factoryId);
 
-        FactoryPerformanceReport factoryPerformanceReport = factoryPerformanceService.computeFactoryPerformanceReport(productionHistory);
+        FactoryProductionGraph productionGraph = factoryProductionGraphService.getProductionGraphByFactoryId(factoryId).getFirst();
+
+        FactoryPerformanceReport factoryPerformanceReport = factoryPerformanceService.computeFactoryPerformanceReport(productionHistory, productionGraph.getFactoryGraph());
 
         FactoryPerformance factoryPerformance = factoryPerformanceRepository.findByFactoryId(factoryId)
                 .orElse(null);

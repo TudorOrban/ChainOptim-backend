@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -22,14 +23,13 @@ public class FactoryStagePerformanceReport {
 
     private Float daysUnderCapacityPercentage; // Ignoring days not recorded in Production History
 
-    private Map<Integer, Float> totalDeficits; // Key: componentId
-    private Map<Integer, Float> averageDeficits; // Key: componentId
+    private Map<Integer, Float> totalDeficits = new HashMap<>(); // Key: componentId
+    private Map<Integer, Float> averageDeficits = new HashMap<>(); // Key: componentId
 
+    private Float errorRate;
 
-    private Float overallScore;
-    private Float resourceDistributionScore;
-    private Float resourceReadinessScore;
-    private Float resourceUtilizationScore;
-
+    private Float overallScore; // Computed based on the other scores
+    private Float resourceReadinessScore; // Measures how many resources are available when needed
+    private Float resourceUtilizationScore; // Measures lack of errors and resource waste
 
 }
