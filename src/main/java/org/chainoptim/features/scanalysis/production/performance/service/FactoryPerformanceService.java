@@ -1,8 +1,9 @@
 package org.chainoptim.features.scanalysis.production.performance.service;
 
 import org.chainoptim.features.scanalysis.production.performance.model.FactoryPerformanceReport;
+import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
 
 public interface FactoryPerformanceService {
 
-    FactoryPerformanceReport computeFactoryPerformanceReport(Integer factoryId);
+    FactoryPerformanceReport computeFactoryPerformanceReport(FactoryProductionHistory productionHistory);
 }

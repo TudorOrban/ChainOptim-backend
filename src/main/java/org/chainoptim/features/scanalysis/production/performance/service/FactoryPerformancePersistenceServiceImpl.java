@@ -7,6 +7,8 @@ import org.chainoptim.features.scanalysis.production.performance.dto.UpdateFacto
 import org.chainoptim.features.scanalysis.production.performance.model.FactoryPerformance;
 import org.chainoptim.features.scanalysis.production.performance.model.FactoryPerformanceReport;
 import org.chainoptim.features.scanalysis.production.performance.repository.FactoryPerformanceRepository;
+import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
+import org.chainoptim.features.scanalysis.production.productionhistory.service.FactoryProductionHistoryPersistenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,15 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
 
     private final FactoryPerformanceRepository factoryPerformanceRepository;
     private final FactoryPerformanceService factoryPerformanceService;
+    private final FactoryProductionHistoryPersistenceService historyPersistenceService;
 
     @Autowired
     public FactoryPerformancePersistenceServiceImpl(FactoryPerformanceRepository factoryPerformanceRepository,
-                                                    FactoryPerformanceService factoryPerformanceService) {
+                                                    FactoryPerformanceService factoryPerformanceService,
+                                                    FactoryProductionHistoryPersistenceService historyPersistenceService) {
         this.factoryPerformanceRepository = factoryPerformanceRepository;
         this.factoryPerformanceService = factoryPerformanceService;
+        this.historyPersistenceService = historyPersistenceService;
     }
 
     public FactoryPerformance getFactoryPerformance(Integer factoryId) {
@@ -30,7 +35,9 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
 
     public FactoryPerformance refreshFactoryPerformance(Integer factoryId) {
         // Compute fresh factory performance report
-        FactoryPerformanceReport factoryPerformanceReport = factoryPerformanceService.computeFactoryPerformanceReport(factoryId);
+        FactoryProductionHistory productionHistory = historyPersistenceService.getFactoryProductionHistoryByFactoryId(factoryId);
+
+        FactoryPerformanceReport factoryPerformanceReport = factoryPerformanceService.computeFactoryPerformanceReport(productionHistory);
 
         FactoryPerformance factoryPerformance = factoryPerformanceRepository.findByFactoryId(factoryId)
                 .orElse(null);

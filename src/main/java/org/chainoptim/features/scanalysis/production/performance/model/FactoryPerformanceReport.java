@@ -11,8 +11,10 @@ import java.util.Map;
 @NoArgsConstructor
 public class FactoryPerformanceReport {
 
-    private Map<Float, Float> deficits;
     private Map<Integer, FactoryStagePerformanceReport> stageReports; // Key: factoryStageId
 
-
+    private Float overallScore;
+    private Float resourceDistributionScore;
+    private Float resourceReadinessScore;
+    private Float resourceUtilizationScore;
 }
