@@ -13,12 +13,11 @@ import java.util.Map;
 public class FactoryStagePerformanceReport {
 
     private Integer factoryStageId;
-    private Float capacity;
-    private Float duration;
+    private String stageName;
 
     private Float totalExecutedStages;
     private Float totalTimeDays;
-    private Float averageExecutedCapacityPerDay;
+    private Float averageExecutedStagesPerDay;
     private Float minimumExecutedCapacityPerDay;
 
     private Float daysUnderCapacityPercentage; // Ignoring days not recorded in Production History

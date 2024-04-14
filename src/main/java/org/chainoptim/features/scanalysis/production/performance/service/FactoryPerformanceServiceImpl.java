@@ -14,8 +14,6 @@ import org.chainoptim.features.scanalysis.production.resourceallocation.model.Re
 
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,27 +30,28 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
             Integer factoryStageId = entry.getKey();
             Map<Float, DailyProductionRecord> records = entry.getValue();
 
-            FactoryStagePerformanceReport stagePerformanceReport = computeFactoryStagePerformanceReport(factoryStageId, records, factoryGraph, productionHistory.getProductionHistory().getStartDate());
+            FactoryStagePerformanceReport stagePerformanceReport = computeFactoryStagePerformanceReport(factoryStageId, records, factoryGraph);
             factoryPerformanceReport.getStageReports().put(factoryStageId, stagePerformanceReport);
         }
 
+        computeFactoryScores(factoryPerformanceReport);
 
         return factoryPerformanceReport;
     }
 
-    private FactoryStagePerformanceReport computeFactoryStagePerformanceReport(Integer factoryStageId, Map<Float, DailyProductionRecord> productionRecords, FactoryGraph factoryGraph, LocalDateTime startDate) {
+    private FactoryStagePerformanceReport computeFactoryStagePerformanceReport(Integer factoryStageId, Map<Float, DailyProductionRecord> productionRecords, FactoryGraph factoryGraph) {
         FactoryStagePerformanceReport factoryStagePerformanceReport = new FactoryStagePerformanceReport();
         factoryStagePerformanceReport.setFactoryStageId(factoryStageId);
+        factoryStagePerformanceReport.setStageName(factoryGraph.getNodes().get(factoryStageId).getSmallStage().getStageName());
 
         float overallScore = 0;
         float resourceReadinessScore = 0;
         float resourceUtilizationScore = 0;
-
         float errorRate = 0;
 
         float totalExecutedStages = 0f;
         float totalTimeDays = determineRecordsDuration(productionRecords);
-        float averageExecutedCapacityPerDay = 0f;
+        float averageExecutedStagesPerDay = 0f;
         float minimumExecutedCapacityPerDay = Float.MAX_VALUE;
         float daysUnderCapacityPercentage = 0f;
 
@@ -61,22 +60,23 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
             StageNode stageNode = factoryGraph.getNodes().get(factoryStageId);
             float stageCapacity = stageNode.getNumberOfStepsCapacity() * dailyRecord.getDurationDays();
 
-            float executedStages = determineStageExecutedStages(dailyRecord.getResults());
+            float executedStages = determineStageExecutedStages(dailyRecord.getResults(), stageCapacity);
             totalExecutedStages += executedStages;
 
             if (executedStages < stageCapacity) {
                 daysUnderCapacityPercentage++;
             }
 
-            float executedCapacityPerDay = executedStages / dailyRecord.getDurationDays();
-            averageExecutedCapacityPerDay += executedCapacityPerDay;
+            float executedStagesPerDay = executedStages / dailyRecord.getDurationDays();
+            averageExecutedStagesPerDay += executedStagesPerDay;
 
-            if (executedCapacityPerDay < minimumExecutedCapacityPerDay) {
-                minimumExecutedCapacityPerDay = executedCapacityPerDay;
+            if (executedStagesPerDay < minimumExecutedCapacityPerDay) {
+                minimumExecutedCapacityPerDay = executedStagesPerDay;
             }
 
             for (ResourceAllocation allocation : dailyRecord.getAllocations()) {
                 resourceReadinessScore += allocation.getActualAmount() / allocation.getRequestedAmount();
+
             }
             resourceReadinessScore /= dailyRecord.getAllocations().size();
 
@@ -84,13 +84,13 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
             errorRate += recordErrorRate;
         }
 
-
-        averageExecutedCapacityPerDay /= totalTimeDays;
+        averageExecutedStagesPerDay /= totalTimeDays;
         daysUnderCapacityPercentage /= totalTimeDays * 100;
 
         errorRate /= productionRecords.size();
         resourceReadinessScore /= productionRecords.size() * 100;
         resourceUtilizationScore = (1 - errorRate) * 100;
+        overallScore = (resourceReadinessScore + resourceUtilizationScore) / 2;
 
         // Prepare the report
         factoryStagePerformanceReport.setOverallScore(overallScore);
@@ -101,7 +101,7 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
 
         factoryStagePerformanceReport.setTotalExecutedStages(totalExecutedStages);
         factoryStagePerformanceReport.setTotalTimeDays(totalTimeDays);
-        factoryStagePerformanceReport.setAverageExecutedCapacityPerDay(averageExecutedCapacityPerDay);
+        factoryStagePerformanceReport.setAverageExecutedStagesPerDay(averageExecutedStagesPerDay);
         factoryStagePerformanceReport.setMinimumExecutedCapacityPerDay(minimumExecutedCapacityPerDay);
         factoryStagePerformanceReport.setDaysUnderCapacityPercentage(daysUnderCapacityPercentage);
 
@@ -114,10 +114,11 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
                 .reduce(0f, Float::sum);
     }
 
-    private float determineStageExecutedStages(List<AllocationResult> stageResults) {
+    private float determineStageExecutedStages(List<AllocationResult> stageResults, float stageCapacity) {
         return stageResults.stream()
                 .map(result -> result.getActualAmount() / result.getFullAmount())
-                .min(Float::compare).orElse(0.0f);
+                .min(Float::compare).orElse(0.0f)
+                * stageCapacity;
     }
 
     private float determineStageRecordErrorRate(DailyProductionRecord dailyRecord, StageNode stageNode) {
@@ -155,6 +156,25 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
         errorRate /= stageNode.getSmallStage().getStageOutputs().size();
 
         return errorRate;
+    }
+
+    private void computeFactoryScores(FactoryPerformanceReport factoryPerformanceReport) {
+        float overallScore = factoryPerformanceReport.getStageReports().values().stream()
+                .map(FactoryStagePerformanceReport::getOverallScore)
+                .reduce(0f, Float::sum) / factoryPerformanceReport.getStageReports().size();
+
+        float resourceReadinessScore = factoryPerformanceReport.getStageReports().values().stream()
+                .map(FactoryStagePerformanceReport::getResourceReadinessScore)
+                .reduce(0f, Float::sum) / factoryPerformanceReport.getStageReports().size();
+
+        float resourceUtilizationScore = factoryPerformanceReport.getStageReports().values().stream()
+                .map(FactoryStagePerformanceReport::getResourceUtilizationScore)
+                .reduce(0f, Float::sum) / factoryPerformanceReport.getStageReports().size();
+
+        factoryPerformanceReport.setOverallScore(overallScore);
+        factoryPerformanceReport.setResourceDistributionScore(0f); // TODO: Implement
+        factoryPerformanceReport.setResourceReadinessScore(resourceReadinessScore);
+        factoryPerformanceReport.setResourceUtilizationScore(resourceUtilizationScore);
     }
 
     private Map<Integer, Map<Float, DailyProductionRecord>> groupRecordsByFactoryStageId(ProductionHistory productionHistory) {
