@@ -23,10 +23,16 @@ ChainOptim allows registration of suppliers and clients, tracking orders and shi
 
 ### How to use
 ChainOptim is not yet deployed. To use it, you will have to set up locally the database, backend server and chosen frontend.
-1. Download the [database schema](https://github.com/SorinPopteanu/ChainOptim-DesktopApp/blob/main/database/schema/schema.sql) and import it into MySQL. Create a user and an organization for later login.
-2. Ensure you have JDK 21 installed and fetch this repository.
-3. Create an application.properties from the [application.properties.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/src/main/resources/application.properties.example), replacing the database user and password appropriately, and the JWT secret as needed. Then run the project from your IDE of choice.
-4. Fetch the [JavaFX desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp), run it and log in. Alternatively, fetch the [Angular web frontend](https://github.com/TudorOrban/ChainOptim-frontend), run `ng serve` and log in.
+1. Ensure you have installed: JDK21, Maven and Docker.
+2. Fetch the Spring Boot backend. In the root, create:
+- an application-docker.properties from the [application-docker.properties.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/src/main/resources/application.properties.example), replacing the database user and password appropriately, and the JWT secret as needed. 
+- a docker-compose.yml from the [docker-compose.yml.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/docker-compose.yml.example), replacing the database user and password.
+3. Build the Spring Boot image and spin up the necessary Docker containers (MySQL, Spring Boot, Redis, Kafka). You can find a script that does this for your operating system in the [scripts](https://github.com/TudorOrban/ChainOptim-backend/blob/main/scripts) folder (Restart.ps1 or Restart.sh). *Run it twice*, as the first time around the database will be empty and Spring Boot won't start.
+4. Fetch the [JavaFX desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp), run it in your IDE of choice and log in with:
+- Username: ExampleUser
+- Password: example-password
+
+Now you can interact with the application. Alternatively, fetch the [Angular web frontend](https://github.com/TudorOrban/ChainOptim-frontend), run `ng serve` and log in.
 
 ### Status
 In mid stages of development.

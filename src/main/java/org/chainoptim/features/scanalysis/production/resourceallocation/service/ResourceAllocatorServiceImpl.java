@@ -35,45 +35,9 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
 
             // Allocate resources for each stage input
             for (SmallStageInput stageInput : node.getSmallStage().getStageInputs()) {
-                Float neededQuantity = stageInput.getQuantityPerStage() * totalNumberOfStepsCapacity;
-
-                FactoryInventoryItem componentItem = inventoryBalance.get(stageInput.getComponentId());
-
-                // Start allocating resource
-                ResourceAllocation allocation = new ResourceAllocation();
-                allocation.setStageInputId(stageInput.getId());
-                allocation.setFactoryStageId(factoryStageId);
-                allocation.setComponentId(stageInput.getComponentId());
-                allocation.setComponentName(stageInput.getComponentName());
-                allocation.setRequestedAmount(neededQuantity);
-
-                if (componentItem == null) {
-                    allocation.setAllocatorInventoryItemId(-1);
-                    allocation.setAllocatedAmount(0.0f);
-                    allocations.add(allocation);
-                    continue; // Skip further processing for this stage input
-                }
-
-                // Compute surplus
-                float surplus = componentItem.getQuantity() - neededQuantity;
-                boolean isSurplus = surplus >= 0;
-
-                // Compute and set allocated quantity
-                Float allocatedQuantity = isSurplus ? neededQuantity : componentItem.getQuantity();
-                stageInput.setAllocatedQuantity(allocatedQuantity);
-                stageInput.setRequestedQuantity(neededQuantity);
-
-                // Update the inventory balance
-                Float newQuantity = isSurplus ? surplus : 0.0f;
-                componentItem.setQuantity(newQuantity);
-                inventoryBalance.put(stageInput.getComponentId(), componentItem);
-
-                // Add allocation
-                allocation.setAllocatorInventoryItemId(componentItem.getId());
-                allocation.setAllocatedAmount(allocatedQuantity);
-                allocations.add(allocation);
-
-                allocatedRequestedRatios.add(allocatedQuantity / neededQuantity);
+                allocateStageInputResources(stageInput, factoryStageId, node,
+                        totalNumberOfStepsCapacity, allocations, allocatedRequestedRatios,
+                        inventoryBalance);
             }
 
             // Calculate how many steps can be executed
@@ -101,7 +65,52 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
         return new AllocationPlan(factoryGraph, inventoryBalance, allocations, results, duration);
     }
 
-    private void computeExpectedAndRequestedStageOutputs(StageNode node, Integer factoryStageId, float durationRatio, List<AllocationResult> results) {
+    private void allocateStageInputResources(SmallStageInput stageInput, Integer factoryStageId, StageNode node,
+                                    float totalNumberOfStepsCapacity, List<ResourceAllocation> allocations, List<Float> allocatedRequestedRatios,
+                                    Map<Integer, FactoryInventoryItem> inventoryBalance) {
+        Float neededQuantity = stageInput.getQuantityPerStage() * totalNumberOfStepsCapacity;
+
+        FactoryInventoryItem componentItem = inventoryBalance.get(stageInput.getComponentId());
+
+        // Start allocating resource
+        ResourceAllocation allocation = new ResourceAllocation();
+        allocation.setStageInputId(stageInput.getId());
+        allocation.setFactoryStageId(factoryStageId);
+        allocation.setStageName(node.getSmallStage().getStageName());
+        allocation.setComponentId(stageInput.getComponentId());
+        allocation.setComponentName(stageInput.getComponentName());
+        allocation.setRequestedAmount(neededQuantity);
+
+        if (componentItem == null) {
+            allocation.setAllocatorInventoryItemId(-1);
+            allocation.setAllocatedAmount(0.0f);
+            allocations.add(allocation);
+            return;
+        }
+
+        // Compute surplus
+        float surplus = componentItem.getQuantity() - neededQuantity;
+        boolean isSurplus = surplus >= 0;
+
+        // Compute and set allocated quantity
+        Float allocatedQuantity = isSurplus ? neededQuantity : componentItem.getQuantity();
+        stageInput.setAllocatedQuantity(allocatedQuantity);
+        stageInput.setRequestedQuantity(neededQuantity);
+
+        // Update the inventory balance
+        Float newQuantity = isSurplus ? surplus : 0.0f;
+        componentItem.setQuantity(newQuantity);
+        inventoryBalance.put(stageInput.getComponentId(), componentItem);
+
+        // Add allocation
+        allocation.setAllocatorInventoryItemId(componentItem.getId());
+        allocation.setAllocatedAmount(allocatedQuantity);
+        allocations.add(allocation);
+
+        allocatedRequestedRatios.add(allocatedQuantity / neededQuantity);
+    }
+
+    public void computeExpectedAndRequestedStageOutputs(StageNode node, Integer factoryStageId, float durationRatio, List<AllocationResult> results) {
         float totalAllocatedInput = node.getSmallStage().getStageInputs().stream()
                 .map(SmallStageInput::getAllocatedQuantity)
                 .reduce(0.0f, Float::sum);
@@ -137,10 +146,13 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             AllocationResult result = new AllocationResult();
             result.setStageOutputId(output.getId());
             result.setFactoryStageId(factoryStageId);
+            result.setStageName(node.getSmallStage().getStageName());
             result.setComponentId(output.getComponentId());
             result.setComponentName(output.getComponentName());
             result.setResultedAmount(expectedOutputPerAllocation);
             result.setFullAmount(requestedOutput);
+
+            results.add(result);
         }
     }
 }
