@@ -1,6 +1,8 @@
 package org.chainoptim.features.scanalysis.production.performance.service;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.SmallStageInput;
+import org.chainoptim.features.scanalysis.production.factorygraph.model.SmallStageOutput;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.StageNode;
 import org.chainoptim.features.scanalysis.production.performance.model.FactoryPerformanceReport;
 import org.chainoptim.features.scanalysis.production.performance.model.FactoryStagePerformanceReport;
@@ -49,7 +51,7 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
         float errorRate = 0;
 
         float totalExecutedStages = 0f;
-        float totalTimeDays = 0f;
+        float totalTimeDays = determineRecordsDuration(productionRecords);
         float averageExecutedCapacityPerDay = 0f;
         float minimumExecutedCapacityPerDay = Float.MAX_VALUE;
         float daysUnderCapacityPercentage = 0f;
@@ -59,14 +61,12 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
             StageNode stageNode = factoryGraph.getNodes().get(factoryStageId);
             float stageCapacity = stageNode.getNumberOfStepsCapacity() * dailyRecord.getDurationDays();
 
-            float executedStages = determineStageExecutedStages(dailyRecord.getResults(), factoryGraph);
+            float executedStages = determineStageExecutedStages(dailyRecord.getResults());
             totalExecutedStages += executedStages;
 
             if (executedStages < stageCapacity) {
                 daysUnderCapacityPercentage++;
             }
-
-            totalTimeDays += dailyRecord.getDurationDays();
 
             float executedCapacityPerDay = executedStages / dailyRecord.getDurationDays();
             averageExecutedCapacityPerDay += executedCapacityPerDay;
@@ -74,12 +74,25 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
             if (executedCapacityPerDay < minimumExecutedCapacityPerDay) {
                 minimumExecutedCapacityPerDay = executedCapacityPerDay;
             }
+
+            for (ResourceAllocation allocation : dailyRecord.getAllocations()) {
+                resourceReadinessScore += allocation.getActualAmount() / allocation.getRequestedAmount();
+            }
+            resourceReadinessScore /= dailyRecord.getAllocations().size();
+
+            float recordErrorRate = determineStageRecordErrorRate(dailyRecord, stageNode);
+            errorRate += recordErrorRate;
         }
 
-        float totalDuration = determineRecordsDuration(productionRecords);
-        averageExecutedCapacityPerDay /= totalDuration;
-        daysUnderCapacityPercentage /= totalDuration * 100;
 
+        averageExecutedCapacityPerDay /= totalTimeDays;
+        daysUnderCapacityPercentage /= totalTimeDays * 100;
+
+        errorRate /= productionRecords.size();
+        resourceReadinessScore /= productionRecords.size() * 100;
+        resourceUtilizationScore = (1 - errorRate) * 100;
+
+        // Prepare the report
         factoryStagePerformanceReport.setOverallScore(overallScore);
         factoryStagePerformanceReport.setResourceReadinessScore(resourceReadinessScore);
         factoryStagePerformanceReport.setResourceUtilizationScore(resourceUtilizationScore);
@@ -95,19 +108,53 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
         return factoryStagePerformanceReport;
     }
 
-
-    private float determineStageExecutedStages(List<AllocationResult> stageResults, FactoryGraph factoryGraph) {
-        List<Float> allocatedRequestedRations = stageResults.stream()
-                .map(result -> result.getActualAmount() / result.getFullAmount())
-                .toList();
-
-        return allocatedRequestedRations.stream().min(Float::compare).orElse(0.0f);
-    }
-
     private float determineRecordsDuration(Map<Float, DailyProductionRecord> productionRecords) {
         return productionRecords.values().stream()
                 .map(DailyProductionRecord::getDurationDays)
                 .reduce(0f, Float::sum);
+    }
+
+    private float determineStageExecutedStages(List<AllocationResult> stageResults) {
+        return stageResults.stream()
+                .map(result -> result.getActualAmount() / result.getFullAmount())
+                .min(Float::compare).orElse(0.0f);
+    }
+
+    private float determineStageRecordErrorRate(DailyProductionRecord dailyRecord, StageNode stageNode) {
+        float errorRate = 0;
+
+        float totalActualInput = dailyRecord.getAllocations().stream()
+                .map(ResourceAllocation::getActualAmount)
+                .reduce(0.0f, Float::sum);
+
+        float totalInitialOutputs = stageNode.getSmallStage().getStageOutputs().stream()
+                .map(SmallStageOutput::getQuantityPerStage)
+                .reduce(0.0f, Float::sum);
+
+        float totalInitialInputs = stageNode.getSmallStage().getStageInputs().stream()
+                .map(SmallStageInput::getQuantityPerStage)
+                .reduce(0.0f, Float::sum);
+
+        float durationRatio = dailyRecord.getDurationDays() / stageNode.getPerDuration();
+        float inputOutputRatio = (totalInitialInputs / totalInitialOutputs) * durationRatio;
+        float expectedOutput = inputOutputRatio * totalActualInput;
+
+        for (SmallStageOutput output : stageNode.getSmallStage().getStageOutputs()) {
+            float outputRatio = output.getQuantityPerStage() / totalInitialOutputs;
+            float expectedOutputPerAllocation = expectedOutput * outputRatio;
+
+            AllocationResult correspondingResult = dailyRecord.getResults().stream()
+                    .filter(result -> result.getStageOutputId().equals(output.getId()))
+                    .findFirst().orElse(null);
+
+            if (correspondingResult != null) {
+                float stageOutputError = (expectedOutputPerAllocation - correspondingResult.getActualAmount()) / expectedOutputPerAllocation;
+                errorRate += stageOutputError > 0 ? stageOutputError : 0; // Only add positive errors
+            }
+        }
+        errorRate /= stageNode.getSmallStage().getStageOutputs().size();
+
+        return errorRate;
     }
 
     private Map<Integer, Map<Float, DailyProductionRecord>> groupRecordsByFactoryStageId(ProductionHistory productionHistory) {
