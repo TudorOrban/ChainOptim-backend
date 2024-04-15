@@ -16,6 +16,7 @@ Each product can have a *Production Pipeline* that configures how the components
 #### **Factories** and **Warehouses**:
 An organization's sites for production and storage of goods. Configuring a factory's stages of production
 allows the software to provide valuable information into its operations, including allocating resources, seeking solutions to resource deficits and evaluating performance over time. 
+
 ![Factory Production Graph](/screenshots/FactoryProductionGraph.png)
 
 #### **Suppliers** and **Clients**:
