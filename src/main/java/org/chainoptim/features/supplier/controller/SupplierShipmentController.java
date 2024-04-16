@@ -23,7 +23,7 @@ public class SupplierShipmentController {
 
     @RequestMapping("/order/{orderId}")
     public ResponseEntity<List<SupplierShipment>> getShipmentsByOrderId(@PathVariable("orderId") Integer orderId) {
-        List<SupplierShipment> shipments = supplierShipmentService.getSupplierShipmentBySupplyOrderId(orderId);
+        List<SupplierShipment> shipments = supplierShipmentService.getSupplierShipmentBySupplierOrderId(orderId);
         return ResponseEntity.ok(shipments);
     }
 }

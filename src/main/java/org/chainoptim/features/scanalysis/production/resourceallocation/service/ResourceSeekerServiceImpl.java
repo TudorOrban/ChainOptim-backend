@@ -107,7 +107,7 @@ public class ResourceSeekerServiceImpl implements ResourceSeekerService {
             float neededComponentQuantity = resourceAllocation.getRequestedAmount() - resourceAllocation.getAllocatedAmount();
 
             for (SupplierOrder potentialOrder : potentialSupplierOrders) {
-                List<SupplierShipment> orderShipments = supplierShipmentService.getSupplierShipmentBySupplyOrderId(potentialOrder.getId());
+                List<SupplierShipment> orderShipments = supplierShipmentService.getSupplierShipmentBySupplierOrderId(potentialOrder.getId());
 
                 for (SupplierShipment shipment : orderShipments) {
                     if (!areCloseEnough(shipment.getDestinationLocation(), factoryLocation, 80.0f)) continue;

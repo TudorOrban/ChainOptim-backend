@@ -15,9 +15,7 @@ import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
-import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
-import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
-import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
+import org.chainoptim.features.supplier.dto.*;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
@@ -124,6 +122,14 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
 
     public CreateSupplierOrderDTO sanitizeCreateSupplierOrderDTO(CreateSupplierOrderDTO orderDTO) {
         return orderDTO;
+    }
+
+    public CreateSupplierShipmentDTO sanitizeCreateSupplierShipmentDTO(CreateSupplierShipmentDTO shipmentDTO) {
+        return shipmentDTO;
+    }
+
+    public UpdateSupplierShipmentDTO sanitizeUpdateSupplierShipmentDTO(UpdateSupplierShipmentDTO shipmentDTO) {
+        return shipmentDTO;
     }
 
     // Clients
