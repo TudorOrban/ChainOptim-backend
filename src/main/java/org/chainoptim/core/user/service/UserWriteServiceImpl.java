@@ -1,5 +1,6 @@
 package org.chainoptim.core.user.service;
 
+import org.chainoptim.core.email.service.EmailVerificationService;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.user.model.User;
@@ -17,14 +18,17 @@ public class UserWriteServiceImpl implements UserWriteService {
 
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
+    private final EmailVerificationService emailVerificationService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserWriteServiceImpl(UserRepository userRepository,
                                 OrganizationRepository organizationRepository,
+                                EmailVerificationService emailVerificationService,
                                 PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
+        this.emailVerificationService = emailVerificationService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -42,7 +46,13 @@ public class UserWriteServiceImpl implements UserWriteService {
         newUser.setUpdatedAt(LocalDateTime.now());
         newUser.setRole(User.Role.NONE);
 
-        return userRepository.save(newUser);
+        emailVerificationService.prepareUserForVerification(newUser);
+
+        User registeredUser = userRepository.save(newUser);
+
+        emailVerificationService.sendConfirmationMail(email, newUser.getVerificationToken());
+
+        return registeredUser;
     }
 
     public User registerNewOrganizationUser(String username, String password, String email, Integer organizationId, User.Role role) {
@@ -67,7 +77,13 @@ public class UserWriteServiceImpl implements UserWriteService {
             newUser.setOrganization(organization);
         }
 
-        return userRepository.save(newUser);
+        emailVerificationService.prepareUserForVerification(newUser);
+
+        User registeredUser = userRepository.save(newUser);
+
+        emailVerificationService.sendConfirmationMail(email, newUser.getVerificationToken());
+
+        return registeredUser;
     }
 
     // Delete

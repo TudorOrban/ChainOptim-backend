@@ -43,20 +43,6 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private java.time.LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        if (id == null) {
-            id = UUID.randomUUID().toString();
-        }
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organization_id")
     @JsonBackReference
@@ -80,9 +66,28 @@ public class User {
     @Column(name = "is_profile_public")
     private Boolean isProfilePublic;
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    private Set<NotificationUser> notificationUsers = new HashSet<>();
+    @Column(name = "verification_token")
+    private String verificationToken;
+
+    @Column(name = "verification_token_expiration_date")
+    private LocalDateTime verificationTokenExpirationDate;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    @PrePersist
+    protected void onCreate() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @Override
     public boolean equals(Object o) {
