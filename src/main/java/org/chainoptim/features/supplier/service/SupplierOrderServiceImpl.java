@@ -123,16 +123,4 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return orderIds;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
 }
