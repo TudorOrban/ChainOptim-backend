@@ -56,9 +56,9 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     // Create
     public SupplierOrder createSupplierOrder(CreateSupplierOrderDTO orderDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), "Supplier Orders", 1)) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
-        }
+//        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), "Supplier Orders", 1)) {
+//            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
+//        }
 
         // Sanitize input and map to entity
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
@@ -79,9 +79,9 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
             throw new ValidationException("All orders must belong to the same organization.");
         }
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), "Supplier Orders", orderDTOs.size())) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
-        }
+//        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), "Supplier Orders", orderDTOs.size())) {
+//            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
+//        }
 
         // Sanitize and map to entity
         List<SupplierOrder> orders = orderDTOs.stream()
