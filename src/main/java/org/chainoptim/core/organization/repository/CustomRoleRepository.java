@@ -15,4 +15,6 @@ public interface CustomRoleRepository extends JpaRepository<CustomRole, Integer>
 
     @Query("SELECT cr.organizationId FROM CustomRole cr WHERE cr.id = :customRoleId")
     Optional<Integer> findOrganizationIdById(@Param("customRoleId") Long customRoleId);
+
+    long countByOrganizationId(Integer organizationId);
 }

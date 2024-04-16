@@ -10,6 +10,7 @@ import org.chainoptim.features.client.dto.CreateClientOrderDTO;
 import org.chainoptim.features.client.dto.UpdateClientOrderDTO;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import jakarta.transaction.Transactional;
@@ -56,7 +57,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     // Create
     public ClientOrder createClientOrder(CreateClientOrderDTO orderDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), "Client Orders", 1)) {
+        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.CLIENT_ORDER, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed clients for the current Subscription Plan.");
         }
 
@@ -79,7 +80,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
             throw new ValidationException("All orders must belong to the same organization.");
         }
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), "Client Orders", orderDTOs.size())) {
+        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), Feature.CLIENT_ORDER, orderDTOs.size())) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Client Orders for the current Subscription Plan.");
         }
 

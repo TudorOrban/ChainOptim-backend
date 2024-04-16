@@ -10,6 +10,7 @@ import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
 import org.chainoptim.features.supplier.dto.UpdateSupplierOrderDTO;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -56,7 +57,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     // Create
     public SupplierOrder createSupplierOrder(CreateSupplierOrderDTO orderDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), "Supplier Orders", 1)) {
+        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.SUPPLIER_ORDER, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
         }
 
@@ -79,7 +80,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
             throw new ValidationException("All orders must belong to the same organization.");
         }
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), "Supplier Orders", orderDTOs.size())) {
+        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), Feature.SUPPLIER_ORDER, orderDTOs.size())) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
         }
 

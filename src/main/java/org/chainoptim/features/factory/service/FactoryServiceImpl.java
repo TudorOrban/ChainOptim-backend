@@ -14,6 +14,7 @@ import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -87,7 +88,7 @@ public class FactoryServiceImpl implements FactoryService {
     // Create
     public Factory createFactory(CreateFactoryDTO factoryDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(factoryDTO.getOrganizationId(), "Factories", 1)) {
+        if (planLimiterService.isLimitReached(factoryDTO.getOrganizationId(), Feature.FACTORY, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed factories for the current Subscription Plan.");
         }
 

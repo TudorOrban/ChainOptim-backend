@@ -11,6 +11,7 @@ import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationDistributionService notificationDistributionService;
     private final EmailService emailService;
     private final ObjectMapper objectMapper;
+
+    @Value("${app.environment}")
+    private String appEnvironment;
 
     @Autowired
     public NotificationServiceImpl(WebSocketMessagingService messagingService,
@@ -63,7 +67,9 @@ public class NotificationServiceImpl implements NotificationService {
 
         sendRealTimeNotification(notification, notificationUserIds);
 
-        sendEmailNotification(notification, emailUserEmails);
+        if ("prod".equals(appEnvironment)) { // Only send emails in production
+            sendEmailNotification(notification, emailUserEmails);
+        }
 
         // Persist the notification in the database
         AddNotificationDTO notificationDTO = NotificationDTOMapper.mapNotificationToAddNotificationDTO(notification, notificationUserIds);

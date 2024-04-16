@@ -1,5 +1,7 @@
 package org.chainoptim.features.factory.service;
 
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.factory.dto.CreateFactoryStageDTO;
 import org.chainoptim.features.factory.dto.FactoryDTOMapper;
@@ -8,6 +10,7 @@ import org.chainoptim.features.factory.model.FactoryStage;
 import org.chainoptim.features.factory.repository.FactoryStageRepository;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
+import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +19,15 @@ public class FactoryStageServiceImpl implements FactoryStageService {
 
     private final FactoryStageRepository factoryStageRepository;
     private final FactoryProductionGraphService graphService;
+    private final SubscriptionPlanLimiterService planLimiterService;
 
     @Autowired
     public FactoryStageServiceImpl(FactoryStageRepository factoryStageRepository,
-                                   FactoryProductionGraphService graphService) {
+                                   FactoryProductionGraphService graphService,
+                                   SubscriptionPlanLimiterService planLimiterService) {
         this.factoryStageRepository = factoryStageRepository;
         this.graphService = graphService;
+        this.planLimiterService = planLimiterService;
     }
 
     // Fetch
@@ -32,6 +38,11 @@ public class FactoryStageServiceImpl implements FactoryStageService {
 
     // Create
     public FactoryStage createFactoryStage(CreateFactoryStageDTO stageDTO, Boolean refreshGraph) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(stageDTO.getFactoryId(), Feature.FACTORY_STAGE, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed factory stages for the current Subscription Plan.");
+        }
+
         FactoryStage factoryStage = factoryStageRepository.save(FactoryDTOMapper.convertCreateFactoryStageDTOToFactoryStage(stageDTO));
 
         // TODO: Fix this (the stageInputs and stageOutputs are null for some reason)

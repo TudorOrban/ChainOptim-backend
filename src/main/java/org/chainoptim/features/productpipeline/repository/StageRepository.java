@@ -20,4 +20,6 @@ public interface StageRepository extends JpaRepository<Stage, Integer> {
 
     @Query("SELECT p.organizationId FROM Product p WHERE p.id = :productId")
     Optional<Integer> findOrganizationIdById(@Param("productId") Long productId);
+
+    long countByOrganizationId(Integer organizationId);
 }

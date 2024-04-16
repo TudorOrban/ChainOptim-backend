@@ -10,6 +10,7 @@ import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -74,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Product createProduct(CreateProductDTO productDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(productDTO.getOrganizationId(), "Products", 1)) {
+        if (planLimiterService.isLimitReached(productDTO.getOrganizationId(), Feature.PRODUCT, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed products for the current Subscription Plan.");
         }
 

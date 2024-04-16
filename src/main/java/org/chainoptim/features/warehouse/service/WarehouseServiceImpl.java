@@ -13,6 +13,7 @@ import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     public Warehouse createWarehouse(CreateWarehouseDTO warehouseDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(warehouseDTO.getOrganizationId(), "Warehouses", 1)) {
+        if (planLimiterService.isLimitReached(warehouseDTO.getOrganizationId(), Feature.WAREHOUSE, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed warehouses for the current Subscription Plan.");
         }
 

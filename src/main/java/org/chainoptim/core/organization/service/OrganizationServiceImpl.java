@@ -11,6 +11,7 @@ import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.core.user.service.UserWriteService;
 import org.chainoptim.core.user.service.UserService;
+import org.chainoptim.exception.PlanLimitReachedException;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,20 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Transactional
     public Organization createOrganization(CreateOrganizationDTO createOrganizationDTO) {
+        // Create organization
         Organization organization = new Organization();
         organization.setName(createOrganizationDTO.getName());
         organization.setAddress(createOrganizationDTO.getAddress());
         organization.setContactInfo(createOrganizationDTO.getContactInfo());
         organization.setSubscriptionPlanTier(createOrganizationDTO.getSubscriptionPlanTier());
 
-        // Save the organization
+        // Ensure creation is within plan limits
+        int totalUsers = createOrganizationDTO.getCreatedUsers().size() + createOrganizationDTO.getExistingUserIds().size();
+        int maxMembers = organization.getSubscriptionPlan().getMaxMembers();
+        if (totalUsers > maxMembers && maxMembers != -1) {
+            throw new PlanLimitReachedException("You are attempting to create more users than allowed by your current Subscription Plan.");
+        }
+
         Organization savedOrganization = organizationRepository.save(organization);
 
         // Handle users

@@ -13,5 +13,5 @@ public interface ClientOrderRepository extends JpaRepository<ClientOrder, Intege
     List<ClientOrder> findByClientId(Integer clientId);
 
     @Query("SELECT COUNT(co) FROM ClientOrder co WHERE co.organizationId = :organizationId")
-    long findCountByOrganizationId(@Param("organizationId") Integer organizationId);
+    long countByOrganizationId(@Param("organizationId") Integer organizationId);
 }

@@ -5,7 +5,10 @@ import org.chainoptim.core.organization.dto.CustomRoleDTOMapper;
 import org.chainoptim.core.organization.dto.UpdateCustomRoleDTO;
 import org.chainoptim.core.organization.model.CustomRole;
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.shared.enums.Feature;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,13 @@ import java.util.List;
 public class CustomRoleServiceImpl implements CustomRoleService {
 
     private final CustomRoleRepository customRoleRepository;
+    private final SubscriptionPlanLimiterService planLimiterService;
 
     @Autowired
-    public CustomRoleServiceImpl(CustomRoleRepository customRoleRepository) {
+    public CustomRoleServiceImpl(CustomRoleRepository customRoleRepository,
+                                 SubscriptionPlanLimiterService planLimiterService) {
         this.customRoleRepository = customRoleRepository;
+        this.planLimiterService = planLimiterService;
     }
 
     // Fetch
@@ -29,6 +35,11 @@ public class CustomRoleServiceImpl implements CustomRoleService {
 
     // Create
     public CustomRole createCustomRole(CreateCustomRoleDTO roleDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(roleDTO.getOrganizationId(), Feature.CUSTOM_ROLE, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed custom roles for the current Subscription Plan.");
+        }
+
         return customRoleRepository.save(CustomRoleDTOMapper.mapCreateCustomRoleDTOToCustomRole(roleDTO));
     }
 
