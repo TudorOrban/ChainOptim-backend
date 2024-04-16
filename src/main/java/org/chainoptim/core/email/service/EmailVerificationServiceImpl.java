@@ -4,9 +4,12 @@ import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -14,13 +17,25 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
 
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public EmailVerificationServiceImpl(EmailService emailService,
-                                         UserRepository userRepository) {
+                                        UserRepository userRepository,
+                                        PasswordEncoder passwordEncoder) {
         this.emailService = emailService;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
+//    @Scheduled(cron = "0 0 0 * * ?")
+//    public void checkTokenExpirations() {
+//        List<User> usersWithExpiredTokens = userRepository.findByTokenExpirationDateBefore(LocalDateTime.now());
+//
+//        for (User user : usersWithExpiredTokens) {
+//
+//        }
+//    }
 
     public void prepareUserForVerification(User newUser) {
         String token = generateVerificationToken();
@@ -29,17 +44,25 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         newUser.setEnabled(false);
     }
 
-    public void sendConfirmationMail(String email, String token) {
-        String confirmationUrl = "http://localhost:8080/api/v1/verify-email?token=" + token;
-        emailService.sendEmail(
-                email,
-                "Confirm your email",
+    public void sendConfirmationMail(String email, String token, boolean isInOrganization) {
+        String confirmationUrl = "http://localhost:8080/api/v1/verify-email" +
+            "?token=" + token +
+            (isInOrganization ? "?isInOrganization=true" : "");
+
+        String emailMessage = !isInOrganization ?
                 "Your email has been used to register an account with us at ChainOptim. " +
-                "Please click the following link to confirm your email: " + confirmationUrl
-        );
+                "Please click the following link to confirm your email: " :
+
+                "A user of our software ChainOptim has created an account for you " +
+                "and invited you to join their organization. " +
+                "Please click the following link to confirm your email and set your password: ";
+
+        emailMessage += confirmationUrl;
+
+        emailService.sendEmail(email, "Confirm your email", emailMessage);
     }
 
-    public String verifyAccountEmail(String token) {
+    public String verifyAccountEmail(String token, boolean isInOrganization, String newPassword) {
         try {
             User user = userRepository.findByVerificationToken(token)
                     .orElseThrow(() -> new ValidationException("Invalid token"));
@@ -50,6 +73,10 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
             user.setEnabled(true);
             user.setVerificationToken(null);
             user.setVerificationTokenExpirationDate(null);
+
+            if (isInOrganization && newPassword != null) {
+                user.setPasswordHash(passwordEncoder.encode(newPassword));
+            }
 
             userRepository.save(user);
 

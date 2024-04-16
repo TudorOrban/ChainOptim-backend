@@ -77,8 +77,10 @@ public class AuthController {
     }
 
     @GetMapping("/verify-email")
-    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
-        String response = emailVerificationService.verifyAccountEmail(token);
+    public ResponseEntity<String> verifyEmail(@RequestParam String token,
+                                              @RequestParam(required = false) boolean isInOrganization,
+                                              @RequestParam(required = false) String newPassword) {
+        String response = emailVerificationService.verifyAccountEmail(token, isInOrganization, newPassword);
         return ResponseEntity.ok(response);
     }
 

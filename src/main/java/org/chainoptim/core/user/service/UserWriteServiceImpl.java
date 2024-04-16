@@ -50,19 +50,20 @@ public class UserWriteServiceImpl implements UserWriteService {
 
         User registeredUser = userRepository.save(newUser);
 
-        emailVerificationService.sendConfirmationMail(email, newUser.getVerificationToken());
+        emailVerificationService.sendConfirmationMail(email, newUser.getVerificationToken(), false);
 
         return registeredUser;
     }
 
-    public User registerNewOrganizationUser(String username, String password, String email, Integer organizationId, User.Role role) {
+
+    public User registerNewOrganizationUser(String username, String email, Integer organizationId, User.Role role) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already taken");
         }
 
         User newUser = new User();
         newUser.setUsername(username);
-        newUser.setPasswordHash(passwordEncoder.encode(password));
+        newUser.setPasswordHash(null);
         newUser.setEmail(email);
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setUpdatedAt(LocalDateTime.now());
@@ -81,7 +82,7 @@ public class UserWriteServiceImpl implements UserWriteService {
 
         User registeredUser = userRepository.save(newUser);
 
-        emailVerificationService.sendConfirmationMail(email, newUser.getVerificationToken());
+        emailVerificationService.sendConfirmationMail(email, newUser.getVerificationToken(), true);
 
         return registeredUser;
     }

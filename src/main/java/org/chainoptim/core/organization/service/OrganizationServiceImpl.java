@@ -56,9 +56,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         // Handle users
         // - For new user, use User service to register and tie to organization
         for (CreateOrganizationUserDTO createDto: createOrganizationDTO.getCreatedUsers()) {
-            userWriteService.registerNewOrganizationUser(createDto.getUsername(), createDto.getPassword(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole());
+            userWriteService.registerNewOrganizationUser(createDto.getUsername(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole());
         }
-
 
         // - For existing users, only send invites
         if (createOrganizationDTO.getExistingUserIds() != null) {

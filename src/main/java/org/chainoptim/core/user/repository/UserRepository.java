@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,12 @@ public interface UserRepository extends JpaRepository<User, String>, UserSearchR
     @Query("SELECT u FROM User u WHERE u.customRole.id = :roleId")
     List<User> findByCustomRoleId(Integer roleId);
     List<UserSearchResultDTO> findByUsernameContaining(String username);
+
     @Query("SELECT u FROM User u WHERE u.verificationToken = :token")
     Optional<User> findByVerificationToken(@Param("token") String token);
+    @Query("SELECT u FROM User u WHERE u.tokenExpirationDate < :now AND u.enabled = false")
+    List<User> findByTokenExpirationDateBefore(@Param("now") LocalDateTime now);
+
     long countByOrganizationId(Integer organizationId);
 
 }
