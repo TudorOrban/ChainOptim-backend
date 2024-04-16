@@ -46,7 +46,7 @@ public class UserWriteServiceImpl implements UserWriteService {
         newUser.setUpdatedAt(LocalDateTime.now());
         newUser.setRole(User.Role.NONE);
 
-        emailVerificationService.prepareUserForVerification(newUser);
+        emailVerificationService.prepareUserForVerification(newUser, true);
 
         User registeredUser = userRepository.save(newUser);
 
@@ -78,7 +78,7 @@ public class UserWriteServiceImpl implements UserWriteService {
             newUser.setOrganization(organization);
         }
 
-        emailVerificationService.prepareUserForVerification(newUser);
+        emailVerificationService.prepareUserForVerification(newUser, true);
 
         User registeredUser = userRepository.save(newUser);
 

@@ -28,19 +28,11 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-//    @Scheduled(cron = "0 0 0 * * ?")
-//    public void checkTokenExpirations() {
-//        List<User> usersWithExpiredTokens = userRepository.findByTokenExpirationDateBefore(LocalDateTime.now());
-//
-//        for (User user : usersWithExpiredTokens) {
-//
-//        }
-//    }
-
-    public void prepareUserForVerification(User newUser) {
+    public void prepareUserForVerification(User newUser, boolean isFirstConfirmationEmail) {
         String token = generateVerificationToken();
         newUser.setVerificationToken(token);
         newUser.setVerificationTokenExpirationDate(calculateExpirationDate(24));
+        newUser.setIsFirstConfirmationEmail(isFirstConfirmationEmail);
         newUser.setEnabled(false);
     }
 
@@ -84,6 +76,43 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         } catch (Exception e) {
             return "Error verifying email: " + e.getMessage();
         }
+    }
+
+    // Background job to resend confirmation tokens or clean up
+//    @Scheduled(cron = "0 0 0 * * ?")
+    public void checkTokenExpirations() {
+        List<User> usersWithExpiredTokens = userRepository.findByTokenExpirationDateBefore(LocalDateTime.now());
+
+        for (User user : usersWithExpiredTokens) {
+            if (user.getOrganization() != null) continue; // Skip users created by organizations
+
+            if (user.getIsFirstConfirmationEmail()) {
+                refreshVerificationToken(user);
+            } else {
+                userRepository.delete(user);
+            }
+        }
+    }
+
+    private void refreshVerificationToken(User user) {
+        prepareUserForVerification(user, false);
+
+        userRepository.save(user);
+
+        resendConfirmationMail(user.getEmail(), user.getVerificationToken());
+    }
+
+    private void resendConfirmationMail(String email, String token) {
+        String confirmationUrl = "http://localhost:8080/api/v1/verify-email" +
+                "?token=" + token;
+
+        String emailMessage = "Your email has been used to register an account with us at ChainOptim. " +
+                "Please click the following link to confirm your email. " +
+                "Otherwise, your account will be deleted in 24 hours. ";
+
+        emailMessage += confirmationUrl;
+
+        emailService.sendEmail(email, "Confirm your email", emailMessage);
     }
 
     private String generateVerificationToken() {

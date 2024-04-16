@@ -75,6 +75,9 @@ public class User {
     @Column(name = "enabled")
     private Boolean enabled;
 
+    @Column(name = "is_first_confirmation_email")
+    private Boolean isFirstConfirmationEmail;
+
     @PrePersist
     protected void onCreate() {
         if (id == null) {
