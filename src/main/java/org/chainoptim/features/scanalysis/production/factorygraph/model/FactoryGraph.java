@@ -16,13 +16,13 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FactoryGraph {
-    private Map<Integer, Node> nodes = new HashMap<>(); // Key: factoryStageId
+    private Map<Integer, StageNode> nodes = new HashMap<>(); // Key: factoryStageId
     private Map<Integer, List<Edge>> adjList = new HashMap<>(); // Key: factoryStageId
     private Float pipelinePriority;
 
     public void populateGraph(Factory factory, List<FactoryStageConnection> connections) {
         for (FactoryStage factoryStage : factory.getFactoryStages()) {
-            Node node = new Node();
+            StageNode node = new StageNode();
             List<Edge> newEdges = new ArrayList<>();
 
             SmallStage stage = new SmallStage();

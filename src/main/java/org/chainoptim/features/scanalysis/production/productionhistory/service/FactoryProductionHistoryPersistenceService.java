@@ -8,6 +8,7 @@ import org.chainoptim.features.scanalysis.production.productionhistory.model.Fac
 public interface FactoryProductionHistoryPersistenceService {
 
     FactoryProductionHistory getFactoryProductionHistoryByFactoryId(Integer factoryId);
+    Integer getIdByFactoryId(Integer factoryId);
     FactoryProductionHistory createFactoryProductionHistory(CreateFactoryProductionHistoryDTO historyDTO);
     FactoryProductionHistory updateFactoryProductionHistory(UpdateFactoryProductionHistoryDTO historyDTO);
     FactoryProductionHistory addDayToFactoryProductionHistory(AddDayToFactoryProductionHistoryDTO addDayDTO);

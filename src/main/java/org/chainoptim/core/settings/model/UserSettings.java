@@ -23,7 +23,37 @@ public class UserSettings {
     @Column(name = "user_id")
     private String userId;
 
-    // Manual deserialization and caching of JSON column
+    // Manual deserialization and caching of JSON columns
+    @Column(name = "general_settings", columnDefinition = "json")
+    private String generalSettingsJson;
+
+    @Transient // Ignore field
+    private GeneralSettings generalSettings;
+
+    public GeneralSettings getGeneralSettings() {
+        if (this.generalSettings == null && this.generalSettingsJson != null) {
+            // Deserialize when accessed
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                this.generalSettings = mapper.readValue(this.generalSettingsJson, GeneralSettings.class);
+            } catch (JsonProcessingException e) {
+                throw new ValidationException("Invalid General Settings json");
+            }
+        }
+        return this.generalSettings;
+    }
+
+    public void setGeneralSettings(GeneralSettings generalSettings) {
+        this.generalSettings = generalSettings;
+        // Serialize when setting the object
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            this.generalSettingsJson = mapper.writeValueAsString(generalSettings);
+        } catch (JsonProcessingException e) {
+            throw new ValidationException("Invalid General Settings json");
+        }
+    }
+
     @Column(name = "notification_settings", columnDefinition = "json")
     private String notificationSettingsJson;
 

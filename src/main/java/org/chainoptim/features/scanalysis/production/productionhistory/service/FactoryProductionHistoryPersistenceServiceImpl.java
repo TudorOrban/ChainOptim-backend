@@ -7,6 +7,7 @@ import org.chainoptim.features.scanalysis.production.productionhistory.dto.Facto
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.UpdateFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
 import org.chainoptim.features.scanalysis.production.productionhistory.repository.FactoryProductionHistoryRepository;
+import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceAllocationPlanPersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,30 +24,13 @@ public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryPr
 
     public FactoryProductionHistory getFactoryProductionHistoryByFactoryId(Integer factoryId) {
         return productionHistoryRepository.findByFactoryId(factoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Supplier performance for factory ID: " + factoryId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Production History for factory ID: " + factoryId + " not found"));
     }
 
-//    public SupplierPerformance refreshSupplierPerformance(Integer supplierId) {
-//        // Compute fresh supplier performance report
-//        SupplierPerformanceReport supplierPerformanceReport = supplierPerformanceService.computeSupplierPerformanceReport(supplierId);
-//
-//        SupplierPerformance supplierPerformance = supplierPerformanceRepository.findBySupplierId(supplierId)
-//                .orElse(null);
-//
-//        // Create new supplier performance or update existing one
-//        if (supplierPerformance == null) {
-//            CreateSupplierPerformanceDTO performanceDTO = new CreateSupplierPerformanceDTO();
-//            performanceDTO.setSupplierId(supplierId);
-//            performanceDTO.setReport(supplierPerformanceReport);
-//            return createSupplierPerformance(performanceDTO);
-//        } else {
-//            UpdateSupplierPerformanceDTO performanceDTO = new UpdateSupplierPerformanceDTO();
-//            performanceDTO.setId(supplierPerformance.getId());
-//            performanceDTO.setSupplierId(supplierId);
-//            performanceDTO.setReport(supplierPerformanceReport);
-//            return updateSupplierPerformance(performanceDTO);
-//        }
-//    }
+    public Integer getIdByFactoryId(Integer factoryId) {
+        return productionHistoryRepository.findIdByFactoryId(factoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Production History for factory ID: " + factoryId + " not found"));
+    }
 
     public FactoryProductionHistory createFactoryProductionHistory(CreateFactoryProductionHistoryDTO historyDTO) {
         return productionHistoryRepository.save(FactoryProductionHistoryDTOMapper
@@ -64,6 +48,7 @@ public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryPr
     public FactoryProductionHistory addDayToFactoryProductionHistory(AddDayToFactoryProductionHistoryDTO addDayDTO) {
         FactoryProductionHistory history = productionHistoryRepository.findById(addDayDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Production history with ID: " + addDayDTO.getId() + " not found"));
+
         FactoryProductionHistoryDTOMapper.addDayToFactoryProductionHistory(addDayDTO, history);
 
         return productionHistoryRepository.save(history);

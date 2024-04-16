@@ -36,6 +36,12 @@ public class FactoryProductionHistoryController {
         return ResponseEntity.ok(factoryProductionHistory);
     }
 
+    @GetMapping("/factory/{factoryId}/id")
+    public ResponseEntity<Integer> getFactoryProductionHistoryId(@PathVariable Integer factoryId) {
+        Integer id = historyPersistenceService.getIdByFactoryId(factoryId);
+        return ResponseEntity.ok(id);
+    }
+
     // Create
     @PreAuthorize("@securityService.canAccessEntity(#historyDTO.getFactoryId(), \"Factory\", \"Create\")")
     @PostMapping("/create")

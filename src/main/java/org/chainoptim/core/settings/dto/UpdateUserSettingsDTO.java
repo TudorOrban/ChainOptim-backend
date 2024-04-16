@@ -1,5 +1,6 @@
 package org.chainoptim.core.settings.dto;
 
+import org.chainoptim.core.settings.model.GeneralSettings;
 import org.chainoptim.core.settings.model.NotificationSettings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,5 +13,6 @@ public class UpdateUserSettingsDTO {
 
     private Integer id;
     private String userId;
+    private GeneralSettings generalSettings;
     private NotificationSettings notificationSettings;
 }

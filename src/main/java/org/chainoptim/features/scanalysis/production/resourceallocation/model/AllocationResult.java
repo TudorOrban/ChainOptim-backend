@@ -1,16 +1,19 @@
 package org.chainoptim.features.scanalysis.production.resourceallocation.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class ResourceAllocation {
-    private Integer stageInputId;
+@AllArgsConstructor
+@NoArgsConstructor
+public class AllocationResult {
+    private Integer stageOutputId;
     private Integer factoryStageId;
     private String stageName;
     private Integer componentId;
     private String componentName;
-    private Integer allocatorInventoryItemId;
-    private Float allocatedAmount;
-    private Float requestedAmount;
+    private Float resultedAmount;
+    private Float fullAmount;
     private Float actualAmount;
 }
