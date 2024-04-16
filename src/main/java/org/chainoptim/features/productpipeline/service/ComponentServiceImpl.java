@@ -4,6 +4,7 @@ import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.service.UnitOfMeasurementService;
 import org.chainoptim.features.productpipeline.dto.ComponentDTOMapper;
+import org.chainoptim.features.productpipeline.dto.ComponentsSearchDTO;
 import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.model.Component;
@@ -33,6 +34,10 @@ public class ComponentServiceImpl implements ComponentService {
     // Fetch
     public List<Component> getComponentsByOrganizationId(Integer organizationId) {
         return componentRepository.findByOrganizationId(organizationId);
+    }
+
+    public List<ComponentsSearchDTO> getComponentsByOrganizationIdSmall(Integer organizationId) {
+        return componentRepository.findByOrganizationIdSmall(organizationId);
     }
 
     // Create

@@ -65,4 +65,13 @@ public class SupplierOrderController {
         List<SupplierOrder> clientOrders = supplierOrderService.updateSuppliersOrdersInBulk(orders);
         return ResponseEntity.ok(clientOrders);
     }
+
+    // TODO: Secure endpoint
+    @DeleteMapping("/delete/bulk")
+    public ResponseEntity<List<Integer>> deleteSupplierOrdersInBulk(@RequestBody List<Integer> orders) {
+        List<Integer> clientOrders = supplierOrderService.deleteSupplierOrdersInBulk(orders);
+        System.out.println("Deleted orders: " + orders);
+        return ResponseEntity.ok().build();
+    }
+
 }
