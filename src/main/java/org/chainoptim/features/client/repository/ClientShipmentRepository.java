@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ClientShipmentRepository extends JpaRepository<ClientShipment, Integer> {
+public interface ClientShipmentRepository extends JpaRepository<ClientShipment, Integer>, ClientShipmentsSearchRepository {
 
     @Query("SELECT cs FROM ClientShipment cs " +
             "WHERE cs.clientOrderId = :orderId")

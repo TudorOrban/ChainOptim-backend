@@ -70,12 +70,6 @@ public class SupplierDTOMapper {
         shipment.setEstimatedArrivalDate(shipmentDTO.getEstimatedArrivalDate());
         shipment.setArrivalDate(shipmentDTO.getArrivalDate());
         shipment.setStatus(shipmentDTO.getStatus());
-        Location sourceLocation = new Location();
-        sourceLocation.setId(shipmentDTO.getSourceLocationId());
-        shipment.setSourceLocation(sourceLocation);
-        Location destinationLocation = new Location();
-        destinationLocation.setId(shipmentDTO.getDestinationLocationId());
-        shipment.setDestinationLocation(destinationLocation);
         shipment.setCurrentLocationLatitude(shipmentDTO.getCurrentLocationLatitude());
         shipment.setCurrentLocationLongitude(shipmentDTO.getCurrentLocationLongitude());
 
@@ -88,12 +82,6 @@ public class SupplierDTOMapper {
         shipment.setEstimatedArrivalDate(shipmentDTO.getEstimatedArrivalDate());
         shipment.setArrivalDate(shipmentDTO.getArrivalDate());
         shipment.setStatus(shipmentDTO.getStatus());
-        Location sourceLocation = new Location();
-        sourceLocation.setId(shipmentDTO.getSourceLocationId());
-        shipment.setSourceLocation(sourceLocation);
-        Location destinationLocation = new Location();
-        destinationLocation.setId(shipmentDTO.getDestinationLocationId());
-        shipment.setDestinationLocation(destinationLocation);
         shipment.setCurrentLocationLatitude(shipmentDTO.getCurrentLocationLatitude());
         shipment.setCurrentLocationLongitude(shipmentDTO.getCurrentLocationLongitude());
     }

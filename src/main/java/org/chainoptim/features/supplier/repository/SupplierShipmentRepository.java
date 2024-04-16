@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SupplierShipmentRepository extends JpaRepository<SupplierShipment, Integer> {
+public interface SupplierShipmentRepository extends JpaRepository<SupplierShipment, Integer>, SupplierShipmentsSearchRepository {
 
     @Query("SELECT ss FROM SupplierShipment ss " +
             "WHERE ss.supplierOrderId = :orderId")

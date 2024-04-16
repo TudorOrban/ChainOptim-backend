@@ -4,12 +4,14 @@ import jakarta.transaction.Transactional;
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.model.UserDetailsImpl;
+import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.product.repository.UnitOfMeasurementRepository;
 import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
+import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
@@ -29,13 +31,15 @@ public class SecurityServiceImpl implements SecurityService {
 
     private final ProductRepository productRepository;
     private final StageRepository stageRepository;
+    private final ComponentRepository componentRepository;
     private final FactoryRepository factoryRepository;
     private final WarehouseRepository warehouseRepository;
     private final SupplierRepository supplierRepository;
+    private final SupplierOrderRepository supplierOrderRepository;
     private final ClientRepository clientRepository;
+    private final ClientOrderRepository clientOrderRepository;
     private final LocationRepository locationRepository;
     private final UnitOfMeasurementRepository unitOfMeasurementRepository;
-    private final ComponentRepository componentRepository;
 
     @Autowired
     public SecurityServiceImpl(
@@ -46,7 +50,9 @@ public class SecurityServiceImpl implements SecurityService {
             FactoryRepository factoryRepository,
             WarehouseRepository warehouseRepository,
             SupplierRepository supplierRepository,
+            SupplierOrderRepository supplierOrderRepository,
             ClientRepository clientRepository,
+            ClientOrderRepository clientOrderRepository,
             LocationRepository locationRepository,
             UnitOfMeasurementRepository unitOfMeasurementRepository,
             ComponentRepository componentRepository
@@ -58,7 +64,9 @@ public class SecurityServiceImpl implements SecurityService {
         this.factoryRepository = factoryRepository;
         this.warehouseRepository = warehouseRepository;
         this.supplierRepository = supplierRepository;
+        this.supplierOrderRepository = supplierOrderRepository;
         this.clientRepository = clientRepository;
+        this.clientOrderRepository = clientOrderRepository;
         this.locationRepository = locationRepository;
         this.unitOfMeasurementRepository = unitOfMeasurementRepository;
         this.componentRepository = componentRepository;
@@ -69,14 +77,16 @@ public class SecurityServiceImpl implements SecurityService {
         Optional<Integer> entityOrganizationId = switch (entityType) {
             case "CustomRole" -> customRoleRepository.findOrganizationIdById(entityId);
             case "Product" -> productRepository.findOrganizationIdById(entityId);
+            case "Stage" -> stageRepository.findOrganizationIdById(entityId);
+            case "Component" -> componentRepository.findOrganizationIdById(entityId);
             case "Factory" -> factoryRepository.findOrganizationIdById(entityId);
             case "Warehouse" -> warehouseRepository.findOrganizationIdById(entityId);
             case "Supplier" -> supplierRepository.findOrganizationIdById(entityId);
-            case "Stage" -> stageRepository.findOrganizationIdById(entityId);
+            case "SupplierOrder" -> supplierOrderRepository.findOrganizationIdById(entityId);
             case "Client" -> clientRepository.findOrganizationIdById(entityId);
+            case "ClientOrder" -> clientOrderRepository.findOrganizationIdById(entityId);
             case "Location" -> locationRepository.findOrganizationIdById(entityId);
             case "UnitOfMeasurement" -> unitOfMeasurementRepository.findOrganizationIdById(entityId);
-            case "Component" -> componentRepository.findOrganizationIdById(entityId);
             default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
         };
 

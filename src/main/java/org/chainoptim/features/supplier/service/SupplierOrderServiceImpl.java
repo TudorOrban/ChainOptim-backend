@@ -50,7 +50,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return supplierOrderRepository.findBySupplierId(supplierId);
     }
 
-    public PaginatedResults<SupplierOrder> getSuppliersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+    public PaginatedResults<SupplierOrder> getSupplierOrdersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         return supplierOrderRepository.findBySupplierIdAdvanced(supplierId, searchQuery, sortBy, ascending, page, itemsPerPage);
     }
 
@@ -117,6 +117,11 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     @Transactional
     public List<Integer> deleteSupplierOrdersInBulk(List<Integer> orderIds) {
         List<SupplierOrder> orders = supplierOrderRepository.findAllById(orderIds);
+        // Ensure same organizationId
+        if (orders.stream().map(SupplierOrder::getOrganizationId).distinct().count() > 1) {
+            throw new ValidationException("All orders must belong to the same organization.");
+        }
+
         supplierOrderRepository.deleteAll(orders);
 
         kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(orders, KafkaEvent.EventType.DELETE);

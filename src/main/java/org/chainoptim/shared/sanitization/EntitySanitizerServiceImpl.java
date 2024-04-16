@@ -1,8 +1,6 @@
 package org.chainoptim.shared.sanitization;
 
-import org.chainoptim.features.client.dto.CreateClientDTO;
-import org.chainoptim.features.client.dto.CreateClientOrderDTO;
-import org.chainoptim.features.client.dto.UpdateClientDTO;
+import org.chainoptim.features.client.dto.*;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
@@ -149,6 +147,13 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         return orderDTO;
     }
 
+    public CreateClientShipmentDTO sanitizeCreateClientShipmentDTO(CreateClientShipmentDTO shipmentDTO) {
+        return shipmentDTO;
+    }
+
+    public UpdateClientShipmentDTO sanitizeUpdateClientShipmentDTO(UpdateClientShipmentDTO shipmentDTO) {
+        return shipmentDTO;
+    }
 
     // Locations
     public CreateLocationDTO sanitizeCreateLocationDTO(CreateLocationDTO locationDTO) {
