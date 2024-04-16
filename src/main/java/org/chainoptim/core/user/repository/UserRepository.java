@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, String>, UserSearchR
 
     @Query("SELECT u FROM User u WHERE u.verificationToken = :token")
     Optional<User> findByVerificationToken(@Param("token") String token);
-    @Query("SELECT u FROM User u WHERE u.tokenExpirationDate < :now AND u.enabled = false")
+    @Query("SELECT u FROM User u WHERE u.verificationTokenExpirationDate < :now AND u.enabled = false")
     List<User> findByTokenExpirationDateBefore(@Param("now") LocalDateTime now);
 
     long countByOrganizationId(Integer organizationId);

@@ -13,4 +13,8 @@ public class NotificationSettings {
     private boolean clientOrdersOn;
     private boolean factoryInventoryOn;
     private boolean warehouseInventoryOn;
+    private boolean emailSupplierOrdersOn;
+    private boolean emailClientOrdersOn;
+    private boolean emailFactoryInventoryOn;
+    private boolean emailWarehouseInventoryOn;
 }

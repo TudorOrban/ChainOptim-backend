@@ -3,8 +3,8 @@ package org.chainoptim.core.email.service;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.exception.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

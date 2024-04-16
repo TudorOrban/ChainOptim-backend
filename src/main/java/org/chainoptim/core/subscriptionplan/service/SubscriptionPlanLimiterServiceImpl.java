@@ -30,6 +30,8 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
         PlanDetails planDetails = SubscriptionPlans.getPlans().get(planTier);
 
+        if (planTier.equals(Organization.SubscriptionPlanTier.PRO)) return false; // No limits for PRO plan
+
         return switch (featureName) {
             case "Products" -> snapshot.getProductsCount() >= planDetails.getMaxProducts() + quantity;
             case "Factories" -> snapshot.getFactoriesCount() >= planDetails.getMaxFactories() + quantity;
