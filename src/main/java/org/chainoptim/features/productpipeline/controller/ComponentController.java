@@ -1,6 +1,7 @@
 package org.chainoptim.features.productpipeline.controller;
 
 import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.productpipeline.dto.ComponentsSearchDTO;
 import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.model.Component;
@@ -27,6 +28,13 @@ public class ComponentController {
     }
 
     // Fetch
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Component\", \"Read\")")
+    @GetMapping("/organization/{organizationId}/small")
+    public ResponseEntity<List<ComponentsSearchDTO>> getComponentsByOrganizationIdSmall(@PathVariable Integer organizationId) {
+        List<ComponentsSearchDTO> components = componentService.getComponentsByOrganizationIdSmall(organizationId);
+        return ResponseEntity.ok(components);
+    }
+
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Component\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Component>> getComponentsByOrganizationId(@PathVariable Integer organizationId) {
