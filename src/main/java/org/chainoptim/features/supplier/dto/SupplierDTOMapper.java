@@ -50,7 +50,7 @@ public class SupplierDTOMapper {
         return supplierOrder;
     }
 
-    public static void setUpdateSupplierOrderDTOToClientOrder(SupplierOrder supplierOrder, UpdateSupplierOrderDTO orderDTO) {
+    public static void setUpdateSupplierOrderDTOToUpdateOrder(SupplierOrder supplierOrder, UpdateSupplierOrderDTO orderDTO) {
         supplierOrder.setQuantity(orderDTO.getQuantity());
         supplierOrder.setOrderDate(orderDTO.getOrderDate());
         supplierOrder.setEstimatedDeliveryDate(orderDTO.getEstimatedDeliveryDate());

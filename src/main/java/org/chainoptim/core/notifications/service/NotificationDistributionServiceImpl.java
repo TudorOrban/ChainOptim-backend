@@ -16,6 +16,7 @@ import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class NotificationDistributionServiceImpl implements NotificationDistribu
         return distributeEventToUsers(organizationId, event.getEventType(), event.getEntityType());
     }
 
-    private NotificationUserDistribution distributeEventToUsers(Integer organizationId, KafkaEvent.EventType eventType, String entityType) {
+    private NotificationUserDistribution distributeEventToUsers(Integer organizationId, KafkaEvent.EventType eventType, Feature entityType) {
         // TODO: Cache this with Redis
         Organization organization = organizationRepository.findByIdWithUsersAndCustomRoles(organizationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
@@ -89,7 +90,7 @@ public class NotificationDistributionServiceImpl implements NotificationDistribu
     }
 
     private void determineMembersWithPermissions(Set<User> organizationMembers,
-                                                 KafkaEvent.EventType eventType, String entityType,
+                                                 KafkaEvent.EventType eventType, Feature entityType,
                                                  List<String> candidateUserIds, List<User> emailCandidateUsers) {
         for (User user : organizationMembers) {
             if (user.getCustomRole() == null) {
@@ -119,13 +120,13 @@ public class NotificationDistributionServiceImpl implements NotificationDistribu
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID: " + event.getNewEntity().getClientId() + " not found"));
     }
 
-    private FeaturePermissions getFeaturePermissions(Permissions permissions, String entityType) {
+    private FeaturePermissions getFeaturePermissions(Permissions permissions, Feature entityType) {
         if (permissions == null) return null;
         return switch (entityType) {
-            case "Supplier Order" -> permissions.getSuppliers();
-            case "Client Order" -> permissions.getClients();
-            case "Factory Inventory" -> permissions.getFactories();
-            case "Warehouse Inventory" -> permissions.getWarehouses();
+            case SUPPLIER_ORDER -> permissions.getSuppliers();
+            case CLIENT_ORDER -> permissions.getClients();
+            case FACTORY_INVENTORY -> permissions.getFactories();
+            case WAREHOUSE_INVENTORY -> permissions.getWarehouses();
             default -> null;
         };
     }
@@ -138,22 +139,22 @@ public class NotificationDistributionServiceImpl implements NotificationDistribu
         };
     }
 
-    private boolean shouldReceiveNotification(NotificationSettings notificationSettings, String entityType) {
+    private boolean shouldReceiveNotification(NotificationSettings notificationSettings, Feature entityType) {
         return switch (entityType) {
-            case "Supplier Order" -> notificationSettings.isSupplierOrdersOn();
-            case "Client Order" -> notificationSettings.isClientOrdersOn();
-            case "Factory Inventory" -> notificationSettings.isFactoryInventoryOn();
-            case "Warehouse Inventory" -> notificationSettings.isWarehouseInventoryOn();
+            case SUPPLIER_ORDER -> notificationSettings.isSupplierOrdersOn();
+            case CLIENT_ORDER -> notificationSettings.isClientOrdersOn();
+            case FACTORY_INVENTORY -> notificationSettings.isFactoryInventoryOn();
+            case WAREHOUSE_INVENTORY -> notificationSettings.isWarehouseInventoryOn();
             default -> false;
         };
     }
 
-    private boolean shouldReceiveEmailNotification(NotificationSettings notificationSettings, String entityType) {
+    private boolean shouldReceiveEmailNotification(NotificationSettings notificationSettings, Feature entityType) {
         return switch (entityType) {
-            case "Supplier Order" -> notificationSettings.isEmailSupplierOrdersOn();
-            case "Client Order" -> notificationSettings.isEmailClientOrdersOn();
-            case "Factory Inventory" -> notificationSettings.isEmailFactoryInventoryOn();
-            case "Warehouse Inventory" -> notificationSettings.isEmailWarehouseInventoryOn();
+            case SUPPLIER_ORDER -> notificationSettings.isEmailSupplierOrdersOn();
+            case CLIENT_ORDER -> notificationSettings.isEmailClientOrdersOn();
+            case FACTORY_INVENTORY -> notificationSettings.isEmailFactoryInventoryOn();
+            case WAREHOUSE_INVENTORY -> notificationSettings.isEmailWarehouseInventoryOn();
             default -> false;
         };
     }

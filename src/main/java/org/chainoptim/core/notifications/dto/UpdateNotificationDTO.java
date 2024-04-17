@@ -1,5 +1,6 @@
 package org.chainoptim.core.notifications.dto;
 
+import org.chainoptim.shared.enums.Feature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ public class UpdateNotificationDTO {
     private String userId;
     private String title;
     private Integer entityId;
-    private String entityType;
+    private Feature entityType;
     private String message;
     private Boolean readStatus;
     private String type;

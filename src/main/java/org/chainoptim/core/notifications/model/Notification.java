@@ -1,11 +1,15 @@
 package org.chainoptim.core.notifications.model;
 
+import org.chainoptim.exception.ValidationException;
+import org.chainoptim.shared.enums.Feature;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -36,7 +40,7 @@ public class Notification {
     private Integer entityId;
 
     @Column(name = "entity_type")
-    private String entityType;
+    private Feature entityType;
 
     @Column(name = "message")
     private String message;
@@ -55,4 +59,34 @@ public class Notification {
     @Column(name = "type")
     private String type;
 
+    // Manual deserialization and caching of JSON columns
+    @Column(name = "extra_info", columnDefinition = "json")
+    private String extraInfoJson;
+
+    @Transient // Ignore field
+    private NotificationExtraInfo extraInfo;
+
+    public NotificationExtraInfo getExtraInfo() {
+        if (this.extraInfo == null && this.extraInfoJson != null) {
+            // Deserialize when accessed
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                this.extraInfo = mapper.readValue(this.extraInfoJson, NotificationExtraInfo.class);
+            } catch (JsonProcessingException e) {
+                throw new ValidationException("Invalid NotificationExtraInfo json");
+            }
+        }
+        return this.extraInfo;
+    }
+
+    public void setExtraInfo(NotificationExtraInfo extraInfo) {
+        this.extraInfo = extraInfo;
+        // Serialize when setting the object
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            this.extraInfoJson = mapper.writeValueAsString(extraInfo);
+        } catch (JsonProcessingException e) {
+            throw new ValidationException("Invalid NotificationExtraInfo json");
+        }
+    }
 }

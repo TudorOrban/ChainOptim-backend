@@ -3,6 +3,7 @@ package org.chainoptim.features.client.service;
 import org.chainoptim.core.notifications.model.KafkaEvent;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.client.model.ClientOrderEvent;
+import org.chainoptim.shared.enums.Feature;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,7 @@ public class KafkaClientOrderServiceImpl implements KafkaClientOrderService {
     private ClientOrderEvent convertToEvent(ClientOrder order, KafkaEvent.EventType eventType) {
         ClientOrderEvent event = new ClientOrderEvent();
         event.setNewEntity(order);
-        event.setEntityType("Client Order");
+        event.setEntityType(Feature.CLIENT_ORDER);
         event.setEventType(eventType);
         return event;
     }

@@ -44,7 +44,7 @@ public class Component {
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "unit_id", nullable = true)
     private UnitOfMeasurement unit;
 
