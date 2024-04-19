@@ -9,7 +9,9 @@ import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
 import org.chainoptim.features.supplier.dto.UpdateSupplierOrderDTO;
 import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -49,16 +51,16 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return supplierOrderRepository.findBySupplierId(supplierId);
     }
 
-    public PaginatedResults<SupplierOrder> getSuppliersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+    public PaginatedResults<SupplierOrder> getSupplierOrdersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
         return supplierOrderRepository.findBySupplierIdAdvanced(supplierId, searchQuery, sortBy, ascending, page, itemsPerPage);
     }
 
     // Create
     public SupplierOrder createSupplierOrder(CreateSupplierOrderDTO orderDTO) {
         // Check if plan limit is reached
-//        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), "Supplier Orders", 1)) {
-//            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
-//        }
+        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.SUPPLIER_ORDER, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
+        }
 
         // Sanitize input and map to entity
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
@@ -67,7 +69,8 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
 
         // Publish order to Kafka broker
-        kafkaSupplierOrderService.sendSupplierOrderEvent(savedOrder, KafkaEvent.EventType.CREATE);
+        kafkaSupplierOrderService.sendSupplierOrderEvent(
+                new SupplierOrderEvent(savedOrder, null, KafkaEvent.EventType.CREATE, savedOrder.getSupplierId(), Feature.SUPPLIER, "Test"));
 
         return savedOrder;
     }
@@ -79,9 +82,9 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
             throw new ValidationException("All orders must belong to the same organization.");
         }
         // Check if plan limit is reached
-//        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), "Supplier Orders", orderDTOs.size())) {
-//            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
-//        }
+        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), Feature.SUPPLIER_ORDER, orderDTOs.size())) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
+        }
 
         // Sanitize and map to entity
         List<SupplierOrder> orders = orderDTOs.stream()
@@ -94,31 +97,71 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         List<SupplierOrder> savedOrders = supplierOrderRepository.saveAll(orders);
 
         // Publish order events to Kafka broker
-        kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(savedOrders, KafkaEvent.EventType.CREATE);
+        List<SupplierOrderEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> new SupplierOrderEvent(order, null, KafkaEvent.EventType.CREATE, order.getSupplierId(), Feature.SUPPLIER, "Test"))
+                .forEach(orderEvents::add);
+
+        kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(orderEvents);
 
         return savedOrders;
     }
 
     @Transactional
     public List<SupplierOrder> updateSuppliersOrdersInBulk(List<UpdateSupplierOrderDTO> orderDTOs) {
-        List<SupplierOrder> orders = new ArrayList<>();
-        for (UpdateSupplierOrderDTO orderDTO : orderDTOs) {
-            SupplierOrder order = supplierOrderRepository.findById(orderDTO.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Supplier Order with ID: " + orderDTO.getId() + " not found."));
+        List<SupplierOrder> orders = supplierOrderRepository.findByIds(orderDTOs.stream().map(UpdateSupplierOrderDTO::getId).toList())
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier Orders not found."));
 
-            SupplierDTOMapper.setUpdateSupplierOrderDTOToClientOrder(order, orderDTO);
-            orders.add(order);
-        }
+        List<SupplierOrder> oldOrders = orders.stream().map(SupplierOrder::deepCopy).toList();
 
-        return supplierOrderRepository.saveAll(orders);
+        List<SupplierOrder> updatedOrders = orders.stream()
+                .map(order -> {
+                    UpdateSupplierOrderDTO orderDTO = orderDTOs.stream()
+                            .filter(dto -> dto.getId().equals(order.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new ResourceNotFoundException("Supplier Order with ID: " + order.getId() + " not found."));
+
+//                    UpdateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateSupplierOrderDTO(orderDTO);
+                    SupplierDTOMapper.setUpdateSupplierOrderDTOToUpdateOrder(order, orderDTO);
+
+                    return order;
+                }).toList();
+
+        // Publish order events to Kafka broker
+        List<SupplierOrderEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> {
+                    SupplierOrder oldOrder = oldOrders.stream()
+                            .filter(o -> o.getId().equals(order.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new ResourceNotFoundException("Supplier Order with ID: " + order.getId() + " not found."));
+                    return new SupplierOrderEvent(order, oldOrder, KafkaEvent.EventType.UPDATE, order.getSupplierId(), Feature.SUPPLIER, "Test");
+                })
+                .forEach(orderEvents::add);
+
+        kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(orderEvents);
+
+        // Save
+        return supplierOrderRepository.saveAll(updatedOrders);
     }
 
     @Transactional
     public List<Integer> deleteSupplierOrdersInBulk(List<Integer> orderIds) {
         List<SupplierOrder> orders = supplierOrderRepository.findAllById(orderIds);
+        // Ensure same organizationId
+        if (orders.stream().map(SupplierOrder::getOrganizationId).distinct().count() > 1) {
+            throw new ValidationException("All orders must belong to the same organization.");
+        }
+
         supplierOrderRepository.deleteAll(orders);
 
-        kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(orders, KafkaEvent.EventType.DELETE);
+        // Publish order events to Kafka broker
+        List<SupplierOrderEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> new SupplierOrderEvent(null, order, KafkaEvent.EventType.CREATE, order.getSupplierId(), Feature.SUPPLIER, "Test"))
+                .forEach(orderEvents::add);
+
+        kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(orderEvents);
 
         return orderIds;
     }

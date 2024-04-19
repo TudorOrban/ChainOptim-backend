@@ -9,6 +9,7 @@ import org.chainoptim.features.warehouse.dto.WarehouseDTOMapper;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.chainoptim.features.warehouse.repository.WarehouseInventoryRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -58,7 +59,7 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
     // Create
     public WarehouseInventoryItem createWarehouseInventoryItem(CreateWarehouseInventoryItemDTO itemDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(itemDTO.getOrganizationId(), "Warehouse Inventory Items", 1)) {
+        if (planLimiterService.isLimitReached(itemDTO.getOrganizationId(), Feature.WAREHOUSE_INVENTORY, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Warehouse Inventory Items for the current Subscription Plan.");
         }
 
@@ -76,7 +77,7 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
             throw new ValidationException("All items must belong to the same organization.");
         }
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(itemDTOs.getFirst().getOrganizationId(), "Warehouse Inventory Items", itemDTOs.size())) {
+        if (planLimiterService.isLimitReached(itemDTOs.getFirst().getOrganizationId(), Feature.WAREHOUSE_INVENTORY, itemDTOs.size())) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Warehouse Inventory Items for the current Subscription Plan.");
         }
 

@@ -12,6 +12,7 @@ import org.chainoptim.features.client.model.Client;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -60,7 +61,7 @@ public class ClientServiceImpl implements ClientService {
 
     public Client createClient(CreateClientDTO clientDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(clientDTO.getOrganizationId(), "Clients", 1)) {
+        if (planLimiterService.isLimitReached(clientDTO.getOrganizationId(), Feature.CLIENT, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed clients for the current Subscription Plan.");
         }
 

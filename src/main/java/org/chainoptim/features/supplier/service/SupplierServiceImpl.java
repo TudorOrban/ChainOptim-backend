@@ -12,6 +12,7 @@ import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
@@ -64,7 +65,7 @@ public class SupplierServiceImpl implements SupplierService {
 
     public Supplier createSupplier(CreateSupplierDTO supplierDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(supplierDTO.getOrganizationId(), "Suppliers", 1)) {
+        if (planLimiterService.isLimitReached(supplierDTO.getOrganizationId(), Feature.SUPPLIER, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed suppliers for the current Subscription Plan.");
         }
 

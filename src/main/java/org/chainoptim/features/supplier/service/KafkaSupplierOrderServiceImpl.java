@@ -23,22 +23,12 @@ public class KafkaSupplierOrderServiceImpl implements KafkaSupplierOrderService 
     @Value("${supplier.order.topic.name:supplier-order-events}")
     private String supplierOrderTopicName;
 
-    public void sendSupplierOrderEvent(SupplierOrder order, KafkaEvent.EventType eventType) {
-        SupplierOrderEvent orderEvent = convertToEvent(order, eventType);
+    public void sendSupplierOrderEvent(SupplierOrderEvent orderEvent) {
         kafkaTemplate.send(supplierOrderTopicName, orderEvent);
     }
 
-    public void sendSupplierOrderEventsInBulk(List<SupplierOrder> orders, KafkaEvent.EventType eventType) {
-        orders.stream()
-                .map(order -> convertToEvent(order, eventType))
+    public void sendSupplierOrderEventsInBulk(List<SupplierOrderEvent> kafkaEvents) {
+        kafkaEvents
                 .forEach(orderEvent -> kafkaTemplate.send(supplierOrderTopicName, orderEvent));
-    }
-
-    private SupplierOrderEvent convertToEvent(SupplierOrder order, KafkaEvent.EventType eventType) {
-        SupplierOrderEvent event = new SupplierOrderEvent();
-        event.setNewEntity(order);
-        event.setEntityType("Supplier Order");
-        event.setEventType(eventType);
-        return event;
     }
 }

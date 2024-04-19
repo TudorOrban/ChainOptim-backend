@@ -31,7 +31,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Column(nullable = false, unique = true)
@@ -42,20 +42,6 @@ public class User {
 
     @Column(name = "updated_at", nullable = false)
     private java.time.LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        if (id == null) {
-            id = UUID.randomUUID().toString();
-        }
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organization_id")
@@ -80,9 +66,31 @@ public class User {
     @Column(name = "is_profile_public")
     private Boolean isProfilePublic;
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    private Set<NotificationUser> notificationUsers = new HashSet<>();
+    @Column(name = "verification_token")
+    private String verificationToken;
+
+    @Column(name = "verification_token_expiration_date")
+    private LocalDateTime verificationTokenExpirationDate;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    @Column(name = "is_first_confirmation_email")
+    private Boolean isFirstConfirmationEmail;
+
+    @PrePersist
+    protected void onCreate() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @Override
     public boolean equals(Object o) {

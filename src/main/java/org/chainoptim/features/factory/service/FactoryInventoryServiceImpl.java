@@ -8,6 +8,7 @@ import org.chainoptim.features.factory.dto.*;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.factory.repository.FactoryInventoryRepository;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import jakarta.transaction.Transactional;
@@ -57,7 +58,7 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
     // Create
     public FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO itemDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(itemDTO.getOrganizationId(), "Factory Inventory Items", 1)) {
+        if (planLimiterService.isLimitReached(itemDTO.getOrganizationId(), Feature.FACTORY_INVENTORY, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Factory Inventory Items for the current Subscription Plan.");
         }
 
@@ -75,7 +76,7 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
             throw new ValidationException("All items must belong to the same organization.");
         }
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(itemDTOs.getFirst().getOrganizationId(), "Factory Inventory Items", itemDTOs.size())) {
+        if (planLimiterService.isLimitReached(itemDTOs.getFirst().getOrganizationId(), Feature.FACTORY_INVENTORY, itemDTOs.size())) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Factory Inventory Items for the current Subscription Plan.");
         }
 

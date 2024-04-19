@@ -1,8 +1,10 @@
 package org.chainoptim.core.user.controller;
 
+import org.chainoptim.core.email.service.EmailVerificationService;
 import org.chainoptim.core.user.dto.LoginDTO;
 import org.chainoptim.core.user.dto.UserRegistrationDTO;
 import org.chainoptim.core.user.model.User;
+import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.core.user.service.UserWriteService;
 import org.chainoptim.core.user.jwt.JwtAuthenticationResponse;
 import org.chainoptim.core.user.jwt.JwtTokenProvider;
@@ -16,10 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -29,6 +28,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserWriteService userWriteService;
+    private final EmailVerificationService emailVerificationService;
     private final JwtTokenProvider tokenProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -36,9 +36,11 @@ public class AuthController {
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
                           UserWriteService userWriteService,
+                            EmailVerificationService emailVerificationService,
                           JwtTokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userWriteService = userWriteService;
+        this.emailVerificationService = emailVerificationService;
         this.tokenProvider = tokenProvider;
     }
 
@@ -60,18 +62,26 @@ public class AuthController {
         User registeredUser = userWriteService.registerNewUser(registrationDto.getUsername(), registrationDto.getPassword(), registrationDto.getEmail());
 
         // Automatically log in user after registration and return JWT
+        UserDetailsImpl userDetails = new UserDetailsImpl();
+        userDetails.setUsername(registeredUser.getUsername());
+        userDetails.setPassword(registeredUser.getPasswordHash());
+        userDetails.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                new org.springframework.security.core.userdetails.User(
-                        registeredUser.getUsername(),
-                        registeredUser.getPasswordHash(),
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-                ),
+                userDetails,
                 null,
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
         String jwt = tokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam String token,
+                                              @RequestParam(required = false) boolean isInOrganization,
+                                              @RequestParam(required = false) String newPassword) {
+        String response = emailVerificationService.verifyAccountEmail(token, isInOrganization, newPassword);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/validate-token")

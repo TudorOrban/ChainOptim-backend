@@ -31,7 +31,7 @@ public class ClientOrderController {
     }
 
     @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Read\")")
-    @GetMapping("/organization/advanced/{clientId}")
+    @GetMapping("/client/advanced/{clientId}")
     public ResponseEntity<PaginatedResults<ClientOrder>> getClientOrdersByClientIdAdvanced(
             @PathVariable Integer clientId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,

@@ -1,6 +1,7 @@
 package org.chainoptim.features.supplier.model;
 
 import org.chainoptim.features.productpipeline.model.Component;
+import org.chainoptim.shared.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -55,17 +56,28 @@ public class SupplierOrder {
     @Column(name = "delivery_date", nullable = true)
     private LocalDateTime deliveryDate;
 
-    public enum Status {
-        Initiated,
-        Negociated,
-        Placed,
-        Delivered
-    }
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status;
+    private OrderStatus status;
 
     @Column(name = "company_id")
     private String companyId;
+
+    public SupplierOrder deepCopy() {
+        return SupplierOrder.builder()
+                .id(this.id)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .organizationId(this.organizationId)
+                .supplierId(this.supplierId)
+                .component(this.component)
+                .quantity(this.quantity)
+                .deliveredQuantity(this.deliveredQuantity)
+                .orderDate(this.orderDate)
+                .estimatedDeliveryDate(this.estimatedDeliveryDate)
+                .deliveryDate(this.deliveryDate)
+                .status(this.status)
+                .companyId(this.companyId)
+                .build();
+    }
 }

@@ -7,6 +7,7 @@ import org.chainoptim.core.scsnapshot.service.SnapshotPersistenceService;
 import org.chainoptim.core.subscriptionplan.model.PlanDetails;
 import org.chainoptim.core.subscriptionplan.model.SubscriptionPlans;
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.shared.enums.Feature;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,22 +25,29 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
         this.organizationRepository = organizationRepository;
     }
 
-    public boolean isLimitReached(Integer organizationId, String featureName, Integer quantity) {
+    public boolean isLimitReached(Integer organizationId, Feature feature, Integer quantity) {
         Snapshot snapshot = snapshotPersistenceService.getSupplyChainSnapshotByOrganizationId(organizationId).getSnapshot();
         Organization.SubscriptionPlanTier planTier = organizationRepository.getSubscriptionPlanTierById(organizationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
         PlanDetails planDetails = SubscriptionPlans.getPlans().get(planTier);
 
-        return switch (featureName) {
-            case "Products" -> snapshot.getProductsCount() >= planDetails.getMaxProducts() + quantity;
-            case "Factories" -> snapshot.getFactoriesCount() >= planDetails.getMaxFactories() + quantity;
-            case "Factory Inventory Items" -> snapshot.getFactoryInventoryItemsCount() >= planDetails.getMaxFactoryInventoryItems() + quantity;
-            case "Warehouses" -> snapshot.getWarehousesCount() >= planDetails.getMaxWarehouses() + quantity;
-            case "Warehouse Inventory Items" -> snapshot.getWarehouseInventoryItemsCount() >= planDetails.getMaxWarehouseInventoryItems() + quantity;
-            case "Suppliers" -> snapshot.getSuppliersCount() >= planDetails.getMaxSuppliers() + quantity;
-            case "Supplier Orders" -> snapshot.getSupplierOrdersCount() >= planDetails.getMaxSupplierOrders() + quantity;
-            case "Clients" -> snapshot.getClientsCount() >= planDetails.getMaxClients() + quantity;
-            case "Client Orders" -> snapshot.getClientOrdersCount() >= planDetails.getMaxClientOrders() + quantity;
+        if (planTier.equals(Organization.SubscriptionPlanTier.PRO)) return false; // No limits for PRO plan
+
+        return switch (feature) {
+            case Feature.PRODUCT -> snapshot.getProductsCount() + quantity >= planDetails.getMaxProducts();
+            case Feature.PRODUCT_STAGE -> snapshot.getProductStagesCount() + quantity >= planDetails.getMaxProductStages();
+            case Feature.COMPONENT -> snapshot.getComponentsCount() + quantity >= planDetails.getMaxComponents();
+            case Feature.FACTORY -> snapshot.getFactoriesCount() + quantity >= planDetails.getMaxFactories();
+            case Feature.FACTORY_INVENTORY -> snapshot.getFactoryInventoryItemsCount() + quantity >= planDetails.getMaxFactoryInventoryItems();
+            case Feature.FACTORY_STAGE -> snapshot.getFactoryStagesCount() + quantity >= planDetails.getMaxFactoryStages();
+            case Feature.WAREHOUSE -> snapshot.getWarehousesCount() + quantity >= planDetails.getMaxWarehouses();
+            case Feature.WAREHOUSE_INVENTORY -> snapshot.getWarehouseInventoryItemsCount() + quantity >= planDetails.getMaxWarehouseInventoryItems();
+            case Feature.SUPPLIER -> snapshot.getSuppliersCount() + quantity >= planDetails.getMaxSuppliers();
+            case Feature.SUPPLIER_ORDER -> snapshot.getSupplierOrdersCount() + quantity >= planDetails.getMaxSupplierOrders();
+            case Feature.SUPPLIER_SHIPMENT -> snapshot.getSupplierShipmentsCount() + quantity >= planDetails.getMaxSupplierShipments();
+            case Feature.CLIENT -> snapshot.getClientsCount() + quantity >= planDetails.getMaxClients();
+            case Feature.CLIENT_ORDER -> snapshot.getClientOrdersCount() + quantity >= planDetails.getMaxClientOrders();
+            case Feature.CLIENT_SHIPMENT -> snapshot.getClientShipmentsCount() + quantity >= planDetails.getMaxClientShipments();
             default -> true; // Don't restrict here for now
         };
     }

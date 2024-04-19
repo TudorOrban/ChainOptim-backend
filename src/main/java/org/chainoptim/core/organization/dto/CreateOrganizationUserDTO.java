@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 public class CreateOrganizationUserDTO {
     String username;
-    String password;
     String email;
-    Integer organizationId;
     User.Role role;
 }

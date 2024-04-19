@@ -16,5 +16,5 @@ public interface FactoryInventoryRepository extends JpaRepository<FactoryInvento
     List<FactoryInventoryItem> findByFactoryId(Integer factoryId);
 
     @Query("SELECT COUNT(ii) FROM FactoryInventoryItem ii WHERE ii.organizationId = :organizationId")
-    long findCountByOrganizationId(@Param("organizationId") Integer organizationId);
+    long countByOrganizationId(@Param("organizationId") Integer organizationId);
 }

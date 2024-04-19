@@ -11,4 +11,7 @@ public interface FactoryStageRepository extends JpaRepository<FactoryStage, Inte
 
     @Query("SELECT fs FROM FactoryStage fs JOIN FETCH fs.stage WHERE fs.id = :id")
     Optional<FactoryStage> findByIdWithStage(@Param("id") Integer id);
+
+    @Query("SELECT COUNT(fs) FROM FactoryStage fs JOIN fs.factory f WHERE f.organizationId = :organizationId")
+    long countByOrganizationId(@Param("organizationId") Integer organizationId);
 }

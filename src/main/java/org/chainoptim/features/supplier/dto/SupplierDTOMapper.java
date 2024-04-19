@@ -3,6 +3,7 @@ package org.chainoptim.features.supplier.dto;
 import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.features.supplier.model.SupplierShipment;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 public class SupplierDTOMapper {
@@ -49,7 +50,7 @@ public class SupplierDTOMapper {
         return supplierOrder;
     }
 
-    public static void setUpdateSupplierOrderDTOToClientOrder(SupplierOrder supplierOrder, UpdateSupplierOrderDTO orderDTO) {
+    public static void setUpdateSupplierOrderDTOToUpdateOrder(SupplierOrder supplierOrder, UpdateSupplierOrderDTO orderDTO) {
         supplierOrder.setQuantity(orderDTO.getQuantity());
         supplierOrder.setOrderDate(orderDTO.getOrderDate());
         supplierOrder.setEstimatedDeliveryDate(orderDTO.getEstimatedDeliveryDate());
@@ -59,5 +60,29 @@ public class SupplierDTOMapper {
         component.setId(orderDTO.getComponentId());
         supplierOrder.setComponent(component);
         supplierOrder.setCompanyId(orderDTO.getCompanyId());
+    }
+
+    public static SupplierShipment mapCreateSupplierShipmentDTOTOShipment(CreateSupplierShipmentDTO shipmentDTO) {
+        SupplierShipment shipment = new SupplierShipment();
+        shipment.setSupplierOrderId(shipmentDTO.getSupplierOrderId());
+        shipment.setQuantity(shipmentDTO.getQuantity());
+        shipment.setShipmentStartingDate(shipmentDTO.getShipmentStartingDate());
+        shipment.setEstimatedArrivalDate(shipmentDTO.getEstimatedArrivalDate());
+        shipment.setArrivalDate(shipmentDTO.getArrivalDate());
+        shipment.setStatus(shipmentDTO.getStatus());
+        shipment.setCurrentLocationLatitude(shipmentDTO.getCurrentLocationLatitude());
+        shipment.setCurrentLocationLongitude(shipmentDTO.getCurrentLocationLongitude());
+
+        return shipment;
+    }
+
+    public static void setUpdateSupplierShipmentDTOToSupplierShipment(SupplierShipment shipment, UpdateSupplierShipmentDTO shipmentDTO) {
+        shipment.setQuantity(shipmentDTO.getQuantity());
+        shipment.setShipmentStartingDate(shipmentDTO.getShipmentStartingDate());
+        shipment.setEstimatedArrivalDate(shipmentDTO.getEstimatedArrivalDate());
+        shipment.setArrivalDate(shipmentDTO.getArrivalDate());
+        shipment.setStatus(shipmentDTO.getStatus());
+        shipment.setCurrentLocationLatitude(shipmentDTO.getCurrentLocationLatitude());
+        shipment.setCurrentLocationLongitude(shipmentDTO.getCurrentLocationLongitude());
     }
 }
