@@ -3,6 +3,7 @@ package org.chainoptim.core.s3.service;
 import org.chainoptim.core.s3.model.S3FileType;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,15 @@ public class S3ServiceImpl implements S3Service {
         }
 
         return file;
+    }
+
+    public byte[] fetchFileContent(String bucketName, String key) {
+        try (S3ObjectInputStream inputStream = s3client.getObject(new GetObjectRequest(bucketName, key)).getObjectContent()) {
+            return IOUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            System.err.println("Error while fetching file content from S3: " + e.getMessage());
+            return null;
+        }
     }
 
     public void uploadFile(String bucketName, String key, File file, S3FileType fileType) {

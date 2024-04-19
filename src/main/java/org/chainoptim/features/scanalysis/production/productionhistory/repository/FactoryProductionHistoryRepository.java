@@ -14,4 +14,7 @@ public interface FactoryProductionHistoryRepository extends JpaRepository<Factor
 
     @Query("SELECT id FROM FactoryProductionHistory WHERE factoryId = :factoryId")
     Optional<Integer> findIdByFactoryId(@Param("factoryId") Integer factoryId);
+
+    @Query("SELECT factoryId FROM FactoryProductionHistory WHERE id = :id")
+    Optional<Integer> findFactoryIdById(@Param("id") Integer id);
 }

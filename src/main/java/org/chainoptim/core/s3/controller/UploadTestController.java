@@ -22,7 +22,9 @@ import java.nio.file.Paths;
 @RequestMapping("/upload-to-s3-test")
 public class UploadTestController {
 
-    private S3Service s3Service;
+    private final S3Service s3Service;
+
+    private static final String TEST_BUCKET_NAME = "chainoptim-productionhistory";
 
     @Autowired
     public UploadTestController(S3Service s3Service) {
@@ -33,14 +35,14 @@ public class UploadTestController {
     public ResponseEntity<String> uploadFile(@RequestParam("file")MultipartFile file) {
         File fileObj = convertMultiPartToFile(file);
         String key = "test/" + file.getOriginalFilename();
-        s3Service.uploadFile("chainoptim-productionhistory", key, fileObj, S3FileType.TEXT);
+        s3Service.uploadFile(TEST_BUCKET_NAME, key, fileObj, S3FileType.TEXT);
         fileObj.delete();
         return ResponseEntity.ok("File uploaded successfully");
     }
 
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadFile(@RequestParam String key) {
-        File file = s3Service.downloadFile("chainoptim-productionhistory", key, "C:/Users/tudor/Desktop/awsdownload");
+        File file = s3Service.downloadFile(TEST_BUCKET_NAME, key, "C:/Users/tudor/Desktop/awsdownload/myfile.txt");
         if (file != null) {
             Path path = Paths.get(file.getAbsolutePath());
             ByteArrayResource resource;
@@ -60,7 +62,7 @@ public class UploadTestController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteFile(@RequestParam String key) {
-        s3Service.deleteFile("chainoptim-productionhistory", key);
+        s3Service.deleteFile(TEST_BUCKET_NAME, key);
         return ResponseEntity.ok("File deleted successfully");
     }
 
