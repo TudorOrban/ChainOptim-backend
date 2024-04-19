@@ -1,8 +1,13 @@
 package org.chainoptim.core.s3.service;
 
+import org.chainoptim.core.s3.model.S3FileType;
+
 import java.io.File;
 
 public interface S3Service {
 
-    void uploadFile(String key, File file);
+    File downloadFile(String bucketName, String key, String destinationPath);
+    void uploadFile(String bucketName, String key, File file, S3FileType fileType);
+    void updateFile(String bucketName, String key, File file);
+    void deleteFile(String bucketName, String key);
 }
