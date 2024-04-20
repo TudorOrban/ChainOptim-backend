@@ -31,7 +31,7 @@ public class SnapshotBackgroundRefresherServiceImpl implements SnapshotBackgroun
     }
 
     @Async
-    @Scheduled(fixedDelay = REFRESH_INTERVAL)
+//    @Scheduled(fixedDelay = REFRESH_INTERVAL)
     public void refreshAndSaveSnapshots() {
         List<Integer> organizationIds = organizationRepository.getAllOrganizationIds();
 

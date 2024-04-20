@@ -2,6 +2,7 @@ package org.chainoptim.features.product.controller;
 
 import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.product.dto.CreateProductDTO;
+import org.chainoptim.features.product.dto.ProductOverviewDTO;
 import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
@@ -55,6 +56,13 @@ public class ProductController {
     ) {
         PaginatedResults<ProductsSearchDTO> paginatedResults = productService.getProductsByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(paginatedResults);
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Read\")")
+    @GetMapping("/{productId}/overview")
+    public ResponseEntity<ProductOverviewDTO> getProductOverview(@PathVariable Integer productId) {
+        ProductOverviewDTO productOverview = productService.getProductOverview(productId);
+        return ResponseEntity.ok(productOverview);
     }
 
     @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Read\")")

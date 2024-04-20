@@ -1,10 +1,15 @@
 package org.chainoptim.features.product.controller;
 
+import org.chainoptim.core.scsnapshot.model.Snapshot;
+import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
+import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.features.product.dto.*;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.product.repository.UnitOfMeasurementRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import org.chainoptim.testutil.TestDataSeederService;
@@ -43,6 +48,12 @@ class ProductControllerIntegrationTest {
     private UnitOfMeasurementRepository unitOfMeasurementRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private EntitySanitizerService entitySanitizerService;
+    @Autowired
+    private SubscriptionPlanLimiterService planLimiterService;
+    @Autowired
+    private SupplyChainSnapshotRepository snapshotRepository;
 
     // Necessary seed data
     Integer organizationId;
@@ -65,6 +76,14 @@ class ProductControllerIntegrationTest {
         unitDTO.setOrganizationId(organizationId);
 
         unit = unitOfMeasurementRepository.save(UnitDTOMapper.convertCreateUnitDTOToUnit(unitDTO));
+
+        // Set up supply chain snapshot for plan limiter service
+        SupplyChainSnapshot snapshot = new SupplyChainSnapshot();
+        snapshot.setOrganizationId(organizationId);
+        Snapshot snapshot1 = new Snapshot();
+        snapshot1.setProductsCount(0);
+        snapshot.setSnapshot(snapshot1);
+        snapshotRepository.save(snapshot);
 
         // Set up product for search, update and delete tests
         createTestProducts();

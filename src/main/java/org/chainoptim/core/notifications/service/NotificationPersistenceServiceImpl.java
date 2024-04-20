@@ -10,6 +10,7 @@ import org.chainoptim.core.notifications.repository.NotificationUserRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.shared.search.model.PaginatedResults;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,6 +42,10 @@ public class NotificationPersistenceServiceImpl implements NotificationPersisten
 
     public List<NotificationUser> getNotificationsByUserId(String userId) {
         return notificationUserRepository.findByUserId(userId);
+    }
+
+    public PaginatedResults<NotificationUser> getNotificationsByUserIdAdvanced(String userId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        return notificationUserRepository.findByUserIdAdvanced(userId, searchQuery, sortBy, ascending, page, itemsPerPage);
     }
 
     /*

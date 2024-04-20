@@ -1,5 +1,6 @@
 package org.chainoptim.features.product.service;
 
+import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
@@ -8,6 +9,7 @@ import org.chainoptim.features.product.dto.UpdateProductDTO;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,9 +27,14 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private SubscriptionPlanLimiterService planLimiterService;
+    @Mock
+    private EntitySanitizerService entitySanitizerService;
 
     @InjectMocks
     private ProductServiceImpl productService;
+
 
     @Test
     void testCreateProduct() {
@@ -36,6 +43,8 @@ class ProductServiceTest {
         Product expectedProduct = ProductDTOMapper.convertCreateProductDTOToProduct(productDTO);
 
         when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
+        when(planLimiterService.isLimitReached(any(), any(), any())).thenReturn(false);
+        when(entitySanitizerService.sanitizeCreateProductDTO(any(CreateProductDTO.class))).thenReturn(productDTO);
 
         // Act
         Product createdProduct = productService.createProduct(productDTO);
@@ -64,6 +73,7 @@ class ProductServiceTest {
 
         when(productRepository.findById(productDTO.getId())).thenReturn(Optional.of(existingProduct));
         when(productRepository.save(any(Product.class))).thenReturn(existingProduct);
+        when(entitySanitizerService.sanitizeUpdateProductDTO(any(UpdateProductDTO.class))).thenReturn(productDTO);
 
         // Act
         Product updatedProduct = productService.updateProduct(productDTO);
@@ -91,6 +101,7 @@ class ProductServiceTest {
         existingProduct.setUnit(unit);
 
         when(productRepository.findById(productDTO.getId())).thenReturn(Optional.empty());
+        when(entitySanitizerService.sanitizeUpdateProductDTO(any(UpdateProductDTO.class))).thenReturn(productDTO);
 
         // Act and assert
         assertThrows(ResourceNotFoundException.class, () -> productService.updateProduct(productDTO));

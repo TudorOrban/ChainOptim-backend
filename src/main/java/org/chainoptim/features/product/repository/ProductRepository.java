@@ -23,5 +23,17 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, Prod
             "WHERE p.name = :productName")
     Optional<Product> findByName(@Param("productName") String productName);
 
+    @Query("SELECT s.name from Stage s WHERE s.productId = :productId")
+    List<String> findStageNamesByProductId(@Param("productId") Integer productId);
+
+    @Query("SELECT f.name from Factory f WHERE f.id IN (SELECT fs.factory.id FROM FactoryStage fs WHERE fs.stage.productId = :productId)")
+    List<String> findFactoryNamesByProductId(@Param("productId") Integer productId);
+
+    @Query("SELECT w.name from Warehouse w WHERE w.id IN (SELECT wi.warehouseId FROM WarehouseInventoryItem wi WHERE wi.product.id = :productId)")
+    List<String> findWarehouseNamesByProductId(@Param("productId") Integer productId);
+
+    @Query("SELECT c.name from Client c WHERE c.id IN (SELECT co.clientId FROM ClientOrder co WHERE co.productId = :productId)")
+    List<String> findClientNamesByOrganizationId(@Param("productId") Integer productId);
+
     long countByOrganizationId(Integer organizationId);
 }

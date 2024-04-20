@@ -6,25 +6,44 @@ import org.chainoptim.features.scanalysis.production.productionhistory.dto.Creat
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.FactoryProductionHistoryDTOMapper;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.UpdateFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
+import org.chainoptim.features.scanalysis.production.productionhistory.model.ProductionHistory;
 import org.chainoptim.features.scanalysis.production.productionhistory.repository.FactoryProductionHistoryRepository;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceAllocationPlanPersistenceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryProductionHistoryPersistenceService {
 
     private final FactoryProductionHistoryRepository productionHistoryRepository;
+    private final ProductionHistoryStorageService historyStorageService;
+
+    @Value("${app.environment}")
+    private String appEnvironment;
 
     @Autowired
-    public FactoryProductionHistoryPersistenceServiceImpl(FactoryProductionHistoryRepository productionHistoryRepository) {
+    public FactoryProductionHistoryPersistenceServiceImpl(FactoryProductionHistoryRepository productionHistoryRepository,
+                                                          ProductionHistoryStorageService historyStorageService) {
         this.productionHistoryRepository = productionHistoryRepository;
+        this.historyStorageService = historyStorageService;
     }
 
     public FactoryProductionHistory getFactoryProductionHistoryByFactoryId(Integer factoryId) {
-        return productionHistoryRepository.findByFactoryId(factoryId)
+        FactoryProductionHistory factoryProductionHistory = productionHistoryRepository.findByFactoryId(factoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Production History for factory ID: " + factoryId + " not found"));
+
+        if (!Objects.equals(appEnvironment, "prod")) {
+            return factoryProductionHistory;
+        }
+
+        // Get production history from S3 only when in production
+        ProductionHistory productionHistory = historyStorageService.getProductionHistory(factoryId);
+        factoryProductionHistory.setProductionHistory(productionHistory);
+        return factoryProductionHistory;
     }
 
     public Integer getIdByFactoryId(Integer factoryId) {
@@ -33,8 +52,16 @@ public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryPr
     }
 
     public FactoryProductionHistory createFactoryProductionHistory(CreateFactoryProductionHistoryDTO historyDTO) {
-        return productionHistoryRepository.save(FactoryProductionHistoryDTOMapper
+        FactoryProductionHistory factoryProductionHistory = productionHistoryRepository.save(FactoryProductionHistoryDTOMapper
                 .mapCreateFactoryProductionHistoryDTOToFactoryProductionHistory(historyDTO));
+
+        if (!Objects.equals(appEnvironment, "prod")) {
+            return factoryProductionHistory;
+        }
+
+        // Save production history to S3 only when in production
+        historyStorageService.saveProductionHistory(factoryProductionHistory.getFactoryId(), factoryProductionHistory.getProductionHistory());
+        return factoryProductionHistory;
     }
 
     public FactoryProductionHistory updateFactoryProductionHistory(UpdateFactoryProductionHistoryDTO historyDTO) {
@@ -51,10 +78,27 @@ public class FactoryProductionHistoryPersistenceServiceImpl implements FactoryPr
 
         FactoryProductionHistoryDTOMapper.addDayToFactoryProductionHistory(addDayDTO, history);
 
-        return productionHistoryRepository.save(history);
+        FactoryProductionHistory updatedHistory = productionHistoryRepository.save(history);
+
+        if (!Objects.equals(appEnvironment, "prod")) {
+            return updatedHistory;
+        }
+
+        // Save production history to S3 only when in production
+        historyStorageService.saveProductionHistory(updatedHistory.getFactoryId(), updatedHistory.getProductionHistory());
+        return updatedHistory;
     }
 
     public void deleteFactoryProductionHistory(Integer id) {
-        productionHistoryRepository.deleteById(id);
+        Integer factoryId = productionHistoryRepository.findFactoryIdById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Production history with ID: " + id + " not found"));
+
+        if (!Objects.equals(appEnvironment, "prod")) {
+            productionHistoryRepository.deleteById(id);
+            return;
+        }
+
+        // Delete production history from S3 only when in production
+        historyStorageService.deleteProductionHistory(factoryId);
     }
 }

@@ -13,5 +13,6 @@ public class UpdateFactoryProductionHistoryDTO {
 
     private Integer id;
     private Integer factoryId;
+    private String s3Key;
     private ProductionHistory productionHistory;
 }

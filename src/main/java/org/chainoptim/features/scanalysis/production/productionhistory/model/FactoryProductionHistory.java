@@ -37,6 +37,9 @@ public class FactoryProductionHistory {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "s3_key")
+    private String s3Key;
+
     @Column(name = "production_history", columnDefinition = "json")
     private String productionHistoryJson;
 

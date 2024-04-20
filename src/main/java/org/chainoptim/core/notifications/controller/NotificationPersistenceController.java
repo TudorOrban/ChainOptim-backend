@@ -6,15 +6,18 @@ import org.chainoptim.core.notifications.dto.UpdateNotificationDTO;
 import org.chainoptim.core.notifications.model.Notification;
 import org.chainoptim.core.notifications.model.NotificationUser;
 import org.chainoptim.core.notifications.service.NotificationPersistenceService;
+import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
-public class NotificationPersistenceController {
+public class NotificationPersistenceController { // TODO: Secure all the endpoints
 
     private final NotificationPersistenceService notificationPersistenceService;
     private final EmailService emailService;
@@ -26,19 +29,23 @@ public class NotificationPersistenceController {
         this.emailService = emailService;
     }
 
-    @GetMapping("/send-email")
-    public ResponseEntity<Void> sendEmail() {
-        emailService.sendEmail(
-                "tudororban3@gmail.com",
-                "Welcome to ChainOptim!",
-                "Thank you for signing up with us. Here are some things you can do next..."
-        );
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/user/{userId}")
     public List<NotificationUser> getNotificationsByUserId(@PathVariable("userId") String userId) {
         return notificationPersistenceService.getNotificationsByUserId(userId);
+    }
+
+//    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Supplier\", \"Read\")")
+    @GetMapping("/user/advanced/{userId}")
+    public ResponseEntity<PaginatedResults<NotificationUser>> getNotificationsByUserIdAdvanced(
+            @PathVariable String userId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        PaginatedResults<NotificationUser> notifications = notificationPersistenceService.getNotificationsByUserIdAdvanced(userId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return ResponseEntity.ok(notifications);
     }
 
     @PostMapping("/add")

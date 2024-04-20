@@ -39,6 +39,7 @@ public class Notification {
     @Column(name = "entity_id")
     private Integer entityId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "entity_type")
     private Feature entityType;
 
