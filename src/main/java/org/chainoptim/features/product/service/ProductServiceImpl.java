@@ -3,10 +3,7 @@ package org.chainoptim.features.product.service;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.product.dto.CreateProductDTO;
-import org.chainoptim.features.product.dto.ProductDTOMapper;
-import org.chainoptim.features.product.dto.ProductsSearchDTO;
-import org.chainoptim.features.product.dto.UpdateProductDTO;
+import org.chainoptim.features.product.dto.*;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
@@ -39,19 +36,6 @@ public class ProductServiceImpl implements ProductService {
         this.entitySanitizerService = entitySanitizerService;
     }
 
-    public Product getProductWithStages(Integer productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productId + " not found."));
-
-        // Trigger lazy loading
-        product.getStages().forEach(stage -> {
-            Hibernate.initialize(stage.getStageInputs());
-            Hibernate.initialize(stage.getStageOutputs());
-        });
-
-        return product;
-    }
-
     public List<ProductsSearchDTO> getProductsByOrganizationIdSmall(Integer organizationId) {
         return productRepository.findByOrganizationIdSmall(organizationId);
     }
@@ -71,6 +55,28 @@ public class ProductServiceImpl implements ProductService {
                         .toList(),
                 paginatedResults.totalCount
         );
+    }
+
+    public ProductOverviewDTO getProductOverview(Integer productId) {
+        List<String> stageNames = productRepository.findStageNamesByProductId(productId);
+        List<String> factoryNames = productRepository.findFactoryNamesByProductId(productId);
+        List<String> warehouseNames = productRepository.findWarehouseNamesByProductId(productId);
+        List<String> clientNames = productRepository.findClientNamesByOrganizationId(productId);
+
+        return new ProductOverviewDTO(stageNames, factoryNames, warehouseNames, clientNames);
+    }
+
+    public Product getProductWithStages(Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productId + " not found."));
+
+        // Trigger lazy loading
+        product.getStages().forEach(stage -> {
+            Hibernate.initialize(stage.getStageInputs());
+            Hibernate.initialize(stage.getStageOutputs());
+        });
+
+        return product;
     }
 
     public Product createProduct(CreateProductDTO productDTO) {
