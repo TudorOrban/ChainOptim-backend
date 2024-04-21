@@ -7,9 +7,9 @@ import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
 import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
-import org.chainoptim.features.supplier.service.SupplierServiceImpl;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -100,7 +100,6 @@ class SupplierServiceTest {
     @Test
     void testDeleteSupplier() {
         // Arrange
-        Integer supplierId = 1;
         doNothing().when(supplierRepository).delete(any(Supplier.class));
 
         // Act

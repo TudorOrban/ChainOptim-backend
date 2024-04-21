@@ -100,7 +100,6 @@ class ClientServiceTest {
     @Test
     void testDeleteClient() {
         // Arrange
-        Integer clientId = 1;
         doNothing().when(clientRepository).delete(any(Client.class));
 
         // Act
