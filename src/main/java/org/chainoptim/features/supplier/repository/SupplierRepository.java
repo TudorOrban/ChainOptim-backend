@@ -17,5 +17,8 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer>, Su
     @Query("SELECT p.organizationId FROM Supplier p WHERE p.id = :supplierId")
     Optional<Integer> findOrganizationIdById(@Param("supplierId") Long supplierId);
 
+    @Query("SELECT p FROM Supplier p WHERE p.name = :name")
+    Optional<Supplier> findByName(@Param("name") String name);
+
     long countByOrganizationId(Integer organizationId);
 }
