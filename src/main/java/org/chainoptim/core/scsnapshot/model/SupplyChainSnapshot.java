@@ -36,16 +36,25 @@ public class SupplyChainSnapshot {
 
     public Snapshot getSnapshot() {
         if (this.snapshot == null && this.snapshotJson != null) {
-            // Deserialize when accessed
+            // Remove backslashes used to escape double quotes
+            String correctedJson = this.snapshotJson.replace("\\\"", "\"").trim();
+
+            // Ensure there are no outer quotes surrounding the JSON object
+            if (correctedJson.startsWith("\"") && correctedJson.endsWith("\"")) {
+                correctedJson = correctedJson.substring(1, correctedJson.length() - 1);
+            }
+
             ObjectMapper mapper = new ObjectMapper();
             try {
-                this.snapshot = mapper.readValue(this.snapshotJson, Snapshot.class);
+                this.snapshot = mapper.readValue(correctedJson, Snapshot.class);
             } catch (JsonProcessingException e) {
+                e.printStackTrace();
                 throw new ValidationException("Invalid Snapshot json");
             }
         }
         return this.snapshot;
     }
+
 
     public void setSnapshot(Snapshot snapshot) {
         this.snapshot = snapshot;

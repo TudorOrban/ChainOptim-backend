@@ -29,13 +29,13 @@ class ProductsSearchRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
-    void createTestProduct(Integer id, String name, String description, String createdAt, String updatedAt) {
+    void createTestProduct(String name, String description, String createdAt, String updatedAt) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setId(1);
+        unit.setName("Unit");
+        entityManager.persist(unit);
 
         Product product = Product.builder()
-                .id(id)
                 .organizationId(1)
                 .name(name)
                 .description(description)
@@ -49,12 +49,12 @@ class ProductsSearchRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        createTestProduct(1, "Samsung", "New phone", "2024-01-23 12:02:02", "2024-01-23 12:02:02");
-        createTestProduct(2, "Iphone 1", "New version", "2024-02-23 12:02:02", "2024-02-23 12:02:02");
-        createTestProduct(3, "Iphone 2", "Another phone", "2024-03-23 12:02:02", "2024-03-23 12:02:02");
-        createTestProduct(4, "Google Pixel 1", "New phone", "2024-04-23 12:02:02", "2024-04-23 12:02:02");
-        createTestProduct(5, "Motorola DX1", "Old phone", "2024-05-23 12:02:02", "2024-05-23 12:02:02");
-        createTestProduct(6, "Samsung Galaxy 21", "New phone version", "2024-06-23 12:02:02", "2024-06-23 12:02:02");
+        createTestProduct("Samsung", "New phone", "2024-01-23 12:02:02", "2024-01-23 12:02:02");
+        createTestProduct("Iphone 1", "New version", "2024-02-23 12:02:02", "2024-02-23 12:02:02");
+        createTestProduct( "Iphone 2", "Another phone", "2024-03-23 12:02:02", "2024-03-23 12:02:02");
+        createTestProduct("Google Pixel 1", "New phone", "2024-04-23 12:02:02", "2024-04-23 12:02:02");
+        createTestProduct("Motorola DX1", "Old phone", "2024-05-23 12:02:02", "2024-05-23 12:02:02");
+        createTestProduct("Samsung Galaxy 21", "New phone version", "2024-06-23 12:02:02", "2024-06-23 12:02:02");
         entityManager.flush();
     }
 

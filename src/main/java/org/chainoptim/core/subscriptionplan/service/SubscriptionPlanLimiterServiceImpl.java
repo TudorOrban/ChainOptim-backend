@@ -26,7 +26,9 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
     }
 
     public boolean isLimitReached(Integer organizationId, Feature feature, Integer quantity) {
+        System.out.println("PlanLimiter: organizationId: " + organizationId);
         Snapshot snapshot = snapshotPersistenceService.getSupplyChainSnapshotByOrganizationId(organizationId).getSnapshot();
+        System.out.println("PlanLimiter: supply chain snapshot: " + snapshot);
         Organization.SubscriptionPlanTier planTier = organizationRepository.getSubscriptionPlanTierById(organizationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
         PlanDetails planDetails = SubscriptionPlans.getPlans().get(planTier);
