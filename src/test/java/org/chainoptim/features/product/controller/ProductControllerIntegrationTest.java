@@ -84,7 +84,6 @@ class ProductControllerIntegrationTest {
         Snapshot snapshot = new Snapshot();
         snapshot.setProductsCount(0);
         supplyChainSnapshot.setSnapshot(snapshot);
-        System.out.println("Snapshot: " + supplyChainSnapshot.getSnapshotJson());
         snapshotRepository.save(supplyChainSnapshot);
 
         // Set up product for search, update and delete tests
@@ -241,7 +240,7 @@ class ProductControllerIntegrationTest {
         // Act (invalid security credentials)
         mockMvc.perform(delete(url)
                         .header("Authorization", "Bearer " + invalidJWTToken))
-                        .andExpect(status().is(500));
+                        .andExpect(status().is(403));
 
         // Assert
         Optional<Product> invalidUpdatedProductOptional = productRepository.findById(productId);

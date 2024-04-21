@@ -22,6 +22,9 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
     @Query("SELECT f.organizationId FROM Factory f WHERE f.id = :factoryId")
     Optional<Integer> findOrganizationIdById(@Param("factoryId") Long factoryId);
 
+    @Query("SELECT f FROM Factory f WHERE f.name = :name")
+    Optional<Factory> findByName(@Param("name") String name);
+
     @Query("SELECT f FROM Factory f " +
             "LEFT JOIN FETCH f.factoryStages fs " +
             "LEFT JOIN FETCH fs.stage WHERE f.id = :factoryId")
