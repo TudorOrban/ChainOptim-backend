@@ -2,6 +2,7 @@ package org.chainoptim.features.client.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "clients")
 public class Client {
