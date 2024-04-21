@@ -13,6 +13,7 @@ import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import org.chainoptim.testutil.TestDataSeederService;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,12 +79,12 @@ class ProductControllerIntegrationTest {
         unit = unitOfMeasurementRepository.save(UnitDTOMapper.convertCreateUnitDTOToUnit(unitDTO));
 
         // Set up supply chain snapshot for plan limiter service
-        SupplyChainSnapshot snapshot = new SupplyChainSnapshot();
-        snapshot.setOrganizationId(organizationId);
-        Snapshot snapshot1 = new Snapshot();
-        snapshot1.setProductsCount(0);
-        snapshot.setSnapshot(snapshot1);
-        snapshotRepository.save(snapshot);
+        SupplyChainSnapshot supplyChainSnapshot = new SupplyChainSnapshot();
+        supplyChainSnapshot.setOrganizationId(organizationId);
+        Snapshot snapshot = new Snapshot();
+        snapshot.setProductsCount(0);
+        supplyChainSnapshot.setSnapshot(snapshot);
+        snapshotRepository.save(supplyChainSnapshot);
 
         // Set up product for search, update and delete tests
         createTestProducts();
@@ -130,7 +131,7 @@ class ProductControllerIntegrationTest {
         // Act and assert error status for invalid credentials
         MvcResult invalidMvcResult = mockMvc.perform(get(url)
                 .header("Authorization", "Bearer " + invalidJWTToken))
-                .andExpect(status().is(500))
+                .andExpect(status().is(403))
                 .andReturn();
 
         // Act
@@ -163,7 +164,7 @@ class ProductControllerIntegrationTest {
                         .header("Authorization", "Bearer " + invalidJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(productDTOJson))
-                        .andExpect(status().is(500));
+                        .andExpect(status().is(403));
 
         // Assert
         Optional<Product> invalidCreatedProductOptional = productRepository.findByName(productDTO.getName());
@@ -203,7 +204,7 @@ class ProductControllerIntegrationTest {
                         .header("Authorization", "Bearer " + invalidJWTToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(productDTOJson))
-                        .andExpect(status().is(500));
+                        .andExpect(status().is(403));
 
         // Assert
         Optional<Product> invalidUpdatedProductOptional = productRepository.findByName(productDTO.getName());
@@ -239,7 +240,7 @@ class ProductControllerIntegrationTest {
         // Act (invalid security credentials)
         mockMvc.perform(delete(url)
                         .header("Authorization", "Bearer " + invalidJWTToken))
-                        .andExpect(status().is(500));
+                        .andExpect(status().is(403));
 
         // Assert
         Optional<Product> invalidUpdatedProductOptional = productRepository.findById(productId);

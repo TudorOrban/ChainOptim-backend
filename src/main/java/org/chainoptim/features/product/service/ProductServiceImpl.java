@@ -9,6 +9,7 @@ import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import org.hibernate.Hibernate;
@@ -58,12 +59,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductOverviewDTO getProductOverview(Integer productId) {
-        List<String> stageNames = productRepository.findStageNamesByProductId(productId);
-        List<String> factoryNames = productRepository.findFactoryNamesByProductId(productId);
-        List<String> warehouseNames = productRepository.findWarehouseNamesByProductId(productId);
-        List<String> clientNames = productRepository.findClientNamesByOrganizationId(productId);
+        List<SmallEntityDTO> stages = productRepository.findStageNamesByProductId(productId);
+        List<SmallEntityDTO> manufacturedInFactories = productRepository.findFactoryNamesByProductId(productId);
+        List<SmallEntityDTO> storedInWarehouses = productRepository.findWarehouseNamesByProductId(productId);
+        List<SmallEntityDTO> orderedByClients = productRepository.findClientNamesByOrganizationId(productId);
 
-        return new ProductOverviewDTO(stageNames, factoryNames, warehouseNames, clientNames);
+        return new ProductOverviewDTO(stages, manufacturedInFactories, storedInWarehouses, orderedByClients);
     }
 
     public Product getProductWithStages(Integer productId) {
@@ -71,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + productId + " not found."));
 
         // Trigger lazy loading
+        Hibernate.initialize(product.getUnit());
         product.getStages().forEach(stage -> {
             Hibernate.initialize(stage.getStageInputs());
             Hibernate.initialize(stage.getStageOutputs());

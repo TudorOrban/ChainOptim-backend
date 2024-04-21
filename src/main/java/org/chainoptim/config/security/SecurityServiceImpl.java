@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.model.UserDetailsImpl;
+import org.chainoptim.exception.AuthorizationException;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
@@ -96,7 +98,12 @@ public class SecurityServiceImpl implements SecurityService {
     @Transactional
     public boolean canAccessOrganizationEntity(Optional<Integer> organizationId, String entityType, String operationType) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails;
+        try {
+            userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        } catch (Exception e) {
+            throw new AuthorizationException("User not authenticated");
+        }
         Integer currentOrganizationId = userDetails.getOrganizationId();
 
         boolean belongsToOrganization = organizationId.map(id -> id.equals(currentOrganizationId)).orElse(false);

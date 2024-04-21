@@ -1,4 +1,4 @@
-package org.chainoptim;
+package org.chainoptim.config;
 
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;

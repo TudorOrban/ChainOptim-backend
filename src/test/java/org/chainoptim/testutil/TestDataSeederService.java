@@ -62,7 +62,7 @@ public class TestDataSeederService {
                 .role(User.Role.ADMIN)
                 .build();
 
-        user = userRepository.save(user);
+        userRepository.save(user);
 
         // Get JWT token from user
         UserDetailsImpl userDetails = new UserDetailsImpl();

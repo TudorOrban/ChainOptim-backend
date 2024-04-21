@@ -2,9 +2,11 @@ package org.chainoptim.shared.commonfeatures.location.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CreateLocationDTO {
 
     private String address;

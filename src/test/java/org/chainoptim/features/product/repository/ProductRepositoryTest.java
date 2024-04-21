@@ -1,8 +1,16 @@
 package org.chainoptim.features.product.repository;
 
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.features.client.model.Client;
+import org.chainoptim.features.client.model.ClientOrder;
+import org.chainoptim.features.factory.model.Factory;
+import org.chainoptim.features.factory.model.FactoryStage;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
+import org.chainoptim.features.productpipeline.model.Stage;
+import org.chainoptim.features.warehouse.model.Warehouse;
+import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
+import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,32 +63,127 @@ class ProductRepositoryTest {
         unitId = unitOfMeasurement.getId();
 
         // Set up product for update and delete tests
-        Product product = new Product();
-        product.setName("Test Product");
-        product.setDescription("Test Description");
-        product.setOrganizationId(organizationId);
-        UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setId(unitId);
-        product.setUnit(unit);
-
-        entityManager.persist(product);
-        entityManager.flush();
+        Product product = addTestProduct();
         productId = product.getId();
+    }
+
+    @Test
+    void testFindStageNamesByProductId() {
+        // Arrange
+        Product savedProduct = addTestProduct();
+
+        Stage savedStage = addTestStage(savedProduct);
+
+        // Act
+        List<SmallEntityDTO> stageNames = productRepository.findStageNamesByProductId(savedProduct.getId());
+
+        // Assert
+        assertNotNull(stageNames);
+        assertEquals(1, stageNames.size());
+        assertEquals("Test Stage", stageNames.getFirst().getName());
+        assertEquals(savedStage.getId(), stageNames.getFirst().getId());
+    }
+
+    @Test
+    void testFindFactoryNamesByProductId() {
+        // Arrange
+        // - Product and stage
+        Product savedProduct = addTestProduct();
+
+        Stage savedStage = addTestStage(savedProduct);
+
+        // - Factory and FactoryStage
+        Factory factory = new Factory();
+        factory.setName("Test Factory");
+        factory.setOrganizationId(organizationId);
+
+        entityManager.persist(factory);
+        entityManager.flush();
+
+        FactoryStage factoryStage = new FactoryStage();
+        factoryStage.setFactory(factory);
+        factoryStage.setStage(savedStage);
+
+        entityManager.persist(factoryStage);
+        entityManager.flush();
+
+        // Act
+        List<SmallEntityDTO> factoryNames = productRepository.findFactoryNamesByProductId(savedProduct.getId());
+
+        // Assert
+        assertNotNull(factoryNames);
+        assertEquals(1, factoryNames.size());
+        assertEquals("Test Factory", factoryNames.getFirst().getName());
+        assertEquals(factory.getId(), factoryNames.getFirst().getId());
+    }
+
+    @Test
+    void findWarehouseNamesByProductId() {
+        // Arrange
+        // - Product
+        Product savedProduct = addTestProduct();
+
+        // - Warehouse and WarehouseInventoryItem
+        Warehouse warehouse = new Warehouse();
+        warehouse.setName("Test Warehouse");
+        warehouse.setOrganizationId(organizationId);
+
+        entityManager.persist(warehouse);
+        entityManager.flush();
+
+        WarehouseInventoryItem warehouseInventoryItem = new WarehouseInventoryItem();
+        warehouseInventoryItem.setWarehouseId(warehouse.getId());
+        warehouseInventoryItem.setProduct(savedProduct);
+
+        entityManager.persist(warehouseInventoryItem);
+        entityManager.flush();
+
+        // Act
+        List<SmallEntityDTO> warehouseNames = productRepository.findWarehouseNamesByProductId(savedProduct.getId());
+
+        // Assert
+        assertNotNull(warehouseNames);
+        assertEquals(1, warehouseNames.size());
+        assertEquals("Test Warehouse", warehouseNames.getFirst().getName());
+        assertEquals(warehouse.getId(), warehouseNames.getFirst().getId());
+    }
+
+    @Test
+    void testFindClientNamesByOrganizationId() {
+        // Arrange
+        // - Product
+        Product savedProduct = addTestProduct();
+
+        // - Client and ClientOrder
+        Client client = new Client();
+        client.setName("Test Client");
+        client.setOrganizationId(organizationId);
+
+        entityManager.persist(client);
+        entityManager.flush();
+
+        ClientOrder clientOrder = new ClientOrder();
+        clientOrder.setClientId(client.getId());
+        clientOrder.setProductId(savedProduct.getId());
+        clientOrder.setOrganizationId(organizationId);
+
+        entityManager.persist(clientOrder);
+        entityManager.flush();
+
+        // Act
+        List<SmallEntityDTO> clientNames = productRepository.findClientNamesByOrganizationId(savedProduct.getId());
+
+        // Assert
+        assertNotNull(clientNames);
+        assertEquals(1, clientNames.size());
+        assertEquals("Test Client", clientNames.getFirst().getName());
+        assertEquals(client.getId(), clientNames.getFirst().getId());
     }
 
     @Test
     void testCreateProduct() {
         // Arrange
-        Product newProduct = new Product();
-        newProduct.setName("Test Product 2");
-        newProduct.setDescription("Test Description 2");
-        newProduct.setOrganizationId(organizationId);
-        UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setId(unitId);
-        newProduct.setUnit(unit);
-
-        // Act
-        Product savedProduct = productRepository.save(newProduct);
+        Product savedProduct = addTestProduct();
 
         entityManager.flush();
         entityManager.clear();
@@ -89,10 +193,10 @@ class ProductRepositoryTest {
         assertTrue(foundProductOpt.isPresent(), "Product should be found in the database");
 
         Product foundProduct = foundProductOpt.get();
-        assertEquals(newProduct.getName(), foundProduct.getName());
-        assertEquals(newProduct.getDescription(), foundProduct.getDescription());
-        assertEquals(newProduct.getOrganizationId(), foundProduct.getOrganizationId());
-        assertEquals(newProduct.getUnit().getId(), foundProduct.getUnit().getId());
+        assertEquals(savedProduct.getName(), foundProduct.getName());
+        assertEquals(savedProduct.getDescription(), foundProduct.getDescription());
+        assertEquals(savedProduct.getOrganizationId(), foundProduct.getOrganizationId());
+        assertEquals(savedProduct.getUnit().getId(), foundProduct.getUnit().getId());
     }
 
     @Test
@@ -135,4 +239,27 @@ class ProductRepositoryTest {
             fail("Expected product with id 1 to have been deleted");
         }
     }
+
+    Product addTestProduct() {
+        Product product = new Product();
+        product.setName("Test Product");
+        product.setDescription("Test Description");
+        product.setOrganizationId(organizationId);
+        UnitOfMeasurement unit = new UnitOfMeasurement();
+        unit.setId(unitId);
+        product.setUnit(unit);
+
+        return entityManager.persist(product);
+    }
+
+    Stage addTestStage(Product product) {
+        Stage stage = new Stage();
+        stage.setName("Test Stage");
+        stage.setOrganizationId(organizationId);
+        stage.setProduct(product);
+        stage.setProductId(product.getId());
+
+        return entityManager.persist(stage);
+    }
+
 }
