@@ -18,6 +18,9 @@ public interface ComponentRepository extends JpaRepository<Component, Integer> {
     @Query("SELECT c.organizationId FROM Component c WHERE c.id = :componentId")
     Optional<Integer> findOrganizationIdById(@Param("componentId") Long componentId);
 
+    @Query("SELECT c FROM Component c WHERE c.name = :name")
+    Optional<Component> findByName(@Param("name") String name);
+
     @Query("SELECT COUNT(c) FROM Component c WHERE c.organizationId = :organizationId")
     long countByOrganizationId(@Param("organizationId") Integer organizationId);
 }

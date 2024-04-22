@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.model.UserDetailsImpl;
+import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.exception.AuthorizationException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
@@ -29,6 +30,8 @@ import java.util.Optional;
 public class SecurityServiceImpl implements SecurityService {
 
     private final CustomRoleSecurityService customRoleSecurityService;
+
+    private final UserRepository userRepository;
     private final CustomRoleRepository customRoleRepository;
 
     private final ProductRepository productRepository;
@@ -46,6 +49,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Autowired
     public SecurityServiceImpl(
             CustomRoleSecurityService customRoleSecurityService,
+            UserRepository userRepository,
             CustomRoleRepository customRoleRepository,
             ProductRepository productRepository,
             StageRepository stageRepository,
@@ -60,6 +64,7 @@ public class SecurityServiceImpl implements SecurityService {
             ComponentRepository componentRepository
     ) {
         this.customRoleSecurityService = customRoleSecurityService;
+        this.userRepository = userRepository;
         this.customRoleRepository = customRoleRepository;
         this.productRepository = productRepository;
         this.stageRepository = stageRepository;
@@ -127,5 +132,13 @@ public class SecurityServiceImpl implements SecurityService {
             return true; // Allow access if user is a member and operation is read
         }
         return false; // Reject access otherwise
+    }
+
+    public boolean canUserAccessOrganizationEntity(String userId, String operationType) {
+        System.out.println("userId: " + userId);
+        Optional<Integer> organizationId = userRepository.findOrganizationIdById(userId);
+        System.out.println("organizationId: " + organizationId);
+
+        return canAccessOrganizationEntity(organizationId, "User", operationType);
     }
 }

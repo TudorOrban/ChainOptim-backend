@@ -1,5 +1,6 @@
 package org.chainoptim.core.organization.controller;
 
+import org.chainoptim.core.organization.dto.UpdateOrganizationDTO;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.dto.CreateOrganizationDTO;
 import org.chainoptim.core.organization.dto.OrganizationDTO;
@@ -39,8 +40,8 @@ public class OrganizationController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Organization> updateOrganization(@RequestBody Organization organization) {
-        return ResponseEntity.ok(organizationService.updateOrganization(organization));
+    public ResponseEntity<Organization> updateOrganization(@RequestBody UpdateOrganizationDTO organizationDTO) {
+        return ResponseEntity.ok(organizationService.updateOrganization(organizationDTO));
     }
 
     @DeleteMapping("/{id}")

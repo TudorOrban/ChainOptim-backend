@@ -32,10 +32,18 @@ public class UserSettings {
 
     public GeneralSettings getGeneralSettings() {
         if (this.generalSettings == null && this.generalSettingsJson != null) {
+            // Remove backslashes used to escape double quotes
+            String correctedJson = this.generalSettingsJson.replace("\\\"", "\"").trim();
+
+            // Ensure there are no outer quotes surrounding the JSON object
+            if (correctedJson.startsWith("\"") && correctedJson.endsWith("\"")) {
+                correctedJson = correctedJson.substring(1, correctedJson.length() - 1);
+            }
+
             // Deserialize when accessed
             ObjectMapper mapper = new ObjectMapper();
             try {
-                this.generalSettings = mapper.readValue(this.generalSettingsJson, GeneralSettings.class);
+                this.generalSettings = mapper.readValue(correctedJson, GeneralSettings.class);
             } catch (JsonProcessingException e) {
                 throw new ValidationException("Invalid General Settings json");
             }
@@ -62,10 +70,18 @@ public class UserSettings {
 
     public NotificationSettings getNotificationSettings() {
         if (this.notificationSettings == null && this.notificationSettingsJson != null) {
+            // Remove backslashes used to escape double quotes
+            String correctedJson = this.notificationSettingsJson.replace("\\\"", "\"").trim();
+
+            // Ensure there are no outer quotes surrounding the JSON object
+            if (correctedJson.startsWith("\"") && correctedJson.endsWith("\"")) {
+                correctedJson = correctedJson.substring(1, correctedJson.length() - 1);
+            }
+
             // Deserialize when accessed
             ObjectMapper mapper = new ObjectMapper();
             try {
-                this.notificationSettings = mapper.readValue(this.notificationSettingsJson, NotificationSettings.class);
+                this.notificationSettings = mapper.readValue(correctedJson, NotificationSettings.class);
             } catch (JsonProcessingException e) {
                 throw new ValidationException("Invalid Notification Settings json");
             }
