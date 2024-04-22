@@ -3,9 +3,6 @@ package org.chainoptim.features.productpipeline.service;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.product.model.Product;
-import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
 import org.chainoptim.features.productpipeline.dto.StageDTOMapper;
 import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;
@@ -68,7 +65,7 @@ public class StageServiceImpl implements StageService {
         // Sanitize input
         CreateStageDTO sanitizedStageDTO = entitySanitizerService.sanitizeCreateStageDTO(stageDTO);
 
-        return stageRepository.save(StageDTOMapper.convertCreateStageDTOToProduct(sanitizedStageDTO));
+        return stageRepository.save(StageDTOMapper.convertCreateStageDTOToStage(sanitizedStageDTO));
     }
 
     public Stage updateStage(UpdateStageDTO stageDTO) {

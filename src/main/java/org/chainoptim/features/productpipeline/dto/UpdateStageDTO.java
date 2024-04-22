@@ -1,11 +1,9 @@
 package org.chainoptim.features.productpipeline.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class UpdateStageDTO {
     private Integer id;
