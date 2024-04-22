@@ -1,17 +1,14 @@
 package org.chainoptim.core.organization.service;
 
-import org.chainoptim.core.organization.dto.CreateOrganizationUserDTO;
+import org.chainoptim.core.organization.dto.*;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.organization.dto.CreateOrganizationDTO;
-import org.chainoptim.core.organization.dto.CreateOrganizationInviteDTO;
-import org.chainoptim.core.organization.dto.OrganizationDTO;
-import org.chainoptim.core.organization.util.OrganizationMapper;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.core.user.service.UserWriteService;
 import org.chainoptim.core.user.service.UserService;
 import org.chainoptim.exception.PlanLimitReachedException;
+import org.chainoptim.exception.ResourceNotFoundException;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final UserWriteService userWriteService;
-
     private final OrganizationInviteService organizationInviteService;
 
     @Autowired
@@ -34,13 +30,25 @@ public class OrganizationServiceImpl implements OrganizationService {
                                    UserRepository userRepository,
                                    UserService userService,
                                    UserWriteService userWriteService,
-                                   OrganizationInviteService organizationInviteService
-                                   ) {
+                                   OrganizationInviteService organizationInviteService) {
         this.organizationRepository = organizationRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.userWriteService = userWriteService;
         this.organizationInviteService = organizationInviteService;
+    }
+
+    @Transactional
+    public OrganizationDTO getOrganizationById(Integer id, boolean includeUsers) {
+        Organization organization = organizationRepository.findById(id).orElse(null);
+        if (organization != null) {
+            return OrganizationDTOMapper.mapOrganizationToDTO(organization, includeUsers);
+        }
+        return null;
+    }
+
+    public List<Organization> getAllOrganizations() {
+        return organizationRepository.findAll();
     }
 
     @Transactional
@@ -63,8 +71,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         // Handle users
         // - For new user, use User service to register and tie to organization
-        for (CreateOrganizationUserDTO createDto: createOrganizationDTO.getCreatedUsers()) {
-            userWriteService.registerNewOrganizationUser(createDto.getUsername(), createDto.getEmail(), savedOrganization.getId(), createDto.getRole());
+        for (CreateOrganizationUserDTO createDTO: createOrganizationDTO.getCreatedUsers()) {
+            userWriteService.registerNewOrganizationUser(createDTO.getUsername(), createDTO.getEmail(), savedOrganization.getId(), createDTO.getRole());
         }
 
         // - For existing users, only send invites
@@ -86,21 +94,12 @@ public class OrganizationServiceImpl implements OrganizationService {
         return savedOrganization;
     }
 
-
-    @Transactional
-    public OrganizationDTO getOrganizationById(Integer id, boolean includeUsers) {
-        Organization organization = organizationRepository.findById(id).orElse(null);
-        if (organization != null) {
-            return OrganizationMapper.mapOrganizationToDTO(organization, includeUsers);
-        }
-        return null;
-    }
-
-    public List<Organization> getAllOrganizations() {
-        return organizationRepository.findAll();
-    }
-
-    public Organization updateOrganization(Organization organization) {
+    public Organization updateOrganization(UpdateOrganizationDTO organizationDTO) {
+        Organization organization = organizationRepository.findById(organizationDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationDTO.getId() + " not found"));
+        organization.setName(organizationDTO.getName());
+        organization.setAddress(organizationDTO.getAddress());
+        organization.setContactInfo(organizationDTO.getContactInfo());
         return organizationRepository.save(organization);
     }
 

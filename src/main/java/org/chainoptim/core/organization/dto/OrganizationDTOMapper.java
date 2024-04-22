@@ -1,6 +1,5 @@
-package org.chainoptim.core.organization.util;
+package org.chainoptim.core.organization.dto;
 
-import org.chainoptim.core.organization.dto.OrganizationDTO;
 import org.chainoptim.core.user.dto.UserDTO;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.user.model.User;
@@ -9,9 +8,9 @@ import org.hibernate.Hibernate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class OrganizationMapper {
+public class OrganizationDTOMapper {
 
-    private OrganizationMapper() {}
+    private OrganizationDTOMapper() {}
 
 
     public static OrganizationDTO mapOrganizationToDTO(Organization organization, boolean includeUsers) {
@@ -26,7 +25,7 @@ public class OrganizationMapper {
 
         if (includeUsers) {
             Set<UserDTO> userDTOs = organization.getUsers().stream()
-                    .map(OrganizationMapper::mapUserToDTO)
+                    .map(OrganizationDTOMapper::mapUserToDTO)
                     .collect(Collectors.toSet());
             dto.setUsers(userDTOs);
         }
