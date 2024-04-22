@@ -6,6 +6,7 @@ import org.chainoptim.core.settings.dto.UserSettingsDTOMapper;
 import org.chainoptim.core.settings.model.UserSettings;
 import org.chainoptim.core.settings.repository.UserSettingsRepository;
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,13 @@ import org.springframework.stereotype.Service;
 public class UserSettingsServiceImpl implements UserSettingsService {
 
     private final UserSettingsRepository userSettingsRepository;
+    private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public UserSettingsServiceImpl(UserSettingsRepository userSettingsRepository) {
+    public UserSettingsServiceImpl(UserSettingsRepository userSettingsRepository,
+                                   EntitySanitizerService entitySanitizerService) {
         this.userSettingsRepository = userSettingsRepository;
+        this.entitySanitizerService = entitySanitizerService;
     }
 
     public UserSettings getUserSettings(String userId) {
@@ -26,16 +30,16 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     }
 
     public UserSettings saveUserSettings(CreateUserSettingsDTO userSettingsDTO) {
-        // TODO: Sanitize input
-        UserSettings userSettings = UserSettingsDTOMapper.mapCreateUserSettingsDTOToUserSettings(userSettingsDTO);
+        CreateUserSettingsDTO sanitizedUserSettingsDTO = entitySanitizerService.sanitizeCreateUserSettingsDTO(userSettingsDTO);
+        UserSettings userSettings = UserSettingsDTOMapper.mapCreateUserSettingsDTOToUserSettings(sanitizedUserSettingsDTO);
         return userSettingsRepository.save(userSettings);
     }
 
     public UserSettings updateUserSettings(UpdateUserSettingsDTO userSettingsDTO) {
-        // TODO: Sanitize input
-        UserSettings userSettings = userSettingsRepository.findById(userSettingsDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User settings with ID: " + userSettingsDTO.getId() + " not found"));
-        UserSettingsDTOMapper.setUpdateUserSettingsDTOToUserSettings(userSettings, userSettingsDTO);
+        UpdateUserSettingsDTO sanitizedUserSettingsDTO = entitySanitizerService.sanitizeUpdateUserSettingsDTO(userSettingsDTO);
+        UserSettings userSettings = userSettingsRepository.findById(sanitizedUserSettingsDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User settings with ID: " + sanitizedUserSettingsDTO.getId() + " not found"));
+        UserSettingsDTOMapper.setUpdateUserSettingsDTOToUserSettings(userSettings, sanitizedUserSettingsDTO);
         return userSettingsRepository.save(userSettings);
     }
 

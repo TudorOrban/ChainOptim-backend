@@ -14,6 +14,10 @@ public interface UserRepository extends JpaRepository<User, String>, UserSearchR
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.customRole cr WHERE u.username = :username")
     Optional<User> findByUsername(String username);
     List<User> findByOrganizationId(Integer organizationId);
+
+    @Query("SELECT u.organization.id FROM User u WHERE u.id = :userId")
+    Optional<Integer> findOrganizationIdById(@Param("userId") String userId);
+
     @Query("SELECT u FROM User u WHERE u.customRole.id = :roleId")
     List<User> findByCustomRoleId(Integer roleId);
     List<UserSearchResultDTO> findByUsernameContaining(String username);

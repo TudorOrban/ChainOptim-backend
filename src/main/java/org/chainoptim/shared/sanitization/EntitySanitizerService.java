@@ -1,5 +1,7 @@
 package org.chainoptim.shared.sanitization;
 
+import org.chainoptim.core.settings.dto.CreateUserSettingsDTO;
+import org.chainoptim.core.settings.dto.UpdateUserSettingsDTO;
 import org.chainoptim.features.client.dto.*;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
@@ -68,4 +70,8 @@ public interface EntitySanitizerService {
     // Component
     CreateComponentDTO sanitizeCreateComponentDTO(CreateComponentDTO componentDTO);
     UpdateComponentDTO sanitizeUpdateComponentDTO(UpdateComponentDTO componentDTO);
+
+    // Settings
+    CreateUserSettingsDTO sanitizeCreateUserSettingsDTO(CreateUserSettingsDTO userSettingsDTO);
+    UpdateUserSettingsDTO sanitizeUpdateUserSettingsDTO(UpdateUserSettingsDTO userSettingsDTO);
 }
