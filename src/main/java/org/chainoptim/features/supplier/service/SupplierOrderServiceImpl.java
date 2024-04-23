@@ -5,6 +5,8 @@ import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterServi
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
+import org.chainoptim.features.productpipeline.model.Component;
+import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
 import org.chainoptim.features.supplier.dto.UpdateSupplierOrderDTO;
@@ -27,6 +29,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
 
     private final SupplierOrderRepository supplierOrderRepository;
     private final KafkaSupplierOrderService kafkaSupplierOrderService;
+    private final ComponentRepository componentRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
@@ -34,11 +37,13 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     public SupplierOrderServiceImpl(
             SupplierOrderRepository supplierOrderRepository,
             KafkaSupplierOrderService kafkaSupplierOrderService,
+            ComponentRepository componentRepository,
             SubscriptionPlanLimiterService planLimiterService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.supplierOrderRepository = supplierOrderRepository;
         this.kafkaSupplierOrderService = kafkaSupplierOrderService;
+        this.componentRepository = componentRepository;
         this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
@@ -61,10 +66,15 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.SUPPLIER_ORDER, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
         }
+        System.out.println("componentId: " + orderDTO.getComponentId());
 
         // Sanitize input and map to entity
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
         SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
+        Component component = componentRepository.findById(sanitizedOrderDTO.getComponentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + sanitizedOrderDTO.getComponentId() + " not found."));
+        System.out.println("component: " + component.getId());
+        supplierOrder.setComponent(component);
 
         SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
 
@@ -90,7 +100,11 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         List<SupplierOrder> orders = orderDTOs.stream()
                 .map(orderDTO -> {
                     CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
-                    return SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
+                    SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
+                    Component component = componentRepository.findById(sanitizedOrderDTO.getComponentId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + sanitizedOrderDTO.getComponentId() + " not found."));
+                    supplierOrder.setComponent(component);
+                    return supplierOrder;
                 })
                 .toList();
 
@@ -120,10 +134,11 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
                             .filter(dto -> dto.getId().equals(order.getId()))
                             .findFirst()
                             .orElseThrow(() -> new ResourceNotFoundException("Supplier Order with ID: " + order.getId() + " not found."));
-
 //                    UpdateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateSupplierOrderDTO(orderDTO);
                     SupplierDTOMapper.setUpdateSupplierOrderDTOToUpdateOrder(order, orderDTO);
-
+                    Component component = componentRepository.findById(orderDTO.getComponentId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + orderDTO.getComponentId() + " not found."));
+                    order.setComponent(component);
                     return order;
                 }).toList();
 

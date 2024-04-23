@@ -37,9 +37,6 @@ public class SupplierDTOMapper {
         SupplierOrder supplierOrder = new SupplierOrder();
         supplierOrder.setOrganizationId(order.getOrganizationId());
         supplierOrder.setSupplierId(order.getSupplierId());
-        Component component = new Component();
-        component.setId(order.getComponentId());
-        supplierOrder.setComponent(component);
         supplierOrder.setQuantity(order.getQuantity());
         supplierOrder.setOrderDate(order.getOrderDate());
         supplierOrder.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
@@ -56,9 +53,6 @@ public class SupplierDTOMapper {
         supplierOrder.setEstimatedDeliveryDate(orderDTO.getEstimatedDeliveryDate());
         supplierOrder.setDeliveryDate(orderDTO.getDeliveryDate());
         supplierOrder.setStatus(orderDTO.getStatus());
-        Component component = new Component();
-        component.setId(orderDTO.getComponentId());
-        supplierOrder.setComponent(component);
         supplierOrder.setCompanyId(orderDTO.getCompanyId());
     }
 

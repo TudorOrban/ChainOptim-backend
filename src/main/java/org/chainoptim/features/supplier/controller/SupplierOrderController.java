@@ -56,19 +56,20 @@ public class SupplierOrderController {
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"Supplier\", \"Create\")")
     @PostMapping("/create/bulk")
     public ResponseEntity<List<SupplierOrder>> createSupplierOrdersInBulk(@RequestBody List<CreateSupplierOrderDTO> orderDTOs) {
-        List<SupplierOrder> clientOrders = supplierOrderService.createSupplierOrdersInBulk(orderDTOs);
-        return ResponseEntity.ok(clientOrders);
+        List<SupplierOrder> supplierOrders = supplierOrderService.createSupplierOrdersInBulk(orderDTOs);
+        return ResponseEntity.ok(supplierOrders);
     }
 
+    // Update
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"Supplier\", \"Update\")")
     @PutMapping("/update/bulk")
     public ResponseEntity<List<SupplierOrder>> updateSupplierOrdersInBulk(@RequestBody List<UpdateSupplierOrderDTO> orderDTOs) {
-        List<SupplierOrder> clientOrders = supplierOrderService.updateSuppliersOrdersInBulk(orderDTOs);
-        return ResponseEntity.ok(clientOrders);
+        List<SupplierOrder> supplierOrders = supplierOrderService.updateSuppliersOrdersInBulk(orderDTOs);
+        return ResponseEntity.ok(supplierOrders);
     }
 
-    // TODO: Secure endpoint
-//    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderIds.getFirst(), \"SupplierOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
+    // Delete
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderIds.getFirst(), \"SupplierOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
     @DeleteMapping("/delete/bulk")
     public ResponseEntity<List<Integer>> deleteSupplierOrdersInBulk(@RequestBody List<Integer> orderIds) {
         supplierOrderService.deleteSupplierOrdersInBulk(orderIds);
