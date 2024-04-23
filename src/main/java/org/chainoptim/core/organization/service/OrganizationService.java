@@ -8,9 +8,8 @@ import org.chainoptim.core.organization.model.Organization;
 import java.util.List;
 
 public interface OrganizationService {
-    public Organization createOrganization(CreateOrganizationDTO createOrganizationDTO);
-    public OrganizationDTO getOrganizationById(Integer id, boolean includeUsers);
-    public List<Organization> getAllOrganizations();
+    OrganizationDTO getOrganizationById(Integer id, boolean includeUsers);
+    Organization createOrganization(CreateOrganizationDTO createOrganizationDTO);
     Organization updateOrganization(UpdateOrganizationDTO organizationDTO);
-    public void deleteOrganization(Integer id);
+    void deleteOrganization(Integer id);
 }

@@ -7,6 +7,7 @@ import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class UserWriteServiceImpl implements UserWriteService {
     private final OrganizationRepository organizationRepository;
     private final EmailVerificationService emailVerificationService;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${app.environment}")
+    private String environment;
 
     @Autowired
     public UserWriteServiceImpl(UserRepository userRepository,
@@ -45,6 +49,11 @@ public class UserWriteServiceImpl implements UserWriteService {
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setUpdatedAt(LocalDateTime.now());
         newUser.setRole(User.Role.NONE);
+
+        // Skip email verification in dev and test environments
+        if (!environment.equals("prod")) {
+            return userRepository.save(newUser);
+        }
 
         emailVerificationService.prepareUserForVerification(newUser, true);
 
@@ -76,6 +85,11 @@ public class UserWriteServiceImpl implements UserWriteService {
             Organization organization = organizationRepository.findById(organizationId)
                     .orElseThrow(() -> new IllegalArgumentException("Organization not found"));
             newUser.setOrganization(organization);
+        }
+
+        // Skip email verification in dev and test environments
+        if (!environment.equals("prod")) {
+            return userRepository.save(newUser);
         }
 
         emailVerificationService.prepareUserForVerification(newUser, true);
