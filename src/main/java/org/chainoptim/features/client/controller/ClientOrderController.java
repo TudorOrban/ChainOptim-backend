@@ -1,5 +1,6 @@
 package org.chainoptim.features.client.controller;
 
+import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.client.dto.CreateClientOrderDTO;
 import org.chainoptim.features.client.dto.UpdateClientOrderDTO;
 import org.chainoptim.features.client.model.ClientOrder;
@@ -18,14 +19,18 @@ import java.util.List;
 public class ClientOrderController {
 
     private final ClientOrderService clientOrderService;
+    private final SecurityService securityService;
 
     @Autowired
-    public ClientOrderController(ClientOrderService clientOrderService) {
+    public ClientOrderController(ClientOrderService clientOrderService,
+                                 SecurityService securityService) {
         this.clientOrderService = clientOrderService;
+        this.securityService = securityService;
     }
 
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Client\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
-    public ResponseEntity<List<ClientOrder>> getClientsByOrganizationId(@PathVariable Integer organizationId) {
+    public ResponseEntity<List<ClientOrder>> getClientOrdersByOrganizationId(@PathVariable Integer organizationId) {
         List<ClientOrder> clientOrders = clientOrderService.getClientOrdersByOrganizationId(organizationId);
         return ResponseEntity.ok(clientOrders);
     }
@@ -45,24 +50,34 @@ public class ClientOrderController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#order.getOrganizationId(), \"Client\", \"Create\")")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTO.getOrganizationId(), \"ClientOrder\", \"Create\")")
     @PostMapping("/create")
-    public ResponseEntity<ClientOrder> createClientOrder(@RequestBody CreateClientOrderDTO order) {
-        ClientOrder clientOrder = clientOrderService.createClientOrder(order);
+    public ResponseEntity<ClientOrder> createClientOrder(@RequestBody CreateClientOrderDTO orderDTO) {
+        ClientOrder clientOrder = clientOrderService.createClientOrder(orderDTO);
         return ResponseEntity.ok(clientOrder);
     }
 
-    // TODO: Secure endpoint
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"ClientOrder\", \"Create\")")
     @PostMapping("/create/bulk")
-    public ResponseEntity<List<ClientOrder>> createClientOrdersInBulk(@RequestBody List<CreateClientOrderDTO> orders) {
-        List<ClientOrder> clientOrders = clientOrderService.createClientOrdersInBulk(orders);
+    public ResponseEntity<List<ClientOrder>> createClientOrdersInBulk(@RequestBody List<CreateClientOrderDTO> orderDTOs) {
+        List<ClientOrder> clientOrders = clientOrderService.createClientOrdersInBulk(orderDTOs);
         return ResponseEntity.ok(clientOrders);
     }
 
-    // TODO: Secure endpoint
+    // Update
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"ClientOrder\", \"Update\")")
     @PutMapping("/update/bulk")
-    public ResponseEntity<List<ClientOrder>> updateClientOrdersInBulk(@RequestBody List<UpdateClientOrderDTO> orders) {
-        List<ClientOrder> clientOrders = clientOrderService.updateClientOrdersInBulk(orders);
+    public ResponseEntity<List<ClientOrder>> updateClientOrdersInBulk(@RequestBody List<UpdateClientOrderDTO> orderDTOs) {
+        List<ClientOrder> clientOrders = clientOrderService.updateClientOrdersInBulk(orderDTOs);
         return ResponseEntity.ok(clientOrders);
+    }
+
+    // Delete
+    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"ClientOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
+    @DeleteMapping("/delete/bulk")
+    public ResponseEntity<List<Integer>> deleteClientOrdersInBulk(@RequestBody List<Integer> orderIds) {
+        clientOrderService.deleteClientOrdersInBulk(orderIds);
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -47,10 +47,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         return null;
     }
 
-    public List<Organization> getAllOrganizations() {
-        return organizationRepository.findAll();
-    }
-
     @Transactional
     public Organization createOrganization(CreateOrganizationDTO createOrganizationDTO) {
         // Create organization
@@ -61,7 +57,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         organization.setSubscriptionPlanTier(createOrganizationDTO.getSubscriptionPlanTier());
 
         // Ensure creation is within plan limits
-        int totalUsers = createOrganizationDTO.getCreatedUsers().size() + createOrganizationDTO.getExistingUserIds().size();
+        int existingUsers = createOrganizationDTO.getExistingUserIds() != null ? createOrganizationDTO.getExistingUserIds().size() : 0;
+        int totalUsers = createOrganizationDTO.getCreatedUsers().size() + existingUsers + 1;
         int maxMembers = organization.getSubscriptionPlan().getMaxMembers();
         if (totalUsers > maxMembers && maxMembers != -1) {
             throw new PlanLimitReachedException("You are attempting to create more users than allowed by your current Subscription Plan.");
@@ -103,7 +100,16 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationRepository.save(organization);
     }
 
+    @Transactional
     public void deleteOrganization(Integer id) {
+        Organization organization = organizationRepository.findByIdWithUsers(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + id + " not found"));
+
+        for (User user: organization.getUsers()) {
+            user.setOrganization(null);
+            userRepository.save(user);
+        }
+
         organizationRepository.deleteById(id);
     }
 }

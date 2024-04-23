@@ -1,7 +1,5 @@
 package org.chainoptim.features.supplier.service;
 
-import org.chainoptim.core.notifications.model.KafkaEvent;
-import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

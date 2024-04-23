@@ -15,4 +15,5 @@ public interface ClientOrderService {
     ClientOrder createClientOrder(CreateClientOrderDTO order);
     List<ClientOrder> createClientOrdersInBulk(List<CreateClientOrderDTO> orderDTOs);
     List<ClientOrder> updateClientOrdersInBulk(List<UpdateClientOrderDTO> orderDTOs);
+    List<Integer> deleteClientOrdersInBulk(List<Integer> orderIds);
 }

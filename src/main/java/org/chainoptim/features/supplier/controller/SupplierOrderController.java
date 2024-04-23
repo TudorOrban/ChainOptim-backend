@@ -1,5 +1,6 @@
 package org.chainoptim.features.supplier.controller;
 
+import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.dto.UpdateSupplierOrderDTO;
 import org.chainoptim.features.supplier.model.SupplierOrder;
@@ -18,15 +19,18 @@ import java.util.List;
 public class SupplierOrderController {
 
     private final SupplierOrderService supplierOrderService;
+    private final SecurityService securityService;
 
     @Autowired
-    public SupplierOrderController(SupplierOrderService supplierOrderService) {
+    public SupplierOrderController(SupplierOrderService supplierOrderService,
+                                   SecurityService securityService) {
         this.supplierOrderService = supplierOrderService;
+        this.securityService = securityService;
     }
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Supplier\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
-    public ResponseEntity<List<SupplierOrder>> getSuppliersByOrganizationId(@PathVariable Integer organizationId) {
+    public ResponseEntity<List<SupplierOrder>> getSupplierOrdersByOrganizationId(@PathVariable Integer organizationId) {
         List<SupplierOrder> supplierOrders = supplierOrderService.getSupplierOrdersByOrganizationId(organizationId);
         return ResponseEntity.ok(supplierOrders);
     }
@@ -46,29 +50,30 @@ public class SupplierOrderController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTO.getOrganizationId(), \"Supplier\", \"Create\")")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTO.getOrganizationId(), \"SupplierOrder\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<SupplierOrder> createSupplierOrder(@RequestBody CreateSupplierOrderDTO orderDTO) {
         SupplierOrder supplierOrder = supplierOrderService.createSupplierOrder(orderDTO);
         return ResponseEntity.ok(supplierOrder);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"Supplier\", \"Create\")")
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"SupplierOrder\", \"Create\")")
     @PostMapping("/create/bulk")
     public ResponseEntity<List<SupplierOrder>> createSupplierOrdersInBulk(@RequestBody List<CreateSupplierOrderDTO> orderDTOs) {
-        List<SupplierOrder> clientOrders = supplierOrderService.createSupplierOrdersInBulk(orderDTOs);
-        return ResponseEntity.ok(clientOrders);
+        List<SupplierOrder> supplierOrders = supplierOrderService.createSupplierOrdersInBulk(orderDTOs);
+        return ResponseEntity.ok(supplierOrders);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"Supplier\", \"Update\")")
+    // Update
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"SupplierOrder\", \"Update\")")
     @PutMapping("/update/bulk")
     public ResponseEntity<List<SupplierOrder>> updateSupplierOrdersInBulk(@RequestBody List<UpdateSupplierOrderDTO> orderDTOs) {
-        List<SupplierOrder> clientOrders = supplierOrderService.updateSuppliersOrdersInBulk(orderDTOs);
-        return ResponseEntity.ok(clientOrders);
+        List<SupplierOrder> supplierOrders = supplierOrderService.updateSuppliersOrdersInBulk(orderDTOs);
+        return ResponseEntity.ok(supplierOrders);
     }
 
-    // TODO: Secure endpoint
-//    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderIds.getFirst(), \"SupplierOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
+    // Delete
+    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"SupplierOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
     @DeleteMapping("/delete/bulk")
     public ResponseEntity<List<Integer>> deleteSupplierOrdersInBulk(@RequestBody List<Integer> orderIds) {
         supplierOrderService.deleteSupplierOrdersInBulk(orderIds);

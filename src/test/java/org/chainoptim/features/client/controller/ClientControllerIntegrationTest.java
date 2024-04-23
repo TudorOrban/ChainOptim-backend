@@ -233,8 +233,8 @@ class ClientControllerIntegrationTest {
                         .andExpect(status().is(403));
 
         // Assert
-        Optional<Client> invalidUpdatedClientOptional = clientRepository.findById(clientId);
-        if (invalidUpdatedClientOptional.isEmpty()) {
+        Optional<Client> invalidDeletedClientOptional = clientRepository.findById(clientId);
+        if (invalidDeletedClientOptional.isEmpty()) {
             fail("Failed to prevent deletion on invalid JWT Token.");
         }
 

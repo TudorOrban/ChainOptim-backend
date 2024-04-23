@@ -164,7 +164,7 @@ class ProductRepositoryTest {
 
         ClientOrder clientOrder = new ClientOrder();
         clientOrder.setClientId(client.getId());
-        clientOrder.setProductId(savedProduct.getId());
+        clientOrder.setProduct(savedProduct);
         clientOrder.setOrganizationId(organizationId);
 
         entityManager.persist(clientOrder);

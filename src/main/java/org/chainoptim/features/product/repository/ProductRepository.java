@@ -36,7 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, Prod
     List<SmallEntityDTO> findWarehouseNamesByProductId(@Param("productId") Integer productId);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(c.id, c.name) FROM Client c " +
-            "WHERE c.id IN (SELECT co.clientId FROM ClientOrder co WHERE co.productId = :productId)")
+            "WHERE c.id IN (SELECT co.clientId FROM ClientOrder co WHERE co.product.id = :productId)")
     List<SmallEntityDTO> findClientNamesByOrganizationId(@Param("productId") Integer productId);
 
     long countByOrganizationId(Integer organizationId);

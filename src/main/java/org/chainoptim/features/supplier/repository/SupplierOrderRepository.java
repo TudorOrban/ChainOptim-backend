@@ -20,8 +20,14 @@ public interface SupplierOrderRepository extends JpaRepository<SupplierOrder, In
     @Query("SELECT so FROM SupplierOrder so WHERE so.id IN :ids")
     Optional<List<SupplierOrder>> findByIds(@Param("ids") List<Integer> ids);
 
-    @Query("SELECT so.organizationId FROM SupplierOrder so WHERE so.id = :supplierId")
-    Optional<Integer> findOrganizationIdById(@Param("supplierId") Long supplierId);
+    @Query("SELECT so.organizationId FROM SupplierOrder so WHERE so.id = :supplierOrderId")
+    Optional<Integer> findOrganizationIdById(@Param("supplierOrderId") Long supplierOrderId);
+
+    @Query("SELECT so FROM SupplierOrder so WHERE so.companyId = :companyId")
+    Optional<SupplierOrder> findByCompanyId(@Param("companyId") String companyId);
+
+    @Query("SELECT so FROM SupplierOrder so WHERE so.companyId IN :companyIds")
+    List<SupplierOrder> findByCompanyIds(@Param("companyIds") List<String> companyIds);
 
     @Query("SELECT COUNT(so) FROM SupplierOrder so WHERE so.organizationId = :organizationId")
     long countByOrganizationId(@Param("organizationId") Integer organizationId);

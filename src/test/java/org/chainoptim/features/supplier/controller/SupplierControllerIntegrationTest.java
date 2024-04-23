@@ -177,11 +177,11 @@ class SupplierControllerIntegrationTest {
             fail("Created supplier has not been found");
         }
         Supplier createdSupplier = createdSupplierOptional.get();
+
         assertNotNull(createdSupplier);
         assertEquals(supplierDTO.getName(), createdSupplier.getName());
         assertEquals(supplierDTO.getOrganizationId(), createdSupplier.getOrganizationId());
         assertEquals(supplierDTO.getLocationId(), createdSupplier.getLocation().getId());
-
     }
 
     @Test

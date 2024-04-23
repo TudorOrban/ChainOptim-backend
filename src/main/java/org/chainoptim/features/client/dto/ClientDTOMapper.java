@@ -39,20 +39,25 @@ public class ClientDTOMapper {
         ClientOrder clientOrder = new ClientOrder();
         clientOrder.setClientId(order.getClientId());
         clientOrder.setOrganizationId(order.getOrganizationId());
-        clientOrder.setProductId(order.getProductId());
+        clientOrder.setCompanyId(order.getCompanyId());
         clientOrder.setQuantity(order.getQuantity());
+        clientOrder.setDeliveredQuantity(order.getDeliveredQuantity());
         clientOrder.setOrderDate(order.getOrderDate());
         clientOrder.setEstimatedDeliveryDate(order.getEstimatedDeliveryDate());
         clientOrder.setDeliveryDate(order.getDeliveryDate());
+        clientOrder.setStatus(order.getStatus());
 
         return clientOrder;
     }
 
     public static void setUpdateClientOrderDTOToClientOrder(ClientOrder clientOrder, UpdateClientOrderDTO orderDTO) {
+        clientOrder.setCompanyId(orderDTO.getCompanyId());
         clientOrder.setQuantity(orderDTO.getQuantity());
         clientOrder.setOrderDate(orderDTO.getOrderDate());
         clientOrder.setEstimatedDeliveryDate(orderDTO.getEstimatedDeliveryDate());
         clientOrder.setDeliveryDate(orderDTO.getDeliveryDate());
+        clientOrder.setStatus(orderDTO.getStatus());
+        clientOrder.setDeliveredQuantity(orderDTO.getDeliveredQuantity());
     }
 
     public static ClientShipment mapCreateClientShipmentDTOTOShipment(CreateClientShipmentDTO shipmentDTO) {

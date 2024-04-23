@@ -9,9 +9,13 @@ import org.chainoptim.features.client.dto.ClientDTOMapper;
 import org.chainoptim.features.client.dto.CreateClientOrderDTO;
 import org.chainoptim.features.client.dto.UpdateClientOrderDTO;
 import org.chainoptim.features.client.model.ClientOrder;
+import org.chainoptim.features.client.model.ClientOrderEvent;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
+import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+
 import org.chainoptim.shared.search.model.PaginatedResults;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
     private final ClientOrderRepository clientOrderRepository;
     private final KafkaClientOrderService kafkaClientOrderService;
+    private final ProductRepository productRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
@@ -32,11 +37,13 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     public ClientOrderServiceImpl(
             ClientOrderRepository clientOrderRepository,
             KafkaClientOrderService kafkaClientOrderService,
+            ProductRepository productRepository,
             SubscriptionPlanLimiterService planLimiterService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.clientOrderRepository = clientOrderRepository;
         this.kafkaClientOrderService = kafkaClientOrderService;
+        this.productRepository = productRepository;
         this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
@@ -64,11 +71,15 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         // Sanitize input and map to entity
         CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);
         ClientOrder clientOrder = ClientDTOMapper.mapCreateDtoToClientOrder(sanitizedOrderDTO);
+        Product product = productRepository.findById(orderDTO.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + orderDTO.getProductId() + " not found."));
+        clientOrder.setProduct(product);
 
         ClientOrder savedOrder = clientOrderRepository.save(clientOrder);
 
         // Publish order to Kafka broker
-        kafkaClientOrderService.sendClientOrderEvent(savedOrder, KafkaEvent.EventType.CREATE);
+        kafkaClientOrderService.sendClientOrderEvent(
+                new ClientOrderEvent(savedOrder, null, KafkaEvent.EventType.CREATE, savedOrder.getClientId(), Feature.CLIENT, "Test"));
 
         return savedOrder;
     }
@@ -88,31 +99,84 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         List<ClientOrder> orders = orderDTOs.stream()
                 .map(orderDTO -> {
                     CreateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateClientOrderDTO(orderDTO);
-                    return ClientDTOMapper.mapCreateDtoToClientOrder(sanitizedOrderDTO);
+                    ClientOrder clientOrder = ClientDTOMapper.mapCreateDtoToClientOrder(sanitizedOrderDTO);
+                    Product product = productRepository.findById(sanitizedOrderDTO.getProductId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + sanitizedOrderDTO.getProductId() + " not found."));
+                    clientOrder.setProduct(product);
+                    return clientOrder;
                 })
                 .toList();
 
         List<ClientOrder> savedOrders = clientOrderRepository.saveAll(orders);
 
-        // Publish orders to Kafka broker
-        kafkaClientOrderService.sendClientOrderEventsInBulk(savedOrders, KafkaEvent.EventType.CREATE);
+        // Publish order events to Kafka broker
+        List<ClientOrderEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> new ClientOrderEvent(order, null, KafkaEvent.EventType.CREATE, order.getClientId(), Feature.CLIENT, "Test"))
+                .forEach(orderEvents::add);
+
+        kafkaClientOrderService.sendClientOrderEventsInBulk(orderEvents);
 
         return savedOrders;
     }
 
     @Transactional
     public List<ClientOrder> updateClientOrdersInBulk(List<UpdateClientOrderDTO> orderDTOs) {
-        List<ClientOrder> orders = new ArrayList<>();
-        for (UpdateClientOrderDTO orderDTO : orderDTOs) {
-            ClientOrder order = clientOrderRepository.findById(orderDTO.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Client Order with ID: " + orderDTO.getId() + " not found."));
+        List<ClientOrder> orders = clientOrderRepository.findByIds(orderDTOs.stream().map(UpdateClientOrderDTO::getId).toList())
+                .orElseThrow(() -> new ResourceNotFoundException("Client Orders not found."));
 
-            ClientDTOMapper.setUpdateClientOrderDTOToClientOrder(order, orderDTO);
-            orders.add(order);
+        List<ClientOrder> oldOrders = orders.stream().map(ClientOrder::deepCopy).toList();
+
+        List<ClientOrder> updatedOrders = orders.stream()
+                .map(order -> {
+                    UpdateClientOrderDTO orderDTO = orderDTOs.stream()
+                            .filter(dto -> dto.getId().equals(order.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new ResourceNotFoundException("Client Order with ID: " + order.getId() + " not found."));
+//                    UpdateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateClientOrderDTO(orderDTO);
+                    ClientDTOMapper.setUpdateClientOrderDTOToClientOrder(order, orderDTO);
+                    Product product = productRepository.findById(orderDTO.getProductId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + orderDTO.getProductId() + " not found."));
+                    order.setProduct(product);
+                    return order;
+                }).toList();
+
+        // Publish order events to Kafka broker
+        List<ClientOrderEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> {
+                    ClientOrder oldOrder = oldOrders.stream()
+                            .filter(o -> o.getId().equals(order.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new ResourceNotFoundException("Client Order with ID: " + order.getId() + " not found."));
+                    return new ClientOrderEvent(order, oldOrder, KafkaEvent.EventType.UPDATE, order.getClientId(), Feature.CLIENT, "Test");
+                })
+                .forEach(orderEvents::add);
+
+        kafkaClientOrderService.sendClientOrderEventsInBulk(orderEvents);
+
+        // Save
+        return clientOrderRepository.saveAll(updatedOrders);
+    }
+    
+    @Transactional
+    public List<Integer> deleteClientOrdersInBulk(List<java.lang.Integer> orderIds) {
+        List<ClientOrder> orders = clientOrderRepository.findAllById(orderIds);
+        // Ensure same organizationId
+        if (orders.stream().map(ClientOrder::getOrganizationId).distinct().count() > 1) {
+            throw new ValidationException("All orders must belong to the same organization.");
         }
 
-        return clientOrderRepository.saveAll(orders);
+        clientOrderRepository.deleteAll(orders);
+
+        // Publish order events to Kafka broker
+        List<ClientOrderEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> new ClientOrderEvent(null, order, KafkaEvent.EventType.CREATE, order.getClientId(), Feature.CLIENT, "Test"))
+                .forEach(orderEvents::add);
+
+        kafkaClientOrderService.sendClientOrderEventsInBulk(orderEvents);
+
+        return orderIds;
     }
-
-
 }
