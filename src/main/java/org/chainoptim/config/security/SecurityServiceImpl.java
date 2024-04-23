@@ -135,9 +135,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     public boolean canUserAccessOrganizationEntity(String userId, String operationType) {
-        System.out.println("userId: " + userId);
         Optional<Integer> organizationId = userRepository.findOrganizationIdById(userId);
-        System.out.println("organizationId: " + organizationId);
 
         return canAccessOrganizationEntity(organizationId, "User", operationType);
     }

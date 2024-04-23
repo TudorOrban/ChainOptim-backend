@@ -1,7 +1,11 @@
 package org.chainoptim.features.client.model;
 
+import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.shared.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -31,14 +36,18 @@ public class ClientOrder {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "product_id", nullable = false)
-    private Integer productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
 
     @Column(name = "quantity")
     private Float quantity;
+
+    @Column(name = "delivered_quantity")
+    private Float deliveredQuantity;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
@@ -50,8 +59,26 @@ public class ClientOrder {
     private LocalDateTime deliveryDate;
 
     @Column(name = "status")
-    private String status;
+    private OrderStatus status;
 
     @Column(name = "company_id")
     private String companyId;
+
+    public ClientOrder deepCopy() {
+        return ClientOrder.builder()
+                .id(this.id)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .organizationId(this.organizationId)
+                .clientId(this.clientId)
+                .product(this.product)
+                .quantity(this.quantity)
+                .deliveredQuantity(this.deliveredQuantity)
+                .orderDate(this.orderDate)
+                .estimatedDeliveryDate(this.estimatedDeliveryDate)
+                .deliveryDate(this.deliveryDate)
+                .status(this.status)
+                .companyId(this.companyId)
+                .build();
+    }
 }

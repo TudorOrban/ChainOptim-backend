@@ -1,9 +1,6 @@
 package org.chainoptim.features.client.service;
 
-import org.chainoptim.core.notifications.model.KafkaEvent;
-import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.client.model.ClientOrderEvent;
-import org.chainoptim.shared.enums.Feature;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,24 +20,14 @@ public class KafkaClientOrderServiceImpl implements KafkaClientOrderService {
     }
 
     @Value("${client.order.topic.name:client-order-events}")
-    private String supplierOrderTopicName;
+    private String clientOrderTopicName;
 
-    public void sendClientOrderEvent(ClientOrder order, KafkaEvent.EventType eventType) {
-        ClientOrderEvent orderEvent = convertToEvent(order, eventType);
-        kafkaTemplate.send(supplierOrderTopicName, orderEvent);
+    public void sendClientOrderEvent(ClientOrderEvent orderEvent) {
+        kafkaTemplate.send(clientOrderTopicName, orderEvent);
     }
 
-    public void sendClientOrderEventsInBulk(List<ClientOrder> orders, KafkaEvent.EventType eventType) {
-        orders.stream()
-                .map(order -> convertToEvent(order, eventType))
-                .forEach(orderEvent -> kafkaTemplate.send(supplierOrderTopicName, orderEvent));
-    }
-
-    private ClientOrderEvent convertToEvent(ClientOrder order, KafkaEvent.EventType eventType) {
-        ClientOrderEvent event = new ClientOrderEvent();
-        event.setNewEntity(order);
-        event.setEntityType(Feature.CLIENT_ORDER);
-        event.setEventType(eventType);
-        return event;
+    public void sendClientOrderEventsInBulk(List<ClientOrderEvent> kafkaEvents) {
+        kafkaEvents
+                .forEach(orderEvent -> kafkaTemplate.send(clientOrderTopicName, orderEvent));
     }
 }

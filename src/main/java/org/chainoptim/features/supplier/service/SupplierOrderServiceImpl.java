@@ -66,14 +66,12 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.SUPPLIER_ORDER, 1)) {
             throw new PlanLimitReachedException("You have reached the limit of allowed Supplier Orders for the current Subscription Plan.");
         }
-        System.out.println("componentId: " + orderDTO.getComponentId());
 
         // Sanitize input and map to entity
         CreateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateSupplierOrderDTO(orderDTO);
         SupplierOrder supplierOrder = SupplierDTOMapper.mapCreateDtoToSupplierOrder(sanitizedOrderDTO);
         Component component = componentRepository.findById(sanitizedOrderDTO.getComponentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + sanitizedOrderDTO.getComponentId() + " not found."));
-        System.out.println("component: " + component.getId());
         supplierOrder.setComponent(component);
 
         SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
