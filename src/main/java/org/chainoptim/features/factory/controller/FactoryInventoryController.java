@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/factories/inventory")
+@RequestMapping("/api/v1/factory-inventory-items")
 public class FactoryInventoryController {
 
     private final FactoryInventoryService factoryInventoryService;
