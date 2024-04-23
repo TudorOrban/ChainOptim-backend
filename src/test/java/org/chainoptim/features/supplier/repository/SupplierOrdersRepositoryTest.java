@@ -1,10 +1,12 @@
 package org.chainoptim.features.supplier.repository;
 
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.chainoptim.shared.enums.OrderStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +36,8 @@ class SupplierOrdersRepositoryTest {
     Integer organizationId;
     Integer locationId;
     Integer supplierId;
+    Integer supplierOrderId;
+    Component component;
 
     @BeforeEach
     void setUp() {
@@ -58,17 +62,22 @@ class SupplierOrdersRepositoryTest {
         // Set up supplier for update and delete tests
         Supplier supplier = addTestSupplier();
         supplierId = supplier.getId();
+
+        Component newComponent = new Component();
+        newComponent.setName("Test Component");
+        newComponent.setOrganizationId(organizationId);
+
+        component = entityManager.persist(newComponent);
+        entityManager.flush();
+
+        SupplierOrder supplierOrder = addTestSupplierOrder();
+        supplierOrderId = supplierOrder.getId();
     }
 
     @Test
     void testCreateSupplierOrder() {
         // Arrange
-        SupplierOrder supplierOrder = new SupplierOrder();
-        supplierOrder.setSupplierId(supplierId);
-        supplierOrder.setOrganizationId(organizationId);
-        LocalDateTime orderDate = LocalDateTime.parse("2021-01-01T00:00:00");
-        supplierOrder.setOrderDate(orderDate);
-        supplierOrder.setQuantity(10f);
+        SupplierOrder supplierOrder = addTestSupplierOrder();
 
         // Act
         SupplierOrder savedSupplierOrder = entityManager.persist(supplierOrder);
@@ -85,44 +94,52 @@ class SupplierOrdersRepositoryTest {
         assertEquals(savedSupplierOrder.getQuantity(), foundSupplierOrder.getQuantity());
     }
 
-//    @Test
-//    void testUpdateSupplier() {
-//        // Arrange
-//        Optional<Supplier> supplierOptional = supplierRepository.findById(supplierId); // Id from setUp
-//        if (supplierOptional.isEmpty()) {
-//            fail("Expected an existing supplier with id " + supplierOptional);
-//        }
-//
-//        Supplier supplier = supplierOptional.get();
-//        supplier.setName("New Test Name");
-//
-//        // Act
-//        Supplier updatedSupplier = supplierRepository.save(supplier);
-//
-//        // Assert
-//        assertNotNull(updatedSupplier);
-//        assertEquals("New Test Name", updatedSupplier.getName());
-//    }
-//
-//    @Test
-//    void testDeleteSupplier() {
-//        // Arrange
-//        Optional<Supplier> supplierToBeDeletedOptional = supplierRepository.findById(supplierId);
-//        if (supplierToBeDeletedOptional.isEmpty()) {
-//            fail("Expected an existing supplier with id " + supplierId);
-//        }
-//
-//        Supplier supplierToBeDeleted = supplierToBeDeletedOptional.get();
-//
-//        // Act
-//        supplierRepository.delete(supplierToBeDeleted);
-//
-//        // Assert
-//        Optional<Supplier> deletedSupplierOptional = supplierRepository.findById(supplierId);
-//        if (deletedSupplierOptional.isPresent()) {
-//            fail("Expected supplier with id 1 to have been deleted");
-//        }
-//    }
+    @Test
+    void testUpdateSupplier() {
+        // Arrange
+        Optional<SupplierOrder> supplierOrderOptional = supplierOrderRepository.findById(supplierOrderId); // Id from setUp
+        if (supplierOrderOptional.isEmpty()) {
+            fail("Expected an existing supplier order with id " + supplierOrderId);
+        }
+
+        SupplierOrder supplierOrder = supplierOrderOptional.get();
+        supplierOrder.setStatus(OrderStatus.DELIVERED);
+        supplierOrder.setQuantity(20f);
+        LocalDateTime deliveryDate = LocalDateTime.parse("2021-01-02T00:00:00");
+        supplierOrder.setDeliveryDate(deliveryDate);
+
+        // Act
+        SupplierOrder updatedSupplierOrder = supplierOrderRepository.save(supplierOrder);
+
+        // Assert
+        assertNotNull(updatedSupplierOrder);
+        assertEquals(supplierOrder.getOrganizationId(), updatedSupplierOrder.getOrganizationId());
+        assertEquals(supplierOrder.getSupplierId(), updatedSupplierOrder.getSupplierId());
+        assertEquals(supplierOrder.getOrderDate(), updatedSupplierOrder.getOrderDate());
+        assertEquals(supplierOrder.getQuantity(), updatedSupplierOrder.getQuantity());
+        assertEquals(supplierOrder.getStatus(), updatedSupplierOrder.getStatus());
+        assertEquals(supplierOrder.getDeliveryDate(), updatedSupplierOrder.getDeliveryDate());
+    }
+
+    @Test
+    void testDeleteSupplier() {
+        // Arrange
+        Optional<SupplierOrder> supplierOrderToBeDeletedOptional = supplierOrderRepository.findById(supplierOrderId);
+        if (supplierOrderToBeDeletedOptional.isEmpty()) {
+            fail("Expected an existing supplier order with id " + supplierOrderId);
+        }
+
+        SupplierOrder supplierOrderToBeDeleted = supplierOrderToBeDeletedOptional.get();
+
+        // Act
+        supplierOrderRepository.delete(supplierOrderToBeDeleted);
+
+        // Assert
+        Optional<SupplierOrder> deletedSupplierOrderOptional = supplierOrderRepository.findById(supplierOrderId);
+        if (deletedSupplierOrderOptional.isPresent()) {
+            fail("Expected supplier order with id 1 to have been deleted");
+        }
+    }
 
     Supplier addTestSupplier() {
         Supplier supplier = new Supplier();
@@ -133,5 +150,18 @@ class SupplierOrdersRepositoryTest {
         supplier.setLocation(location);
 
         return entityManager.persist(supplier);
+    }
+
+    SupplierOrder addTestSupplierOrder() {
+        SupplierOrder supplierOrder = new SupplierOrder();
+        supplierOrder.setSupplierId(supplierId);
+        supplierOrder.setOrganizationId(organizationId);
+        LocalDateTime orderDate = LocalDateTime.parse("2021-01-01T00:00:00");
+        supplierOrder.setOrderDate(orderDate);
+        supplierOrder.setStatus(OrderStatus.PLACED);
+        supplierOrder.setQuantity(10f);
+        supplierOrder.setComponent(component);
+
+        return entityManager.persist(supplierOrder);
     }
 }
