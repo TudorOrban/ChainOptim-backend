@@ -17,4 +17,5 @@ public class CreateLocationDTO {
     private Double latitude;
     private Double longitude;
     private Integer organizationId;
+    private boolean useGeocoding;
 }

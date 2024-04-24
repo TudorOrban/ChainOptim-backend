@@ -5,6 +5,7 @@ import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,8 @@ public class LocationController {
     private final SecurityService securityService;
 
     @Autowired
-    public LocationController(LocationService locationService, SecurityService securityService) {
+    public LocationController(LocationService locationService,
+                              SecurityService securityService) {
         this.locationService = locationService;
         this.securityService = securityService;
     }
