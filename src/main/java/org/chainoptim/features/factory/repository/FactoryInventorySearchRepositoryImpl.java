@@ -1,16 +1,16 @@
 package org.chainoptim.features.factory.repository;
 
+import org.chainoptim.exception.ValidationException;
+import org.chainoptim.features.factory.model.FactoryInventoryItem;
+import org.chainoptim.shared.search.model.PaginatedResults;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
-import org.chainoptim.features.factory.model.Factory;
-import org.chainoptim.features.factory.model.FactoryInventoryItem;
-import org.chainoptim.features.product.model.Product;
-import org.chainoptim.features.productpipeline.model.Component;
-import org.chainoptim.shared.search.model.PaginatedResults;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class FactoryInventorySearchRepositoryImpl implements FactoryInventorySearchRepository {
 
@@ -20,35 +20,32 @@ public class FactoryInventorySearchRepositoryImpl implements FactoryInventorySea
     @Override
     public PaginatedResults<FactoryInventoryItem> findFactoryItemsById(
             Integer factoryId,
-            String searchQuery,
-            String sortBy,
-            boolean ascending,
-            int page,
-            int itemsPerPage
+            String searchQuery, Map<String, String> filters,
+            String sortBy, boolean ascending,
+            int page, int itemsPerPage
     ) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<FactoryInventoryItem> query = builder.createQuery(FactoryInventoryItem.class);
-        Root<FactoryInventoryItem> root = query.from(FactoryInventoryItem.class);
+        Root<FactoryInventoryItem> factoryInventoryItem = query.from(FactoryInventoryItem.class);
+        factoryInventoryItem.alias("so");
 
-        // Skip if no factoryId (add error in the future)
-        if (factoryId == null) {
-            return new PaginatedResults<>(new ArrayList<>(), 0);
+        // Perform a fetch join to load products eagerly
+        factoryInventoryItem.fetch("product", JoinType.LEFT);
+        factoryInventoryItem.fetch("component", JoinType.LEFT);
+
+        // Add conditions (factoryId, searchQuery and filters)
+        Predicate conditions = getConditions(builder, factoryInventoryItem, factoryId, searchQuery, filters);
+        query.where(conditions);
+
+        // Add sorting
+        if (ascending) {
+            query.orderBy(builder.asc(factoryInventoryItem.get(sortBy)));
+        } else {
+            query.orderBy(builder.desc(factoryInventoryItem.get(sortBy)));
         }
 
-        // Filters
-        List<Predicate> predicates = getInventoryItemsSearchConditions(builder, root, factoryId, searchQuery);
-
-        query.where(builder.and(predicates.toArray(new Predicate[0])));
-
-        // Sorting
-        if (sortBy != null && !sortBy.isEmpty()) {
-            Path<Object> sortPath = root.get(sortBy);
-            Order order = ascending ? builder.asc(sortPath) : builder.desc(sortPath);
-            query.orderBy(order);
-        }
-
-        // Pagination
-        List<FactoryInventoryItem> inventoryItems = entityManager.createQuery(query)
+        // Create query with pagination
+        List<FactoryInventoryItem> factoryInventoryItems = entityManager.createQuery(query)
                 .setFirstResult((page - 1) * itemsPerPage)
                 .setMaxResults(itemsPerPage)
                 .getResultList();
@@ -57,34 +54,103 @@ public class FactoryInventorySearchRepositoryImpl implements FactoryInventorySea
         CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
         Root<FactoryInventoryItem> countRoot = countQuery.from(FactoryInventoryItem.class);
-
-        // Apply the same predicates as the main query
-        List<Predicate> countPredicates = getInventoryItemsSearchConditions(countBuilder, countRoot, factoryId, searchQuery);
+        Predicate countConditions = getConditions(countBuilder, countRoot, factoryId, searchQuery, filters);
         countQuery.select(countBuilder.count(countRoot));
-        countQuery.where(countBuilder.and(countPredicates.toArray(new Predicate[0])));
+        countQuery.where(countConditions);
 
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PaginatedResults<>(inventoryItems, totalCount);
+        return new PaginatedResults<>(factoryInventoryItems, totalCount);
     }
 
-    private List<Predicate> getInventoryItemsSearchConditions(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Integer factoryId, String searchQuery) {
-        List<Predicate> predicates = new ArrayList<>();
-
-        // Add factoryId filter
-        predicates.add(builder.equal(root.get("factoryId"), factoryId));
-
-        // Join with Component and Product and filter by their name
-        Join<FactoryInventoryItem, Component> componentJoin = root.join("component", JoinType.LEFT);
-        Join<FactoryInventoryItem, Product> productJoin = root.join("product", JoinType.LEFT);
-
+    private Predicate getConditions(CriteriaBuilder builder, Root<FactoryInventoryItem> root,
+                                    Integer factoryId,
+                                    String searchQuery, Map<String, String> filters) {
+        Predicate conditions = builder.conjunction();
+        if (factoryId != null) {
+            conditions = builder.and(conditions, builder.equal(root.get("factoryId"), factoryId));
+        }
         if (searchQuery != null && !searchQuery.isEmpty()) {
-            Predicate componentPredicate = builder.like(componentJoin.get("name"), "%" + searchQuery + "%");
-            Predicate productPredicate = builder.like(productJoin.get("name"), "%" + searchQuery + "%");
-            predicates.add(builder.or(componentPredicate, productPredicate));
+            conditions = builder.and(conditions, builder.like(root.get("companyId"), "%" + searchQuery + "%"));
         }
 
-        return predicates;
+        // Filters
+        conditions = addFilters(builder, root, conditions, filters);
+
+        return conditions;
     }
+
+    private Predicate addFilters(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions, Map<String, String> filters) {
+        for (Map.Entry<String, String> filter : filters.entrySet()) {
+            String key = filter.getKey();
+            String value = filter.getValue();
+            if (value == null || value.isEmpty()) {
+                throw new ValidationException("Invalid filter value for " + key + " filter.");
+            }
+
+            conditions = applyFilter(builder, root, conditions, key, value);
+        }
+
+        return conditions;
+    }
+
+    private Predicate applyFilter(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions, String key, String value) {
+        return switch (key) {
+            case "createdAtStart" ->
+                    addDateFilter(builder, root, conditions, "createdAt", value, true);
+            case "createdAtEnd" ->
+                    addDateFilter(builder, root, conditions, "createdAt", value, false);
+            case "updatedAtStart" ->
+                    addDateFilter(builder, root, conditions, "updatedAt", value, true);
+            case "updatedAtEnd" ->
+                    addDateFilter(builder, root, conditions, "updatedAt", value, false);
+            case "greaterThanQuantity" ->
+                    addFloatFilter(builder, root, conditions, "quantity", value, true);
+            case "lessThanQuantity" ->
+                    addFloatFilter(builder, root, conditions, "quantity", value, false);
+            case "greaterThanMinimumRequiredQuantity" ->
+                    addFloatFilter(builder, root, conditions, "minimumRequiredQuantity", value, true);
+            case "lessThanMinimumRequiredQuantity" ->
+                    addFloatFilter(builder, root, conditions, "minimumRequiredQuantity", value, false);
+            default -> throw new ValidationException("Invalid filter: " + key);
+        };
+    }
+
+    private Predicate addDateFilter(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions,
+                                    String targetProperty, String filterValue, boolean startingAt) {
+        LocalDateTime date;
+        try {
+            date = LocalDateTime.parse(filterValue);
+        } catch (Exception e) {
+            throw new ValidationException("Invalid date format for " + targetProperty + " filter.");
+        }
+
+        if (startingAt) {
+            conditions = builder.and(conditions, builder.greaterThanOrEqualTo(root.get(targetProperty), date));
+        } else {
+            conditions = builder.and(conditions, builder.lessThanOrEqualTo(root.get(targetProperty), date));
+        }
+
+        return conditions;
+    }
+
+    private Predicate addFloatFilter(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions,
+                                     String targetProperty, String filterValue, boolean startingAt) {
+        Float value;
+        try {
+            value = Float.parseFloat(filterValue);
+        } catch (Exception e) {
+            throw new ValidationException("Invalid float format for " + targetProperty + " filter.");
+        }
+
+        if (startingAt) {
+            conditions = builder.and(conditions, builder.greaterThanOrEqualTo(root.get(targetProperty), value));
+        } else {
+            conditions = builder.and(conditions, builder.lessThanOrEqualTo(root.get(targetProperty), value));
+        }
+
+        return conditions;
+    }
+
 }

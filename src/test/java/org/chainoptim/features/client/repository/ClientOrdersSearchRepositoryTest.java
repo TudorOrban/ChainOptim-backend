@@ -18,6 +18,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
@@ -51,6 +53,7 @@ class ClientOrdersSearchRepositoryTest {
         // Arrange
         Integer clientId = 1;
         String searchQuery = "no 1";
+        Map<String, String> filters = new HashMap<>();
         String sortBy = "createdAt";
         boolean ascending = true;
         int page = 1;
@@ -58,7 +61,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> paginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -69,7 +72,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -81,6 +84,7 @@ class ClientOrdersSearchRepositoryTest {
         // Arrange
         Integer clientId = 1;
         String searchQuery = "";
+        Map<String, String> filters = new HashMap<>();
         String sortBy = "createdAt";
         boolean ascending = true;
         int page = 1;
@@ -88,7 +92,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> paginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -99,7 +103,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -113,6 +117,7 @@ class ClientOrdersSearchRepositoryTest {
         // Arrange
         Integer clientId = 1;
         String searchQuery = "";
+        Map<String, String> filters = new HashMap<>();
         String sortBy = "createdAt";
         boolean ascending = true;
         int page = 1;
@@ -120,7 +125,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> paginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -131,7 +136,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -143,7 +148,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults2 = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -154,7 +159,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults3 = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, sortBy, ascending, page, itemsPerPage
+                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert

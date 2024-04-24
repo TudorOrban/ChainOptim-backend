@@ -52,4 +52,7 @@ public class WarehouseInventoryItem {
     @Column(name = "minimum_required_quantity")
     private Float minimumRequiredQuantity;
 
+    @Column(name = "company_id")
+    private Integer companyId;
+
 }

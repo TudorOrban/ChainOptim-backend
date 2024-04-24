@@ -13,11 +13,9 @@ public interface FactoryInventoryService {
     List<FactoryInventoryItem> getFactoryInventoryItemsByFactoryId(Integer factoryId);
     PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsByFactoryIdAdvanced(
             Integer factoryId,
-            String searchQuery,
-            String sortBy,
-            boolean ascending,
-            int page,
-            int itemsPerPage);
+            String searchQuery, String filtersJson,
+            String sortBy, boolean ascending,
+            int page, int itemsPerPage);
     FactoryInventoryItem getFactoryInventoryItemById(Integer inventoryItemId);
 
     // Create

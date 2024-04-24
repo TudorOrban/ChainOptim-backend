@@ -51,4 +51,7 @@ public class FactoryInventoryItem {
 
     @Column(name = "minimum_required_quantity")
     private Float minimumRequiredQuantity;
+
+    @Column(name = "company_id")
+    private String companyId;
 }
