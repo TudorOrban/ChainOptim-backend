@@ -17,6 +17,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
@@ -50,6 +52,7 @@ class SupplierOrdersSearchRepositoryTest {
         // Arrange
         Integer supplierId = 1;
         String searchQuery = "no 1";
+        Map<String, String> filters = new HashMap<>();
         String sortBy = "createdAt";
         boolean ascending = true;
         int page = 1;
@@ -57,7 +60,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -68,7 +71,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -80,6 +83,7 @@ class SupplierOrdersSearchRepositoryTest {
         // Arrange
         Integer supplierId = 1;
         String searchQuery = "";
+        Map<String, String> filters = new HashMap<>();
         String sortBy = "createdAt";
         boolean ascending = true;
         int page = 1;
@@ -87,7 +91,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -98,7 +102,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -112,6 +116,7 @@ class SupplierOrdersSearchRepositoryTest {
         // Arrange
         Integer supplierId = 1;
         String searchQuery = "";
+        Map<String, String> filters = new HashMap<>();
         String sortBy = "createdAt";
         boolean ascending = true;
         int page = 1;
@@ -119,7 +124,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -130,7 +135,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -142,7 +147,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults2 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert
@@ -153,7 +158,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults3 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, sortBy, ascending, page, itemsPerPage
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
         );
 
         // Assert

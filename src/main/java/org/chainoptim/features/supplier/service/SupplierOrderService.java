@@ -6,12 +6,13 @@ import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SupplierOrderService {
 
     List<SupplierOrder> getSupplierOrdersByOrganizationId(Integer organizationId);
     List<SupplierOrder> getSupplierOrdersBySupplierId(Integer supplierId);
-    PaginatedResults<SupplierOrder> getSupplierOrdersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
+    PaginatedResults<SupplierOrder> getSupplierOrdersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String filtersJson, String sortBy, boolean ascending, int page, int itemsPerPage);
 
     SupplierOrder createSupplierOrder(CreateSupplierOrderDTO order);
     List<SupplierOrder> createSupplierOrdersInBulk(List<CreateSupplierOrderDTO> orderDTOs);
