@@ -6,7 +6,7 @@ import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.client.repository.ClientShipmentRepository;
-import org.chainoptim.features.factory.repository.FactoryInventoryRepository;
+import org.chainoptim.features.factory.repository.FactoryInventoryItemRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.factory.repository.FactoryStageRepository;
 import org.chainoptim.features.product.repository.ProductRepository;
@@ -15,7 +15,7 @@ import org.chainoptim.features.productpipeline.repository.StageRepository;
 import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.features.supplier.repository.SupplierShipmentRepository;
-import org.chainoptim.features.warehouse.repository.WarehouseInventoryRepository;
+import org.chainoptim.features.warehouse.repository.WarehouseInventoryItemRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,10 @@ public class SnapshotFinderServiceImpl implements SnapshotFinderService {
     private final StageRepository stageRepository;
     private final ComponentRepository componentRepository;
     private final FactoryRepository factoryRepository;
-    private final FactoryInventoryRepository factoryInventoryRepository;
+    private final FactoryInventoryItemRepository factoryInventoryRepository;
     private final FactoryStageRepository factoryStageRepository;
     private final WarehouseRepository warehouseRepository;
-    private final WarehouseInventoryRepository warehouseInventoryRepository;
+    private final WarehouseInventoryItemRepository warehouseInventoryRepository;
     private final SupplierRepository supplierRepository;
     private final SupplierOrderRepository supplierOrderRepository;
     private final SupplierShipmentRepository supplierShipmentRepository;
@@ -48,10 +48,10 @@ public class SnapshotFinderServiceImpl implements SnapshotFinderService {
                                      StageRepository stageRepository,
                                      ComponentRepository componentRepository,
                                      FactoryRepository factoryRepository,
-                                     FactoryInventoryRepository factoryInventoryRepository,
+                                     FactoryInventoryItemRepository factoryInventoryRepository,
                                      FactoryStageRepository factoryStageRepository,
                                      WarehouseRepository warehouseRepository,
-                                     WarehouseInventoryRepository warehouseInventoryRepository,
+                                     WarehouseInventoryItemRepository warehouseInventoryRepository,
                                      SupplierRepository supplierRepository,
                                      SupplierOrderRepository supplierOrderRepository,
                                      SupplierShipmentRepository supplierShipmentRepository,

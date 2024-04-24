@@ -38,12 +38,12 @@ class SupplierOrdersSearchRepositoryTest {
     void setUp() {
         createTestSupplier();
         Component component = createTestComponent();
-        createTestSupplierOrder("no 1", "2024-01-23 12:02:02", "2024-01-23 12:02:02", component);
-        createTestSupplierOrder("no 12", "2024-02-23 12:02:02", "2024-02-23 12:02:02", component);
-        createTestSupplierOrder("no 3", "2024-03-23 12:02:02", "2024-03-23 12:02:02", component);
-        createTestSupplierOrder("no 4", "2024-04-23 12:02:02", "2024-04-23 12:02:02", component);
-        createTestSupplierOrder("no 5", "2024-05-23 12:02:02", "2024-05-23 12:02:02", component);
-        createTestSupplierOrder("no 6", "2024-06-23 12:02:02", "2024-06-23 12:02:02", component);
+        createTestSupplierOrder("no 1", "2024-01-23 12:02:02", "2024-01-23 12:02:02", component, OrderStatus.DELIVERED, 1f);
+        createTestSupplierOrder("no 12", "2024-02-23 12:02:02", "2024-02-23 12:02:02", component, OrderStatus.DELIVERED, 2f);
+        createTestSupplierOrder("no 3", "2024-03-23 12:02:02", "2024-03-23 12:02:02", component, OrderStatus.DELIVERED, 3f);
+        createTestSupplierOrder("no 4", "2024-04-23 12:02:02", "2024-04-23 12:02:02", component, OrderStatus.PLACED, 4f);
+        createTestSupplierOrder("no 5", "2024-05-23 12:02:02", "2024-05-23 12:02:02", component, OrderStatus.PLACED, 5f);
+        createTestSupplierOrder("no 6", "2024-06-23 12:02:02", "2024-06-23 12:02:02", component, OrderStatus.CANCELED, 6f);
         entityManager.flush();
     }
 
@@ -53,7 +53,7 @@ class SupplierOrdersSearchRepositoryTest {
         Integer supplierId = 1;
         String searchQuery = "no 1";
         Map<String, String> filters = new HashMap<>();
-        String sortBy = "createdAt";
+        String sortBy = "orderDate";
         boolean ascending = true;
         int page = 1;
         int itemsPerPage = 10;
@@ -84,7 +84,7 @@ class SupplierOrdersSearchRepositoryTest {
         Integer supplierId = 1;
         String searchQuery = "";
         Map<String, String> filters = new HashMap<>();
-        String sortBy = "createdAt";
+        String sortBy = "orderDate";
         boolean ascending = true;
         int page = 1;
         int itemsPerPage = 4;
@@ -117,7 +117,7 @@ class SupplierOrdersSearchRepositoryTest {
         Integer supplierId = 1;
         String searchQuery = "";
         Map<String, String> filters = new HashMap<>();
-        String sortBy = "createdAt";
+        String sortBy = "orderDate";
         boolean ascending = true;
         int page = 1;
         int itemsPerPage = 10;
@@ -142,7 +142,7 @@ class SupplierOrdersSearchRepositoryTest {
         assertEquals(6, newPaginatedResults.results.getFirst().getId());
 
         // Arrange
-        sortBy = "updatedAt";
+        sortBy = "deliveryDate";
         ascending = true;
 
         // Act
@@ -163,6 +163,63 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Assert
         assertEquals(1, newPaginatedResults3.results.getFirst().getId());
+    }
+    
+    @Test
+    void findByOrganizationIdAdvanced_FiltersWork() {
+        // Arrange
+        Integer supplierId = 1;
+        String searchQuery = "";
+        Map<String, String> filters = new HashMap<>();
+        filters.put("status", "DELIVERED");
+        String sortBy = "orderDate";
+        boolean ascending = true;
+        int page = 1;
+        int itemsPerPage = 10;
+
+        // Act
+        PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        );
+
+        // Assert
+        assertEquals(3, paginatedResults.results.size());
+
+        // Arrange
+        filters.clear();
+        filters.put("orderDateStart", "2024-03-01T00:00:00");
+
+        // Act
+        PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        );
+
+        // Assert
+        assertEquals(4, newPaginatedResults.results.size());
+
+        // Arrange
+        filters.clear();
+        filters.put("orderDateEnd", "2024-03-01T00:00:00");
+
+        // Act
+        PaginatedResults<SupplierOrder> newPaginatedResults2 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        );
+
+        // Assert
+        assertEquals(2, newPaginatedResults2.results.size());
+
+        // Arrange
+        filters.clear();
+        filters.put("greaterThanQuantity", "3");
+
+        // Act
+        PaginatedResults<SupplierOrder> newPaginatedResults3 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
+                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        );
+
+        // Assert
+        assertEquals(4, newPaginatedResults3.results.size());
     }
 
     private void createTestSupplier() {
@@ -192,16 +249,17 @@ class SupplierOrdersSearchRepositoryTest {
         return entityManager.persist(component);
     }
 
-    private void createTestSupplierOrder(String companyId, String createdAt, String updatedAt, Component component) {
+    private void createTestSupplierOrder(String companyId, String orderDate, String deliveryDate, Component component, OrderStatus status, float quantity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         SupplierOrder supplierOrder = SupplierOrder.builder()
                 .organizationId(1)
                 .supplierId(1)
                 .companyId(companyId)
-                .createdAt(LocalDateTime.parse(createdAt, formatter))
-                .updatedAt(LocalDateTime.parse(updatedAt, formatter))
+                .orderDate(LocalDateTime.parse(orderDate, formatter))
+                .deliveryDate(LocalDateTime.parse(deliveryDate, formatter))
                 .component(component)
-                .status(OrderStatus.DELIVERED)
+                .status(status)
+                .quantity(quantity)
                 .build();
 
         entityManager.persist(supplierOrder);

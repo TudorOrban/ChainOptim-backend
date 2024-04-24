@@ -8,7 +8,7 @@ import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.dto.WarehouseDTOMapper;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
-import org.chainoptim.features.warehouse.repository.WarehouseInventoryRepository;
+import org.chainoptim.features.warehouse.repository.WarehouseInventoryItemRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -30,12 +30,12 @@ import java.util.Map;
 @Service
 public class WarehouseInventoryServiceImpl implements WarehouseInventoryService {
 
-    private final WarehouseInventoryRepository warehouseInventoryRepository;
+    private final WarehouseInventoryItemRepository warehouseInventoryRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public WarehouseInventoryServiceImpl(WarehouseInventoryRepository warehouseInventoryRepository,
+    public WarehouseInventoryServiceImpl(WarehouseInventoryItemRepository warehouseInventoryRepository,
                                          SubscriptionPlanLimiterService planLimiterService,
                                          EntitySanitizerService entitySanitizerService) {
         this.warehouseInventoryRepository = warehouseInventoryRepository;
@@ -63,7 +63,7 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
             }
         }
 
-        return warehouseInventoryRepository.findWarehouseItemsById(warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
+        return warehouseInventoryRepository.findWarehouseItemsByIdAdvanced(warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
     }
 
     public WarehouseInventoryItem getWarehouseInventoryItemById(Integer itemId) {

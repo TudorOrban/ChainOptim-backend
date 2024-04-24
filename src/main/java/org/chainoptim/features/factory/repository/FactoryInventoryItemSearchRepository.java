@@ -5,9 +5,9 @@ import org.chainoptim.shared.search.model.PaginatedResults;
 
 import java.util.Map;
 
-public interface FactoryInventorySearchRepository {
+public interface FactoryInventoryItemSearchRepository {
 
-    PaginatedResults<FactoryInventoryItem> findFactoryItemsById(
+    PaginatedResults<FactoryInventoryItem> findFactoryItemsByIdAdvanced(
             Integer factoryId,
             String searchQuery, Map<String, String> filters,
             String sortBy, boolean ascending,

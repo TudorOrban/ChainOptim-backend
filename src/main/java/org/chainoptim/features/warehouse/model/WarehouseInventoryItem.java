@@ -1,10 +1,7 @@
 package org.chainoptim.features.warehouse.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.productpipeline.model.Component;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,8 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -53,6 +50,6 @@ public class WarehouseInventoryItem {
     private Float minimumRequiredQuantity;
 
     @Column(name = "company_id")
-    private Integer companyId;
+    private String companyId;
 
 }

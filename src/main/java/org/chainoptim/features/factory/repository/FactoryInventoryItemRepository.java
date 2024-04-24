@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FactoryInventoryRepository extends JpaRepository<FactoryInventoryItem, Integer>, FactoryInventorySearchRepository {
+public interface FactoryInventoryItemRepository extends JpaRepository<FactoryInventoryItem, Integer>, FactoryInventoryItemSearchRepository {
 
     List<FactoryInventoryItem> findByOrganizationId(Integer organizationId);
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WarehouseInventoryRepository extends JpaRepository<WarehouseInventoryItem, Integer>, WarehouseInventorySearchRepository {
+public interface WarehouseInventoryItemRepository extends JpaRepository<WarehouseInventoryItem, Integer>, WarehouseInventoryItemSearchRepository {
 
     List<WarehouseInventoryItem> findByOrganizationId(Integer organizationId);
 

@@ -6,8 +6,7 @@ import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.factory.dto.*;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
-import org.chainoptim.features.factory.repository.FactoryInventoryRepository;
-import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.factory.repository.FactoryInventoryItemRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -25,12 +24,12 @@ import java.util.*;
 @Service
 public class FactoryInventoryServiceImpl implements FactoryInventoryService {
 
-    private final FactoryInventoryRepository factoryInventoryRepository;
+    private final FactoryInventoryItemRepository factoryInventoryRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public FactoryInventoryServiceImpl(FactoryInventoryRepository factoryInventoryRepository,
+    public FactoryInventoryServiceImpl(FactoryInventoryItemRepository factoryInventoryRepository,
                                        SubscriptionPlanLimiterService planLimiterService,
                                        EntitySanitizerService entitySanitizerService) {
         this.factoryInventoryRepository = factoryInventoryRepository;
@@ -58,7 +57,7 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
             }
         }
 
-        return factoryInventoryRepository.findFactoryItemsById(factoryId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
+        return factoryInventoryRepository.findFactoryItemsByIdAdvanced(factoryId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
     }
 
     public FactoryInventoryItem getFactoryInventoryItemById(Integer itemId) {
