@@ -6,28 +6,30 @@ import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.factory.dto.*;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
-import org.chainoptim.features.factory.repository.FactoryInventoryRepository;
-import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.factory.repository.FactoryInventoryItemRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FactoryInventoryServiceImpl implements FactoryInventoryService {
 
-    private final FactoryInventoryRepository factoryInventoryRepository;
+    private final FactoryInventoryItemRepository factoryInventoryRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public FactoryInventoryServiceImpl(FactoryInventoryRepository factoryInventoryRepository,
+    public FactoryInventoryServiceImpl(FactoryInventoryItemRepository factoryInventoryRepository,
                                        SubscriptionPlanLimiterService planLimiterService,
                                        EntitySanitizerService entitySanitizerService) {
         this.factoryInventoryRepository = factoryInventoryRepository;
@@ -42,12 +44,20 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
 
     public PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsByFactoryIdAdvanced(
             Integer factoryId,
-            String searchQuery,
-            String sortBy,
-            boolean ascending,
-            int page,
-            int itemsPerPage) {
-        return factoryInventoryRepository.findFactoryItemsById(factoryId, searchQuery, sortBy, ascending, page, itemsPerPage);
+            String searchQuery, String filtersJson,
+            String sortBy, boolean ascending,
+            int page, int itemsPerPage) {
+        // Attempt to parse filters JSON
+        Map<String, String> filters = new HashMap<>();
+        if (!filtersJson.isEmpty()) {
+            try {
+                filters = new ObjectMapper().readValue(filtersJson, new TypeReference<Map<String, String>>(){});
+            } catch (JsonProcessingException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid filters format");
+            }
+        }
+
+        return factoryInventoryRepository.findFactoryItemsByIdAdvanced(factoryId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
     }
 
     public FactoryInventoryItem getFactoryInventoryItemById(Integer itemId) {

@@ -11,7 +11,7 @@ public interface ClientOrderService {
 
     List<ClientOrder> getClientOrdersByOrganizationId(Integer organizationId);
     List<ClientOrder> getClientOrdersByClientId(Integer clientId);
-    PaginatedResults<ClientOrder> getClientOrdersByClientIdAdvanced(Integer clientId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
+    PaginatedResults<ClientOrder> getClientOrdersByClientIdAdvanced(Integer clientId, String searchQuery, String filtersJson, String sortBy, boolean ascending, int page, int itemsPerPage);
     ClientOrder createClientOrder(CreateClientOrderDTO order);
     List<ClientOrder> createClientOrdersInBulk(List<CreateClientOrderDTO> orderDTOs);
     List<ClientOrder> updateClientOrdersInBulk(List<UpdateClientOrderDTO> orderDTOs);

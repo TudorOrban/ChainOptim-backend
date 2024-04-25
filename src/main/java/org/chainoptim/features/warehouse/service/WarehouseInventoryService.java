@@ -13,11 +13,9 @@ public interface WarehouseInventoryService {
     List<WarehouseInventoryItem> getWarehouseInventoryItemsByWarehouseId(Integer warehouseId);
     PaginatedResults<WarehouseInventoryItem> getWarehouseInventoryItemsByWarehouseIdAdvanced(
             Integer warehouseId,
-            String searchQuery,
-            String sortBy,
-            boolean ascending,
-            int page,
-            int itemsPerPage);
+            String searchQuery, String filtersJson,
+            String sortBy, boolean ascending,
+            int page, int itemsPerPage);
     WarehouseInventoryItem getWarehouseInventoryItemById(Integer itemId);
 
     // Create

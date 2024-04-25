@@ -8,27 +8,34 @@ import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.dto.WarehouseDTOMapper;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
-import org.chainoptim.features.warehouse.repository.WarehouseInventoryRepository;
+import org.chainoptim.features.warehouse.repository.WarehouseInventoryItemRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class WarehouseInventoryServiceImpl implements WarehouseInventoryService {
 
-    private final WarehouseInventoryRepository warehouseInventoryRepository;
+    private final WarehouseInventoryItemRepository warehouseInventoryRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public WarehouseInventoryServiceImpl(WarehouseInventoryRepository warehouseInventoryRepository,
+    public WarehouseInventoryServiceImpl(WarehouseInventoryItemRepository warehouseInventoryRepository,
                                          SubscriptionPlanLimiterService planLimiterService,
                                          EntitySanitizerService entitySanitizerService) {
         this.warehouseInventoryRepository = warehouseInventoryRepository;
@@ -43,12 +50,20 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
 
     public PaginatedResults<WarehouseInventoryItem> getWarehouseInventoryItemsByWarehouseIdAdvanced(
             Integer warehouseId,
-            String searchQuery,
-            String sortBy,
-            boolean ascending,
-            int page,
-            int itemsPerPage) {
-        return warehouseInventoryRepository.findWarehouseItemsById(warehouseId, searchQuery, sortBy, ascending, page, itemsPerPage);
+            String searchQuery, String filtersJson,
+            String sortBy, boolean ascending,
+            int page, int itemsPerPage) {
+        // Attempt to parse filters JSON
+        Map<String, String> filters = new HashMap<>();
+        if (!filtersJson.isEmpty()) {
+            try {
+                filters = new ObjectMapper().readValue(filtersJson, new TypeReference<Map<String, String>>(){});
+            } catch (JsonProcessingException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid filters format");
+            }
+        }
+
+        return warehouseInventoryRepository.findWarehouseItemsByIdAdvanced(warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
     }
 
     public WarehouseInventoryItem getWarehouseInventoryItemById(Integer itemId) {

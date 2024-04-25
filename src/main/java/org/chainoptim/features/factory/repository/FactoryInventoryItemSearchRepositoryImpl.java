@@ -1,8 +1,7 @@
-package org.chainoptim.features.client.repository;
+package org.chainoptim.features.factory.repository;
 
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.client.model.ClientOrder;
-import org.chainoptim.shared.enums.OrderStatus;
+import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import jakarta.persistence.EntityManager;
@@ -13,39 +12,40 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepository {
+public class FactoryInventoryItemSearchRepositoryImpl implements FactoryInventoryItemSearchRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public PaginatedResults<ClientOrder> findByClientIdAdvanced(
-            Integer clientId,
+    public PaginatedResults<FactoryInventoryItem> findFactoryItemsByIdAdvanced(
+            Integer factoryId,
             String searchQuery, Map<String, String> filters,
             String sortBy, boolean ascending,
             int page, int itemsPerPage
     ) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ClientOrder> query = builder.createQuery(ClientOrder.class);
-        Root<ClientOrder> clientOrder = query.from(ClientOrder.class);
-        clientOrder.alias("so");
+        CriteriaQuery<FactoryInventoryItem> query = builder.createQuery(FactoryInventoryItem.class);
+        Root<FactoryInventoryItem> factoryInventoryItem = query.from(FactoryInventoryItem.class);
+        factoryInventoryItem.alias("so");
 
         // Perform a fetch join to load products eagerly
-        clientOrder.fetch("product", JoinType.LEFT);
+        factoryInventoryItem.fetch("product", JoinType.LEFT);
+        factoryInventoryItem.fetch("component", JoinType.LEFT);
 
-        // Add conditions (clientId and searchQuery)
-        Predicate conditions = getConditions(builder, clientOrder, clientId, searchQuery, filters);
+        // Add conditions (factoryId, searchQuery and filters)
+        Predicate conditions = getConditions(builder, factoryInventoryItem, factoryId, searchQuery, filters);
         query.where(conditions);
 
         // Add sorting
         if (ascending) {
-            query.orderBy(builder.asc(clientOrder.get(sortBy)));
+            query.orderBy(builder.asc(factoryInventoryItem.get(sortBy)));
         } else {
-            query.orderBy(builder.desc(clientOrder.get(sortBy)));
+            query.orderBy(builder.desc(factoryInventoryItem.get(sortBy)));
         }
 
         // Create query with pagination
-        List<ClientOrder> clientOrders = entityManager.createQuery(query)
+        List<FactoryInventoryItem> factoryInventoryItems = entityManager.createQuery(query)
                 .setFirstResult((page - 1) * itemsPerPage)
                 .setMaxResults(itemsPerPage)
                 .getResultList();
@@ -53,23 +53,23 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
         // Query total results count
         CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
-        Root<ClientOrder> countRoot = countQuery.from(ClientOrder.class);
-        Predicate countConditions = getConditions(countBuilder, countRoot, clientId, searchQuery, filters);
+        Root<FactoryInventoryItem> countRoot = countQuery.from(FactoryInventoryItem.class);
+        Predicate countConditions = getConditions(countBuilder, countRoot, factoryId, searchQuery, filters);
         countQuery.select(countBuilder.count(countRoot));
         countQuery.where(countConditions);
 
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PaginatedResults<>(clientOrders, totalCount);
+        return new PaginatedResults<>(factoryInventoryItems, totalCount);
     }
 
-    private Predicate getConditions(CriteriaBuilder builder, Root<ClientOrder> root,
-                                    Integer clientId,
+    private Predicate getConditions(CriteriaBuilder builder, Root<FactoryInventoryItem> root,
+                                    Integer factoryId,
                                     String searchQuery, Map<String, String> filters) {
         Predicate conditions = builder.conjunction();
-        if (clientId != null) {
-            conditions = builder.and(conditions, builder.equal(root.get("clientId"), clientId));
+        if (factoryId != null) {
+            conditions = builder.and(conditions, builder.equal(root.get("factoryId"), factoryId));
         }
         if (searchQuery != null && !searchQuery.isEmpty()) {
             conditions = builder.and(conditions, builder.like(root.get("companyId"), "%" + searchQuery + "%"));
@@ -81,7 +81,7 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
         return conditions;
     }
 
-    private Predicate addFilters(CriteriaBuilder builder, Root<ClientOrder> root, Predicate conditions, Map<String, String> filters) {
+    private Predicate addFilters(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions, Map<String, String> filters) {
         for (Map.Entry<String, String> filter : filters.entrySet()) {
             String key = filter.getKey();
             String value = filter.getValue();
@@ -95,35 +95,29 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
         return conditions;
     }
 
-    private Predicate applyFilter(CriteriaBuilder builder, Root<ClientOrder> root, Predicate conditions, String key, String value) {
+    private Predicate applyFilter(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions, String key, String value) {
         return switch (key) {
-            case "orderDateStart" ->
-                    addDateFilter(builder, root, conditions, "orderDate", value, true);
-            case "orderDateEnd" ->
-                    addDateFilter(builder, root, conditions, "orderDate", value, false);
-            case "deliveryDateStart" ->
-                    addDateFilter(builder, root, conditions, "deliveryDate", value, true);
-            case "deliveryDateEnd" ->
-                    addDateFilter(builder, root, conditions, "deliveryDate", value, false);
-            case "estimatedDeliveryDateStart" ->
-                    addDateFilter(builder, root, conditions, "estimatedDeliveryDate", value, true);
-            case "estimatedDeliveryDateEnd" ->
-                    addDateFilter(builder, root, conditions, "estimatedDeliveryDate", value, false);
+            case "createdAtStart" ->
+                    addDateFilter(builder, root, conditions, "createdAt", value, true);
+            case "createdAtEnd" ->
+                    addDateFilter(builder, root, conditions, "createdAt", value, false);
+            case "updatedAtStart" ->
+                    addDateFilter(builder, root, conditions, "updatedAt", value, true);
+            case "updatedAtEnd" ->
+                    addDateFilter(builder, root, conditions, "updatedAt", value, false);
             case "greaterThanQuantity" ->
                     addFloatFilter(builder, root, conditions, "quantity", value, true);
             case "lessThanQuantity" ->
                     addFloatFilter(builder, root, conditions, "quantity", value, false);
-            case "greaterThanDeliveredQuantity" ->
-                    addFloatFilter(builder, root, conditions, "deliveredQuantity", value, true);
-            case "lessThanDeliveredQuantity" ->
-                    addFloatFilter(builder, root, conditions, "deliveredQuantity", value, false);
-            case "status" ->
-                    addStatusFilter(builder, root, conditions, value);
+            case "greaterThanMinimumRequiredQuantity" ->
+                    addFloatFilter(builder, root, conditions, "minimumRequiredQuantity", value, true);
+            case "lessThanMinimumRequiredQuantity" ->
+                    addFloatFilter(builder, root, conditions, "minimumRequiredQuantity", value, false);
             default -> throw new ValidationException("Invalid filter: " + key);
         };
     }
 
-    private Predicate addDateFilter(CriteriaBuilder builder, Root<ClientOrder> root, Predicate conditions,
+    private Predicate addDateFilter(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions,
                                     String targetProperty, String filterValue, boolean startingAt) {
         LocalDateTime date;
         try {
@@ -141,7 +135,7 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
         return conditions;
     }
 
-    private Predicate addFloatFilter(CriteriaBuilder builder, Root<ClientOrder> root, Predicate conditions,
+    private Predicate addFloatFilter(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions,
                                      String targetProperty, String filterValue, boolean startingAt) {
         Float value;
         try {
@@ -157,19 +151,6 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
         }
 
         return conditions;
-    }
-
-    private Predicate addStatusFilter(CriteriaBuilder builder, Root<ClientOrder> root, Predicate conditions, String status) {
-        if (status == null || status.isEmpty()) return conditions;
-
-        OrderStatus orderStatus;
-        try {
-            orderStatus = OrderStatus.valueOf(status);
-        } catch (IllegalArgumentException e) {
-            throw new ValidationException("Invalid status filter.");
-        }
-
-        return builder.and(conditions, builder.equal(root.get("status"), orderStatus));
     }
 
 }

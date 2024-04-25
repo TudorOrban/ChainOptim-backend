@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/supplier-orders")
@@ -40,12 +41,13 @@ public class SupplierOrderController {
     public ResponseEntity<PaginatedResults<SupplierOrder>> getSupplierOrdersBySupplierIdAdvanced(
             @PathVariable Integer supplierId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
             @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
     ) {
-        PaginatedResults<SupplierOrder> supplierOrders = supplierOrderService.getSupplierOrdersBySupplierIdAdvanced(supplierId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<SupplierOrder> supplierOrders = supplierOrderService.getSupplierOrdersBySupplierIdAdvanced(supplierId, searchQuery, filtersJson, sortBy, ascending, page, itemsPerPage);
         return ResponseEntity.ok(supplierOrders);
     }
 
