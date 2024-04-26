@@ -141,38 +141,42 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         List<SupplierOrder> orders = supplierOrderRepository.findByIds(orderDTOs.stream().map(UpdateSupplierOrderDTO::getId).toList())
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier Orders not found."));
 
-        List<SupplierOrder> oldOrders = orders.stream().map(SupplierOrder::deepCopy).toList();
+        // Save old orders for event publishing
+        Map<Integer, SupplierOrder> oldOrders = new HashMap<>();
+        for (SupplierOrder order: orders) {
+            oldOrders.put(order.getId(), order.deepCopy());
+        }
 
+        // Update orders
         List<SupplierOrder> updatedOrders = orders.stream()
                 .map(order -> {
                     UpdateSupplierOrderDTO orderDTO = orderDTOs.stream()
                             .filter(dto -> dto.getId().equals(order.getId()))
                             .findFirst()
                             .orElseThrow(() -> new ResourceNotFoundException("Supplier Order with ID: " + order.getId() + " not found."));
-//                    UpdateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateSupplierOrderDTO(orderDTO);
-                    SupplierDTOMapper.setUpdateSupplierOrderDTOToUpdateOrder(order, orderDTO);
-                    Component component = componentRepository.findById(orderDTO.getComponentId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + orderDTO.getComponentId() + " not found."));
+                    UpdateSupplierOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateSupplierOrderDTO(orderDTO);
+                    SupplierDTOMapper.setUpdateSupplierOrderDTOToUpdateOrder(order, sanitizedOrderDTO);
+                    Component component = componentRepository.findById(sanitizedOrderDTO.getComponentId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + sanitizedOrderDTO.getComponentId() + " not found."));
                     order.setComponent(component);
                     return order;
                 }).toList();
 
+        // Save
+        List<SupplierOrder> savedOrders = supplierOrderRepository.saveAll(updatedOrders);
+
         // Publish order events to Kafka broker
         List<SupplierOrderEvent> orderEvents = new ArrayList<>();
-        orders.stream()
+        savedOrders.stream()
                 .map(order -> {
-                    SupplierOrder oldOrder = oldOrders.stream()
-                            .filter(o -> o.getId().equals(order.getId()))
-                            .findFirst()
-                            .orElseThrow(() -> new ResourceNotFoundException("Supplier Order with ID: " + order.getId() + " not found."));
+                    SupplierOrder oldOrder = oldOrders.get(order.getId());
                     return new SupplierOrderEvent(order, oldOrder, KafkaEvent.EventType.UPDATE, order.getSupplierId(), Feature.SUPPLIER, "Test");
                 })
                 .forEach(orderEvents::add);
 
         kafkaSupplierOrderService.sendSupplierOrderEventsInBulk(orderEvents);
 
-        // Save
-        return supplierOrderRepository.saveAll(updatedOrders);
+        return savedOrders;
     }
 
     @Transactional

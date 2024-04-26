@@ -65,7 +65,7 @@ public class SupplierOrder {
 
     public SupplierOrder deepCopy() {
         return SupplierOrder.builder()
-                .id(this.id)
+//                .id(this.id)
                 .createdAt(this.createdAt)
                 .updatedAt(this.updatedAt)
                 .organizationId(this.organizationId)

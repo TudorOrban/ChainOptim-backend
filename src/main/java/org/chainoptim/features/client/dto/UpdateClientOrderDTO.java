@@ -15,11 +15,11 @@ public class UpdateClientOrderDTO {
     private Integer id;
     private Integer organizationId;
     private Integer productId;
-    private String companyId;
     private Float quantity;
     private Float deliveredQuantity;
-    private OrderStatus status;
     private LocalDateTime orderDate;
     private LocalDateTime estimatedDeliveryDate;
     private LocalDateTime deliveryDate;
+    private OrderStatus status;
+    private String companyId;
 }

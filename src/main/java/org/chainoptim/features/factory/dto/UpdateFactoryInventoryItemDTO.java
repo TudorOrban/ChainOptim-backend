@@ -7,6 +7,7 @@ public class UpdateFactoryInventoryItemDTO {
 
     private Integer id;
     private Integer factoryId;
+    private Integer organizationId;
     private Integer productId;
     private Integer componentId;
     private Float quantity;

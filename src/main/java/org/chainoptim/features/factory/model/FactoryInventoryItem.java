@@ -52,4 +52,18 @@ public class FactoryInventoryItem {
 
     @Column(name = "company_id")
     private String companyId;
+
+    public FactoryInventoryItem deepCopy() {
+        return FactoryInventoryItem.builder()
+                .factoryId(this.factoryId)
+                .organizationId(this.organizationId)
+                .component(this.component)
+                .product(this.product)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .quantity(this.quantity)
+                .minimumRequiredQuantity(this.minimumRequiredQuantity)
+                .companyId(this.companyId)
+                .build();
+    }
 }
