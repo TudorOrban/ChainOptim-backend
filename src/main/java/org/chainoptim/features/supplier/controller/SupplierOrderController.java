@@ -80,7 +80,7 @@ public class SupplierOrderController {
     public ResponseEntity<List<Integer>> deleteSupplierOrdersInBulk(@RequestBody List<Integer> orderIds) {
         supplierOrderService.deleteSupplierOrdersInBulk(orderIds);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(orderIds);
     }
 
 }

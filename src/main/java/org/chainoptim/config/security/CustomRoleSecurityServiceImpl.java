@@ -16,6 +16,7 @@ public class CustomRoleSecurityServiceImpl implements CustomRoleSecurityService 
         }
 
         return switch (entityType) {
+            case "Organization" -> hasOperationAccess(userPermissions.getOrganization(), operationType);
             case "Product" -> hasOperationAccess(userPermissions.getProducts(), operationType);
             case "Factory" -> hasOperationAccess(userPermissions.getFactories(), operationType);
             case "Warehouse" -> hasOperationAccess(userPermissions.getWarehouses(), operationType);

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Permissions {
 
+    private FeaturePermissions organization;
     private FeaturePermissions products;
     private FeaturePermissions factories;
     private FeaturePermissions warehouses;
