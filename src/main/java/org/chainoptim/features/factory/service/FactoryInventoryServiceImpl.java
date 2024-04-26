@@ -1,15 +1,24 @@
 package org.chainoptim.features.factory.service;
 
+import org.chainoptim.core.notifications.model.KafkaEvent;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.factory.dto.*;
+import org.chainoptim.features.factory.dto.FactoryDTOMapper;
+import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
+import org.chainoptim.features.factory.dto.UpdateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
+import org.chainoptim.features.factory.model.FactoryInventoryItemEvent;
 import org.chainoptim.features.factory.repository.FactoryInventoryItemRepository;
+import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.repository.ProductRepository;
+import org.chainoptim.features.productpipeline.model.Component;
+import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,29 +33,40 @@ import java.util.*;
 @Service
 public class FactoryInventoryServiceImpl implements FactoryInventoryService {
 
-    private final FactoryInventoryItemRepository factoryInventoryRepository;
+    private final FactoryInventoryItemRepository factoryInventoryItemRepository;
+    private final KafkaFactoryInventoryService kafkaFactoryInventoryService;
+    private final ProductRepository productRepository;
+    private final ComponentRepository componentRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
-    public FactoryInventoryServiceImpl(FactoryInventoryItemRepository factoryInventoryRepository,
-                                       SubscriptionPlanLimiterService planLimiterService,
-                                       EntitySanitizerService entitySanitizerService) {
-        this.factoryInventoryRepository = factoryInventoryRepository;
+    public FactoryInventoryServiceImpl(
+            FactoryInventoryItemRepository factoryInventoryItemRepository,
+            KafkaFactoryInventoryService kafkaFactoryInventoryService,
+            ProductRepository productRepository,
+            ComponentRepository componentRepository,
+            SubscriptionPlanLimiterService planLimiterService,
+            EntitySanitizerService entitySanitizerService
+    ) {
+        this.factoryInventoryItemRepository = factoryInventoryItemRepository;
+        this.kafkaFactoryInventoryService = kafkaFactoryInventoryService;
+        this.productRepository = productRepository;
+        this.componentRepository = componentRepository;
         this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
 
     // Fetch
-    public List<FactoryInventoryItem> getFactoryInventoryItemsByFactoryId(Integer factoryId) {
-        return factoryInventoryRepository.findByFactoryId(factoryId);
+    public List<FactoryInventoryItem> getFactoryInventoryItemsByOrganizationId(Integer organizationId) {
+        return factoryInventoryItemRepository.findByOrganizationId(organizationId);
     }
 
-    public PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsByFactoryIdAdvanced(
-            Integer factoryId,
-            String searchQuery, String filtersJson,
-            String sortBy, boolean ascending,
-            int page, int itemsPerPage) {
+    public List<FactoryInventoryItem> getFactoryInventoryItemsByFactoryId(Integer factoryId) {
+        return factoryInventoryItemRepository.findByFactoryId(factoryId);
+    }
+
+    public PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsByFactoryIdAdvanced(Integer factoryId, String searchQuery, String filtersJson, String sortBy, boolean ascending, int page, int itemsPerPage) {
         // Attempt to parse filters JSON
         Map<String, String> filters = new HashMap<>();
         if (!filtersJson.isEmpty()) {
@@ -57,80 +77,149 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
             }
         }
 
-        return factoryInventoryRepository.findFactoryItemsByIdAdvanced(factoryId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
-    }
-
-    public FactoryInventoryItem getFactoryInventoryItemById(Integer itemId) {
-        return factoryInventoryRepository.findById(itemId)
-                .orElseThrow(() -> new ResourceNotFoundException("Factory inventory item with ID: " + itemId + " not found."));
+        return factoryInventoryItemRepository.findFactoryItemsByIdAdvanced(factoryId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
     }
 
     // Create
-    public FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO itemDTO) {
+    public FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO orderDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(itemDTO.getOrganizationId(), Feature.FACTORY_INVENTORY, 1)) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed Factory Inventory Items for the current Subscription Plan.");
+        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.CLIENT_ORDER, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed factorys for the current Subscription Plan.");
         }
 
         // Sanitize input and map to entity
-        CreateFactoryInventoryItemDTO sanitizedItemDTO = entitySanitizerService.sanitizeCreateFactoryInventoryItemDTO(itemDTO);
-        FactoryInventoryItem item = FactoryDTOMapper.convertCreateFactoryItemDTOToFactoryItem(sanitizedItemDTO);
+        CreateFactoryInventoryItemDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateFactoryInventoryItemDTO(orderDTO);
+        FactoryInventoryItem factoryInventoryItem = FactoryDTOMapper.mapCreateFactoryInventoryItemDTOToFactoryInventoryItem(sanitizedOrderDTO);
+        if (sanitizedOrderDTO.getProductId() != null) {
+            Product product = productRepository.findById(orderDTO.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + orderDTO.getProductId() + " not found."));
+            factoryInventoryItem.setProduct(product);
+        }
+        if (sanitizedOrderDTO.getComponentId() != null) {
+            Component component = componentRepository.findById(orderDTO.getComponentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + orderDTO.getComponentId() + " not found."));
+            factoryInventoryItem.setComponent(component);
+        }
+        FactoryInventoryItem savedOrder = factoryInventoryItemRepository.save(factoryInventoryItem);
 
-        return factoryInventoryRepository.save(item);
+        // Publish order to Kafka broker
+        kafkaFactoryInventoryService.sendFactoryInventoryItemEvent(
+                new FactoryInventoryItemEvent(savedOrder, null, KafkaEvent.EventType.CREATE, savedOrder.getFactoryId(), Feature.CLIENT, "Test"));
+
+        return savedOrder;
     }
 
     @Transactional
-    public List<FactoryInventoryItem> createFactoryInventoryItemsInBulk(List<CreateFactoryInventoryItemDTO> itemDTOs) {
+    public List<FactoryInventoryItem> createFactoryInventoryItemsInBulk(List<CreateFactoryInventoryItemDTO> orderDTOs) {
         // Ensure same organizationId
-        if (itemDTOs.stream().map(CreateFactoryInventoryItemDTO::getOrganizationId).distinct().count() > 1) {
-            throw new ValidationException("All items must belong to the same organization.");
+        if (orderDTOs.stream().map(CreateFactoryInventoryItemDTO::getOrganizationId).distinct().count() > 1) {
+            throw new ValidationException("All orders must belong to the same organization.");
         }
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(itemDTOs.getFirst().getOrganizationId(), Feature.FACTORY_INVENTORY, itemDTOs.size())) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed Factory Inventory Items for the current Subscription Plan.");
+        if (planLimiterService.isLimitReached(orderDTOs.getFirst().getOrganizationId(), Feature.CLIENT_ORDER, orderDTOs.size())) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed Factory Orders for the current Subscription Plan.");
         }
 
         // Sanitize and map to entity
-        List<FactoryInventoryItem> items = itemDTOs.stream()
-                .map(itemDTO -> {
-                    CreateFactoryInventoryItemDTO sanitizedItemDTO = entitySanitizerService.sanitizeCreateFactoryInventoryItemDTO(itemDTO);
-                    return FactoryDTOMapper.convertCreateFactoryItemDTOToFactoryItem(sanitizedItemDTO);
+        List<FactoryInventoryItem> orders = orderDTOs.stream()
+                .map(orderDTO -> {
+                    CreateFactoryInventoryItemDTO sanitizedOrderDTO = entitySanitizerService.sanitizeCreateFactoryInventoryItemDTO(orderDTO);
+                    FactoryInventoryItem factoryInventoryItem = FactoryDTOMapper.mapCreateFactoryInventoryItemDTOToFactoryInventoryItem(sanitizedOrderDTO);
+                    if (sanitizedOrderDTO.getProductId() != null) {
+                        Product product = productRepository.findById(orderDTO.getProductId())
+                                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + orderDTO.getProductId() + " not found."));
+                        factoryInventoryItem.setProduct(product);
+                    }
+                    if (sanitizedOrderDTO.getComponentId() != null) {
+                        Component component = componentRepository.findById(orderDTO.getComponentId())
+                                .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + orderDTO.getComponentId() + " not found."));
+                        factoryInventoryItem.setComponent(component);
+                    }
+                    return factoryInventoryItem;
                 })
                 .toList();
 
-        return factoryInventoryRepository.saveAll(items);
-    }
+        List<FactoryInventoryItem> savedOrders = factoryInventoryItemRepository.saveAll(orders);
 
-    // Update
-    public FactoryInventoryItem updateFactoryInventoryItem(UpdateFactoryInventoryItemDTO itemDTO) {
-        UpdateFactoryInventoryItemDTO sanitizedItemDTO = entitySanitizerService.sanitizeUpdateFactoryInventoryItemDTO(itemDTO);
-        FactoryInventoryItem item = factoryInventoryRepository.findById(sanitizedItemDTO.getId()).
-                orElseThrow(() -> new ResourceNotFoundException("Factory inventory item with ID: " + sanitizedItemDTO.getId() + " not found."));
+        // Publish order events to Kafka broker
+        List<FactoryInventoryItemEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> new FactoryInventoryItemEvent(order, null, KafkaEvent.EventType.CREATE, order.getFactoryId(), Feature.CLIENT, "Test"))
+                .forEach(orderEvents::add);
 
-        item.setQuantity(sanitizedItemDTO.getQuantity());
+        kafkaFactoryInventoryService.sendFactoryInventoryItemEventsInBulk(orderEvents);
 
-        factoryInventoryRepository.save(item);
-        return item;
+        return savedOrders;
     }
 
     @Transactional
-    public List<FactoryInventoryItem> updateFactoryInventoryItemsInBulk(List<UpdateFactoryInventoryItemDTO> itemDTOs) {
-        List<FactoryInventoryItem> items = new ArrayList<>();
-        for (UpdateFactoryInventoryItemDTO itemDTO : itemDTOs) {
-            FactoryInventoryItem item = factoryInventoryRepository.findById(itemDTO.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Factory inventory item with ID: " + itemDTO.getId() + " not found."));
+    public List<FactoryInventoryItem> updateFactoryInventoryItemsInBulk(List<UpdateFactoryInventoryItemDTO> orderDTOs) {
+        List<FactoryInventoryItem> orders = factoryInventoryItemRepository.findByIds(orderDTOs.stream().map(UpdateFactoryInventoryItemDTO::getId).toList())
+                .orElseThrow(() -> new ResourceNotFoundException("Factory Orders not found."));
 
-            item.setQuantity(itemDTO.getQuantity());
-            items.add(item);
+        // Save old orders for event publishing
+        Map<Integer, FactoryInventoryItem> oldOrders = new HashMap<>();
+        for (FactoryInventoryItem order : orders) {
+            oldOrders.put(order.getId(), order.deepCopy());
         }
 
-        return factoryInventoryRepository.saveAll(items);
+        // Update orders
+        List<FactoryInventoryItem> updatedOrders = orders.stream()
+                .map(item -> {
+                    UpdateFactoryInventoryItemDTO orderDTO = orderDTOs.stream()
+                            .filter(dto -> dto.getId().equals(item.getId()))
+                            .findFirst()
+                            .orElseThrow(() -> new ResourceNotFoundException("Factory Order with ID: " + item.getId() + " not found."));
+                    UpdateFactoryInventoryItemDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateFactoryInventoryItemDTO(orderDTO);
+                    FactoryDTOMapper.setUpdateFactoryInventoryItemDTOToFactoryInventoryItem(item, sanitizedOrderDTO);
+                    if (sanitizedOrderDTO.getProductId() != null) {
+                        Product product = productRepository.findById(orderDTO.getProductId())
+                                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + orderDTO.getProductId() + " not found."));
+                        item.setProduct(product);
+                    }
+                    if (sanitizedOrderDTO.getComponentId() != null) {
+                        Component component = componentRepository.findById(orderDTO.getComponentId())
+                                .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + orderDTO.getComponentId() + " not found."));
+                        item.setComponent(component);
+                    }
+                    return item;
+                }).toList();
+
+        // Save
+        List<FactoryInventoryItem> savedOrders = factoryInventoryItemRepository.saveAll(updatedOrders);
+
+        // Publish order events to Kafka broker
+        List<FactoryInventoryItemEvent> orderEvents = new ArrayList<>();
+        savedOrders.stream()
+                .map(order -> {
+                    FactoryInventoryItem oldOrder = oldOrders.get(order.getId());
+                    return new FactoryInventoryItemEvent(order, oldOrder, KafkaEvent.EventType.UPDATE, order.getFactoryId(), Feature.CLIENT, "Test");
+                })
+                .forEach(orderEvents::add);
+
+        kafkaFactoryInventoryService.sendFactoryInventoryItemEventsInBulk(orderEvents);
+
+        return savedOrders;
     }
 
-    // Delete
-    public void deleteFactoryInventoryItem(Integer itemId) {
-        FactoryInventoryItem item = new FactoryInventoryItem();
-        item.setId(itemId);
-        factoryInventoryRepository.delete(item);
+    @Transactional
+    public List<Integer> deleteFactoryInventoryItemsInBulk(List<Integer> orderIds) {
+        List<FactoryInventoryItem> orders = factoryInventoryItemRepository.findAllById(orderIds);
+        // Ensure same organizationId
+        if (orders.stream().map(FactoryInventoryItem::getOrganizationId).distinct().count() > 1) {
+            throw new ValidationException("All orders must belong to the same organization.");
+        }
+
+        factoryInventoryItemRepository.deleteAll(orders);
+
+        // Publish order events to Kafka broker
+        List<FactoryInventoryItemEvent> orderEvents = new ArrayList<>();
+        orders.stream()
+                .map(order -> new FactoryInventoryItemEvent(null, order, KafkaEvent.EventType.CREATE, order.getFactoryId(), Feature.CLIENT, "Test"))
+                .forEach(orderEvents::add);
+
+        kafkaFactoryInventoryService.sendFactoryInventoryItemEventsInBulk(orderEvents);
+
+        return orderIds;
     }
 }

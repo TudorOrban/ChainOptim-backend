@@ -16,16 +16,15 @@ public interface FactoryInventoryService {
             String searchQuery, String filtersJson,
             String sortBy, boolean ascending,
             int page, int itemsPerPage);
-    FactoryInventoryItem getFactoryInventoryItemById(Integer inventoryItemId);
 
     // Create
     FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO itemDTO);
     List<FactoryInventoryItem> createFactoryInventoryItemsInBulk(List<CreateFactoryInventoryItemDTO> itemDTOs);
 
     // Update
-    FactoryInventoryItem updateFactoryInventoryItem(UpdateFactoryInventoryItemDTO itemDTO);
+//    FactoryInventoryItem updateFactoryInventoryItem(UpdateFactoryInventoryItemDTO itemDTO);
     List<FactoryInventoryItem> updateFactoryInventoryItemsInBulk(List<UpdateFactoryInventoryItemDTO> itemDTOs);
 
     // Delete
-    void deleteFactoryInventoryItem(Integer itemId);
+    List<Integer> deleteFactoryInventoryItemsInBulk(List<Integer> itemIds);
 }

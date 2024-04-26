@@ -77,4 +77,17 @@ public class FactoryDTOMapper {
         factoryStage.setPriority(stageDTO.getPriority());
         factoryStage.setMinimumRequiredCapacity(stageDTO.getMinimumRequiredCapacity());
     }
+
+    public static FactoryInventoryItem mapCreateFactoryInventoryItemDTOToFactoryInventoryItem(CreateFactoryInventoryItemDTO item) {
+        FactoryInventoryItem factoryInventoryItem = new FactoryInventoryItem();
+        factoryInventoryItem.setFactoryId(item.getFactoryId());
+        factoryInventoryItem.setQuantity(item.getQuantity());
+        factoryInventoryItem.setMinimumRequiredQuantity(item.getMinimumRequiredQuantity());
+        return factoryInventoryItem;
+    }
+
+    public static void setUpdateFactoryInventoryItemDTOToFactoryInventoryItem(FactoryInventoryItem factoryInventoryItem, UpdateFactoryInventoryItemDTO item) {
+        factoryInventoryItem.setQuantity(item.getQuantity());
+        factoryInventoryItem.setMinimumRequiredQuantity(item.getMinimumRequiredQuantity());
+    }
 }
