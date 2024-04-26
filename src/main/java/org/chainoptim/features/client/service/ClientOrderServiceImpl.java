@@ -148,6 +148,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
             oldOrders.put(order.getId(), order.deepCopy());
         }
 
+        // Update orders
         List<ClientOrder> updatedOrders = orders.stream()
                 .map(order -> {
                     UpdateClientOrderDTO orderDTO = orderDTOs.stream()
@@ -167,7 +168,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
         // Publish order events to Kafka broker
         List<ClientOrderEvent> orderEvents = new ArrayList<>();
-        updatedOrders.stream()
+        savedOrders.stream()
                 .map(order -> {
                     ClientOrder oldOrder = oldOrders.get(order.getId());
                     return new ClientOrderEvent(order, oldOrder, KafkaEvent.EventType.UPDATE, order.getClientId(), Feature.CLIENT, "Test");
