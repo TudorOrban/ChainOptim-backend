@@ -142,7 +142,11 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         List<ClientOrder> orders = clientOrderRepository.findByIds(orderDTOs.stream().map(UpdateClientOrderDTO::getId).toList())
                 .orElseThrow(() -> new ResourceNotFoundException("Client Orders not found."));
 
-        List<ClientOrder> oldOrders = orders.stream().map(ClientOrder::deepCopy).toList();
+        // Save old orders for event publishing
+        Map<Integer, ClientOrder> oldOrders = new HashMap<>();
+        for (ClientOrder order : orders) {
+            oldOrders.put(order.getId(), order.deepCopy());
+        }
 
         List<ClientOrder> updatedOrders = orders.stream()
                 .map(order -> {
@@ -150,30 +154,29 @@ public class ClientOrderServiceImpl implements ClientOrderService {
                             .filter(dto -> dto.getId().equals(order.getId()))
                             .findFirst()
                             .orElseThrow(() -> new ResourceNotFoundException("Client Order with ID: " + order.getId() + " not found."));
-//                    UpdateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateClientOrderDTO(orderDTO);
-                    ClientDTOMapper.setUpdateClientOrderDTOToClientOrder(order, orderDTO);
-                    Product product = productRepository.findById(orderDTO.getProductId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + orderDTO.getProductId() + " not found."));
+                    UpdateClientOrderDTO sanitizedOrderDTO = entitySanitizerService.sanitizeUpdateClientOrderDTO(orderDTO);
+                    ClientDTOMapper.setUpdateClientOrderDTOToClientOrder(order, sanitizedOrderDTO);
+                    Product product = productRepository.findById(sanitizedOrderDTO.getProductId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + sanitizedOrderDTO.getProductId() + " not found."));
                     order.setProduct(product);
                     return order;
                 }).toList();
 
+        // Save
+        List<ClientOrder> savedOrders = clientOrderRepository.saveAll(updatedOrders);
+
         // Publish order events to Kafka broker
         List<ClientOrderEvent> orderEvents = new ArrayList<>();
-        orders.stream()
+        updatedOrders.stream()
                 .map(order -> {
-                    ClientOrder oldOrder = oldOrders.stream()
-                            .filter(o -> o.getId().equals(order.getId()))
-                            .findFirst()
-                            .orElseThrow(() -> new ResourceNotFoundException("Client Order with ID: " + order.getId() + " not found."));
+                    ClientOrder oldOrder = oldOrders.get(order.getId());
                     return new ClientOrderEvent(order, oldOrder, KafkaEvent.EventType.UPDATE, order.getClientId(), Feature.CLIENT, "Test");
                 })
                 .forEach(orderEvents::add);
 
         kafkaClientOrderService.sendClientOrderEventsInBulk(orderEvents);
 
-        // Save
-        return clientOrderRepository.saveAll(updatedOrders);
+        return savedOrders;
     }
     
     @Transactional

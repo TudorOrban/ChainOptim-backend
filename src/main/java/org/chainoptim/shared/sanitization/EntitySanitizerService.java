@@ -56,6 +56,7 @@ public interface EntitySanitizerService {
     CreateClientDTO sanitizeCreateClientDTO(CreateClientDTO supplierDTO);
     UpdateClientDTO sanitizeUpdateClientDTO(UpdateClientDTO supplierDTO);
     CreateClientOrderDTO sanitizeCreateClientOrderDTO(CreateClientOrderDTO orderDTO);
+    UpdateClientOrderDTO sanitizeUpdateClientOrderDTO(UpdateClientOrderDTO orderDTO);
     CreateClientShipmentDTO sanitizeCreateClientShipmentDTO(CreateClientShipmentDTO shipmentDTO);
     UpdateClientShipmentDTO sanitizeUpdateClientShipmentDTO(UpdateClientShipmentDTO shipmentDTO);
 

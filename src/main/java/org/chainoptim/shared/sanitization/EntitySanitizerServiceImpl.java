@@ -149,6 +149,10 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         return orderDTO;
     }
 
+    public UpdateClientOrderDTO sanitizeUpdateClientOrderDTO(UpdateClientOrderDTO orderDTO) {
+        return orderDTO;
+    }
+
     public CreateClientShipmentDTO sanitizeCreateClientShipmentDTO(CreateClientShipmentDTO shipmentDTO) {
         return shipmentDTO;
     }
