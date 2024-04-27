@@ -1,5 +1,6 @@
 package org.chainoptim.features.factory.controller;
 
+import org.chainoptim.ChainOptimizerApplication;
 import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryInventoryItemDTO;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/v1/factory-inventory-items")
@@ -20,7 +22,7 @@ public class FactoryInventoryController {
 
     private final FactoryInventoryService factoryInventoryService;
     private final SecurityService securityService;
-
+    private static final Logger logger = Logger.getLogger(FactoryInventoryController.class.getName());
     @Autowired
     public FactoryInventoryController(FactoryInventoryService factoryInventoryService,
                                       SecurityService securityService) {
@@ -61,7 +63,9 @@ public class FactoryInventoryController {
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"FactoryInventoryItem\", \"Create\")")
     @PostMapping("/create/bulk")
     public ResponseEntity<List<FactoryInventoryItem>> createFactoryInventoryItemsInBulk(@RequestBody List<CreateFactoryInventoryItemDTO> orderDTOs) {
+        logger.info("Creating factory inventory items in bulk");
         List<FactoryInventoryItem> factoryInventoryItems = factoryInventoryService.createFactoryInventoryItemsInBulk(orderDTOs);
+        logger.info("Created factory inventory items in bulk");
         return ResponseEntity.ok(factoryInventoryItems);
     }
 
