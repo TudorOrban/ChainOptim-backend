@@ -5,7 +5,9 @@ import org.chainoptim.features.supplier.dto.CreateSupplierOrderDTO;
 import org.chainoptim.features.supplier.dto.UpdateSupplierOrderDTO;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.service.SupplierOrderService;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/supplier-orders")
@@ -36,8 +37,24 @@ public class SupplierOrderController {
         return ResponseEntity.ok(supplierOrders);
     }
 
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Organization\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<SupplierOrder>> getSupplierOrdersByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<SupplierOrder> supplierOrders = supplierOrderService.getSupplierOrdersAdvanced(SearchMode.ORGANIZATION, organizationId, searchParams);
+        return ResponseEntity.ok(supplierOrders);
+    }
+
     @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
-    @GetMapping("/organization/advanced/{supplierId}")
+    @GetMapping("/supplier/advanced/{supplierId}")
     public ResponseEntity<PaginatedResults<SupplierOrder>> getSupplierOrdersBySupplierIdAdvanced(
             @PathVariable Integer supplierId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
@@ -47,7 +64,8 @@ public class SupplierOrderController {
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
     ) {
-        PaginatedResults<SupplierOrder> supplierOrders = supplierOrderService.getSupplierOrdersBySupplierIdAdvanced(supplierId, searchQuery, filtersJson, sortBy, ascending, page, itemsPerPage);
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<SupplierOrder> supplierOrders = supplierOrderService.getSupplierOrdersAdvanced(SearchMode.SECONDARY, supplierId, searchParams);
         return ResponseEntity.ok(supplierOrders);
     }
 
