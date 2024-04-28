@@ -11,6 +11,7 @@ import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,17 @@ public class StageServiceImpl implements StageService {
     public List<StagesSearchDTO> getStagesByOrganizationIdSmall(Integer organizationId) {
         return stageRepository.findByOrganizationIdSmall(organizationId);
     }
+
+    public PaginatedResults<StagesSearchDTO> getStagesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        PaginatedResults<Stage> paginatedResults = stageRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return new PaginatedResults<>(
+                paginatedResults.results.stream()
+                        .map(StageDTOMapper::convertStageToStagesSearchDTO)
+                        .toList(),
+                paginatedResults.totalCount
+        );
+    }
+
 
     public Stage getStageById(Integer stageId) {
         Stage stage = stageRepository.findById(stageId)
