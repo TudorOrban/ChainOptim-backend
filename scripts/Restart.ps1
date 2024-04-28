@@ -9,4 +9,4 @@ Write-Host "Building the Maven project (skipping tests)..."
 mvn clean package -DskipTests
 
 Write-Host "Building and starting Docker containers..."
-docker-compose --profile monitoring up --build
+docker-compose up --build
