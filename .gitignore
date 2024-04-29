@@ -35,10 +35,14 @@ build/
 ### App properties ###
 application.properties
 application-docker.properties
+application-docker-dev.properties
+src/main/resources/application.properties
+src/main/resources/application-docker-prod.properties
+src/main/resources/application-docker-dev.properties
 
 ### MySQL ###
 mysql/
 
 ### Docker ###
-docker-compose.yml
-docker-compose.override.yml
+docker-compose.prod.yml
+docker-compose.dev.yml

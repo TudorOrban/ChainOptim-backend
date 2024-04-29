@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 public class RedisConfig {
 
     /*
-     * Configure Redis to use the redis service defined in docker-compose.yml
+     * Configure Redis to use the redis service defined in docker-compose.prod.yml
      */
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
