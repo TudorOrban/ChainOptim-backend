@@ -5,7 +5,9 @@ import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.enums.OrderStatus;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,7 +62,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -71,7 +73,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -91,7 +93,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -102,7 +104,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -124,7 +126,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -135,7 +137,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -147,7 +149,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults2 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -158,7 +160,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults3 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -179,7 +181,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> paginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -191,7 +193,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -203,7 +205,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults2 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -215,7 +217,7 @@ class SupplierOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<SupplierOrder> newPaginatedResults3 = supplierOrdersSearchRepository.findBySupplierIdAdvanced(
-                supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, supplierId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert

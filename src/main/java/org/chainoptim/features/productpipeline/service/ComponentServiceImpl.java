@@ -3,6 +3,9 @@ package org.chainoptim.features.productpipeline.service;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.features.product.dto.ProductDTOMapper;
+import org.chainoptim.features.product.dto.ProductsSearchDTO;
+import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.service.UnitOfMeasurementService;
 import org.chainoptim.features.productpipeline.dto.ComponentDTOMapper;
@@ -13,6 +16,7 @@ import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +48,16 @@ public class ComponentServiceImpl implements ComponentService {
 
     public List<ComponentsSearchDTO> getComponentsByOrganizationIdSmall(Integer organizationId) {
         return componentRepository.findByOrganizationIdSmall(organizationId);
+    }
+
+    public PaginatedResults<ComponentsSearchDTO> getComponentsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
+        PaginatedResults<Component> paginatedResults = componentRepository.findByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return new PaginatedResults<>(
+                paginatedResults.results.stream()
+                        .map(ComponentDTOMapper::convertComponentToComponentsSearchDTO)
+                        .toList(),
+                paginatedResults.totalCount
+        );
     }
 
     // Create

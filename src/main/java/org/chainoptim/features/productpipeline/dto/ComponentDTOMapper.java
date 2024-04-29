@@ -7,6 +7,13 @@ public class ComponentDTOMapper {
 
     private ComponentDTOMapper() {}
 
+    public static ComponentsSearchDTO convertComponentToComponentsSearchDTO(Component component) {
+        ComponentsSearchDTO componentsSearchDTO = new ComponentsSearchDTO();
+        componentsSearchDTO.setId(component.getId());
+        componentsSearchDTO.setName(component.getName());
+        return componentsSearchDTO;
+    }
+
     public static Component convertCreateComponentDTOToComponent(CreateComponentDTO componentDTO) {
         Component component = new Component();
         component.setOrganizationId(componentDTO.getOrganizationId());

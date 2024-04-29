@@ -1,11 +1,13 @@
 package org.chainoptim.features.productpipeline.controller;
 
 import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.productpipeline.dto.ComponentsSearchDTO;
 import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
 import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.productpipeline.service.ComponentService;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +42,20 @@ public class ComponentController {
     public ResponseEntity<List<Component>> getComponentsByOrganizationId(@PathVariable Integer organizationId) {
         List<Component> components = componentService.getComponentsByOrganizationId(organizationId);
         return ResponseEntity.ok(components);
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Component\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<ComponentsSearchDTO>> getProductsByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        PaginatedResults<ComponentsSearchDTO> paginatedResults = componentService.getComponentsByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return ResponseEntity.ok(paginatedResults);
     }
 
     // Create

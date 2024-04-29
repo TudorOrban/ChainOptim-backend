@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ComponentRepository extends JpaRepository<Component, Integer> {
+public interface ComponentRepository extends JpaRepository<Component, Integer>, ComponentsSearchRepository {
     List<Component> findByOrganizationId(Integer organizationId);
 
     @Query("SELECT new org.chainoptim.features.productpipeline.dto.ComponentsSearchDTO(c.id, c.name) FROM Component c WHERE c.organizationId = :organizationId")

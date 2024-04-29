@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface StageRepository extends JpaRepository<Stage, Integer> {
+public interface StageRepository extends JpaRepository<Stage, Integer>, StagesSearchRepository {
 
     @Query("SELECT new org.chainoptim.features.productpipeline.dto.StagesSearchDTO(s.id, s.name, s.createdAt) FROM Stage s WHERE s.organizationId = :organizationId")
     List<StagesSearchDTO> findByOrganizationIdSmall(Integer organizationId);

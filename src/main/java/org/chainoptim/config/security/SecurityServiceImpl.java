@@ -9,6 +9,7 @@ import org.chainoptim.exception.AuthorizationException;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.client.repository.ClientRepository;
+import org.chainoptim.features.factory.controller.FactoryInventoryController;
 import org.chainoptim.features.factory.repository.FactoryInventoryItemRepository;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.product.repository.ProductRepository;
@@ -20,6 +21,8 @@ import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +50,8 @@ public class SecurityServiceImpl implements SecurityService {
     private final ClientOrderRepository clientOrderRepository;
     private final LocationRepository locationRepository;
     private final UnitOfMeasurementRepository unitOfMeasurementRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class.getName());
 
     @Autowired
     public SecurityServiceImpl(
@@ -119,14 +124,20 @@ public class SecurityServiceImpl implements SecurityService {
         boolean belongsToOrganization = organizationId.map(id -> id.equals(currentOrganizationId)).orElse(false);
 
         if (!belongsToOrganization) {
+            logger.warn("User {} is attempting to access a resource belonging to: {}, not their own organization: {}", userDetails.getUsername(), organizationId.orElse(null), currentOrganizationId);
             return false;
         }
 
+        boolean hasPermissions;
         if (userDetails.getCustomRole() == null) {
-            return canAccessOrganizationEntityWithBasicRole(userDetails.getRole(), operationType);
+            hasPermissions = canAccessOrganizationEntityWithBasicRole(userDetails.getRole(), operationType);
         } else {
-            return customRoleSecurityService.canUserAccessOrganizationEntity(currentOrganizationId, userDetails, entityType, operationType);
+            hasPermissions = customRoleSecurityService.canUserAccessOrganizationEntity(currentOrganizationId, userDetails, entityType, operationType);
         }
+        if (!hasPermissions) {
+            logger.warn("User {} does not have permission to perform operation: {} on entity: {}", userDetails.getUsername(), operationType, entityType);
+        }
+        return hasPermissions;
     }
 
     private boolean canAccessOrganizationEntityWithBasicRole(User.Role basicRole, String operationType) {

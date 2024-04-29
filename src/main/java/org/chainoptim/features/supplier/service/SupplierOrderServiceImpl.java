@@ -14,8 +14,10 @@ import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
 import org.chainoptim.shared.enums.Feature;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -63,18 +65,19 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
         return supplierOrderRepository.findBySupplierId(supplierId);
     }
 
-    public PaginatedResults<SupplierOrder> getSupplierOrdersBySupplierIdAdvanced(Integer supplierId, String searchQuery, String filtersJson, String sortBy, boolean ascending, int page, int itemsPerPage) {
+    public PaginatedResults<SupplierOrder> getSupplierOrdersAdvanced(SearchMode searchMode, Integer entityId, SearchParams searchParams) {
         // Attempt to parse filters JSON
-        Map<String, String> filters = new HashMap<>();
-        if (!filtersJson.isEmpty()) {
+        Map<String, String> filters;
+        if (!searchParams.getFiltersJson().isEmpty()) {
             try {
-                filters = new ObjectMapper().readValue(filtersJson, new TypeReference<Map<String, String>>(){});
+                filters = new ObjectMapper().readValue(searchParams.getFiltersJson(), new TypeReference<Map<String, String>>(){});
+                searchParams.setFilters(filters);
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid filters format");
             }
         }
 
-        return supplierOrderRepository.findBySupplierIdAdvanced(supplierId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
+        return supplierOrderRepository.findBySupplierIdAdvanced(searchMode, entityId, searchParams);
     }
 
     // Create

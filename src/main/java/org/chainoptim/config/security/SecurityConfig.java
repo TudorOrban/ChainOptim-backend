@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/product-graphs/**").permitAll()
                         .requestMatchers("/api/v1/locations/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/actuator/prometheus").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

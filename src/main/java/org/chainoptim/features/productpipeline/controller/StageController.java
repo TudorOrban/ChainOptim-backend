@@ -1,12 +1,12 @@
 package org.chainoptim.features.productpipeline.controller;
 
 import org.chainoptim.config.security.SecurityService;
-import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
 import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.service.StageService;
+import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +42,20 @@ public class StageController {
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<Stage>> getStagesByProductId(@PathVariable Integer productId) {
         return ResponseEntity.ok(stageService.getStagesByProductId(productId));
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<StagesSearchDTO>> getProductsByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        PaginatedResults<StagesSearchDTO> paginatedResults = stageService.getStagesByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return ResponseEntity.ok(paginatedResults);
     }
 
     @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\", \"Read\")")

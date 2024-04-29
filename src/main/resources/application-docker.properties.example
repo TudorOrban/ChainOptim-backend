@@ -1,8 +1,10 @@
+spring.application.name=ChainOptimizer
+
 # Environment
 app.environment=${APP_ENV:dev}
 
 # Data Source
-spring.datasource.url=jdbc:mysql://mysql:3306/chain_optimizer_schema?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+spring.datasource.url=jdbc:mysql://host.docker.internal:3306/chain_optimizer_schema?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 spring.datasource.username=root
 spring.datasource.password=example-password
 
@@ -14,10 +16,19 @@ spring.datasource.hikari.minimum-idle=5
 spring.datasource.hikari.connection-timeout=20000
 spring.datasource.hikari.idle-timeout=300000
 
-# Logging
+# Logging (ELK)
+logging.level.root=INFO
 logging.level.org.springframework.security=DEBUG
-# logging.level.org.chainoptim=DEBUG
+logging.level.org.chainoptim=DEBUG
 logging.level.org.hibernate.SQL=DEBUG
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+logging.appender.logstash.type=LogstashTcpSocketAppender
+logging.appender.logstash.name=LOGSTASH
+logging.appender.logstash.host=logstash:5000
+logging.appender.logstash.encoder.type=net.logstash.logback.encoder.LogstashEncoder
+
+# Monitoring
+management.endpoints.web.exposure.include=prometheus
 
 # Redis Configuration
 spring.redis.host=redis
@@ -38,11 +49,13 @@ spring.kafka.consumer.properties.spring.json.trusted.packages=*
 # Email Service
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
-spring.mail.username=example-email@gmail.com
+spring.mail.username=tudororban2@gmail.com
 spring.mail.password=example-password
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
+# Geocoding Service
+geocoding.api.key=example-password
 
 # JWT secret
 jwt.secret=example-secret

@@ -3,7 +3,9 @@ package org.chainoptim.features.supplier.repository;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.enums.OrderStatus;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,11 +23,7 @@ public class SupplierOrdersSearchRepositoryImpl implements SupplierOrdersSearchR
 
     @Override
     public PaginatedResults<SupplierOrder> findBySupplierIdAdvanced(
-            Integer supplierId,
-            String searchQuery, Map<String, String> filters,
-            String sortBy, boolean ascending,
-            int page, int itemsPerPage
-    ) {
+            SearchMode searchMode, Integer entityId, SearchParams searchParams) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<SupplierOrder> query = builder.createQuery(SupplierOrder.class);
@@ -36,27 +34,27 @@ public class SupplierOrdersSearchRepositoryImpl implements SupplierOrdersSearchR
         supplierOrder.fetch("component", JoinType.LEFT);
 
         // Add conditions (supplierId and searchQuery)
-        Predicate conditions = getConditions(builder, supplierOrder, supplierId, searchQuery, filters);
+        Predicate conditions = getConditions(builder, supplierOrder, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
         query.where(conditions);
 
         // Add sorting
-        if (ascending) {
-            query.orderBy(builder.asc(supplierOrder.get(sortBy)));
+        if (searchParams.isAscending()) {
+            query.orderBy(builder.asc(supplierOrder.get(searchParams.getSortBy())));
         } else {
-            query.orderBy(builder.desc(supplierOrder.get(sortBy)));
+            query.orderBy(builder.desc(supplierOrder.get(searchParams.getSortBy())));
         }
 
         // Create query with pagination
         List<SupplierOrder> supplierOrders = entityManager.createQuery(query)
-                .setFirstResult((page - 1) * itemsPerPage)
-                .setMaxResults(itemsPerPage)
+                .setFirstResult((searchParams.getPage() - 1) * searchParams.getItemsPerPage())
+                .setMaxResults(searchParams.getItemsPerPage())
                 .getResultList();
 
         // Query total results count
         CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
         Root<SupplierOrder> countRoot = countQuery.from(SupplierOrder.class);
-        Predicate countConditions = getConditions(countBuilder, countRoot, supplierId, searchQuery, filters);
+        Predicate countConditions = getConditions(countBuilder, countRoot, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
         countQuery.select(countBuilder.count(countRoot));
         countQuery.where(countConditions);
 
@@ -67,11 +65,13 @@ public class SupplierOrdersSearchRepositoryImpl implements SupplierOrdersSearchR
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<SupplierOrder> root,
-                                    Integer supplierId,
+                                    SearchMode searchMode,
+                                    Integer entityId,
                                     String searchQuery, Map<String, String> filters) {
         Predicate conditions = builder.conjunction();
-        if (supplierId != null) {
-            conditions = builder.and(conditions, builder.equal(root.get("supplierId"), supplierId));
+        if (entityId != null) {
+            String idName = searchMode == SearchMode.ORGANIZATION ? "organizationId" : "supplierId";
+            conditions = builder.and(conditions, builder.equal(root.get(idName), entityId));
         }
         if (searchQuery != null && !searchQuery.isEmpty()) {
             conditions = builder.and(conditions, builder.like(root.get("companyId"), "%" + searchQuery + "%"));
@@ -84,6 +84,7 @@ public class SupplierOrdersSearchRepositoryImpl implements SupplierOrdersSearchR
     }
 
     private Predicate addFilters(CriteriaBuilder builder, Root<SupplierOrder> root, Predicate conditions, Map<String, String> filters) {
+        if (filters == null) return conditions;
         for (Map.Entry<String, String> filter : filters.entrySet()) {
             String key = filter.getKey();
             String value = filter.getValue();

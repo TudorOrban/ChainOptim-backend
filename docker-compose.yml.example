@@ -2,30 +2,21 @@ version: '3.8'
 networks:
   default:
     name: my_custom_network
+    external: false
 services:
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: example-password
-      MYSQL_DATABASE: chain_optimizer_schema
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql:/var/lib/mysql
-      - ./database/schema:/docker-entrypoint-initdb.d
-    networks:
-      - default
 
   chainoptimizer:
     build: .
     depends_on:
-      - mysql
       - redis
       - kafka
     ports:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      AWS_REGION: eu-central-1
+    volumes:
+      - C:/Users/tudor/.aws:/root/.aws
     networks:
       - default
 
@@ -58,5 +49,82 @@ services:
     depends_on:
       - zookeeper
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=30s"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - elk
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.0
+    container_name: logstash
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    volumes:
+      - D:/projects/programming/java/ChainOptimizer/logstash/config:/usr/share/logstash/config
+      - D:/projects/programming/java/ChainOptimizer/logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5000:5000"
+    networks:
+      - default
+    depends_on:
+      - elasticsearch
+    profiles:
+      - elk
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    ports:
+      - "5601:5601"
+    networks:
+      - default
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    restart: on-failure
+    profiles:
+      - elk
+
+  prometheus:
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - default
+    profiles:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+    profiles:
+      - monitoring
+
 volumes:
   mysql-data:
+  elasticsearch-data:
