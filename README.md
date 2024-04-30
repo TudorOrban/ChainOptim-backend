@@ -26,8 +26,8 @@ ChainOptim allows registration of suppliers and clients, tracking orders and shi
 ChainOptim is not yet deployed. To use it, you will have to set up locally the database, backend server and chosen frontend.
 1. Ensure you have installed: JDK21, Maven and Docker.
 2. Fetch the Spring Boot backend. In the root, create:
-- an application-docker.properties from the [application-docker.properties.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/src/main/resources/application.properties.example), replacing the database user and password appropriately, and the JWT secret as needed. 
-- a docker-compose.yml from the [docker-compose.yml.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/docker-compose.yml.example), replacing the database user and password.
+- an application-docker.properties from the [application-docker-dev.properties.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/src/main/resources/application-docker-dev.properties.example), replacing the database user and password appropriately, and the JWT secret as needed. 
+- a docker-compose.dev.yml from the [docker-compose.dev.yml.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/docker-compose.dev.yml.example), replacing the database user and password.
 3. Build the Spring Boot image and spin up the necessary Docker containers (MySQL, Spring Boot, Redis, Kafka). You can find a script that does this for your operating system in the [scripts](https://github.com/TudorOrban/ChainOptim-backend/blob/main/scripts) folder (Restart.ps1 or Restart.sh). *Run it twice*, as the first time around the database will be empty and Spring Boot won't start.
 4. Fetch the [JavaFX desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp), run it in your IDE of choice and log in with:
 - Username: ExampleUser

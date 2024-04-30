@@ -46,3 +46,4 @@ mysql/
 ### Docker ###
 docker-compose.prod.yml
 docker-compose.dev.yml
+docker-compose.prod.kafka.yml

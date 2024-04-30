@@ -16,12 +16,12 @@ public class NotificationListenerServiceImpl implements NotificationListenerServ
         this.notificationService = notificationService;
     }
 
-//    @KafkaListener(topics = "supplier-order-events", groupId = "notification-group")
+    @KafkaListener(topics = "supplier-order-events", groupId = "notification-group")
     public void listenSupplierOrderEvent(SupplierOrderEvent event) {
         notificationService.createNotification(event);
     }
 
-//    @KafkaListener(topics = "client-order-events", groupId = "notification-group")
+    @KafkaListener(topics = "client-order-events", groupId = "notification-group")
     public void listenClientOrderEvent(ClientOrderEvent event) {
         notificationService.createNotification(event);
     }
