@@ -74,7 +74,7 @@ public class ClientOrderController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"ClientOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
+//    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"ClientOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
     @DeleteMapping("/delete/bulk")
     public ResponseEntity<List<Integer>> deleteClientOrdersInBulk(@RequestBody List<Integer> orderIds) {
         clientOrderService.deleteClientOrdersInBulk(orderIds);
