@@ -35,6 +35,10 @@ build/
 ### App properties ###
 application.properties
 application-docker.properties
+application-docker-dev.properties
+src/main/resources/application.properties
+src/main/resources/application-docker-prod.properties
+src/main/resources/application-docker-dev.properties
 
 ### MySQL ###
 mysql/
@@ -43,3 +47,6 @@ mysql/
 docker-compose.yml
 docker-compose.override.yml.DS_Store
 .DS_Store
+docker-compose.prod.yml
+docker-compose.dev.yml
+docker-compose.prod.kafka.yml

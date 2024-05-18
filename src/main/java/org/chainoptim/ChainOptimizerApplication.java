@@ -1,6 +1,5 @@
 package org.chainoptim;
 
-import org.chainoptim.core.user.jwt.JwtTokenProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,4 +16,5 @@ public class ChainOptimizerApplication {
 		logger.info("Starting Chain Optimizer Application");
 		SpringApplication.run(ChainOptimizerApplication.class, args);
 	}
+
 }

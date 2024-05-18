@@ -83,8 +83,8 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
     // Create
     public FactoryInventoryItem createFactoryInventoryItem(CreateFactoryInventoryItemDTO orderDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.CLIENT_ORDER, 1)) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed factorys for the current Subscription Plan.");
+        if (planLimiterService.isLimitReached(orderDTO.getOrganizationId(), Feature.FACTORY_INVENTORY, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed factories for the current Subscription Plan.");
         }
 
         // Sanitize input and map to entity

@@ -1,13 +1,12 @@
-FROM openjdk:21-jdk-slim AS build
+FROM openjdk:21-jdk-bullseye
 
 WORKDIR /app
 
-# Use wait-for-it.sh to wait for redis to be ready
-COPY scripts/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
+# Update and install mysql-client
+RUN apt-get update && apt-get install -y default-mysql-client && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY target/ChainOptimizer-0.0.1-SNAPSHOT.jar /app/ChainOptimizer.jar
 
-ENTRYPOINT ["/wait-for-it.sh", "redis:6379", "--", "java", "-jar", "ChainOptimizer.jar"]
+ENTRYPOINT ["java", "-jar", "ChainOptimizer.jar"]
 
 EXPOSE 8080
