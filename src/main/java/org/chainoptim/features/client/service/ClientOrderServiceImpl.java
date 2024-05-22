@@ -13,7 +13,9 @@ import org.chainoptim.features.client.model.ClientOrderEvent;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
+import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.enums.Feature;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 
 import org.chainoptim.shared.search.model.PaginatedResults;
@@ -21,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import org.chainoptim.shared.search.model.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -64,18 +67,19 @@ public class ClientOrderServiceImpl implements ClientOrderService {
         return clientOrderRepository.findByClientId(clientId);
     }
 
-    public PaginatedResults<ClientOrder> getClientOrdersByClientIdAdvanced(Integer clientId, String searchQuery, String filtersJson, String sortBy, boolean ascending, int page, int itemsPerPage) {
+    public PaginatedResults<ClientOrder> getClientOrdersAdvanced(SearchMode searchMode, Integer entityId, SearchParams searchParams) {
         // Attempt to parse filters JSON
-        Map<String, String> filters = new HashMap<>();
-        if (!filtersJson.isEmpty()) {
+        Map<String, String> filters;
+        if (!searchParams.getFiltersJson().isEmpty()) {
             try {
-                filters = new ObjectMapper().readValue(filtersJson, new TypeReference<Map<String, String>>(){});
+                filters = new ObjectMapper().readValue(searchParams.getFiltersJson(), new TypeReference<Map<String, String>>(){});
+                searchParams.setFilters(filters);
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid filters format");
             }
         }
 
-        return clientOrderRepository.findByClientIdAdvanced(clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
+        return clientOrderRepository.findByClientIdAdvanced(searchMode, entityId, searchParams);
     }
 
     // Create

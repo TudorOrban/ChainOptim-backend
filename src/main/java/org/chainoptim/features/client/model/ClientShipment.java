@@ -64,4 +64,10 @@ public class ClientShipment {
 
     @Column(name = "current_location_longitude")
     private Float currentLocationLongitude;
+
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
+
+    @Column(name = "client_id", nullable = false)
+    private Integer clientId;
 }

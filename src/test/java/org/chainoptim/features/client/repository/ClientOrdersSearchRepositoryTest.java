@@ -5,8 +5,10 @@ import org.chainoptim.features.client.model.Client;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.enums.OrderStatus;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import org.chainoptim.shared.search.model.SearchParams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +63,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> paginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -72,7 +74,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -92,7 +94,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> paginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -103,7 +105,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -125,7 +127,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> paginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -136,7 +138,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -148,7 +150,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults2 = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -159,7 +161,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults3 = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -180,7 +182,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> paginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -192,7 +194,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -204,7 +206,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults2 = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert
@@ -216,7 +218,7 @@ class ClientOrdersSearchRepositoryTest {
 
         // Act
         PaginatedResults<ClientOrder> newPaginatedResults3 = clientOrdersSearchRepository.findByClientIdAdvanced(
-                clientId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+                SearchMode.SECONDARY, clientId, new SearchParams(searchQuery, null, filters, sortBy, ascending, page, itemsPerPage)
         );
 
         // Assert

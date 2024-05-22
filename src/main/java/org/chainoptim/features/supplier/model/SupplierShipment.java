@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -56,4 +58,17 @@ public class SupplierShipment {
     @Column(name = "current_location_longitude")
     private Float currentLocationLongitude;
 
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
+
+    @Column(name = "supplier_id", nullable = false)
+    private Integer supplierId;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 }
