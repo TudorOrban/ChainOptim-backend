@@ -77,7 +77,7 @@ public class ClientShipment {
     public ClientShipment deepCopy() {
         return ClientShipment.builder()
 //                .id(this.id)
-                .clientOrderId(this.clientOrderId)
+                .clientId(this.clientOrderId)
                 .createdAt(this.createdAt)
                 .updatedAt(this.updatedAt)
                 .quantity(this.quantity)

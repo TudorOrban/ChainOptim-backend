@@ -13,6 +13,7 @@ public class CreateClientShipmentDTO {
 
     private Integer organizationId;
     private Integer clientId;
+    private Integer clientOrderId;
     private Float quantity;
     private LocalDateTime shipmentStartingDate;
     private LocalDateTime estimatedArrivalDate;
