@@ -1,5 +1,8 @@
 package org.chainoptim.features.client.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
@@ -12,15 +15,20 @@ import org.chainoptim.features.client.repository.ClientShipmentRepository;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
 import org.chainoptim.shared.enums.Feature;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import jakarta.transaction.Transactional;
+import org.chainoptim.shared.search.model.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ClientShipmentServiceImpl implements ClientShipmentService {
@@ -29,6 +37,7 @@ public class ClientShipmentServiceImpl implements ClientShipmentService {
     private final LocationRepository locationRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
+
 
     @Autowired
     public ClientShipmentServiceImpl(ClientShipmentRepository clientShipmentRepository,
@@ -45,12 +54,22 @@ public class ClientShipmentServiceImpl implements ClientShipmentService {
         return clientShipmentRepository.findByClientOrderId(orderId);
     }
 
-    public PaginatedResults<ClientShipment> getClientShipmentsByClientOrderIdAdvanced(Integer clientOrderId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage) {
-        return clientShipmentRepository.findByClientOrderIdAdvanced(clientOrderId, searchQuery, sortBy, ascending, page, itemsPerPage);
-    }
-
     public ClientShipment getClientShipmentById(Integer shipmentId) {
         return clientShipmentRepository.findById(shipmentId).orElseThrow(() -> new ResourceNotFoundException("Client shipment with ID: " + shipmentId + " not found."));
+    }
+
+    public PaginatedResults<ClientShipment> getClientShipmentsAdvanced(SearchMode searchMode, Integer entityId, SearchParams searchParams) {
+        // Attempt to parse filters JSON
+        Map<String, String> filters;
+        if(!searchParams.getFiltersJson().isEmpty()) {
+            try {
+                filters = new ObjectMapper().readValue(searchParams.getFiltersJson(), new TypeReference<Map<String, String>>(){});
+                searchParams.setFilters(filters);
+            } catch (JsonProcessingException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid format");
+            }
+        }
+        return clientShipmentRepository.findByClientIdAdvanced(searchMode, entityId, searchParams);
     }
 
     // Create

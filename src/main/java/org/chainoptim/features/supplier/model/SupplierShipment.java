@@ -1,10 +1,7 @@
 package org.chainoptim.features.supplier.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "supplier_shipments")
 public class SupplierShipment {
@@ -71,4 +69,25 @@ public class SupplierShipment {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public SupplierShipment deepCopy() {
+        return SupplierShipment.builder()
+//                .id(this.id)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .supplierOrderId(this.supplierOrderId)
+                .quantity(this.quantity)
+                .shipmentStartingDate(this.shipmentStartingDate)
+                .estimatedArrivalDate(this.estimatedArrivalDate)
+                .arrivalDate(this.arrivalDate)
+                .transporterType(this.transporterType)
+                .status(this.status)
+                .sourceLocation(this.sourceLocation)
+                .destinationLocation(this.destinationLocation)
+                .currentLocationLatitude(this.currentLocationLatitude)
+                .currentLocationLongitude(this.currentLocationLongitude)
+                .organizationId(this.organizationId)
+                .supplierId(this.supplierId)
+                .build();
+    }
 }

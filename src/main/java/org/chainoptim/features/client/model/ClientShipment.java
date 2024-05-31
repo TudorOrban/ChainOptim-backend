@@ -1,6 +1,7 @@
 package org.chainoptim.features.client.model;
 
 
+import lombok.Builder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,12 +15,14 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "client_shipments")
 public class ClientShipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
 
     @Column(name = "client_order_id", nullable = false)
@@ -70,4 +73,25 @@ public class ClientShipment {
 
     @Column(name = "client_id", nullable = false)
     private Integer clientId;
+
+    public ClientShipment deepCopy() {
+        return ClientShipment.builder()
+//                .id(this.id)
+                .clientOrderId(this.clientOrderId)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .quantity(this.quantity)
+                .shipmentStartingDate(this.shipmentStartingDate)
+                .estimatedArrivalDate(this.estimatedArrivalDate)
+                .arrivalDate(this.arrivalDate)
+                .transporterType(this.transporterType)
+                .status(this.status)
+                .sourceLocation(this.sourceLocation)
+                .destinationLocation(this.destinationLocation)
+                .currentLocationLatitude(this.currentLocationLatitude)
+                .currentLocationLongitude(this.currentLocationLongitude)
+                .organizationId(this.organizationId)
+                .clientId(this.clientId)
+                .build();
+    }
 }

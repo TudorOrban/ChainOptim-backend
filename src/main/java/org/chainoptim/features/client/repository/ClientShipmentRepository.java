@@ -9,6 +9,10 @@ import java.util.List;
 
 public interface ClientShipmentRepository extends JpaRepository<ClientShipment, Integer>, ClientShipmentsSearchRepository {
 
+    List<ClientShipment> findByOrganizationId(Integer organizationId);
+
+    List<ClientShipment> findByClientId(Integer clientId);
+
     @Query("SELECT cs FROM ClientShipment cs " +
             "WHERE cs.clientOrderId = :orderId")
     List<ClientShipment> findByClientOrderId(@Param("orderId") Integer orderId);
