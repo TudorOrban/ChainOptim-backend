@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class CreateClientShipmentDTO {
 
     private Integer organizationId;
-    private Integer clientOrderId;
+    private Integer clientId;
     private Float quantity;
     private LocalDateTime shipmentStartingDate;
     private LocalDateTime estimatedArrivalDate;

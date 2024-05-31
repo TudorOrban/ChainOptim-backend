@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ClientShipmentService {
 
-    List<ClientShipment> getClientShipmentByClientOrderId(Integer orderId);
+    List<ClientShipment> getClientShipmentByClientId(Integer clientId);
     PaginatedResults<ClientShipment> getClientShipmentsAdvanced(SearchMode searchMode, Integer entity, SearchParams searchParams);
     ClientShipment getClientShipmentById(Integer shipmentId);
     ClientShipment createClientShipment(CreateClientShipmentDTO shipmentDTO);

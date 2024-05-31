@@ -50,8 +50,8 @@ public class ClientShipmentServiceImpl implements ClientShipmentService {
         this.entitySanitizerService = entitySanitizerService;
     }
 
-    public List<ClientShipment> getClientShipmentByClientOrderId(Integer orderId) {
-        return clientShipmentRepository.findByClientOrderId(orderId);
+    public List<ClientShipment> getClientShipmentByClientId(Integer clientId) {
+        return clientShipmentRepository.findByClientId(clientId);
     }
 
     public ClientShipment getClientShipmentById(Integer shipmentId) {

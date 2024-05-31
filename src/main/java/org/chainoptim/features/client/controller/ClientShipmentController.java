@@ -31,10 +31,19 @@ public class ClientShipmentController {
         this.securityService = securityService;
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#clientOrderId, \"ClientOrder\", \"Read\")")
-    @GetMapping("/order/{clientOrderId}")
-    public ResponseEntity<List<ClientShipment>> getClientShipmentsByClientOrderId(@PathVariable("clientOrderId") Integer clientOrderId) {
-        List<ClientShipment> clientShipments = clientShipmentService.getClientShipmentByClientOrderId(clientOrderId);
+    @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Read\")")
+    @GetMapping("/client/advanced/{clientId}")
+    public ResponseEntity<PaginatedResults<ClientShipment>> getClientShipmentsByClientId(
+            @PathVariable Integer clientId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<ClientShipment> clientShipments = clientShipmentService.getClientShipmentsAdvanced(SearchMode.SECONDARY, clientId, searchParams);
         return ResponseEntity.ok(clientShipments);
     }
 

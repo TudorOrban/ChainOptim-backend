@@ -62,7 +62,8 @@ public class ClientDTOMapper {
 
     public static ClientShipment mapCreateClientShipmentDTOTOShipment(CreateClientShipmentDTO shipmentDTO) {
         ClientShipment shipment = new ClientShipment();
-        shipment.setClientOrderId(shipmentDTO.getClientOrderId());
+        shipment.setOrganizationId(shipmentDTO.getOrganizationId());
+        shipment.setClientOrderId(shipmentDTO.getClientId());
         shipment.setQuantity(shipmentDTO.getQuantity());
         shipment.setShipmentStartingDate(shipmentDTO.getShipmentStartingDate());
         shipment.setEstimatedArrivalDate(shipmentDTO.getEstimatedArrivalDate());

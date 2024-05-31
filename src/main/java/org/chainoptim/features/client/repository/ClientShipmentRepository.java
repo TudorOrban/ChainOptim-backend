@@ -11,11 +11,10 @@ public interface ClientShipmentRepository extends JpaRepository<ClientShipment, 
 
     List<ClientShipment> findByOrganizationId(Integer organizationId);
 
-    List<ClientShipment> findByClientId(Integer clientId);
 
     @Query("SELECT cs FROM ClientShipment cs " +
-            "WHERE cs.clientOrderId = :orderId")
-    List<ClientShipment> findByClientOrderId(@Param("orderId") Integer orderId);
+            "WHERE cs.clientId = :clientId")
+    List<ClientShipment> findByClientId(@Param("clientId") Integer clientId);
 
     @Query("SELECT COUNT(cs) FROM ClientShipment cs, ClientOrder co WHERE cs.clientOrderId = co.id AND co.organizationId = :organizationId")
     long countByOrganizationId(@Param("organizationId") Integer organizationId);
