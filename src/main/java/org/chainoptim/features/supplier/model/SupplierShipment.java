@@ -19,6 +19,7 @@ public class SupplierShipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
 
     @Column(name = "supplier_order_id", nullable = false)

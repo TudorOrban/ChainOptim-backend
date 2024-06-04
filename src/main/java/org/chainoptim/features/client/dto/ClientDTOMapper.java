@@ -3,9 +3,6 @@ package org.chainoptim.features.client.dto;
 import org.chainoptim.features.client.model.Client;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.client.model.ClientShipment;
-import org.chainoptim.features.supplier.dto.CreateSupplierShipmentDTO;
-import org.chainoptim.features.supplier.dto.UpdateSupplierShipmentDTO;
-import org.chainoptim.features.supplier.model.SupplierShipment;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 public class ClientDTOMapper {

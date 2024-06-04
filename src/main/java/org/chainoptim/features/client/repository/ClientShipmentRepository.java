@@ -11,7 +11,6 @@ public interface ClientShipmentRepository extends JpaRepository<ClientShipment, 
 
     List<ClientShipment> findByOrganizationId(Integer organizationId);
 
-
     @Query("SELECT cs FROM ClientShipment cs " +
             "WHERE cs.clientId = :clientId")
     List<ClientShipment> findByClientId(@Param("clientId") Integer clientId);

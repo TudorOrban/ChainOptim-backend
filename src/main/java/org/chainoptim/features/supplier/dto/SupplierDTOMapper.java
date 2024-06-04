@@ -60,6 +60,8 @@ public class SupplierDTOMapper {
 
     public static SupplierShipment mapCreateSupplierShipmentDTOTOShipment(CreateSupplierShipmentDTO shipmentDTO) {
         SupplierShipment shipment = new SupplierShipment();
+        shipment.setOrganizationId(shipmentDTO.getOrganizationId());
+        shipment.setSupplierId(shipmentDTO.getSupplierId());
         shipment.setSupplierOrderId(shipmentDTO.getSupplierOrderId());
         shipment.setQuantity(shipmentDTO.getQuantity());
         shipment.setShipmentStartingDate(shipmentDTO.getShipmentStartingDate());

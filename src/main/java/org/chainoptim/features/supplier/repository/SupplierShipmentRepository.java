@@ -11,9 +11,11 @@ import java.util.List;
 @Repository
 public interface SupplierShipmentRepository extends JpaRepository<SupplierShipment, Integer>, SupplierShipmentsSearchRepository {
 
+    List<SupplierShipment>  findByOrganizationId(Integer organizationId);
+
     @Query("SELECT ss FROM SupplierShipment ss " +
-            "WHERE ss.supplierOrderId = :orderId")
-    List<SupplierShipment> findBySupplyOrderId(@Param("orderId") Integer orderId);
+            "WHERE ss.supplierId = :supplierId")
+    List<SupplierShipment> findBySupplierId(@Param("supplierId") Integer supplierId);
 
     @Query("SELECT ss FROM SupplierShipment ss " +
             "WHERE ss.supplierOrderId IN :orderIds")
