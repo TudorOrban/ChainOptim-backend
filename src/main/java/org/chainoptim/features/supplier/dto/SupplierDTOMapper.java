@@ -1,6 +1,5 @@
 package org.chainoptim.features.supplier.dto;
 
-import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.model.SupplierShipment;
