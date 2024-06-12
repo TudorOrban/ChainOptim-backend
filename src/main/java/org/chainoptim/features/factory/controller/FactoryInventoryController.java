@@ -58,7 +58,7 @@ public class FactoryInventoryController {
         return ResponseEntity.ok(factoryInventoryItem);
     }
 
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"FactoryInventoryItem\", \"Create\")")
+//    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"FactoryInventoryItem\", \"Create\")")
     @PostMapping("/create/bulk")
     public ResponseEntity<List<FactoryInventoryItem>> createFactoryInventoryItemsInBulk(@RequestBody List<CreateFactoryInventoryItemDTO> orderDTOs) {
         List<FactoryInventoryItem> factoryInventoryItems = factoryInventoryService.createFactoryInventoryItemsInBulk(orderDTOs);
@@ -66,7 +66,7 @@ public class FactoryInventoryController {
     }
 
     // Update
-    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"FactoryInventoryItem\", \"Update\")")
+//    @PreAuthorize("@securityService.canAccessOrganizationEntity(#orderDTOs.getFirst().getOrganizationId(), \"FactoryInventoryItem\", \"Update\")")
     @PutMapping("/update/bulk")
     public ResponseEntity<List<FactoryInventoryItem>> updateFactoryInventoryItemsInBulk(@RequestBody List<UpdateFactoryInventoryItemDTO> orderDTOs) {
         List<FactoryInventoryItem> factoryInventoryItems = factoryInventoryService.updateFactoryInventoryItemsInBulk(orderDTOs);
@@ -74,7 +74,7 @@ public class FactoryInventoryController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"FactoryInventoryItem\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
+//    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"FactoryInventoryItem\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
     @DeleteMapping("/delete/bulk")
     public ResponseEntity<List<Integer>> deleteFactoryInventoryItemsInBulk(@RequestBody List<Integer> orderIds) {
         factoryInventoryService.deleteFactoryInventoryItemsInBulk(orderIds);

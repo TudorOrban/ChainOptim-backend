@@ -7,7 +7,9 @@ import org.chainoptim.features.client.dto.CreateClientShipmentDTO;
 import org.chainoptim.features.client.dto.UpdateClientShipmentDTO;
 import org.chainoptim.features.client.model.ClientShipment;
 import org.chainoptim.features.client.service.ClientShipmentService;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,24 +31,35 @@ public class ClientShipmentController {
         this.securityService = securityService;
     }
 
-    @PreAuthorize("@securityService.canAccessEntity(#clientOrderId, \"ClientOrder\", \"Read\")")
-    @GetMapping("/order/{clientOrderId}")
-    public ResponseEntity<List<ClientShipment>> getClientShipmentsByClientOrderId(@PathVariable("clientOrderId") Integer clientOrderId) {
-        List<ClientShipment> clientShipments = clientShipmentService.getClientShipmentByClientOrderId(clientOrderId);
-        return ResponseEntity.ok(clientShipments);
-    }
-
-    @PreAuthorize("@securityService.canAccessEntity(#clientOrderId, \"ClientOrder\", \"Read\")")
-    @GetMapping("/order/advanced/{clientOrderId}")
-    public ResponseEntity<PaginatedResults<ClientShipment>> getClientShipmentsByClientOrderIdAdvanced(
-            @PathVariable Integer clientOrderId,
+    @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Read\")")
+    @GetMapping("/client/advanced/{clientId}")
+    public ResponseEntity<PaginatedResults<ClientShipment>> getClientShipmentsByClientId(
+            @PathVariable Integer clientId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "arrivalDate") String sortBy,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
             @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
     ) {
-        PaginatedResults<ClientShipment> clientShipments = clientShipmentService.getClientShipmentsByClientOrderIdAdvanced(clientOrderId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<ClientShipment> clientShipments = clientShipmentService.getClientShipmentsAdvanced(SearchMode.SECONDARY, clientId, searchParams);
+        return ResponseEntity.ok(clientShipments);
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Organization\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<ClientShipment>> getClientShipmentsByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<ClientShipment> clientShipments = clientShipmentService.getClientShipmentsAdvanced(SearchMode.ORGANIZATION, organizationId, searchParams);
         return ResponseEntity.ok(clientShipments);
     }
 

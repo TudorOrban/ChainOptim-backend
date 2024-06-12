@@ -6,7 +6,9 @@ import org.chainoptim.features.client.dto.UpdateClientOrderDTO;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.client.service.ClientOrderService;
 import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +37,22 @@ public class ClientOrderController {
         return ResponseEntity.ok(clientOrders);
     }
 
+//    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Organization\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<ClientOrder>> getClientOrdersByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<ClientOrder> clientOrders = clientOrderService.getClientOrdersAdvanced(SearchMode.ORGANIZATION, organizationId, searchParams);
+        return ResponseEntity.ok(clientOrders);
+    }
+
     @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Read\")")
     @GetMapping("/client/advanced/{clientId}")
     public ResponseEntity<PaginatedResults<ClientOrder>> getClientOrdersByClientIdAdvanced(
@@ -46,7 +64,8 @@ public class ClientOrderController {
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
     ) {
-        PaginatedResults<ClientOrder> clientOrders = clientOrderService.getClientOrdersByClientIdAdvanced(clientId, searchQuery, filtersJson, sortBy, ascending, page, itemsPerPage);
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<ClientOrder> clientOrders = clientOrderService.getClientOrdersAdvanced(SearchMode.SECONDARY, clientId, searchParams);
         return ResponseEntity.ok(clientOrders);
     }
 
@@ -74,7 +93,7 @@ public class ClientOrderController {
     }
 
     // Delete
-    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"ClientOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
+//    @PreAuthorize("@securityService.canAccessEntity(#orderIds.getFirst(), \"ClientOrder\", \"Delete\")") // Secure as service method ensures all orders belong to the same organization
     @DeleteMapping("/delete/bulk")
     public ResponseEntity<List<Integer>> deleteClientOrdersInBulk(@RequestBody List<Integer> orderIds) {
         clientOrderService.deleteClientOrdersInBulk(orderIds);

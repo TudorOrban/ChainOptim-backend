@@ -1,11 +1,10 @@
 package org.chainoptim.features.supplier.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -13,12 +12,14 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "supplier_shipments")
 public class SupplierShipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
 
     @Column(name = "supplier_order_id", nullable = false)
@@ -56,4 +57,38 @@ public class SupplierShipment {
     @Column(name = "current_location_longitude")
     private Float currentLocationLongitude;
 
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
+
+    @Column(name = "supplier_id", nullable = false)
+    private Integer supplierId;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    public SupplierShipment deepCopy() {
+        return SupplierShipment.builder()
+//                .id(this.id)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .supplierOrderId(this.supplierOrderId)
+                .quantity(this.quantity)
+                .shipmentStartingDate(this.shipmentStartingDate)
+                .estimatedArrivalDate(this.estimatedArrivalDate)
+                .arrivalDate(this.arrivalDate)
+                .transporterType(this.transporterType)
+                .status(this.status)
+                .sourceLocation(this.sourceLocation)
+                .destinationLocation(this.destinationLocation)
+                .currentLocationLatitude(this.currentLocationLatitude)
+                .currentLocationLongitude(this.currentLocationLongitude)
+                .organizationId(this.organizationId)
+                .supplierId(this.supplierId)
+                .build();
+    }
 }

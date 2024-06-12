@@ -3,11 +3,13 @@ package org.chainoptim.features.client.repository;
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.shared.enums.OrderStatus;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,41 +22,38 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
 
     @Override
     public PaginatedResults<ClientOrder> findByClientIdAdvanced(
-            Integer clientId,
-            String searchQuery, Map<String, String> filters,
-            String sortBy, boolean ascending,
-            int page, int itemsPerPage
-    ) {
+            SearchMode searchMode, Integer entityId, SearchParams searchParams) {
+
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ClientOrder> query = builder.createQuery(ClientOrder.class);
         Root<ClientOrder> clientOrder = query.from(ClientOrder.class);
-        clientOrder.alias("so");
+        clientOrder.alias("co");
 
         // Perform a fetch join to load products eagerly
         clientOrder.fetch("product", JoinType.LEFT);
 
         // Add conditions (clientId and searchQuery)
-        Predicate conditions = getConditions(builder, clientOrder, clientId, searchQuery, filters);
+        Predicate conditions = getConditions(builder, clientOrder, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
         query.where(conditions);
 
         // Add sorting
-        if (ascending) {
-            query.orderBy(builder.asc(clientOrder.get(sortBy)));
+        if (searchParams.isAscending()) {
+            query.orderBy(builder.asc(clientOrder.get(searchParams.getSortBy())));
         } else {
-            query.orderBy(builder.desc(clientOrder.get(sortBy)));
+            query.orderBy(builder.desc(clientOrder.get(searchParams.getSortBy())));
         }
 
         // Create query with pagination
         List<ClientOrder> clientOrders = entityManager.createQuery(query)
-                .setFirstResult((page - 1) * itemsPerPage)
-                .setMaxResults(itemsPerPage)
+                .setFirstResult((searchParams.getPage() - 1) * searchParams.getItemsPerPage())
+                .setMaxResults(searchParams.getItemsPerPage())
                 .getResultList();
 
         // Query total results count
         CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
         Root<ClientOrder> countRoot = countQuery.from(ClientOrder.class);
-        Predicate countConditions = getConditions(countBuilder, countRoot, clientId, searchQuery, filters);
+        Predicate countConditions = getConditions(countBuilder, countRoot, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
         countQuery.select(countBuilder.count(countRoot));
         countQuery.where(countConditions);
 
@@ -65,11 +64,13 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<ClientOrder> root,
-                                    Integer clientId,
+                                    SearchMode searchMode,
+                                    Integer entityId,
                                     String searchQuery, Map<String, String> filters) {
         Predicate conditions = builder.conjunction();
-        if (clientId != null) {
-            conditions = builder.and(conditions, builder.equal(root.get("clientId"), clientId));
+        if (entityId != null) {
+            String idName = searchMode == SearchMode.ORGANIZATION ? "organizationId" : "clientId";
+            conditions = builder.and(conditions, builder.equal(root.get(idName), entityId));
         }
         if (searchQuery != null && !searchQuery.isEmpty()) {
             conditions = builder.and(conditions, builder.like(root.get("companyId"), "%" + searchQuery + "%"));
@@ -82,6 +83,7 @@ public class ClientOrdersSearchRepositoryImpl implements ClientOrdersSearchRepos
     }
 
     private Predicate addFilters(CriteriaBuilder builder, Root<ClientOrder> root, Predicate conditions, Map<String, String> filters) {
+        if (filters == null) return conditions;
         for (Map.Entry<String, String> filter : filters.entrySet()) {
             String key = filter.getKey();
             String value = filter.getValue();
