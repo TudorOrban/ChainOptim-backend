@@ -12,9 +12,13 @@ import java.util.Map;
 @NoArgsConstructor
 public class SupplierPerformanceReport { // All time periods in days
 
-    private int totalDeliveredOrders;
+    private Float overallScore;
+    private Float timelinessScore;
+    private Float quantityPerTimeScore;
+    private Float availabilityScore;
+    private Float qualityScore;
 
-    // Timeliness
+    private int totalDeliveredOrders;
     private float totalDelays;
     private float averageDelayPerOrder;
     private float ratioOfOnTimeOrderDeliveries;
@@ -25,6 +29,4 @@ public class SupplierPerformanceReport { // All time periods in days
 
     // Quantity
     private Map<Integer, ComponentDeliveryPerformance> componentPerformances = new HashMap<>();
-
-
 }

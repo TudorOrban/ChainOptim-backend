@@ -35,6 +35,12 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
         SupplierPerformanceReport report = new SupplierPerformanceReport();
         Map<Integer, ComponentDeliveryPerformance> componentPerformances = new HashMap<>();
 
+        float overallScore = 0;
+        float timelinessScore = 0;
+        float quantityPerTimeScore = 0;
+        float availabilityScore = 0;
+        float qualityScore = 0;
+
         int totalDeliveredOrders = 0;
         float totalDelays = 0;
         float ratioOfOnTimeOrderDeliveries = 0;
@@ -104,15 +110,16 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
                 averageShipmentsPerOrderComponent += correspondingShipments.size();
 
                 // Compute quantity metrics
-                totalDeliveredQuantity += supplierOrder.getQuantity();
-                averageDeliveredQuantity += supplierOrder.getDeliveredQuantity();
+                float orderDeliveredQuantity = supplierOrder.getDeliveredQuantity() != null ? supplierOrder.getDeliveredQuantity() : 0;
+                totalDeliveredQuantity += orderDeliveredQuantity;
+                averageDeliveredQuantity += orderDeliveredQuantity;
                 averageOrderQuantity += supplierOrder.getQuantity();
                 averageShipmentQuantity += correspondingShipments.stream().map(SupplierShipment::getQuantity).reduce(0.0f, Float::sum);
-                deliveredPerOrderedRatio += supplierOrder.getDeliveredQuantity();
+                deliveredPerOrderedRatio += orderDeliveredQuantity;
                 if (firstDeliveryDate == null) continue;
                 Duration timeFromFirstDelivery = Duration.between(firstDeliveryDate, supplierOrder.getDeliveryDate());
                 long days = timeFromFirstDelivery.toDays(); // This gives you the total days as a long
-                deliveredQuantityOverTime.put((float) days, supplierOrder.getDeliveredQuantity());
+                deliveredQuantityOverTime.put((float) days, orderDeliveredQuantity);
             }
 
             // Add to total
@@ -153,6 +160,11 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
         }
 
         report.setComponentPerformances(componentPerformances);
+        report.setOverallScore(overallScore);
+        report.setTimelinessScore(timelinessScore);
+        report.setQuantityPerTimeScore(quantityPerTimeScore);
+        report.setAvailabilityScore(availabilityScore);
+        report.setQualityScore(qualityScore);
 
         return report;
     }
