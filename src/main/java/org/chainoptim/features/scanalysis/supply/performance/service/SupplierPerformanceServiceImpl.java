@@ -1,6 +1,7 @@
 package org.chainoptim.features.scanalysis.supply.performance.service;
 
 import org.chainoptim.features.scanalysis.supply.performance.model.ComponentDeliveryPerformance;
+import org.chainoptim.features.scanalysis.supply.performance.model.ComponentPerformanceMetrics;
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
 import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.features.supplier.model.SupplierShipment;
@@ -35,10 +36,10 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
         SupplierPerformanceReport report = new SupplierPerformanceReport();
         Map<Integer, ComponentDeliveryPerformance> componentPerformances = new HashMap<>();
 
-        float overallScore = 0;
-        float timelinessScore = 0;
-        float quantityPerTimeScore = 0;
-        float availabilityScore = 0;
+        float overallScore;
+        float timelinessScore;
+        float quantityPerTimeScore;
+        float availabilityScore;
         float qualityScore = 0;
 
         int totalDeliveredOrders = 0;
@@ -68,86 +69,17 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
                     .filter(ss -> componentOrders.stream().map(SupplierOrder::getId).toList().contains(ss.getSupplierOrderId()))
                     .toList();
 
-            int totalDeliveredComponentOrders = 0;
-            float totalDelaysComponent = 0;
-            float ratioOfOnTimeOrderDeliveriesComponent = 0;
-            float ratioOfOnTimeShipmentDeliveriesComponent = 0;
-            float averageShipmentsPerOrderComponent = 0;
-            float averageTimeToShipOrderComponent = 0;
+            ComponentPerformanceMetrics componentMetrics = computeComponentMetrics(componentId, componentPerformances, componentOrders, componentShipments);
 
-            float totalDeliveredQuantity = 0;
-            float averageDeliveredQuantity = 0;
-            float averageOrderQuantity = 0;
-            float averageShipmentQuantity = 0;
-            float deliveredPerOrderedRatio = 0;
-            LocalDateTime firstDeliveryDate = componentOrders.stream()
-                    .map(SupplierOrder::getDeliveryDate).filter(Objects::nonNull) // Filter out null delivery dates
-                    .min(LocalDateTime::compareTo).orElse(null);
-            Map<Float, Float> deliveredQuantityOverTime = new HashMap<>();
-
-            for (SupplierOrder supplierOrder : componentOrders) {
-                // Compute delivery metrics
-                if (supplierOrder.getDeliveryDate() == null) continue;
-                totalDeliveredComponentOrders++;
-
-                if (supplierOrder.getEstimatedDeliveryDate() != null) {
-                    Duration orderDelay = Duration.between(supplierOrder.getEstimatedDeliveryDate(), supplierOrder.getDeliveryDate());
-                    totalDelaysComponent += orderDelay.toDays();
-                    if (totalDelaysComponent <= 0) {
-                        ratioOfOnTimeOrderDeliveriesComponent++;
-                    }
-                }
-
-                if (supplierOrder.getOrderDate() != null) {
-                    Duration shipDuration = Duration.between(supplierOrder.getOrderDate(), supplierOrder.getDeliveryDate());
-                    averageTimeToShipOrderComponent += shipDuration.toDays();
-                }
-
-                List<SupplierShipment> correspondingShipments = componentShipments.stream()
-                        .filter(ss -> ss.getSupplierOrderId().equals(supplierOrder.getId()))
-                        .toList();
-
-                averageShipmentsPerOrderComponent += correspondingShipments.size();
-
-                // Compute quantity metrics
-                float orderDeliveredQuantity = supplierOrder.getDeliveredQuantity() != null ? supplierOrder.getDeliveredQuantity() : 0;
-                totalDeliveredQuantity += orderDeliveredQuantity;
-                averageDeliveredQuantity += orderDeliveredQuantity;
-                averageOrderQuantity += supplierOrder.getQuantity();
-                averageShipmentQuantity += correspondingShipments.stream().map(SupplierShipment::getQuantity).reduce(0.0f, Float::sum);
-                deliveredPerOrderedRatio += orderDeliveredQuantity;
-                if (firstDeliveryDate == null) continue;
-                Duration timeFromFirstDelivery = Duration.between(firstDeliveryDate, supplierOrder.getDeliveryDate());
-                long days = timeFromFirstDelivery.toDays(); // This gives you the total days as a long
-                deliveredQuantityOverTime.put((float) days, orderDeliveredQuantity);
-            }
-
-            // Add to total
-            totalDeliveredOrders += totalDeliveredComponentOrders;
-            totalDelays += totalDelaysComponent;
-            ratioOfOnTimeOrderDeliveries += ratioOfOnTimeOrderDeliveriesComponent;
-            ratioOfOnTimeShipmentDeliveries += ratioOfOnTimeShipmentDeliveriesComponent;
-            averageShipmentsPerOrder += averageShipmentsPerOrderComponent;
-            averageTimeToShipOrder += averageTimeToShipOrderComponent;
-
-            // Get component performance
-            ComponentDeliveryPerformance componentPerformance = new ComponentDeliveryPerformance();
-            componentPerformance.setComponentId(componentId);
-            componentPerformance.setComponentName(componentOrders.getFirst().getComponent().getName());
-            componentPerformance.setTotalDeliveredOrders(totalDeliveredComponentOrders);
-            componentPerformance.setTotalDeliveredQuantity(totalDeliveredQuantity);
-            if (totalDeliveredComponentOrders > 0) {
-                componentPerformance.setAverageDeliveredQuantity(averageDeliveredQuantity / totalDeliveredComponentOrders);
-                componentPerformance.setAverageOrderQuantity(averageOrderQuantity / totalDeliveredComponentOrders);
-                componentPerformance.setDeliveredPerOrderedRatio(deliveredPerOrderedRatio / totalDeliveredComponentOrders);
-                componentPerformance.setAverageShipmentQuantity(averageShipmentQuantity / totalDeliveredComponentOrders); // Not good yet
-                componentPerformance.setFirstDeliveryDate(firstDeliveryDate);
-                componentPerformance.setDeliveredQuantityOverTime(deliveredQuantityOverTime);
-                componentPerformances.put(componentId, componentPerformance);
-            }
+            totalDeliveredOrders += componentMetrics.getTotalDeliveredOrders();
+            totalDelays += componentMetrics.getTotalDelays();
+            ratioOfOnTimeOrderDeliveries += componentMetrics.getRatioOfOnTimeDeliveries();
+            ratioOfOnTimeShipmentDeliveries += componentMetrics.getRatioOfOnTimeShipments();
+            averageShipmentsPerOrder += componentMetrics.getAverageShipmentsPerOrder();
+            averageTimeToShipOrder += componentMetrics.getAverageTimeToShipOrder();
         }
 
-        // Calculate average metrics
+        // Compute average metrics
         if (totalDeliveredOrders > 0) {
             report.setTotalDeliveredOrders(totalDeliveredOrders);
             report.setTotalDelays(totalDelays);
@@ -159,6 +91,13 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
             report.setAverageTimeToShipOrder(averageTimeToShipOrder / totalDeliveredOrders);
         }
 
+        // Compute overall score
+        timelinessScore = 1 - (totalDelays / totalDeliveredOrders) * 100;
+        quantityPerTimeScore = 0; // Not implemented yet
+        availabilityScore = (1 - (1 - ratioOfOnTimeShipmentDeliveries / totalDeliveredOrders)) * 100;
+        qualityScore = 100; // Not implemented yet
+        overallScore = (timelinessScore + quantityPerTimeScore + availabilityScore + qualityScore) / 4;
+
         report.setComponentPerformances(componentPerformances);
         report.setOverallScore(overallScore);
         report.setTimelinessScore(timelinessScore);
@@ -167,5 +106,91 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
         report.setQualityScore(qualityScore);
 
         return report;
+    }
+
+    private ComponentPerformanceMetrics computeComponentMetrics(Integer componentId,
+                                         Map<Integer, ComponentDeliveryPerformance> componentPerformances,
+                                         List<SupplierOrder> componentOrders,
+                                         List<SupplierShipment> componentShipments) {
+        int totalDeliveredComponentOrders = 0;
+        float totalDelaysComponent = 0;
+        float ratioOfOnTimeOrderDeliveriesComponent = 0;
+        float ratioOfOnTimeShipmentDeliveriesComponent = 0;
+        float averageShipmentsPerOrderComponent = 0;
+        float averageTimeToShipOrderComponent = 0;
+
+        float totalDeliveredQuantity = 0;
+        float averageDeliveredQuantity = 0;
+        float averageOrderQuantity = 0;
+        float averageShipmentQuantity = 0;
+        float deliveredPerOrderedRatio = 0;
+
+        LocalDateTime firstDeliveryDate = componentOrders.stream()
+                .map(SupplierOrder::getDeliveryDate).filter(Objects::nonNull) // Filter out null delivery dates
+                .min(LocalDateTime::compareTo).orElse(null);
+        Map<Float, Float> deliveredQuantityOverTime = new HashMap<>();
+
+        for (SupplierOrder supplierOrder : componentOrders) {
+            // Compute delivery metrics
+            if (supplierOrder.getDeliveryDate() == null) continue;
+            totalDeliveredComponentOrders++;
+
+            if (supplierOrder.getEstimatedDeliveryDate() != null) {
+                Duration orderDelay = Duration.between(supplierOrder.getEstimatedDeliveryDate(), supplierOrder.getDeliveryDate());
+                totalDelaysComponent += orderDelay.toDays();
+                if (totalDelaysComponent <= 0) {
+                    ratioOfOnTimeOrderDeliveriesComponent++;
+                }
+            }
+
+            if (supplierOrder.getOrderDate() != null) {
+                Duration shipDuration = Duration.between(supplierOrder.getOrderDate(), supplierOrder.getDeliveryDate());
+                averageTimeToShipOrderComponent += shipDuration.toDays();
+            }
+
+            List<SupplierShipment> correspondingShipments = componentShipments.stream()
+                    .filter(ss -> ss.getSupplierOrderId().equals(supplierOrder.getId()))
+                    .toList();
+
+            averageShipmentsPerOrderComponent += correspondingShipments.size();
+
+            // Compute quantity metrics
+            float orderDeliveredQuantity = supplierOrder.getDeliveredQuantity() != null ? supplierOrder.getDeliveredQuantity() : 0;
+            totalDeliveredQuantity += orderDeliveredQuantity;
+            averageDeliveredQuantity += orderDeliveredQuantity;
+            averageOrderQuantity += supplierOrder.getQuantity();
+            averageShipmentQuantity += correspondingShipments.stream().map(SupplierShipment::getQuantity).reduce(0.0f, Float::sum);
+            deliveredPerOrderedRatio += orderDeliveredQuantity;
+            if (firstDeliveryDate == null) continue;
+            Duration timeFromFirstDelivery = Duration.between(firstDeliveryDate, supplierOrder.getDeliveryDate());
+            long days = timeFromFirstDelivery.toDays();
+            deliveredQuantityOverTime.put((float) days, orderDeliveredQuantity);
+        }
+
+        // Get component performance
+        ComponentDeliveryPerformance componentPerformance = new ComponentDeliveryPerformance();
+        componentPerformance.setComponentId(componentId);
+        componentPerformance.setComponentName(componentOrders.getFirst().getComponent().getName());
+        componentPerformance.setTotalDeliveredOrders(totalDeliveredComponentOrders);
+        componentPerformance.setTotalDeliveredQuantity(totalDeliveredQuantity);
+        if (totalDeliveredComponentOrders > 0) {
+            componentPerformance.setAverageDeliveredQuantity(averageDeliveredQuantity / totalDeliveredComponentOrders);
+            componentPerformance.setAverageOrderQuantity(averageOrderQuantity / totalDeliveredComponentOrders);
+            componentPerformance.setDeliveredPerOrderedRatio(deliveredPerOrderedRatio / totalDeliveredComponentOrders);
+            componentPerformance.setAverageShipmentQuantity(averageShipmentQuantity / totalDeliveredComponentOrders); // Not good yet
+            componentPerformance.setFirstDeliveryDate(firstDeliveryDate);
+            componentPerformance.setDeliveredQuantityOverTime(deliveredQuantityOverTime);
+            componentPerformances.put(componentId, componentPerformance);
+        }
+
+        ComponentPerformanceMetrics componentPerformanceMetrics = new ComponentPerformanceMetrics();
+        componentPerformanceMetrics.setTotalDeliveredOrders(totalDeliveredComponentOrders);
+        componentPerformanceMetrics.setTotalDelays(totalDelaysComponent);
+        componentPerformanceMetrics.setRatioOfOnTimeDeliveries(ratioOfOnTimeOrderDeliveriesComponent);
+        componentPerformanceMetrics.setRatioOfOnTimeShipments(ratioOfOnTimeShipmentDeliveriesComponent);
+        componentPerformanceMetrics.setAverageShipmentsPerOrder(averageShipmentsPerOrderComponent);
+        componentPerformanceMetrics.setAverageTimeToShipOrder(averageTimeToShipOrderComponent);
+
+        return componentPerformanceMetrics;
     }
 }
