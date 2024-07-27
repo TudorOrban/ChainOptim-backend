@@ -1,7 +1,6 @@
 package org.chainoptim.features.warehouse.model;
 
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -51,7 +50,7 @@ public class Compartment {
         return this.data;
     }
 
-    public void setReport(CompartmentData data) {
+    public void setData(CompartmentData data) {
         this.data = data;
         // Serialize when setting the object
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());

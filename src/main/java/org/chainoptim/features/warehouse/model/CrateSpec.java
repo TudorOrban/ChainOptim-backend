@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompartmentData {
+public class CrateSpec {
 
-    private List<CrateSpec> crateSpecs;
-    private List<CrateData> currentCrates;
+    private Integer crateId;
+    private Integer componentId;
+    private Float maxCrates;
 }
