@@ -18,6 +18,7 @@ import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
 import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
+import org.chainoptim.features.warehouse.repository.CompartmentRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
 
@@ -44,6 +45,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final FactoryRepository factoryRepository;
     private final FactoryInventoryItemRepository factoryInventoryRepository;
     private final WarehouseRepository warehouseRepository;
+    private final CompartmentRepository compartmentRepository;
     private final SupplierRepository supplierRepository;
     private final SupplierOrderRepository supplierOrderRepository;
     private final ClientRepository clientRepository;
@@ -63,6 +65,7 @@ public class SecurityServiceImpl implements SecurityService {
             FactoryRepository factoryRepository,
             FactoryInventoryItemRepository factoryInventoryRepository,
             WarehouseRepository warehouseRepository,
+            CompartmentRepository compartmentRepository,
             SupplierRepository supplierRepository,
             SupplierOrderRepository supplierOrderRepository,
             ClientRepository clientRepository,
@@ -79,6 +82,7 @@ public class SecurityServiceImpl implements SecurityService {
         this.factoryRepository = factoryRepository;
         this.factoryInventoryRepository = factoryInventoryRepository;
         this.warehouseRepository = warehouseRepository;
+        this.compartmentRepository = compartmentRepository;
         this.supplierRepository = supplierRepository;
         this.supplierOrderRepository = supplierOrderRepository;
         this.clientRepository = clientRepository;
@@ -98,6 +102,7 @@ public class SecurityServiceImpl implements SecurityService {
             case "Factory" -> factoryRepository.findOrganizationIdById(entityId);
             case "FactoryInventoryItem" -> factoryInventoryRepository.findOrganizationIdById(entityId);
             case "Warehouse" -> warehouseRepository.findOrganizationIdById(entityId);
+            case "Compartment" -> compartmentRepository.findOrganizationIdById(entityId);
             case "Supplier" -> supplierRepository.findOrganizationIdById(entityId);
             case "SupplierOrder" -> supplierOrderRepository.findOrganizationIdById(entityId);
             case "Client" -> clientRepository.findOrganizationIdById(entityId);

@@ -7,9 +7,11 @@ import org.chainoptim.features.warehouse.model.Compartment;
 import org.chainoptim.features.warehouse.repository.CompartmentRepository;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CompartmentServiceImpl implements CompartmentService {
 
     private final CompartmentRepository compartmentRepository;
