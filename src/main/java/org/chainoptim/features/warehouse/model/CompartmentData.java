@@ -1,2 +1,15 @@
-package org.chainoptim.features.warehouse.model;public class CompartmentData {
+package org.chainoptim.features.warehouse.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CompartmentData {
+
+    private List<Integer> crateIds;
 }
