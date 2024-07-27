@@ -13,7 +13,7 @@ public interface CompartmentRepository extends JpaRepository<Compartment, Intege
     List<Compartment> findByOrganizationId(Integer organizationId);
     List<Compartment> findByWarehouseId(Integer warehouseId);
 
-    @Query("SELECT w.organizationId FROM Warehouse w WHERE w.id = :warehouseId")
-    Optional<Integer> findOrganizationIdById(@Param("warehouseId") Long warehouseId);
+    @Query("SELECT c.organizationId FROM Crate c WHERE c.id = :compartmentId")
+    Optional<Integer> findOrganizationIdById(@Param("compartmentId") Long compartmentId);
 
 }

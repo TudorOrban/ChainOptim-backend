@@ -25,3 +25,11 @@ VALUES ("CRate 1", 1, 1.24, 123, true, 2.56);
 
 INSERT INTO compartments(name, warehouse_id, organization_id, data_json)
 VALUES ("Comp 1", 1, 1, "{}");
+
+ALTER TABLE crates
+ADD COLUMN organization_id INT;
+
+ALTER TABLE crates
+ADD FOREIGN KEY (organization_id) REFERENCES organizations(id);
+
+UPDATE `chain_optimizer_schema`.`crates` SET `organization_id` = '1' WHERE (`id` = '1');

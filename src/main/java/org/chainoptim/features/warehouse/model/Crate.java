@@ -20,6 +20,9 @@ public class Crate {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
+
     @Column(name = "component_id", nullable = false)
     private Integer componentId;
 
