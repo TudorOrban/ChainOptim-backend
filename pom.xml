@@ -200,6 +200,11 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.vdurmont</groupId>
+			<artifactId>semver4j</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
