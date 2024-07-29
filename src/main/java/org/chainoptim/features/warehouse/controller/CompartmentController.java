@@ -37,9 +37,6 @@ public class CompartmentController {
     @GetMapping("/warehouse/{warehouseId}")
     public ResponseEntity<List<Compartment>> getCompartmentsByWarehouseId(@PathVariable Integer warehouseId) {
         List<Compartment> compartments = compartmentService.getCompartmentsByWarehouseId(warehouseId);
-        if (compartments.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(compartments);
     }
 
