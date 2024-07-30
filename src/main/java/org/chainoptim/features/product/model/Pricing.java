@@ -1,5 +1,10 @@
 package org.chainoptim.features.product.model;
 
+import org.chainoptim.exception.ValidationException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +25,35 @@ public class Pricing {
     @Column(name = "product_id", nullable = false)
     private Integer productId;
 
-    @Column(name = "product_pricing", nullable = false)
+    // Manual deserialization and caching of JSON column
+    @Column(name = "product_pricing", columnDefinition = "json")
+    private String pricingJson;
+
+    @Transient // Ignore field
     private ProductPricing productPricing;
+
+    public ProductPricing getProductPricing() {
+        if (this.productPricing == null && this.pricingJson != null) {
+            // Deserialize when accessed
+            ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+            try {
+                this.productPricing = mapper.readValue(this.pricingJson, ProductPricing.class);
+            } catch (JsonProcessingException e) {
+                throw new ValidationException("Invalid Pricing json");
+            }
+        }
+        return this.productPricing;
+    }
+
+    public void setProductPricing(ProductPricing pricing) {
+        this.productPricing = pricing;
+        // Serialize when setting the object
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        try {
+            this.pricingJson = mapper.writeValueAsString(pricing);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new ValidationException("Invalid Pricing json");
+        }
+    }
 }
