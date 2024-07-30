@@ -12,10 +12,10 @@ import java.util.Map;
 @NoArgsConstructor
 public class FactoryPerformanceReport {
 
-    private Map<Integer, FactoryStagePerformanceReport> stageReports = new HashMap<>(); // Key: factoryStageId
-
     private Float overallScore;
     private Float resourceDistributionScore; // Measures distribution of resources among stages
     private Float resourceReadinessScore;
     private Float resourceUtilizationScore;
+
+    private Map<Integer, FactoryStagePerformanceReport> stageReports = new HashMap<>(); // Key: factoryStageId
 }

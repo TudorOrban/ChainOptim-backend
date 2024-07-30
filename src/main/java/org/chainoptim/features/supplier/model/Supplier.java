@@ -39,4 +39,20 @@ public class Supplier {
 
     @JoinColumn(name = "organization_id", nullable = false)
     private Integer organizationId;
+
+    // Performance
+    @Column(name = "overall_score")
+    private Float overallScore;
+
+    @Column(name = "timeliness_score")
+    private Float timelinessScore;
+
+    @Column(name = "quantity_per_time_score")
+    private Float quantityPerTimeScore;
+
+    @Column(name = "availability_score")
+    private Float availabilityScore;
+
+    @Column(name = "quality_score")
+    private Float qualityScore;
 }

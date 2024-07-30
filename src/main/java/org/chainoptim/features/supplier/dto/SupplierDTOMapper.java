@@ -16,6 +16,10 @@ public class SupplierDTOMapper {
         dto.setCreatedAt(supplier.getCreatedAt());
         dto.setUpdatedAt(supplier.getUpdatedAt());
         dto.setLocation(supplier.getLocation());
+        dto.setOverallScore(supplier.getOverallScore());
+        dto.setTimelinessScore(supplier.getTimelinessScore());
+        dto.setAvailabilityScore(supplier.getAvailabilityScore());
+        dto.setQualityScore(supplier.getQualityScore());
         return dto;
     }
 

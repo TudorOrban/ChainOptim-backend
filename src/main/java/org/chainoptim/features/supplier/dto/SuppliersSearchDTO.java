@@ -16,4 +16,8 @@ public class SuppliersSearchDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Location location;
+    private Float overallScore;
+    private Float timelinessScore;
+    private Float availabilityScore;
+    private Float qualityScore;
 }

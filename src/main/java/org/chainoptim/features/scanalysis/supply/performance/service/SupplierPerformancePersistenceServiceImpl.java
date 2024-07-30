@@ -7,6 +7,8 @@ import org.chainoptim.features.scanalysis.supply.performance.dto.UpdateSupplierP
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformance;
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
 import org.chainoptim.features.scanalysis.supply.performance.repository.SupplierPerformanceRepository;
+import org.chainoptim.features.supplier.model.Supplier;
+import org.chainoptim.features.supplier.repository.SupplierRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,15 @@ public class SupplierPerformancePersistenceServiceImpl implements SupplierPerfor
 
     private final SupplierPerformanceRepository supplierPerformanceRepository;
     private final SupplierPerformanceService supplierPerformanceService;
+    private final SupplierRepository supplierRepository;
 
     @Autowired
     public SupplierPerformancePersistenceServiceImpl(SupplierPerformanceRepository supplierPerformanceRepository,
-                                                     SupplierPerformanceService supplierPerformanceService) {
+                                                     SupplierPerformanceService supplierPerformanceService,
+                                                     SupplierRepository supplierRepository) {
         this.supplierPerformanceRepository = supplierPerformanceRepository;
         this.supplierPerformanceService = supplierPerformanceService;
+        this.supplierRepository = supplierRepository;
     }
 
     public SupplierPerformance getSupplierPerformance(Integer supplierId) {
@@ -35,6 +40,8 @@ public class SupplierPerformancePersistenceServiceImpl implements SupplierPerfor
 
         SupplierPerformance supplierPerformance = supplierPerformanceRepository.findBySupplierId(supplierId)
                 .orElse(null);
+
+        updateSupplier(supplierId, supplierPerformanceReport);
 
         // Create new supplier performance or update existing one
         if (supplierPerformance == null) {
@@ -64,5 +71,17 @@ public class SupplierPerformancePersistenceServiceImpl implements SupplierPerfor
 
     public void deleteSupplierPerformance(Integer id) {
         supplierPerformanceRepository.deleteById(id);
+    }
+
+    private void updateSupplier(Integer supplierId, SupplierPerformanceReport supplierPerformanceReport) {
+        Supplier supplier = supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + supplierId + " not found"));
+        supplier.setOverallScore(supplierPerformanceReport.getOverallScore());
+        supplier.setTimelinessScore(supplierPerformanceReport.getTimelinessScore());
+        supplier.setQuantityPerTimeScore(supplierPerformanceReport.getQuantityPerTimeScore());
+        supplier.setAvailabilityScore(supplierPerformanceReport.getAvailabilityScore());
+        supplier.setQualityScore(supplierPerformanceReport.getQualityScore());
+
+        supplierRepository.save(supplier);
     }
 }

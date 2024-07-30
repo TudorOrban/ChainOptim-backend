@@ -86,7 +86,7 @@ public class SupplierShipmentController {
 
     // TODO: Secure endpoint
 //    @PreAuthorize("@securityService.canAccessOrganizationEntity(#shipmentIds.getFirst(), \"SupplierShipment\", \"Delete\")")
-    @DeleteMapping("/delete/bulk")
+    @PutMapping("/delete/bulk")
     public ResponseEntity<List<Integer>> deleteSupplierShipmentsInBulk(@RequestBody List<Integer> shipmentIds) {
         supplierShipmentService.deleteSupplierShipmentsInBulk(shipmentIds);
 
