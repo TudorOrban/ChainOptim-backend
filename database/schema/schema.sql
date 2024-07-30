@@ -186,7 +186,7 @@ CREATE TABLE `compartments` (
   KEY `organization_id` (`organization_id`),
   CONSTRAINT `compartments_ibfk_1` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouses` (`id`),
   CONSTRAINT `compartments_ibfk_2` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -195,7 +195,7 @@ CREATE TABLE `compartments` (
 
 LOCK TABLES `compartments` WRITE;
 /*!40000 ALTER TABLE `compartments` DISABLE KEYS */;
-INSERT INTO `compartments` VALUES (1,'Comp 1',1,1,'{}');
+INSERT INTO `compartments` VALUES (1,'Comp 1',1,1,'{}'),(2,'Compr 21',1,1,'{\"crateSpecs\": [{\"crateId\": 1, \"maxCrates\": 16.0, \"componentId\": 1}, {\"crateId\": 2, \"maxCrates\": 100.0, \"componentId\": 2}], \"currentCrates\": [{\"crateId\": 1, \"numberOfCrates\": 10}]}'),(3,'Compr 21',1,1,'{\"crateSpecs\": [{\"crateId\": 1, \"maxCrates\": 12.0, \"componentId\": 1}, {\"crateId\": 2, \"maxCrates\": 60.0, \"componentId\": 2}], \"currentCrates\": [{\"crateId\": 1, \"numberOfCrates\": 8}, {\"crateId\": 2, \"numberOfCrates\": 58}]}'),(4,'C 14',1,1,'{\"crateSpecs\": [{\"crateId\": 1, \"maxCrates\": 129.0, \"componentId\": 1}, {\"crateId\": 2, \"maxCrates\": 41.0, \"componentId\": 2}], \"currentCrates\": [{\"crateId\": 1, \"numberOfCrates\": 20}, {\"crateId\": 2, \"numberOfCrates\": 40}]}'),(5,'NewComp',1,1,'null'),(6,'NC2',1,1,'null'),(7,'weqw',1,1,'null'),(8,'NCC@!',1,1,'null'),(9,'NC12',1,1,'{\"crateSpecs\": [{\"crateId\": 1, \"maxCrates\": 2132.0, \"componentId\": null}, {\"crateId\": 2, \"maxCrates\": 21.23, \"componentId\": null}], \"currentCrates\": null}'),(10,'BDSA1',1,1,'{\"crateSpecs\": [{\"crateId\": 1, \"maxCrates\": 121.0, \"componentId\": null}, {\"crateId\": 2, \"maxCrates\": 213.21, \"componentId\": null}], \"currentCrates\": null}'),(11,'New!',1,1,'{\"crateSpecs\": [{\"crateId\": 1, \"maxCrates\": 231.0, \"componentId\": null}, {\"crateId\": 2, \"maxCrates\": 21421.0, \"componentId\": null}, {\"crateId\": 1, \"maxCrates\": 1231.0, \"componentId\": null}, {\"crateId\": 2, \"maxCrates\": 1535.0, \"componentId\": null}], \"currentCrates\": null}');
 /*!40000 ALTER TABLE `compartments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -247,10 +247,13 @@ CREATE TABLE `crates` (
   `volume_m3` decimal(10,0) DEFAULT NULL,
   `stackable` tinyint(1) DEFAULT NULL,
   `height_m` decimal(10,0) DEFAULT NULL,
+  `organization_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `component_id` (`component_id`),
-  CONSTRAINT `crates_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `organization_id` (`organization_id`),
+  CONSTRAINT `crates_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`),
+  CONSTRAINT `crates_ibfk_2` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,7 +262,7 @@ CREATE TABLE `crates` (
 
 LOCK TABLES `crates` WRITE;
 /*!40000 ALTER TABLE `crates` DISABLE KEYS */;
-INSERT INTO `crates` VALUES (1,'CRate 1',1,1,123,1,3);
+INSERT INTO `crates` VALUES (1,'CRate 1',1,1,123,1,3,1),(2,'Cargo Crate',2,4,19,1,2,1);
 /*!40000 ALTER TABLE `crates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -774,6 +777,33 @@ LOCK TABLES `organizations` WRITE;
 /*!40000 ALTER TABLE `organizations` DISABLE KEYS */;
 INSERT INTO `organizations` VALUES (1,'Menn Industries','Bay Area','tudororban5@gmail.com','PRO','2024-01-02 20:48:32','2024-04-25 14:55:18'),(2,'Apple','San Francisco','stevejobs@gmail.com','BASIC','2024-01-04 20:02:55','2024-01-04 20:02:55'),(3,'ExxonMobil','Houston, Texas, USA',NULL,'PRO','2024-01-05 10:58:27','2024-01-05 10:58:27'),(5,'Microsoft','San Francisco, California, USA',NULL,'PRO','2024-01-05 11:05:49','2024-01-05 11:05:49'),(6,'Microsoft','San Francisco, California, USA',NULL,'PRO','2024-01-05 11:18:48','2024-01-05 11:18:48'),(10,'NVIDIA','San Francisco, California, USA',NULL,'PRO','2024-01-05 11:28:00','2024-01-05 11:28:00'),(12,'Huawei','Shenzen','','NONE','2024-01-05 12:23:06','2024-01-05 12:23:06'),(16,'TestUsers','Shenzen','0722415124','NONE','2024-01-05 13:15:15','2024-01-05 13:15:15'),(17,'','','','NONE','2024-01-05 13:47:04','2024-01-05 13:47:04'),(18,'New-Test-Organization','Address',NULL,'PRO','2024-02-16 07:21:16','2024-02-16 07:21:16'),(21,'Automotive','','','PRO','2024-04-16 12:53:29','2024-04-16 12:53:29');
 /*!40000 ALTER TABLE `organizations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pricings`
+--
+
+DROP TABLE IF EXISTS `pricings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pricings` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NOT NULL,
+  `product_pricing` json DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `product_id` (`product_id`),
+  CONSTRAINT `pricings_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pricings`
+--
+
+LOCK TABLES `pricings` WRITE;
+/*!40000 ALTER TABLE `pricings` DISABLE KEYS */;
+INSERT INTO `pricings` VALUES (1,1,'{\"pricePerUnit\": \"1\"}');
+/*!40000 ALTER TABLE `pricings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1397,7 +1427,7 @@ CREATE TABLE `warehouses` (
 
 LOCK TABLES `warehouses` WRITE;
 /*!40000 ALTER TABLE `warehouses` DISABLE KEYS */;
-INSERT INTO `warehouses` VALUES (1,'NJ Factory 1',1,2,'2024-03-04 21:07:37','2024-03-04 23:07:37'),(2,'Chicago warehouse 2',14,1,'2024-03-06 09:34:29','2024-03-23 16:40:53'),(3,'Chicago Warehouse',4,1,'2024-03-06 09:36:04','2024-03-06 11:36:04'),(4,'Shenzen Warehouse',5,1,'2024-03-06 09:51:05','2024-03-06 11:51:05'),(5,'Kyoto Warehouse',6,1,'2024-03-06 09:51:15','2024-03-06 11:51:15'),(6,'LA Warehouse',3,1,'2024-03-06 09:51:24','2024-03-06 11:51:24'),(9,'Warehouse S.E.A.',5,1,'2024-03-21 17:56:30','2024-04-22 21:26:16');
+INSERT INTO `warehouses` VALUES (1,'NJ Factory 1',1,1,'2024-03-04 21:07:37','2024-07-27 18:20:21'),(2,'Chicago warehouse 2',14,1,'2024-03-06 09:34:29','2024-03-23 16:40:53'),(3,'Chicago Warehouse',4,1,'2024-03-06 09:36:04','2024-03-06 11:36:04'),(4,'Shenzen Warehouse',5,1,'2024-03-06 09:51:05','2024-03-06 11:51:05'),(5,'Kyoto Warehouse',6,1,'2024-03-06 09:51:15','2024-03-06 11:51:15'),(6,'LA Warehouse',3,1,'2024-03-06 09:51:24','2024-03-06 11:51:24'),(9,'Warehouse S.E.A.',5,1,'2024-03-21 17:56:30','2024-04-22 21:26:16');
 /*!40000 ALTER TABLE `warehouses` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1410,4 +1440,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-27 15:07:12
+-- Dump completed on 2024-07-30 17:49:26
