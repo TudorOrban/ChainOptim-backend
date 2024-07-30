@@ -1,6 +1,9 @@
 package org.chainoptim.features.product.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.features.product.dto.CreatePricingDTO;
+import org.chainoptim.features.product.dto.PricingDTOMapper;
+import org.chainoptim.features.product.dto.UpdatePricingDTO;
 import org.chainoptim.features.product.model.Pricing;
 import org.chainoptim.features.product.repository.PricingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +26,20 @@ public class PricingServiceImpl implements PricingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Pricing with Product ID: " + productId + " not found."));
     }
 
-    public Pricing createPricing(Pricing pricing) {
-        Optional<Pricing> existingPricing = pricingRepository.findByProductId(pricing.getProductId());
+    public Pricing createPricing(CreatePricingDTO pricingDTO) {
+        Optional<Pricing> existingPricing = pricingRepository.findByProductId(pricingDTO.getProductId());
         if (existingPricing.isPresent()) {
-            throw new ResourceNotFoundException("Pricing with Product ID: " + pricing.getProductId() + " already exists.");
+            throw new ResourceNotFoundException("Pricing with Product ID: " + pricingDTO.getProductId() + " already exists.");
         }
+        Pricing pricing = PricingDTOMapper.mapCreatePricingDTOToPricing(pricingDTO);
         return pricingRepository.save(pricing);
     }
 
-    public Pricing updatePricing(Pricing pricing) {
-        Pricing existingPricing = pricingRepository.findByProductId(pricing.getProductId())
-                .orElseThrow(() -> new ResourceNotFoundException("Pricing with Product ID: " + pricing.getProductId() + " not found."));
-        pricing.setId(existingPricing.getId());
+    public Pricing updatePricing(UpdatePricingDTO pricingDTO) {
+        Pricing existingPricing = pricingRepository.findByProductId(pricingDTO.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException("Pricing with Product ID: " + pricingDTO.getProductId() + " not found."));
+        pricingDTO.setId(existingPricing.getId());
+        Pricing pricing = PricingDTOMapper.setUpdatePricingDTOToPricing(pricingDTO, existingPricing);
         return pricingRepository.save(pricing);
     }
 

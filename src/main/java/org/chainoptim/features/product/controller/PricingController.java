@@ -1,5 +1,7 @@
 package org.chainoptim.features.product.controller;
 
+import org.chainoptim.features.product.dto.CreatePricingDTO;
+import org.chainoptim.features.product.dto.UpdatePricingDTO;
 import org.chainoptim.features.product.model.Pricing;
 import org.chainoptim.features.product.service.PricingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,14 @@ public class PricingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Pricing> createPricing(@RequestBody Pricing pricing) {
-        Pricing newPricing = pricingService.createPricing(pricing);
+    public ResponseEntity<Pricing> createPricing(@RequestBody CreatePricingDTO pricingDTO) {
+        Pricing newPricing = pricingService.createPricing(pricingDTO);
         return ResponseEntity.ok(newPricing);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Pricing> updatePricing(@RequestBody Pricing pricing) {
-        Pricing updatedPricing = pricingService.updatePricing(pricing);
+    public ResponseEntity<Pricing> updatePricing(@RequestBody UpdatePricingDTO pricingDTO) {
+        Pricing updatedPricing = pricingService.updatePricing(pricingDTO);
         return ResponseEntity.ok(updatedPricing);
     }
 
