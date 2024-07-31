@@ -1,5 +1,6 @@
 package org.chainoptim.features.product.dto;
 
+import org.chainoptim.features.product.model.NewUnitOfMeasurement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,4 +12,5 @@ public class UpdateProductDTO {
     private String name;
     private String description;
     private Integer unitId;
+    private NewUnitOfMeasurement newUnit;
 }

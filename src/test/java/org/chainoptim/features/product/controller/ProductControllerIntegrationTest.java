@@ -5,6 +5,7 @@ import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
 import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.features.product.dto.*;
+import org.chainoptim.features.product.model.NewUnitOfMeasurement;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
@@ -155,7 +156,7 @@ class ProductControllerIntegrationTest {
     @Test
     void testCreateProduct() throws Exception {
         // Arrange
-        CreateProductDTO productDTO = new CreateProductDTO("Test Product - Unique Title 123456789", "Test Description", organizationId, unit.getId(), unitDTO, false);
+        CreateProductDTO productDTO = new CreateProductDTO("Test Product - Unique Title 123456789", "Test Description", organizationId, unit.getId(), unitDTO, false, new NewUnitOfMeasurement());
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
         String invalidJWTToken = "Invalid";
 
@@ -195,7 +196,7 @@ class ProductControllerIntegrationTest {
     @Test
     void testUpdateProduct() throws Exception {
         // Arrange
-        UpdateProductDTO productDTO = new UpdateProductDTO(productId, "Test Product - Updated Unique Title 123456789", "Test Description", unit.getId());
+        UpdateProductDTO productDTO = new UpdateProductDTO(productId, "Test Product - Updated Unique Title 123456789", "Test Description", unit.getId(), new NewUnitOfMeasurement());
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
         String invalidJWTToken = "Invalid";
 

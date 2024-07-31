@@ -6,6 +6,7 @@ import org.chainoptim.features.product.dto.CreateProductDTO;
 import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.product.dto.ProductDTOMapper;
 import org.chainoptim.features.product.dto.UpdateProductDTO;
+import org.chainoptim.features.product.model.NewUnitOfMeasurement;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.ProductRepository;
@@ -39,7 +40,7 @@ class ProductServiceTest {
     @Test
     void testCreateProduct() {
         // Arrange
-        CreateProductDTO productDTO = new CreateProductDTO("Test product", "Test description", 1, 1, new CreateUnitOfMeasurementDTO(), false);
+        CreateProductDTO productDTO = new CreateProductDTO("Test product", "Test description", 1, 1, new CreateUnitOfMeasurementDTO(), false, new NewUnitOfMeasurement());
         Product expectedProduct = ProductDTOMapper.convertCreateProductDTOToProduct(productDTO);
 
         when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
@@ -62,7 +63,7 @@ class ProductServiceTest {
     @Test
     void testUpdateProduct_ExistingProduct() {
         // Arrange
-        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", 2);
+        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", 2, new NewUnitOfMeasurement());
         Product existingProduct = new Product();
         existingProduct.setId(1);
         existingProduct.setName("Test Product");
@@ -91,7 +92,7 @@ class ProductServiceTest {
     @Test
     void testUpdateProduct_NonExistingProduct() {
         // Arrange
-        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", 2);
+        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", 2, new NewUnitOfMeasurement());
         Product existingProduct = new Product();
         existingProduct.setId(2); // Different id
         existingProduct.setName("Test Product");

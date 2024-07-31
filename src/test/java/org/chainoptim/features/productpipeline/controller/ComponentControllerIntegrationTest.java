@@ -6,6 +6,7 @@ import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.product.dto.UnitDTOMapper;
+import org.chainoptim.features.product.model.NewUnitOfMeasurement;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.repository.UnitOfMeasurementRepository;
 import org.chainoptim.features.productpipeline.dto.ComponentsSearchDTO;
@@ -151,7 +152,7 @@ class ComponentControllerIntegrationTest {
     @Test
     void testCreateComponent() throws Exception {
         // Arrange
-        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component - Unique Title 123456789", "Test Description", organizationId, unit.getId(), unitDTO, false);
+        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component - Unique Title 123456789", "Test Description", organizationId, unit.getId(), unitDTO, false, new NewUnitOfMeasurement());
         String componentDTOJson = objectMapper.writeValueAsString(componentDTO);
         String invalidJWTToken = "Invalid";
 
@@ -191,7 +192,7 @@ class ComponentControllerIntegrationTest {
     @Test
     void testUpdateComponent() throws Exception {
         // Arrange
-        UpdateComponentDTO componentDTO = new UpdateComponentDTO(componentId, "Test Component - Updated Unique Title 123456789", "Test Description", unit.getId());
+        UpdateComponentDTO componentDTO = new UpdateComponentDTO(componentId, "Test Component - Updated Unique Title 123456789", "Test Description", unit.getId(), new NewUnitOfMeasurement());
         String componentDTOJson = objectMapper.writeValueAsString(componentDTO);
         String invalidJWTToken = "Invalid";
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
+import org.chainoptim.features.product.model.NewUnitOfMeasurement;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,5 @@ public class CreateComponentDTO {
     private Integer unitId;
     private CreateUnitOfMeasurementDTO unitDTO;
     private boolean createUnit;
+    private NewUnitOfMeasurement newUnit;
 }

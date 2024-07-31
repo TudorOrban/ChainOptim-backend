@@ -103,14 +103,10 @@ public class ProductServiceImpl implements ProductService {
 
     public Product updateProduct(UpdateProductDTO productDTO) {
         UpdateProductDTO sanitizedProductDTO = entitySanitizerService.sanitizeUpdateProductDTO(productDTO);
-        Product product = productRepository.findById(sanitizedProductDTO.getId())
+        Product existingProduct = productRepository.findById(sanitizedProductDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + sanitizedProductDTO.getId() + " not found."));
 
-        product.setName(sanitizedProductDTO.getName());
-        product.setDescription(sanitizedProductDTO.getDescription());
-        UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setId(sanitizedProductDTO.getUnitId());
-        product.setUnit(unit);
+        Product product = ProductDTOMapper.setUpdateProductDTOToProduct(existingProduct, sanitizedProductDTO);
 
         productRepository.save(product);
 

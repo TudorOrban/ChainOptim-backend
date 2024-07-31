@@ -3,6 +3,7 @@ package org.chainoptim.features.productpipeline.service;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
+import org.chainoptim.features.product.model.NewUnitOfMeasurement;
 import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
 import org.chainoptim.features.productpipeline.dto.ComponentDTOMapper;
 import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
@@ -37,7 +38,7 @@ class ComponentServiceTest {
     @Test
     void testCreateComponent() {
         // Arrange
-        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component", "Test Description", 1, 1, new CreateUnitOfMeasurementDTO(), false);
+        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component", "Test Description", 1, 1, new CreateUnitOfMeasurementDTO(), false, new NewUnitOfMeasurement());
         Component expectedComponent = ComponentDTOMapper.convertCreateComponentDTOToComponent(componentDTO);
 
         when(componentRepository.save(any(Component.class))).thenReturn(expectedComponent);
@@ -58,7 +59,7 @@ class ComponentServiceTest {
     @Test
     void testUpdateComponent_ExistingComponent() {
         // Arrange
-        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", 1);
+        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", 1, new NewUnitOfMeasurement());
         Component existingComponent = new Component();
         existingComponent.setId(1);
 
@@ -80,7 +81,7 @@ class ComponentServiceTest {
     @Test
     void testUpdateComponent_NonExistingComponent() {
         // Arrange
-        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", 1);
+        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", 1, new NewUnitOfMeasurement());
         Component existingComponent = new Component();
         existingComponent.setId(1);
 

@@ -24,6 +24,20 @@ public class ComponentDTOMapper {
             unitOfMeasurement.setId(componentDTO.getUnitId());
             component.setUnit(unitOfMeasurement);
         }
+        component.setNewUnit(componentDTO.getNewUnit());
+
+        return component;
+    }
+
+    public static Component setUpdateComponentDTOToComponent(Component component, UpdateComponentDTO componentDTO) {
+        component.setName(componentDTO.getName());
+        component.setDescription(componentDTO.getDescription());
+        if (componentDTO.getUnitId() != null) {
+            UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement();
+            unitOfMeasurement.setId(componentDTO.getUnitId());
+            component.setUnit(unitOfMeasurement);
+        }
+        component.setNewUnit(componentDTO.getNewUnit());
 
         return component;
     }
