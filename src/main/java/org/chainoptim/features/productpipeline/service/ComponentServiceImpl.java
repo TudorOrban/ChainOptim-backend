@@ -83,11 +83,10 @@ public class ComponentServiceImpl implements ComponentService {
     // Update
     public Component updateComponent(UpdateComponentDTO componentDTO) {
         UpdateComponentDTO sanitizedComponentDTO = entitySanitizerService.sanitizeUpdateComponentDTO(componentDTO);
-        Component component = componentRepository.findById(sanitizedComponentDTO.getId())
+        Component existingComponent = componentRepository.findById(sanitizedComponentDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + sanitizedComponentDTO.getId() + " not found."));
 
-        component.setName(sanitizedComponentDTO.getName());
-        component.setDescription(sanitizedComponentDTO.getDescription());
+        Component component = ComponentDTOMapper.setUpdateComponentDTOToComponent(existingComponent, sanitizedComponentDTO);
 
         return componentRepository.save(component);
     }

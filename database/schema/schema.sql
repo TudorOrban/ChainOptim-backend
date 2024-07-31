@@ -214,6 +214,7 @@ CREATE TABLE `components` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `organization_id` int DEFAULT NULL,
+  `unit_of_measurement` json DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `unit_id` (`unit_id`),
   KEY `organization_id` (`organization_id`),
@@ -228,7 +229,7 @@ CREATE TABLE `components` (
 
 LOCK TABLES `components` WRITE;
 /*!40000 ALTER TABLE `components` DISABLE KEYS */;
-INSERT INTO `components` VALUES (1,'Chip',NULL,1,'2024-01-13 23:08:04','2024-01-13 23:08:04',2),(2,'Test Component 2',NULL,1,'2024-03-09 17:26:50','2024-03-09 17:26:50',1),(3,'Microphone',NULL,1,'2024-03-11 13:19:09','2024-03-11 13:19:09',1),(4,'Camera',NULL,1,'2024-03-11 13:20:01','2024-03-11 13:20:01',1),(5,'Sensor',NULL,1,'2024-03-11 17:13:11','2024-03-11 17:13:11',1),(7,'New Component',NULL,NULL,'2024-03-21 19:57:30','2024-03-21 19:57:30',1),(8,'New Component Without Unit',NULL,1,'2024-03-21 19:57:48','2024-03-21 19:59:12',1);
+INSERT INTO `components` VALUES (1,'Chip',NULL,1,'2024-01-13 23:08:04','2024-01-13 23:08:04',2,NULL),(2,'Test Component 2',NULL,1,'2024-03-09 17:26:50','2024-03-09 17:26:50',1,NULL),(3,'Microphone',NULL,1,'2024-03-11 13:19:09','2024-03-11 13:19:09',1,NULL),(4,'Camera',NULL,1,'2024-03-11 13:20:01','2024-03-11 13:20:01',1,NULL),(5,'Sensor',NULL,1,'2024-03-11 17:13:11','2024-03-11 17:13:11',1,NULL),(7,'New Component',NULL,NULL,'2024-03-21 19:57:30','2024-03-21 19:57:30',1,NULL),(8,'New Component Without Unit',NULL,1,'2024-03-21 19:57:48','2024-03-21 19:59:12',1,NULL);
 /*!40000 ALTER TABLE `components` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -793,7 +794,7 @@ CREATE TABLE `pricings` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `product_id` (`product_id`),
   CONSTRAINT `pricings_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -802,7 +803,7 @@ CREATE TABLE `pricings` (
 
 LOCK TABLES `pricings` WRITE;
 /*!40000 ALTER TABLE `pricings` DISABLE KEYS */;
-INSERT INTO `pricings` VALUES (1,1,'{\"pricePerUnit\": \"1\"}');
+INSERT INTO `pricings` VALUES (1,1,'{\"pricePerUnit\": \"1\"}'),(3,2,'{\"pricePerUnit\": 1.0, \"pricePerVolume\": {\"1.2\": 3.3, \"4.5\": 2.2}}');
 /*!40000 ALTER TABLE `pricings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -917,6 +918,7 @@ CREATE TABLE `products` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `unit_id` int DEFAULT NULL,
+  `unit_of_measurement` json DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_organization_products` (`organization_id`),
   KEY `FKcgg9ayc3i1f44ktralk68qq0x` (`unit_id`),
@@ -931,7 +933,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,2,'Iphone 21','The newest version of our product','2024-01-13 20:22:49','2024-01-13 20:22:49',NULL),(2,2,'Iphone 10','Old product','2024-01-13 20:23:15','2024-01-13 20:23:15',NULL),(3,1,'Samsung','New phone','2024-02-23 10:02:02','2024-02-23 10:02:02',NULL),(4,1,'Iphone 21','Another new phone','2024-02-28 09:07:56','2024-02-28 09:07:56',NULL),(5,1,'Pocophone','Brand new phone','2024-02-28 09:08:20','2024-02-28 09:08:20',NULL),(6,1,'Google Pixel 6','','2024-02-28 09:08:31','2024-02-28 09:08:31',NULL),(7,1,'Motorolla v1','New version','2024-03-05 16:09:01','2024-03-05 16:09:01',NULL),(8,1,'Blackberry 5','','2024-03-05 16:09:19','2024-03-05 16:09:19',NULL),(9,1,'Iphone 18','Mid-size','2024-03-05 16:09:54','2024-03-05 16:09:54',NULL),(11,1,'Test product update 2',NULL,'2024-03-08 12:47:03','2024-03-08 12:50:42',1),(13,1,'test name','test','2024-03-08 20:26:05','2024-03-08 20:26:05',1),(14,1,'test name','test','2024-03-09 06:46:48','2024-03-09 06:46:48',1),(15,1,'test Product','test','2024-03-09 06:51:02','2024-03-09 06:51:02',1),(16,1,'test Product','test','2024-03-09 06:52:59','2024-03-09 06:52:59',1),(17,1,'test Product','test','2024-03-09 06:54:25','2024-03-09 06:54:25',1),(18,1,'test Product','test','2024-03-09 06:56:46','2024-03-09 06:56:46',1),(19,1,'eqweqwe','qweqweqw','2024-03-09 07:00:23','2024-03-09 07:00:23',1),(20,1,'Create Test Product','Test of the createproduct','2024-03-09 07:22:16','2024-03-09 07:22:16',1),(21,1,'Test pipeline',NULL,'2024-03-09 17:16:17','2024-03-09 17:16:17',1),(22,1,'TestPr','Test','2024-03-16 14:41:23','2024-03-16 14:41:23',1),(23,1,'Alluminum',NULL,'2024-03-22 06:47:57','2024-03-22 06:47:57',5),(24,1,'Copper','Metal','2024-03-22 06:50:48','2024-03-22 06:50:48',NULL),(25,1,'TestCreateUnit','','2024-03-22 06:56:55','2024-03-22 06:56:55',NULL),(26,1,'Product with New Unit','New Unit Test','2024-03-22 07:00:20','2024-03-22 07:00:20',NULL),(27,1,'Another Create unit test','Test Create Unit','2024-03-22 07:01:57','2024-03-22 07:01:57',6),(28,1,'Test New Product','','2024-03-23 07:58:01','2024-03-23 07:58:01',6),(29,1,'Test Refactor Product','R','2024-04-22 19:11:45','2024-04-22 19:11:45',7),(30,1,'Working?','Think so','2024-04-22 19:49:09','2024-04-22 19:49:09',5),(31,1,'eqw','','2024-04-25 18:55:19','2024-04-25 18:55:19',8),(32,1,'Xperia 2000','','2024-04-25 19:01:40','2024-04-25 19:01:40',NULL),(33,1,'NewTestToast','','2024-04-25 19:03:13','2024-04-25 19:03:13',NULL);
+INSERT INTO `products` VALUES (1,1,'Iphone 21','The newest version of our product','2024-01-13 20:22:49','2024-07-30 19:44:13',NULL,NULL),(2,1,'Iphone 10','Old product','2024-01-13 20:23:15','2024-07-30 19:44:13',NULL,NULL),(3,1,'Samsung','New phone','2024-02-23 10:02:02','2024-02-23 10:02:02',NULL,NULL),(4,1,'Iphone 21','Another new phone','2024-02-28 09:07:56','2024-02-28 09:07:56',NULL,NULL),(5,1,'Pocophone','Brand new phone','2024-02-28 09:08:20','2024-02-28 09:08:20',NULL,NULL),(6,1,'Google Pixel 6','','2024-02-28 09:08:31','2024-02-28 09:08:31',NULL,NULL),(7,1,'Motorolla v1','New version','2024-03-05 16:09:01','2024-03-05 16:09:01',NULL,NULL),(8,1,'Blackberry 5','','2024-03-05 16:09:19','2024-03-05 16:09:19',NULL,NULL),(9,1,'Iphone 18','Mid-size','2024-03-05 16:09:54','2024-03-05 16:09:54',NULL,NULL),(11,1,'Test product update 2',NULL,'2024-03-08 12:47:03','2024-03-08 12:50:42',1,NULL),(13,1,'test name','test','2024-03-08 20:26:05','2024-03-08 20:26:05',1,NULL),(14,1,'test name','test','2024-03-09 06:46:48','2024-03-09 06:46:48',1,NULL),(15,1,'test Product','test','2024-03-09 06:51:02','2024-03-09 06:51:02',1,NULL),(16,1,'test Product','test','2024-03-09 06:52:59','2024-03-09 06:52:59',1,NULL),(17,1,'test Product','test','2024-03-09 06:54:25','2024-03-09 06:54:25',1,NULL),(18,1,'test Product','test','2024-03-09 06:56:46','2024-03-09 06:56:46',1,NULL),(19,1,'eqweqwe','qweqweqw','2024-03-09 07:00:23','2024-03-09 07:00:23',1,NULL),(20,1,'Create Test Product','Test of the createproduct','2024-03-09 07:22:16','2024-03-09 07:22:16',1,NULL),(21,1,'Test pipeline',NULL,'2024-03-09 17:16:17','2024-03-09 17:16:17',1,NULL),(22,1,'TestPr','Test','2024-03-16 14:41:23','2024-03-16 14:41:23',1,NULL),(23,1,'Alluminum',NULL,'2024-03-22 06:47:57','2024-03-22 06:47:57',5,NULL),(24,1,'Copper','Metal','2024-03-22 06:50:48','2024-03-22 06:50:48',NULL,NULL),(25,1,'TestCreateUnit','','2024-03-22 06:56:55','2024-03-22 06:56:55',NULL,NULL),(26,1,'Product with New Unit','New Unit Test','2024-03-22 07:00:20','2024-03-22 07:00:20',NULL,NULL),(27,1,'Another Create unit test','Test Create Unit','2024-03-22 07:01:57','2024-03-22 07:01:57',6,NULL),(28,1,'Test New Product','','2024-03-23 07:58:01','2024-03-23 07:58:01',6,NULL),(29,1,'Test Refactor Product','R','2024-04-22 19:11:45','2024-04-22 19:11:45',7,NULL),(30,1,'Working?','Think so','2024-04-22 19:49:09','2024-04-22 19:49:09',5,NULL),(31,1,'eqw','','2024-04-25 18:55:19','2024-04-25 18:55:19',8,NULL),(32,1,'Xperia 2000','','2024-04-25 19:01:40','2024-04-25 19:01:40',NULL,NULL),(33,1,'NewTestToast','','2024-04-25 19:03:13','2024-04-25 19:03:13',NULL,NULL);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1440,4 +1442,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-30 17:49:26
+-- Dump completed on 2024-07-31 17:25:50

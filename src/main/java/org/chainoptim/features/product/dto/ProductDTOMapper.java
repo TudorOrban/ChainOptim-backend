@@ -28,6 +28,20 @@ public class ProductDTOMapper {
             unit.setId(productDTO.getUnitId());
             product.setUnit(unit);
         }
+        product.setNewUnit(productDTO.getNewUnit());
+
+        return product;
+    }
+
+    public static Product setUpdateProductDTOToProduct(Product product, UpdateProductDTO productDTO) {
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        if (productDTO.getUnitId() != null) {
+            UnitOfMeasurement unit = new UnitOfMeasurement();
+            unit.setId(productDTO.getUnitId());
+            product.setUnit(unit);
+        }
+        product.setNewUnit(productDTO.getNewUnit());
 
         return product;
     }

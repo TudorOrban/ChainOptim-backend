@@ -1,12 +1,17 @@
 package org.chainoptim.features.product.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.*;
+import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -45,8 +50,40 @@ public class Product {
     private Integer organizationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "unit_id", nullable = true)
+    @JoinColumn(name = "unit_id")
     private UnitOfMeasurement unit;
+
+    // Manual deserialization and caching of JSON column
+    @Column(name = "unit_of_measurement", columnDefinition = "json")
+    private String unitJson;
+
+    @Transient // Ignore field
+    private NewUnitOfMeasurement newUnit;
+
+    public NewUnitOfMeasurement getNewUnit() {
+        if (this.newUnit == null && this.unitJson != null) {
+            // Deserialize when accessed
+            ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+            try {
+                this.newUnit = mapper.readValue(this.unitJson, NewUnitOfMeasurement.class);
+            } catch (JsonProcessingException e) {
+                throw new ValidationException("Invalid Unit json");
+            }
+        }
+        return this.newUnit;
+    }
+
+    public void setNewUnit(NewUnitOfMeasurement newUnit) {
+        this.newUnit = newUnit;
+        // Serialize when setting the object
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        try {
+            this.unitJson = mapper.writeValueAsString(newUnit);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new ValidationException("Invalid Unit json");
+        }
+    }
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Stage> stages;
