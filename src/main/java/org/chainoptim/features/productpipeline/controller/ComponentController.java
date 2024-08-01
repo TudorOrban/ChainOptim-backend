@@ -58,6 +58,12 @@ public class ComponentController {
         return ResponseEntity.ok(paginatedResults);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Component> getComponentById(@PathVariable Integer id) {
+        Component component = componentService.getComponentById(id);
+        return ResponseEntity.ok(component);
+    }
+
     // Create
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#componentDTO.getOrganizationId(), \"Component\", \"Create\")")
     @PostMapping("/create")

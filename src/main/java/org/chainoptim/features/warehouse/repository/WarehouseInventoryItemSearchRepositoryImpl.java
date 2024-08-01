@@ -2,7 +2,9 @@ package org.chainoptim.features.warehouse.repository;
 
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,53 +20,53 @@ public class WarehouseInventoryItemSearchRepositoryImpl implements WarehouseInve
     private EntityManager entityManager;
 
     @Override
-    public PaginatedResults<WarehouseInventoryItem> findWarehouseItemsByIdAdvanced(
-            Integer warehouseId,
-            String searchQuery, Map<String, String> filters,
-            String sortBy, boolean ascending,
-            int page, int itemsPerPage
+    public PaginatedResults<WarehouseInventoryItem> findByWarehouseIdAdvanced(
+            SearchMode searchMode,
+            Integer entityId,
+            SearchParams searchParams
     ) {
+
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<WarehouseInventoryItem> query = builder.createQuery(WarehouseInventoryItem.class);
-        Root<WarehouseInventoryItem> warehouseInventoryItem = query.from(WarehouseInventoryItem.class);
-        warehouseInventoryItem.alias("so");
+        Root<WarehouseInventoryItem> factoryInventory = query.from(WarehouseInventoryItem.class);
+        factoryInventory.alias("so");
 
-        // Perform a fetch join to load products eagerly
-        warehouseInventoryItem.fetch("product", JoinType.LEFT);
-        warehouseInventoryItem.fetch("component", JoinType.LEFT);
+        // Perform a fetch join to load components eagerly
+        factoryInventory.fetch("component", JoinType.LEFT);
 
-        // Add conditions (warehouseId, searchQuery and filters)
-        Predicate conditions = getConditions(builder, warehouseInventoryItem, warehouseId, searchQuery, filters);
+        // Add conditions (supplierId and searchQuery)
+        Predicate conditions = getConditions(builder, factoryInventory, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
         query.where(conditions);
 
         // Add sorting
-        if (ascending) {
-            query.orderBy(builder.asc(warehouseInventoryItem.get(sortBy)));
+        if (searchParams.isAscending()) {
+            query.orderBy(builder.asc(factoryInventory.get(searchParams.getSortBy())));
         } else {
-            query.orderBy(builder.desc(warehouseInventoryItem.get(sortBy)));
+            query.orderBy(builder.desc(factoryInventory.get(searchParams.getSortBy())));
         }
 
         // Create query with pagination
-        List<WarehouseInventoryItem> warehouseInventoryItems = entityManager.createQuery(query)
-                .setFirstResult((page - 1) * itemsPerPage)
-                .setMaxResults(itemsPerPage)
+        List<WarehouseInventoryItem> supplierOrders = entityManager.createQuery(query)
+                .setFirstResult((searchParams.getPage() - 1) * searchParams.getItemsPerPage())
+                .setMaxResults(searchParams.getItemsPerPage())
                 .getResultList();
 
         // Query total results count
         CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
         Root<WarehouseInventoryItem> countRoot = countQuery.from(WarehouseInventoryItem.class);
-        Predicate countConditions = getConditions(countBuilder, countRoot, warehouseId, searchQuery, filters);
+        Predicate countConditions = getConditions(countBuilder, countRoot, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
         countQuery.select(countBuilder.count(countRoot));
         countQuery.where(countConditions);
 
         // Execute count query
         long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        return new PaginatedResults<>(warehouseInventoryItems, totalCount);
+        return new PaginatedResults<>(supplierOrders, totalCount);
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<WarehouseInventoryItem> root,
+                                    SearchMode searchMode,
                                     Integer warehouseId,
                                     String searchQuery, Map<String, String> filters) {
         Predicate conditions = builder.conjunction();

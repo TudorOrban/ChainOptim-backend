@@ -5,7 +5,10 @@ import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryInventoryItemDTO;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.factory.service.FactoryInventoryService;
+import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +31,21 @@ public class FactoryInventoryController {
         this.securityService = securityService;
     }
 
-//    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Factory\", \"Read\")")
-//    @GetMapping("/organization/{organizationId}")
-//    public ResponseEntity<List<FactoryInventoryItem>> getFactoryInventoryItemsByOrganizationId(@PathVariable Integer organizationId) {
-//        List<FactoryInventoryItem> factoryInventoryItems = factoryInventoryService.getFactoryInventoryItemsByOrganizationId(organizationId);
-//        return ResponseEntity.ok(factoryInventoryItems);
-//    }
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Organization\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<FactoryInventoryItem>> getFactoryInventoryItemsByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<FactoryInventoryItem> inventoryItems = factoryInventoryService.getFactoryInventoryItemsAdvanced(SearchMode.ORGANIZATION, organizationId, searchParams);
+        return ResponseEntity.ok(inventoryItems);
+    }
 
     @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Read\")")
     @GetMapping("/factory/advanced/{factoryId}")
@@ -46,7 +58,8 @@ public class FactoryInventoryController {
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
             @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
     ) {
-        PaginatedResults<FactoryInventoryItem> factoryInventoryItems = factoryInventoryService.getFactoryInventoryItemsByFactoryIdAdvanced(factoryId, searchQuery, filtersJson, sortBy, ascending, page, itemsPerPage);
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<FactoryInventoryItem> factoryInventoryItems = factoryInventoryService.getFactoryInventoryItemsAdvanced(SearchMode.SECONDARY, factoryId, searchParams);
         return ResponseEntity.ok(factoryInventoryItems);
     }
 

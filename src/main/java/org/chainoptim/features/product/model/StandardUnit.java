@@ -7,13 +7,13 @@ import lombok.Getter;
 @Getter
 public enum StandardUnit {
 
-    METER("Meter", "m", "Length"),
-    INCH("Inch", "in", "Length"),
+    METER("meter", "m", "Length"),
+    INCH("inch", "in", "Length"),
 
     KILOGRAM("gram", "g", "Mass"),
-    POUND("Pound", "lb", "Mass"),
+    POUND("pound", "lb", "Mass"),
 
-    LITER("Liter", "l", "Volume");
+    LITER("liter", "l", "Volume");
 
     private final String name;
     private final String abbreviation;
