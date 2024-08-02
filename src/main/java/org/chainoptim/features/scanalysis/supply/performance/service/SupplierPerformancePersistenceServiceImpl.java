@@ -38,10 +38,10 @@ public class SupplierPerformancePersistenceServiceImpl implements SupplierPerfor
         // Compute fresh supplier performance report
         SupplierPerformanceReport supplierPerformanceReport = supplierPerformanceService.computeSupplierPerformanceReport(supplierId);
 
+        updateSupplier(supplierId, supplierPerformanceReport);
+
         SupplierPerformance supplierPerformance = supplierPerformanceRepository.findBySupplierId(supplierId)
                 .orElse(null);
-
-        updateSupplier(supplierId, supplierPerformanceReport);
 
         // Create new supplier performance or update existing one
         if (supplierPerformance == null) {

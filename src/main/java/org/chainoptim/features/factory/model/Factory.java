@@ -42,6 +42,18 @@ public class Factory {
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
 
+    @Column(name = "overall_score")
+    private Float overallScore;
+
+    @Column(name = "resource_distribution_score")
+    private Float resourceDistributionScore;
+
+    @Column(name = "resource_readiness_score")
+    private Float resourceReadinessScore;
+
+    @Column(name = "resource_utilization_score")
+    private Float resourceUtilizationScore;
+
     @OneToMany(mappedBy = "factory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FactoryStage> factoryStages;
 }
