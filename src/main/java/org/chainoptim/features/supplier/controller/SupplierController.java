@@ -4,6 +4,7 @@ import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
 import org.chainoptim.features.scanalysis.supply.performance.service.SupplierPerformanceService;
 import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
+import org.chainoptim.features.supplier.dto.SupplierOverviewDTO;
 import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
 import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
 import org.chainoptim.features.supplier.model.Supplier;
@@ -62,6 +63,13 @@ public class SupplierController {
     public ResponseEntity<Supplier> getSupplierById(@PathVariable Integer supplierId) {
         Supplier supplier = supplierService.getSupplierById(supplierId);
         return ResponseEntity.ok(supplier);
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Read\")")
+    @GetMapping("/{supplierId}/overview")
+    public ResponseEntity<SupplierOverviewDTO> getSupplierOverview(@PathVariable Integer supplierId) {
+        SupplierOverviewDTO supplierOverview = supplierService.getSupplierOverview(supplierId);
+        return ResponseEntity.ok(supplierOverview);
     }
 
     // Create
