@@ -12,6 +12,7 @@ import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,6 +114,7 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    @Transactional
     public void deleteProduct(Integer productId) {
         Product product = new Product();
         product.setId(productId);
