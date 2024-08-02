@@ -37,7 +37,7 @@ public class ClientOrder {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "organization_id", nullable = false)

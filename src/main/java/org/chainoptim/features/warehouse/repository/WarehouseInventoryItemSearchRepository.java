@@ -1,16 +1,15 @@
 package org.chainoptim.features.warehouse.repository;
 
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
-
-import java.util.Map;
+import org.chainoptim.shared.search.model.SearchParams;
 
 public interface WarehouseInventoryItemSearchRepository {
 
-    PaginatedResults<WarehouseInventoryItem> findWarehouseItemsByIdAdvanced(
+    PaginatedResults<WarehouseInventoryItem> findByWarehouseIdAdvanced(
+            SearchMode searchMode,
             Integer warehouseId,
-            String searchQuery, Map<String, String> filters,
-            String sortBy, boolean ascending,
-            int page, int itemsPerPage
+            SearchParams searchParams
     );
 }

@@ -5,7 +5,9 @@ import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.chainoptim.features.warehouse.service.WarehouseInventoryService;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,31 +33,40 @@ public class WarehouseInventoryController {
     }
 
     // Fetch
-    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\", \"Read\")")
-    @GetMapping("/warehouse/{warehouseId}")
-    public ResponseEntity<List<WarehouseInventoryItem>> getWarehouseInventoryByWarehouseId(@PathVariable Integer warehouseId) {
-        List<WarehouseInventoryItem> items = warehouseInventoryService.getWarehouseInventoryItemsByWarehouseId(warehouseId);
-        if (items.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(items);
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Organization\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<WarehouseInventoryItem>> getWarehouseInventoryItemsByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "filters", required = false, defaultValue = "") String filtersJson,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<WarehouseInventoryItem> inventoryItems = warehouseInventoryService.getWarehouseInventoryItemsAdvanced(SearchMode.ORGANIZATION, organizationId, searchParams);
+        return ResponseEntity.ok(inventoryItems);
     }
 
     @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\", \"Read\")")
     @GetMapping("/warehouse/advanced/{warehouseId}")
-    public ResponseEntity<PaginatedResults<WarehouseInventoryItem>> getWarehouseInventoryItemsByWarehouseId(
+    public ResponseEntity<PaginatedResults<WarehouseInventoryItem>> getWarehouseInventoryItemsByWarehouseIdAdvanced(
             @PathVariable Integer warehouseId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "filters", required = false, defaultValue = "{}") String filtersJson,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
             @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
             @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage) {
-        PaginatedResults<WarehouseInventoryItem> warehouseItems = warehouseInventoryService.getWarehouseInventoryItemsByWarehouseIdAdvanced(warehouseId, searchQuery, filtersJson, sortBy, ascending, page, itemsPerPage);
-        return ResponseEntity.ok(warehouseItems);
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(searchQuery, filtersJson, null, sortBy, ascending, page, itemsPerPage);
+        PaginatedResults<WarehouseInventoryItem> warehouseInventoryItems = warehouseInventoryService.getWarehouseInventoryItemsAdvanced(SearchMode.SECONDARY, warehouseId, searchParams);
+        return ResponseEntity.ok(warehouseInventoryItems);
     }
 
-//    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\")")
+
+    //    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\")")
     // TODO: Secure endpoint
     @GetMapping("/{itemId}")
     public ResponseEntity<WarehouseInventoryItem> getWarehouseInventoryItemById(@PathVariable Integer itemId) {

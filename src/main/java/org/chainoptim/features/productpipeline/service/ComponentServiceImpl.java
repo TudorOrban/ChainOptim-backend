@@ -60,6 +60,11 @@ public class ComponentServiceImpl implements ComponentService {
         );
     }
 
+    public Component getComponentById(Integer id) {
+        return componentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Component with ID: " + id + " not found."));
+    }
+
     // Create
     public Component createComponent(CreateComponentDTO componentDTO) {
         // Check if plan limit is reached

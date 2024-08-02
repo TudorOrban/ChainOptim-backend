@@ -15,9 +15,12 @@ import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.productpipeline.repository.ComponentRepository;
+import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.enums.Feature;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,18 +69,19 @@ public class FactoryInventoryServiceImpl implements FactoryInventoryService {
         return factoryInventoryItemRepository.findByFactoryId(factoryId);
     }
 
-    public PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsByFactoryIdAdvanced(Integer factoryId, String searchQuery, String filtersJson, String sortBy, boolean ascending, int page, int itemsPerPage) {
+    public PaginatedResults<FactoryInventoryItem> getFactoryInventoryItemsAdvanced(SearchMode searchMode, Integer entityId, SearchParams searchParams) {
         // Attempt to parse filters JSON
-        Map<String, String> filters = new HashMap<>();
-        if (!filtersJson.isEmpty()) {
+        Map<String, String> filters;
+        if (!searchParams.getFiltersJson().isEmpty()) {
             try {
-                filters = new ObjectMapper().readValue(filtersJson, new TypeReference<Map<String, String>>(){});
+                filters = new ObjectMapper().readValue(searchParams.getFiltersJson(), new TypeReference<Map<String, String>>(){});
+                searchParams.setFilters(filters);
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid filters format");
             }
         }
 
-        return factoryInventoryItemRepository.findFactoryItemsByIdAdvanced(factoryId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
+        return factoryInventoryItemRepository.findByFactoryIdAdvanced(searchMode, entityId, searchParams);
     }
 
     // Create

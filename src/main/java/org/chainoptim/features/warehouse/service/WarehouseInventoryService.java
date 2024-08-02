@@ -3,7 +3,9 @@ package org.chainoptim.features.warehouse.service;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import java.util.List;
 
@@ -11,11 +13,7 @@ public interface WarehouseInventoryService {
 
     // Fetch
     List<WarehouseInventoryItem> getWarehouseInventoryItemsByWarehouseId(Integer warehouseId);
-    PaginatedResults<WarehouseInventoryItem> getWarehouseInventoryItemsByWarehouseIdAdvanced(
-            Integer warehouseId,
-            String searchQuery, String filtersJson,
-            String sortBy, boolean ascending,
-            int page, int itemsPerPage);
+    PaginatedResults<WarehouseInventoryItem> getWarehouseInventoryItemsAdvanced(SearchMode searchMode, Integer entityId, SearchParams searchParams);
     WarehouseInventoryItem getWarehouseInventoryItemById(Integer itemId);
 
     // Create

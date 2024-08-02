@@ -101,8 +101,8 @@ public class FactoryController {
     // Delete
     @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Delete\")")
     @DeleteMapping("/delete/{factoryId}")
-    public ResponseEntity<Void> deleteFactory(@PathVariable Integer factoryId) {
+    public ResponseEntity<Integer> deleteFactory(@PathVariable Integer factoryId) {
         factoryService.deleteFactory(factoryId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(factoryId);
     }
 }

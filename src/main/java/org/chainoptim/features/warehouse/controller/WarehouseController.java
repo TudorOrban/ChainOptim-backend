@@ -82,8 +82,8 @@ public class WarehouseController {
     // Delete
     @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\", \"Delete\")")
     @DeleteMapping("/delete/{warehouseId}")
-    public ResponseEntity<Void> deleteWarehouse(@PathVariable Integer warehouseId) {
+    public ResponseEntity<Integer> deleteWarehouse(@PathVariable Integer warehouseId) {
         warehouseService.deleteWarehouse(warehouseId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(warehouseId);
     }
 }

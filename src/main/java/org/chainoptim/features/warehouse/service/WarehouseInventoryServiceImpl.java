@@ -10,8 +10,10 @@ import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.chainoptim.features.warehouse.repository.WarehouseInventoryItemRepository;
 import org.chainoptim.shared.enums.Feature;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -48,22 +50,19 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
         return warehouseInventoryRepository.findByWarehouseId(warehouseId);
     }
 
-    public PaginatedResults<WarehouseInventoryItem> getWarehouseInventoryItemsByWarehouseIdAdvanced(
-            Integer warehouseId,
-            String searchQuery, String filtersJson,
-            String sortBy, boolean ascending,
-            int page, int itemsPerPage) {
+    public PaginatedResults<WarehouseInventoryItem> getWarehouseInventoryItemsAdvanced(SearchMode searchMode, Integer entityId, SearchParams searchParams) {
         // Attempt to parse filters JSON
-        Map<String, String> filters = new HashMap<>();
-        if (!filtersJson.isEmpty()) {
+        Map<String, String> filters;
+        if (!searchParams.getFiltersJson().isEmpty()) {
             try {
-                filters = new ObjectMapper().readValue(filtersJson, new TypeReference<Map<String, String>>(){});
+                filters = new ObjectMapper().readValue(searchParams.getFiltersJson(), new TypeReference<Map<String, String>>(){});
+                searchParams.setFilters(filters);
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid filters format");
             }
         }
 
-        return warehouseInventoryRepository.findWarehouseItemsByIdAdvanced(warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage);
+        return warehouseInventoryRepository.findByWarehouseIdAdvanced(searchMode, entityId, searchParams);
     }
 
     public WarehouseInventoryItem getWarehouseInventoryItemById(Integer itemId) {

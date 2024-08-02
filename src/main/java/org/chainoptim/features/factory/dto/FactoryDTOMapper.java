@@ -19,6 +19,10 @@ public class FactoryDTOMapper {
         dto.setCreatedAt(factory.getCreatedAt());
         dto.setUpdatedAt(factory.getUpdatedAt());
         dto.setLocation(factory.getLocation());
+        dto.setOverallScore(factory.getOverallScore());
+        dto.setResourceDistributionScore(factory.getResourceDistributionScore());
+        dto.setResourceReadinessScore(factory.getResourceReadinessScore());
+        dto.setResourceUtilizationScore(factory.getResourceUtilizationScore());
         return dto;
     }
 

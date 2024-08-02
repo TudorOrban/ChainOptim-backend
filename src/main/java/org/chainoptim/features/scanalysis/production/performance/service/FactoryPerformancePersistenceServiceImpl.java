@@ -1,6 +1,7 @@
 package org.chainoptim.features.scanalysis.production.performance.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
+import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.features.scanalysis.production.performance.dto.CreateFactoryPerformanceDTO;
@@ -11,6 +12,7 @@ import org.chainoptim.features.scanalysis.production.performance.model.FactoryPe
 import org.chainoptim.features.scanalysis.production.performance.repository.FactoryPerformanceRepository;
 import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
 import org.chainoptim.features.scanalysis.production.productionhistory.service.FactoryProductionHistoryPersistenceService;
+import org.chainoptim.features.factory.model.Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +23,19 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
     private final FactoryPerformanceService factoryPerformanceService;
     private final FactoryProductionHistoryPersistenceService historyPersistenceService;
     private final FactoryProductionGraphService factoryProductionGraphService;
+    private final FactoryRepository factoryRepository;
 
     @Autowired
     public FactoryPerformancePersistenceServiceImpl(FactoryPerformanceRepository factoryPerformanceRepository,
                                                     FactoryPerformanceService factoryPerformanceService,
                                                     FactoryProductionHistoryPersistenceService historyPersistenceService,
-                                                    FactoryProductionGraphService factoryProductionGraphService) {
+                                                    FactoryProductionGraphService factoryProductionGraphService,
+                                                    FactoryRepository factoryRepository) {
         this.factoryPerformanceRepository = factoryPerformanceRepository;
         this.factoryPerformanceService = factoryPerformanceService;
         this.historyPersistenceService = historyPersistenceService;
         this.factoryProductionGraphService = factoryProductionGraphService;
+        this.factoryRepository = factoryRepository;
     }
 
     public FactoryPerformance getFactoryPerformance(Integer factoryId) {
@@ -41,10 +46,10 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
     public FactoryPerformance refreshFactoryPerformance(Integer factoryId) {
         // Compute fresh factory performance report
         FactoryProductionHistory productionHistory = historyPersistenceService.getFactoryProductionHistoryByFactoryId(factoryId);
-
         FactoryProductionGraph productionGraph = factoryProductionGraphService.getProductionGraphByFactoryId(factoryId).getFirst();
 
         FactoryPerformanceReport factoryPerformanceReport = factoryPerformanceService.computeFactoryPerformanceReport(productionHistory, productionGraph.getFactoryGraph());
+        updateFactory(factoryId, factoryPerformanceReport);
 
         FactoryPerformance factoryPerformance = factoryPerformanceRepository.findByFactoryId(factoryId)
                 .orElse(null);
@@ -63,6 +68,7 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
             return updateFactoryPerformance(performanceDTO);
         }
     }
+    
     public FactoryPerformance createFactoryPerformance(CreateFactoryPerformanceDTO performanceDTO) {
         return factoryPerformanceRepository.save(FactoryPerformanceDTOMapper.mapCreateFactoryPerformanceDTOToFactoryPerformance(performanceDTO));
     }
@@ -77,5 +83,16 @@ public class FactoryPerformancePersistenceServiceImpl implements FactoryPerforma
 
     public void deleteFactoryPerformance(Integer id) {
         factoryPerformanceRepository.deleteById(id);
+    }
+
+    private void updateFactory(Integer factoryId, FactoryPerformanceReport factoryPerformanceReport) {
+        Factory factory = factoryRepository.findById(factoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Factory with ID: " + factoryId + " not found"));
+        factory.setOverallScore(factoryPerformanceReport.getOverallScore());
+        factory.setResourceDistributionScore(factoryPerformanceReport.getResourceDistributionScore());
+        factory.setResourceReadinessScore(factoryPerformanceReport.getResourceReadinessScore());
+        factory.setResourceUtilizationScore(factoryPerformanceReport.getResourceUtilizationScore());
+
+        factoryRepository.save(factory);
     }
 }

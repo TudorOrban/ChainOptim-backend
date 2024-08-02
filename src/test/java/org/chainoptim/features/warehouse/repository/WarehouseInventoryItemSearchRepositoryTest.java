@@ -4,7 +4,9 @@ import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,21 +59,22 @@ class WarehouseInventoryItemSearchRepositoryTest {
         boolean ascending = true;
         int page = 1;
         int itemsPerPage = 10;
+        SearchParams searchParams = new SearchParams(searchQuery, "{}", filters, sortBy, ascending, page, itemsPerPage);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> paginatedResults = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> paginatedResults = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
         assertEquals(2, paginatedResults.results.size());
 
         // Arrange
-        searchQuery = "Non-valid";
+        searchParams.setSearchQuery("Non-valid");
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> newPaginatedResults = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> newPaginatedResults = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
@@ -88,21 +91,22 @@ class WarehouseInventoryItemSearchRepositoryTest {
         boolean ascending = true;
         int page = 1;
         int itemsPerPage = 4;
+        SearchParams searchParams = new SearchParams(searchQuery, "{}", filters, sortBy, ascending, page, itemsPerPage);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> paginatedResults = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> paginatedResults = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
         assertEquals(4, paginatedResults.results.size());
 
         // Arrange
-        page = 2;
+        searchParams.setPage(2);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> newPaginatedResults = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> newPaginatedResults = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
@@ -121,44 +125,45 @@ class WarehouseInventoryItemSearchRepositoryTest {
         boolean ascending = true;
         int page = 1;
         int itemsPerPage = 10;
+        SearchParams searchParams = new SearchParams(searchQuery, "{}", filters, sortBy, ascending, page, itemsPerPage);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> paginatedResults = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> paginatedResults = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
         assertEquals(1, paginatedResults.results.getFirst().getId());
 
         // Arrange
-        ascending = false;
+        searchParams.setAscending(false);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> newPaginatedResults = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> newPaginatedResults = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
         assertEquals(6, newPaginatedResults.results.getFirst().getId());
 
         // Arrange
-        sortBy = "updatedAt";
-        ascending = true;
+        searchParams.setSortBy("updatedAt");
+        searchParams.setAscending(true);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> newPaginatedResults2 = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> newPaginatedResults2 = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
         assertEquals(1, newPaginatedResults2.results.getFirst().getId());
 
         // Arrange
-        sortBy = "companyId";
+        searchParams.setSortBy("companyId");
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> newPaginatedResults3 = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> newPaginatedResults3 = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
@@ -176,10 +181,11 @@ class WarehouseInventoryItemSearchRepositoryTest {
         boolean ascending = true;
         int page = 1;
         int itemsPerPage = 10;
+        SearchParams searchParams = new SearchParams(searchQuery, "{}", filters, sortBy, ascending, page, itemsPerPage);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> newPaginatedResults2 = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> newPaginatedResults2 = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert
@@ -188,10 +194,11 @@ class WarehouseInventoryItemSearchRepositoryTest {
         // Arrange
         filters.clear();
         filters.put("greaterThanQuantity", "3");
+        searchParams.setFilters(filters);
 
         // Act
-        PaginatedResults<WarehouseInventoryItem> newPaginatedResults3 = warehouseInventoryItemsSearchRepository.findWarehouseItemsByIdAdvanced(
-                warehouseId, searchQuery, filters, sortBy, ascending, page, itemsPerPage
+        PaginatedResults<WarehouseInventoryItem> newPaginatedResults3 = warehouseInventoryItemsSearchRepository.findByWarehouseIdAdvanced(
+                SearchMode.SECONDARY, warehouseId, searchParams
         );
 
         // Assert

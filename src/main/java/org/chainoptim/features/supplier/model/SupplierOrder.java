@@ -34,7 +34,7 @@ public class SupplierOrder {
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
 
-    @Column(name = "supplier_id", nullable = false)
+    @Column(name = "supplier_id")
     private Integer supplierId;
 
     @ManyToOne

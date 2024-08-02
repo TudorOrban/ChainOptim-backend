@@ -18,4 +18,8 @@ public class FactoriesSearchDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Location location;
+    private Float overallScore;
+    private Float resourceDistributionScore;
+    private Float resourceReadinessScore;
+    private Float resourceUtilizationScore;
 }

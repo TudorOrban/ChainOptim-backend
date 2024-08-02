@@ -12,6 +12,7 @@ public interface ComponentService {
     List<Component> getComponentsByOrganizationId(Integer organizationId);
     List<ComponentsSearchDTO> getComponentsByOrganizationIdSmall(Integer organizationId);
     PaginatedResults<ComponentsSearchDTO> getComponentsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
+    Component getComponentById(Integer id);
     Component createComponent(CreateComponentDTO componentDTO);
     Component updateComponent(UpdateComponentDTO componentDTO);
     void deleteComponent(Integer id);

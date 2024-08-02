@@ -91,8 +91,8 @@ public class ProductController {
     // Delete
     @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Delete\")")
     @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) {
+    public ResponseEntity<Integer> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(productId);
     }
 }

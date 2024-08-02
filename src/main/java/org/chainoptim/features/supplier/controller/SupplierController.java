@@ -83,8 +83,8 @@ public class SupplierController {
     // Delete
     @PreAuthorize("@securityService.canAccessEntity(#supplierId, \"Supplier\", \"Delete\")")
     @DeleteMapping("/delete/{supplierId}")
-    public ResponseEntity<Void> deleteSupplier(@PathVariable Integer supplierId) {
+    public ResponseEntity<Integer> deleteSupplier(@PathVariable Integer supplierId) {
         supplierService.deleteSupplier(supplierId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(supplierId);
     }
 }
