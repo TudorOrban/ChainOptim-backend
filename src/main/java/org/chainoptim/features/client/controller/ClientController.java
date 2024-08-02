@@ -81,8 +81,8 @@ public class ClientController {
 
     @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Delete\")")
     @DeleteMapping("/delete/{clientId}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Integer clientId) {
+    public ResponseEntity<Integer> deleteClient(@PathVariable Integer clientId) {
         clientService.deleteClient(clientId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(clientId);
     }
 }

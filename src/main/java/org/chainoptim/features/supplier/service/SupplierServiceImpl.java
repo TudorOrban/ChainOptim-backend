@@ -16,6 +16,7 @@ import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,6 +108,7 @@ public class SupplierServiceImpl implements SupplierService {
         return supplier;
     }
 
+    @Transactional
     public void deleteSupplier(Integer supplierId) {
         Supplier supplier = new Supplier();
         supplier.setId(supplierId);
