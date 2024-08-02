@@ -85,6 +85,9 @@ public class FactoryInventoryItemSearchRepositoryImpl implements FactoryInventor
     }
 
     private Predicate addFilters(CriteriaBuilder builder, Root<FactoryInventoryItem> root, Predicate conditions, Map<String, String> filters) {
+        if (filters == null) {
+            return conditions;
+        }
         for (Map.Entry<String, String> filter : filters.entrySet()) {
             String key = filter.getKey();
             String value = filter.getValue();

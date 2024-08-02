@@ -28,21 +28,21 @@ public class WarehouseInventoryItemSearchRepositoryImpl implements WarehouseInve
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<WarehouseInventoryItem> query = builder.createQuery(WarehouseInventoryItem.class);
-        Root<WarehouseInventoryItem> factoryInventory = query.from(WarehouseInventoryItem.class);
-        factoryInventory.alias("so");
+        Root<WarehouseInventoryItem> warehouseInventory = query.from(WarehouseInventoryItem.class);
+        warehouseInventory.alias("so");
 
         // Perform a fetch join to load components eagerly
-        factoryInventory.fetch("component", JoinType.LEFT);
+        warehouseInventory.fetch("component", JoinType.LEFT);
 
         // Add conditions (supplierId and searchQuery)
-        Predicate conditions = getConditions(builder, factoryInventory, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
+        Predicate conditions = getConditions(builder, warehouseInventory, searchMode, entityId, searchParams.getSearchQuery(), searchParams.getFilters());
         query.where(conditions);
 
         // Add sorting
         if (searchParams.isAscending()) {
-            query.orderBy(builder.asc(factoryInventory.get(searchParams.getSortBy())));
+            query.orderBy(builder.asc(warehouseInventory.get(searchParams.getSortBy())));
         } else {
-            query.orderBy(builder.desc(factoryInventory.get(searchParams.getSortBy())));
+            query.orderBy(builder.desc(warehouseInventory.get(searchParams.getSortBy())));
         }
 
         // Create query with pagination
@@ -67,11 +67,12 @@ public class WarehouseInventoryItemSearchRepositoryImpl implements WarehouseInve
 
     private Predicate getConditions(CriteriaBuilder builder, Root<WarehouseInventoryItem> root,
                                     SearchMode searchMode,
-                                    Integer warehouseId,
+                                    Integer entityId,
                                     String searchQuery, Map<String, String> filters) {
         Predicate conditions = builder.conjunction();
-        if (warehouseId != null) {
-            conditions = builder.and(conditions, builder.equal(root.get("warehouseId"), warehouseId));
+        if (entityId != null) {
+            String idName = searchMode == SearchMode.ORGANIZATION ? "organizationId" : "warehouseId";
+            conditions = builder.and(conditions, builder.equal(root.get(idName), entityId));
         }
         if (searchQuery != null && !searchQuery.isEmpty()) {
             conditions = builder.and(conditions, builder.like(root.get("companyId"), "%" + searchQuery + "%"));
@@ -84,6 +85,9 @@ public class WarehouseInventoryItemSearchRepositoryImpl implements WarehouseInve
     }
 
     private Predicate addFilters(CriteriaBuilder builder, Root<WarehouseInventoryItem> root, Predicate conditions, Map<String, String> filters) {
+        if (filters == null) {
+            return conditions;
+        }
         for (Map.Entry<String, String> filter : filters.entrySet()) {
             String key = filter.getKey();
             String value = filter.getValue();
