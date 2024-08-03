@@ -14,4 +14,6 @@ public class SupplierOverviewDTO {
 
 
     private List<SmallEntityDTO> suppliedComponents;
+    private List<SmallEntityDTO> deliveredToFactories;
+    private List<SmallEntityDTO> deliveredToWarehouses;
 }

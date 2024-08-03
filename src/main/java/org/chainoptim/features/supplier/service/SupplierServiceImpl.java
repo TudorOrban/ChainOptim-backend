@@ -65,9 +65,10 @@ public class SupplierServiceImpl implements SupplierService {
 
     public SupplierOverviewDTO getSupplierOverview(Integer supplierId) {
         List<SmallEntityDTO> suppliedComponents = supplierRepository.findComponentsBySupplierId(supplierId);
+        List<SmallEntityDTO> deliveredToFactories = supplierRepository.findFactoriesBySupplierId(supplierId);
+        List<SmallEntityDTO> deliveredToWarehouses = supplierRepository.findWarehousesBySupplierId(supplierId);
 
-        SupplierOverviewDTO supplierOverviewDTO = new SupplierOverviewDTO(suppliedComponents);
-        return supplierOverviewDTO;
+        return new SupplierOverviewDTO(suppliedComponents, deliveredToFactories, deliveredToWarehouses);
     }
 
 
