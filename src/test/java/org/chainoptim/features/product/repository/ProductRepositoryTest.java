@@ -75,7 +75,7 @@ class ProductRepositoryTest {
         Stage savedStage = addTestStage(savedProduct);
 
         // Act
-        List<SmallEntityDTO> stageNames = productRepository.findStageNamesByProductId(savedProduct.getId());
+        List<SmallEntityDTO> stageNames = productRepository.findStagesByProductId(savedProduct.getId());
 
         // Assert
         assertNotNull(stageNames);
@@ -108,7 +108,7 @@ class ProductRepositoryTest {
         entityManager.flush();
 
         // Act
-        List<SmallEntityDTO> factoryNames = productRepository.findFactoryNamesByProductId(savedProduct.getId());
+        List<SmallEntityDTO> factoryNames = productRepository.findFactoriesByProductId(savedProduct.getId());
 
         // Assert
         assertNotNull(factoryNames);
@@ -139,7 +139,7 @@ class ProductRepositoryTest {
         entityManager.flush();
 
         // Act
-        List<SmallEntityDTO> warehouseNames = productRepository.findWarehouseNamesByProductId(savedProduct.getId());
+        List<SmallEntityDTO> warehouseNames = productRepository.findWarehousesByProductId(savedProduct.getId());
 
         // Assert
         assertNotNull(warehouseNames);
@@ -171,7 +171,7 @@ class ProductRepositoryTest {
         entityManager.flush();
 
         // Act
-        List<SmallEntityDTO> clientNames = productRepository.findClientNamesByOrganizationId(savedProduct.getId());
+        List<SmallEntityDTO> clientNames = productRepository.findClientsByOrganizationId(savedProduct.getId());
 
         // Assert
         assertNotNull(clientNames);

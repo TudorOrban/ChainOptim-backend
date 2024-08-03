@@ -3,6 +3,7 @@ package org.chainoptim.features.factory.repository;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
+import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,10 +31,33 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
             "LEFT JOIN FETCH fs.stage WHERE f.id = :factoryId")
     Optional<Factory> findFactoryWithStagesById(@Param("factoryId") Integer factoryId);
 
-
     @Query("SELECT c FROM FactoryStageConnection c " +
             "WHERE c.factoryId = :factoryId")
     List<FactoryStageConnection> findFactoryStageConnectionsByFactoryId(@Param("factoryId") Integer factoryId);
+
+    @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(s.id, s.name) FROM Stage s WHERE " +
+            "s.id IN (SELECT fs.stage.id FROM FactoryStage fs WHERE fs.factory.id = :factoryId)")
+    List<SmallEntityDTO> findFactoryStagesByFactoryId(@Param("factoryId") Integer factoryId);
+
+    @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(c.id, c.name) FROM Component c WHERE " +
+            "c.id IN (SELECT so.component.id FROM StageOutput so WHERE " +
+            "so.stage.id IN (SELECT s.id FROM Stage s WHERE " +
+            "s.id IN (SELECT fs.stage.id FROM FactoryStage fs WHERE fs.factory.id = :factoryId)))")
+    List<SmallEntityDTO> findManufacturedComponentsByFactoryId(@Param("factoryId") Integer factoryId);
+
+    @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(p.id, p.name) FROM Product p WHERE " +
+            "p.id IN (SELECT so.product.id FROM StageOutput so WHERE " +
+            "so.stage.id IN (SELECT s.id FROM Stage s WHERE " +
+            "s.id IN (SELECT fs.stage.id FROM FactoryStage fs WHERE fs.factory.id = :factoryId)))")
+    List<SmallEntityDTO> findManufacturedProductsByFactoryId(@Param("factoryId") Integer factoryId);
+
+    @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(s.id, s.name) FROM Supplier s WHERE " +
+            "s.id IN (SELECT ss.supplierId FROM SupplierShipment ss WHERE ss.destFactoryId = :factoryId)")
+    List<SmallEntityDTO> findDeliveredFromSuppliersByFactoryId(@Param("factoryId") Integer factoryId);
+
+    @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(c.id, c.name) FROM Client c WHERE " +
+            "c.id IN (SELECT cs.clientId FROM ClientShipment cs WHERE cs.srcFactoryId = :factoryId)")
+    List<SmallEntityDTO> findDeliveredToClientsByFactoryId(@Param("factoryId") Integer factoryId);
 
     long countByOrganizationId(Integer organizationId);
 }

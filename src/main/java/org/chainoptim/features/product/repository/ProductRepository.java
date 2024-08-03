@@ -25,19 +25,19 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, Prod
     Optional<Product> findByName(@Param("productName") String productName);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(s.id, s.name) FROM Stage s WHERE s.productId = :productId")
-    List<SmallEntityDTO> findStageNamesByProductId(@Param("productId") Integer productId);
+    List<SmallEntityDTO> findStagesByProductId(@Param("productId") Integer productId);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(f.id, f.name) FROM Factory f WHERE " +
             "f.id IN (SELECT fs.factory.id FROM FactoryStage fs WHERE fs.stage.productId = :productId)")
-    List<SmallEntityDTO> findFactoryNamesByProductId(@Param("productId") Integer productId);
+    List<SmallEntityDTO> findFactoriesByProductId(@Param("productId") Integer productId);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(w.id, w.name) FROM Warehouse w " +
             "WHERE w.id IN (SELECT wi.warehouseId FROM WarehouseInventoryItem wi WHERE wi.product.id = :productId)")
-    List<SmallEntityDTO> findWarehouseNamesByProductId(@Param("productId") Integer productId);
+    List<SmallEntityDTO> findWarehousesByProductId(@Param("productId") Integer productId);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(c.id, c.name) FROM Client c " +
             "WHERE c.id IN (SELECT co.clientId FROM ClientOrder co WHERE co.product.id = :productId)")
-    List<SmallEntityDTO> findClientNamesByOrganizationId(@Param("productId") Integer productId);
+    List<SmallEntityDTO> findClientsByOrganizationId(@Param("productId") Integer productId);
 
     long countByOrganizationId(Integer organizationId);
 }

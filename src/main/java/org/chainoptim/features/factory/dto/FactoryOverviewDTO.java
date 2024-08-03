@@ -12,7 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 public class FactoryOverviewDTO {
 
+    private List<SmallEntityDTO> factoryStages;
     private List<SmallEntityDTO> manufacturedComponents;
     private List<SmallEntityDTO> manufacturedProducts;
-
+    private List<SmallEntityDTO> deliveredFromSuppliers;
+    private List<SmallEntityDTO> deliveredToClients;
 }
