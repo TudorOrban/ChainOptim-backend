@@ -4,16 +4,14 @@ import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterServi
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.supplier.dto.CreateSupplierDTO;
-import org.chainoptim.features.supplier.dto.SupplierDTOMapper;
-import org.chainoptim.features.supplier.dto.SuppliersSearchDTO;
-import org.chainoptim.features.supplier.dto.UpdateSupplierDTO;
+import org.chainoptim.features.supplier.dto.*;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import jakarta.transaction.Transactional;
@@ -41,6 +39,7 @@ public class SupplierServiceImpl implements SupplierService {
         this.entitySanitizerService = entitySanitizerService;
     }
 
+    // Fetch
     public List<Supplier> getAllSuppliers() {
         return supplierRepository.findAll();
     }
@@ -64,6 +63,16 @@ public class SupplierServiceImpl implements SupplierService {
         );
     }
 
+    public SupplierOverviewDTO getSupplierOverview(Integer supplierId) {
+        List<SmallEntityDTO> suppliedComponents = supplierRepository.findSuppliedComponentsBySupplierId(supplierId);
+        List<SmallEntityDTO> deliveredToFactories = supplierRepository.findDeliveredToFactoriesBySupplierId(supplierId);
+        List<SmallEntityDTO> deliveredToWarehouses = supplierRepository.findDeliveredToWarehousesBySupplierId(supplierId);
+
+        return new SupplierOverviewDTO(suppliedComponents, deliveredToFactories, deliveredToWarehouses);
+    }
+
+
+    // Create
     public Supplier createSupplier(CreateSupplierDTO supplierDTO) {
         // Check if plan limit is reached
         if (planLimiterService.isLimitReached(supplierDTO.getOrganizationId(), Feature.SUPPLIER, 1)) {
@@ -84,6 +93,7 @@ public class SupplierServiceImpl implements SupplierService {
         }
     }
 
+    // Update
     public Supplier updateSupplier(UpdateSupplierDTO supplierDTO) {
         UpdateSupplierDTO sanitizedSupplierDTO = entitySanitizerService.sanitizeUpdateSupplierDTO(supplierDTO);
 
@@ -108,6 +118,7 @@ public class SupplierServiceImpl implements SupplierService {
         return supplier;
     }
 
+    // Delete
     @Transactional
     public void deleteSupplier(Integer supplierId) {
         Supplier supplier = new Supplier();

@@ -60,10 +60,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductOverviewDTO getProductOverview(Integer productId) {
-        List<SmallEntityDTO> stages = productRepository.findStageNamesByProductId(productId);
-        List<SmallEntityDTO> manufacturedInFactories = productRepository.findFactoryNamesByProductId(productId);
-        List<SmallEntityDTO> storedInWarehouses = productRepository.findWarehouseNamesByProductId(productId);
-        List<SmallEntityDTO> orderedByClients = productRepository.findClientNamesByOrganizationId(productId);
+        List<SmallEntityDTO> stages = productRepository.findStagesByProductId(productId);
+        List<SmallEntityDTO> manufacturedInFactories = productRepository.findFactoriesByProductId(productId);
+        List<SmallEntityDTO> storedInWarehouses = productRepository.findWarehousesByProductId(productId);
+        List<SmallEntityDTO> orderedByClients = productRepository.findClientsByOrganizationId(productId);
 
         return new ProductOverviewDTO(stages, manufacturedInFactories, storedInWarehouses, orderedByClients);
     }

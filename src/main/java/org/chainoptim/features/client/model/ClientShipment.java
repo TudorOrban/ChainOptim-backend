@@ -74,6 +74,12 @@ public class ClientShipment {
     @Column(name = "client_id", nullable = false)
     private Integer clientId;
 
+    @Column(name = "src_factory_id")
+    private Integer srcFactoryId;
+
+    @Column(name = "src_warehouse_id")
+    private Integer srcWarehouseId;
+
     public ClientShipment deepCopy() {
         return ClientShipment.builder()
 //                .id(this.id)
@@ -92,6 +98,8 @@ public class ClientShipment {
                 .currentLocationLongitude(this.currentLocationLongitude)
                 .organizationId(this.organizationId)
                 .clientId(this.clientId)
+                .srcFactoryId(this.srcFactoryId)
+                .srcWarehouseId(this.srcWarehouseId)
                 .build();
     }
 }

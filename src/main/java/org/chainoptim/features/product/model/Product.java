@@ -4,6 +4,7 @@ import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.client.model.ClientOrder;
 import org.chainoptim.features.factory.model.FactoryInventoryItem;
 import org.chainoptim.features.productpipeline.model.Stage;
+import org.chainoptim.features.productpipeline.model.StageOutput;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -87,6 +88,10 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Stage> stages;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<StageOutput> stageOutputs;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore

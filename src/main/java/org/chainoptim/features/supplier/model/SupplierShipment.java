@@ -28,6 +28,14 @@ public class SupplierShipment {
     @Column(name = "quantity")
     private Float quantity;
 
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
     @Column(name = "shipment_starting_date")
     private LocalDateTime shipmentStartingDate;
 
@@ -63,13 +71,11 @@ public class SupplierShipment {
     @Column(name = "supplier_id", nullable = false)
     private Integer supplierId;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "dest_factory_id")
+    private Integer destFactoryId;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(name = "dest_warehouse_id")
+    private Integer destWarehouseId;
 
     public SupplierShipment deepCopy() {
         return SupplierShipment.builder()
