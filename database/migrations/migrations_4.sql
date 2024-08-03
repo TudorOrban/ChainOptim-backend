@@ -67,3 +67,12 @@ ADD COLUMN src_warehouse_id INT;
 
 ALTER TABLE client_shipments
 ADD FOREIGN KEY (src_warehouse_id) REFERENCES warehouses(id);
+
+CREATE TABLE supply_chain_maps (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    organization_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    map_data JSON,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
+);	
