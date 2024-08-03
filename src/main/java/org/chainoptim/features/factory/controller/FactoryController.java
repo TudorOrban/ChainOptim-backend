@@ -3,6 +3,7 @@ package org.chainoptim.features.factory.controller;
 import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
+import org.chainoptim.features.factory.dto.FactoryOverviewDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.service.FactoryService;
@@ -79,6 +80,17 @@ public class FactoryController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(factory);
+        }
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#factoryId, \"Factory\", \"Read\")")
+    @GetMapping("/{factoryId}/overview")
+    public ResponseEntity<FactoryOverviewDTO> getFactoryOverview(@PathVariable Integer factoryId) {
+        FactoryOverviewDTO overviewDTO = factoryService.getFactoryOverviewById(factoryId);
+        if (overviewDTO == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(overviewDTO);
         }
     }
 

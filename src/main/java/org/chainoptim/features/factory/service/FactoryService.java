@@ -2,6 +2,7 @@ package org.chainoptim.features.factory.service;
 
 import org.chainoptim.features.factory.dto.CreateFactoryDTO;
 import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
+import org.chainoptim.features.factory.dto.FactoryOverviewDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
@@ -21,9 +22,10 @@ public interface FactoryService {
             boolean ascending,
             int page,
             int itemsPerPage);
-    Optional<Factory> getFactoryById(Integer factoryId);
+    Factory getFactoryById(Integer factoryId);
     Factory getFactoryWithStagesById(Integer factoryId);
     List<FactoryStageConnection> getFactoryStageConnectionsByFactoryId(Integer factoryId);
+    FactoryOverviewDTO getFactoryOverviewById(Integer factoryId);
 
     // Create
     Factory createFactory(CreateFactoryDTO factoryDTO);

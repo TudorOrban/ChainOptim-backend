@@ -4,10 +4,7 @@ import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterServi
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.factory.dto.CreateFactoryDTO;
-import org.chainoptim.features.factory.dto.FactoriesSearchDTO;
-import org.chainoptim.features.factory.dto.FactoryDTOMapper;
-import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
+import org.chainoptim.features.factory.dto.*;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
 import org.chainoptim.features.factory.repository.FactoryRepository;
@@ -16,6 +13,7 @@ import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
 import org.hibernate.Hibernate;
@@ -64,8 +62,9 @@ public class FactoryServiceImpl implements FactoryService {
         );
     }
 
-    public Optional<Factory> getFactoryById(Integer factoryId) {
-        return factoryRepository.findById(factoryId);
+    public Factory getFactoryById(Integer factoryId) {
+        return factoryRepository.findById(factoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Factory not found with ID: " + factoryId));
     }
 
     public Factory getFactoryWithStagesById(Integer factoryId) {
@@ -79,6 +78,16 @@ public class FactoryServiceImpl implements FactoryService {
             Hibernate.initialize(stage.getStageOutputs());
         });
         return factory;
+    }
+
+    public FactoryOverviewDTO getFactoryOverviewById(Integer factoryId) {
+        List<SmallEntityDTO> factoryStages = factoryRepository.findFactoryStagesByFactoryId(factoryId);
+        List<SmallEntityDTO> manufacturedComponents = factoryRepository.findManufacturedComponentsByFactoryId(factoryId);
+        List<SmallEntityDTO> manufacturedProducts = factoryRepository.findManufacturedProductsByFactoryId(factoryId);
+        List<SmallEntityDTO> deliveredFromSuppliers = factoryRepository.findDeliveredFromSuppliersByFactoryId(factoryId);
+        List<SmallEntityDTO> deliveredToClients = factoryRepository.findDeliveredToClientsByFactoryId(factoryId);
+
+        return new FactoryOverviewDTO(factoryStages, manufacturedComponents, manufacturedProducts, deliveredFromSuppliers, deliveredToClients);
     }
 
     public List<FactoryStageConnection> getFactoryStageConnectionsByFactoryId(Integer factoryId) {
