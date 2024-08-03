@@ -4,10 +4,7 @@ import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterServi
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
-import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
-import org.chainoptim.features.warehouse.dto.WarehouseDTOMapper;
-import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
+import org.chainoptim.features.warehouse.dto.*;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 
@@ -15,7 +12,9 @@ import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.chainoptim.shared.search.model.PaginatedResults;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +39,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.entitySanitizerService = entitySanitizerService;
     }
 
-
+    // Fetch
     public Warehouse getWarehouseById(Integer warehouseId) {
         return warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + warehouseId + " not found."));
@@ -60,6 +59,17 @@ public class WarehouseServiceImpl implements WarehouseService {
         );
     }
 
+    public WarehouseOverviewDTO getWarehouseOverview(Integer warehouseId) {
+        List<SmallEntityDTO> compartments = warehouseRepository.findCompartmentsByWarehouseId(warehouseId);
+        List<SmallEntityDTO> storedComponents = warehouseRepository.findStoredComponentsByWarehouseId(warehouseId);
+        List<SmallEntityDTO> storedProducts = warehouseRepository.findStoredProductsByWarehouseId(warehouseId);
+        List<SmallEntityDTO> deliveredFromSuppliers = warehouseRepository.findDeliveredFromSuppliersByWarehouseId(warehouseId);
+        List<SmallEntityDTO> deliveredToClients = warehouseRepository.findDeliveredToClientsByWarehouseId(warehouseId);
+
+        return new WarehouseOverviewDTO(compartments, storedComponents, storedProducts, deliveredFromSuppliers, deliveredToClients);
+    }
+
+    // Create
     public Warehouse createWarehouse(CreateWarehouseDTO warehouseDTO) {
         // Check if plan limit is reached
         if (planLimiterService.isLimitReached(warehouseDTO.getOrganizationId(), Feature.WAREHOUSE, 1)) {
@@ -80,6 +90,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
     }
 
+    // Update
     public Warehouse updateWarehouse(UpdateWarehouseDTO warehouseDTO) {
         UpdateWarehouseDTO sanitizedWarehouseDTO = entitySanitizerService.sanitizeUpdateWarehouseDTO(warehouseDTO);
         Warehouse warehouse = warehouseRepository.findById(sanitizedWarehouseDTO.getId())
@@ -103,6 +114,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouse;
     }
 
+    // Delete
+    @Transactional
     public void deleteWarehouse(Integer warehouseId) {
         Warehouse warehouse = new Warehouse();
         warehouse.setId(warehouseId);

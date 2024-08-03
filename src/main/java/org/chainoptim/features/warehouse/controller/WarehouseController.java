@@ -3,6 +3,7 @@ package org.chainoptim.features.warehouse.controller;
 import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
 import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
+import org.chainoptim.features.warehouse.dto.WarehouseOverviewDTO;
 import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.service.WarehouseService;
@@ -61,6 +62,13 @@ public class WarehouseController {
     public ResponseEntity<Warehouse> getWarehouseById(@PathVariable Integer warehouseId) {
         Warehouse warehouse = warehouseService.getWarehouseById(warehouseId);
         return ResponseEntity.ok(warehouse);
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#warehouseId, \"Warehouse\", \"Read\")")
+    @GetMapping("/{warehouseId}/overview")
+    public ResponseEntity<WarehouseOverviewDTO> getWarehouseOverview(@PathVariable Integer warehouseId) {
+        WarehouseOverviewDTO overviewDTO = warehouseService.getWarehouseOverview(warehouseId);
+        return ResponseEntity.ok(overviewDTO);
     }
 
     // Create
