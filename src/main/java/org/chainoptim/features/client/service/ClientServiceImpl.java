@@ -4,18 +4,17 @@ import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterServi
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.client.dto.ClientDTOMapper;
-import org.chainoptim.features.client.dto.ClientsSearchDTO;
-import org.chainoptim.features.client.dto.CreateClientDTO;
-import org.chainoptim.features.client.dto.UpdateClientDTO;
+import org.chainoptim.features.client.dto.*;
 import org.chainoptim.features.client.model.Client;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.service.LocationService;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
+import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +39,6 @@ public class ClientServiceImpl implements ClientService {
         this.entitySanitizerService = entitySanitizerService;
     }
 
-    public Client getClientById(Integer clientId) {
-        return clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResourceNotFoundException("Client with ID: " + clientId + " not found."));
-    }
-
     public List<Client> getClientsByOrganizationId(Integer organizationId) {
         return clientRepository.findByOrganizationId(organizationId);
     }
@@ -59,6 +53,20 @@ public class ClientServiceImpl implements ClientService {
         );
     }
 
+    public Client getClientById(Integer clientId) {
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with ID: " + clientId + " not found."));
+    }
+
+    public ClientOverviewDTO getClientOverview(Integer clientId) {
+        List<SmallEntityDTO> suppliedProducts = clientRepository.findSuppliedProductsByClientId(clientId);
+        List<SmallEntityDTO> deliveredFromFactories = clientRepository.findDeliveredToFactoriesByClientId(clientId);
+        List<SmallEntityDTO> deliveredFromWarehouses = clientRepository.findDeliveredToWarehousesByClientId(clientId);
+
+        return new ClientOverviewDTO(suppliedProducts, deliveredFromFactories, deliveredFromWarehouses);
+    }
+
+    // Create
     public Client createClient(CreateClientDTO clientDTO) {
         // Check if plan limit is reached
         if (planLimiterService.isLimitReached(clientDTO.getOrganizationId(), Feature.CLIENT, 1)) {
@@ -79,6 +87,7 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
+    // Update
     public Client updateClient(UpdateClientDTO clientDTO) {
         UpdateClientDTO sanitizedClientDTO = entitySanitizerService.sanitizeUpdateClientDTO(clientDTO);
         Client client = clientRepository.findById(sanitizedClientDTO.getId())
@@ -102,6 +111,8 @@ public class ClientServiceImpl implements ClientService {
         return client;
     }
 
+    // Delete
+    @Transactional
     public void deleteClient(Integer clientId) {
         Client client = new Client();
         client.setId(clientId);

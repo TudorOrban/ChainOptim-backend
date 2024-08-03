@@ -23,15 +23,15 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer>, Su
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(c.id, c.name) FROM Component c WHERE " +
             "c.id IN (SELECT so.component.id FROM SupplierOrder so WHERE so.supplierId = :supplierId)")
-    List<SmallEntityDTO> findComponentsBySupplierId(@Param("supplierId") Integer supplierId);
+    List<SmallEntityDTO> findSuppliedComponentsBySupplierId(@Param("supplierId") Integer supplierId);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(f.id, f.name) FROM Factory f WHERE " +
             "f.id IN (SELECT ss.destFactoryId FROM SupplierShipment ss WHERE ss.supplierId = :supplierId)")
-    List<SmallEntityDTO> findFactoriesBySupplierId(@Param("supplierId") Integer supplierId);
+    List<SmallEntityDTO> findDeliveredToFactoriesBySupplierId(@Param("supplierId") Integer supplierId);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(w.id, w.name) FROM Warehouse w WHERE " +
             "w.id IN (SELECT ss.destWarehouseId FROM SupplierShipment ss WHERE ss.supplierId = :supplierId)")
-    List<SmallEntityDTO> findWarehousesBySupplierId(@Param("supplierId") Integer supplierId);
+    List<SmallEntityDTO> findDeliveredToWarehousesBySupplierId(@Param("supplierId") Integer supplierId);
 
     long countByOrganizationId(Integer organizationId);
 }

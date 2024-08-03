@@ -1,5 +1,6 @@
 package org.chainoptim.features.client.service;
 
+import org.chainoptim.features.client.dto.ClientOverviewDTO;
 import org.chainoptim.features.client.dto.ClientsSearchDTO;
 import org.chainoptim.features.client.dto.CreateClientDTO;
 import org.chainoptim.features.client.dto.UpdateClientDTO;
@@ -13,6 +14,7 @@ public interface ClientService {
     List<Client> getClientsByOrganizationId(Integer organizationId);
     PaginatedResults<ClientsSearchDTO> getClientsByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
     Client getClientById(Integer id);
+    ClientOverviewDTO getClientOverview(Integer clientId);
 
     // Create
     Client createClient(CreateClientDTO clientDTO);

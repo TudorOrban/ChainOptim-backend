@@ -1,6 +1,7 @@
 package org.chainoptim.features.client.controller;
 
 import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.features.client.dto.ClientOverviewDTO;
 import org.chainoptim.features.client.dto.ClientsSearchDTO;
 import org.chainoptim.features.client.dto.CreateClientDTO;
 import org.chainoptim.features.client.dto.UpdateClientDTO;
@@ -61,6 +62,13 @@ public class ClientController {
     public ResponseEntity<Client> getClientById(@PathVariable Integer clientId) {
         Client client = clientService.getClientById(clientId);
         return ResponseEntity.ok(client);
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#clientId, \"Client\", \"Read\")")
+    @GetMapping("/{clientId}/overview")
+    public ResponseEntity<ClientOverviewDTO> getClientOverview(@PathVariable Integer clientId) {
+        ClientOverviewDTO overviewDTO = clientService.getClientOverview(clientId);
+        return ResponseEntity.ok(overviewDTO);
     }
 
     // Create
