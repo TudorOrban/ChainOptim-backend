@@ -35,7 +35,12 @@ public enum Feature {
     CLIENT,
     CLIENT_ORDER,
     CLIENT_SHIPMENT,
-    CLIENT_EVALUATION;
+    CLIENT_EVALUATION,
+
+    // Overview
+    UPCOMING_EVENT,
+
+    NONE;
 
     @Override
     public String toString() {
@@ -62,10 +67,12 @@ public enum Feature {
             case CLIENT_ORDER -> "Client Order";
             case CLIENT_SHIPMENT -> "Client Shipment";
             case CLIENT_EVALUATION -> "Client Evaluation";
+            case UPCOMING_EVENT -> "Upcoming Event";
+            case NONE -> "None";
         };
     }
 
-    public Feature fromString(String feature) {
+    public static Feature fromString(String feature) {
         return switch (feature) {
             case "Member" -> MEMBER;
             case "Custom Role" -> CUSTOM_ROLE;
@@ -89,6 +96,8 @@ public enum Feature {
             case "Client Order" -> CLIENT_ORDER;
             case "Client Shipment" -> CLIENT_SHIPMENT;
             case "Client Evaluation" -> CLIENT_EVALUATION;
+            case "Upcoming Event" -> UPCOMING_EVENT;
+            case "None" -> NONE;
             default -> throw new IllegalArgumentException("Unsupported feature: " + feature);
         };
     }

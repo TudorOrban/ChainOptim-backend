@@ -67,3 +67,26 @@ ADD COLUMN src_warehouse_id INT;
 
 ALTER TABLE client_shipments
 ADD FOREIGN KEY (src_warehouse_id) REFERENCES warehouses(id);
+
+CREATE TABLE supply_chain_maps (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    organization_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    map_data JSON,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
+);	
+
+CREATE TABLE upcoming_events (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    organization_id INT NOT NULL,
+    title VARCHAR(255),
+    message TEXT,
+    date_time TIMESTAMP,
+    associated_entity_id INTEGER,
+    associated_entity_type VARCHAR(255),
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
+);	
+
+INSERT INTO upcoming_events (organization_id, title, message, associated_entity_id, associated_entity_type)
+VALUES (1, "Incoming Supplier Order", "The Supplier Order with Company ID #123 will arrive today.", 1, "SUPPLIER_ORDER");

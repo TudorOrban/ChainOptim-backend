@@ -2,6 +2,7 @@ package org.chainoptim.features.client.service;
 
 import org.chainoptim.core.notifications.model.KafkaEvent;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.upcomingevents.service.UpcomingEventProcessorService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
@@ -13,7 +14,6 @@ import org.chainoptim.features.client.model.ClientOrderEvent;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
-import org.chainoptim.features.supplier.model.SupplierOrder;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.enums.SearchMode;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
@@ -39,6 +39,7 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
     private final ClientOrderRepository clientOrderRepository;
     private final KafkaClientOrderService kafkaClientOrderService;
+    private final UpcomingEventProcessorService upcomingEventProcessorService;
     private final ProductRepository productRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
@@ -47,12 +48,14 @@ public class ClientOrderServiceImpl implements ClientOrderService {
     public ClientOrderServiceImpl(
             ClientOrderRepository clientOrderRepository,
             KafkaClientOrderService kafkaClientOrderService,
+            UpcomingEventProcessorService upcomingEventProcessorService,
             ProductRepository productRepository,
             SubscriptionPlanLimiterService planLimiterService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.clientOrderRepository = clientOrderRepository;
         this.kafkaClientOrderService = kafkaClientOrderService;
+        this.upcomingEventProcessorService = upcomingEventProcessorService;
         this.productRepository = productRepository;
         this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
@@ -98,6 +101,9 @@ public class ClientOrderServiceImpl implements ClientOrderService {
 
         ClientOrder savedOrder = clientOrderRepository.save(clientOrder);
 
+        // Publish order to upcoming events
+        upcomingEventProcessorService.processUpcomingEvent(savedOrder);
+
         // Publish order to Kafka broker
         kafkaClientOrderService.sendClientOrderEvent(
                 new ClientOrderEvent(savedOrder, null, KafkaEvent.EventType.CREATE, savedOrder.getClientId(), Feature.CLIENT, "Test"));
@@ -129,6 +135,11 @@ public class ClientOrderServiceImpl implements ClientOrderService {
                 .toList();
 
         List<ClientOrder> savedOrders = clientOrderRepository.saveAll(orders);
+
+        // Publish order to upcoming events
+        for (ClientOrder order: savedOrders) {
+            upcomingEventProcessorService.processUpcomingEvent(order);
+        }
 
         // Publish order events to Kafka broker
         List<ClientOrderEvent> orderEvents = new ArrayList<>();
