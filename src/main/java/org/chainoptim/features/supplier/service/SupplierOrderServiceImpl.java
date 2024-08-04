@@ -2,6 +2,7 @@ package org.chainoptim.features.supplier.service;
 
 import org.chainoptim.core.notifications.model.KafkaEvent;
 import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.upcomingevents.service.UpcomingEventProcessorService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;
@@ -38,6 +39,7 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
 
     private final SupplierOrderRepository supplierOrderRepository;
     private final KafkaSupplierOrderService kafkaSupplierOrderService;
+    private final UpcomingEventProcessorService upcomingEventProcessorService;
     private final ComponentRepository componentRepository;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
@@ -46,12 +48,14 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
     public SupplierOrderServiceImpl(
             SupplierOrderRepository supplierOrderRepository,
             KafkaSupplierOrderService kafkaSupplierOrderService,
+            UpcomingEventProcessorService upcomingEventProcessorService,
             ComponentRepository componentRepository,
             SubscriptionPlanLimiterService planLimiterService,
             EntitySanitizerService entitySanitizerService
     ) {
         this.supplierOrderRepository = supplierOrderRepository;
         this.kafkaSupplierOrderService = kafkaSupplierOrderService;
+        this.upcomingEventProcessorService = upcomingEventProcessorService;
         this.componentRepository = componentRepository;
         this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
@@ -96,6 +100,9 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
 
         SupplierOrder savedOrder = supplierOrderRepository.save(supplierOrder);
 
+        // Publish order to upcoming events
+        upcomingEventProcessorService.processUpcomingEvent(savedOrder);
+
         // Publish order to Kafka broker
         kafkaSupplierOrderService.sendSupplierOrderEvent(
                 new SupplierOrderEvent(savedOrder, null, KafkaEvent.EventType.CREATE, savedOrder.getSupplierId(), Feature.SUPPLIER, "Test"));
@@ -127,6 +134,11 @@ public class SupplierOrderServiceImpl implements SupplierOrderService {
                 .toList();
 
         List<SupplierOrder> savedOrders = supplierOrderRepository.saveAll(orders);
+
+        // Publish order to upcoming events
+        for (SupplierOrder order: savedOrders) {
+            upcomingEventProcessorService.processUpcomingEvent(order);
+        }
 
         // Publish order events to Kafka broker
         List<SupplierOrderEvent> orderEvents = new ArrayList<>();

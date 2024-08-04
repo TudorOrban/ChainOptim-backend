@@ -2,8 +2,9 @@ package org.chainoptim.core.upcomingevents.repository;
 
 import org.chainoptim.core.upcomingevents.model.UpcomingEvent;
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.shared.enums.OrderStatus;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.search.model.SearchParams;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
@@ -62,16 +63,8 @@ public class UpcomingEventsSearchRepositoryImpl implements UpcomingEventsSearchR
                     addDateFilter(builder, root, conditions, "dateTime", value, true);
             case "dateTimeEnd" ->
                     addDateFilter(builder, root, conditions, "dateTime", value, false);
-            case "greaterThanQuantity" ->
-                    addFloatFilter(builder, root, conditions, "quantity", value, true);
-            case "lessThanQuantity" ->
-                    addFloatFilter(builder, root, conditions, "quantity", value, false);
-            case "greaterThanDeliveredQuantity" ->
-                    addFloatFilter(builder, root, conditions, "deliveredQuantity", value, true);
-            case "lessThanDeliveredQuantity" ->
-                    addFloatFilter(builder, root, conditions, "deliveredQuantity", value, false);
-            case "status" ->
-                    addStatusFilter(builder, root, conditions, value);
+            case "associatedEntityType" ->
+                    addFeatureFilter(builder, root, conditions, "associatedEntityType", value);
             default -> throw new ValidationException("Invalid filter: " + key);
         };
     }
@@ -94,35 +87,15 @@ public class UpcomingEventsSearchRepositoryImpl implements UpcomingEventsSearchR
         return conditions;
     }
 
-    private Predicate addFloatFilter(CriteriaBuilder builder, Root<UpcomingEvent> root, Predicate conditions,
-                                     String targetProperty, String filterValue, boolean startingAt) {
-        Float value;
+    private Predicate addFeatureFilter(CriteriaBuilder builder, Root<UpcomingEvent> root, Predicate conditions,
+                                       String targetProperty, String filterValue) {
+        Feature feature;
         try {
-            value = Float.parseFloat(filterValue);
-        } catch (Exception e) {
-            throw new ValidationException("Invalid float format for " + targetProperty + " filter.");
-        }
-
-        if (startingAt) {
-            conditions = builder.and(conditions, builder.greaterThanOrEqualTo(root.get(targetProperty), value));
-        } else {
-            conditions = builder.and(conditions, builder.lessThanOrEqualTo(root.get(targetProperty), value));
-        }
-
-        return conditions;
-    }
-
-    private Predicate addStatusFilter(CriteriaBuilder builder, Root<UpcomingEvent> root, Predicate conditions, String status) {
-        if (status == null || status.isEmpty()) return conditions;
-
-        OrderStatus orderStatus;
-        try {
-            orderStatus = OrderStatus.valueOf(status);
+            feature = Feature.fromString(filterValue);
         } catch (IllegalArgumentException e) {
-            throw new ValidationException("Invalid status filter.");
+            throw new ValidationException("Invalid feature filter.");
         }
 
-        return builder.and(conditions, builder.equal(root.get("status"), orderStatus));
+        return builder.and(conditions, builder.equal(root.get(targetProperty), feature));
     }
-
 }
