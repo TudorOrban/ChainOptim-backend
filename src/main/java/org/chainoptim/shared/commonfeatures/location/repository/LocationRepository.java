@@ -15,4 +15,7 @@ public interface LocationRepository extends JpaRepository<Location, Integer> {
 
     @Query("SELECT l FROM Location l WHERE l.organizationId = :organizationId")
     List<Location> findLocationsByOrganizationId(Integer organizationId);
+
+    @Query("SELECT l FROM Location l WHERE l.id IN :locationIds")
+    List<Location> findByLocationIds(List<Integer> locationIds);
 }
