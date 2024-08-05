@@ -54,9 +54,11 @@ public class SupplierShipment {
     private Float quantity;
 
     @Column(name = "transport_type")
+    @Enumerated(EnumType.STRING)
     private TransportType transportType;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private ShipmentStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
