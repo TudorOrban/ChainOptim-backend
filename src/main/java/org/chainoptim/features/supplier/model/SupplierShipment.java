@@ -2,7 +2,9 @@ package org.chainoptim.features.supplier.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.chainoptim.shared.enums.TransportType;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.chainoptim.shared.enums.ShipmentStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,8 +27,8 @@ public class SupplierShipment {
     @Column(name = "supplier_order_id", nullable = false)
     private Integer supplierOrderId;
 
-    @Column(name = "quantity")
-    private Float quantity;
+    @Column(name = "supplier_id", nullable = false)
+    private Integer supplierId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
@@ -42,14 +44,22 @@ public class SupplierShipment {
     @Column(name = "estimated_arrival_date")
     private LocalDateTime estimatedArrivalDate;
 
+    @Column(name = "departure_date")
+    private LocalDateTime departureDate;
+
     @Column(name = "arrival_date")
     private LocalDateTime arrivalDate;
 
-    @Column(name = "transporter_type")
-    private String transporterType;
+    @Column(name = "quantity")
+    private Float quantity;
+
+    @Column(name = "transport_type")
+    @Enumerated(EnumType.STRING)
+    private TransportType transportType;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ShipmentStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "source_location_id")
@@ -60,16 +70,13 @@ public class SupplierShipment {
     private Location destinationLocation;
 
     @Column(name = "current_location_latitude")
-    private Float currentLocationLatitude;
+    private Double currentLocationLatitude;
 
     @Column(name = "current_location_longitude")
-    private Float currentLocationLongitude;
+    private Double currentLocationLongitude;
 
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
-
-    @Column(name = "supplier_id", nullable = false)
-    private Integer supplierId;
 
     @Column(name = "dest_factory_id")
     private Integer destFactoryId;
@@ -87,7 +94,7 @@ public class SupplierShipment {
                 .shipmentStartingDate(this.shipmentStartingDate)
                 .estimatedArrivalDate(this.estimatedArrivalDate)
                 .arrivalDate(this.arrivalDate)
-                .transporterType(this.transporterType)
+                .transportType(this.transportType)
                 .status(this.status)
                 .sourceLocation(this.sourceLocation)
                 .destinationLocation(this.destinationLocation)

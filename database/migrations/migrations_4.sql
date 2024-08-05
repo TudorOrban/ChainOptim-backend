@@ -88,5 +88,17 @@ CREATE TABLE upcoming_events (
     FOREIGN KEY (organization_id) REFERENCES organizations(id)
 );	
 
-INSERT INTO upcoming_events (organization_id, title, message, associated_entity_id, associated_entity_type)
-VALUES (1, "Incoming Supplier Order", "The Supplier Order with Company ID #123 will arrive today.", 1, "SUPPLIER_ORDER");
+INSERT INTO upcoming_events (organization_id, title, message, date_time, associated_entity_id, associated_entity_type)
+VALUES (1, "Outgoing Client Shipment", "The Client Shipment with Company ID #427 leaves Warehouse NewYork.", "2024-08-05 14:22:49", 1, "CLIENT_SHIPMENT");
+
+ALTER TABLE supply_chain_maps 
+ADD COLUMN last_refresh TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE supplier_shipments
+DROP COLUMN transporter_type;
+
+ALTER TABLE supplier_shipments
+ADD COLUMN transport_type ENUM("ROAD", "RAIL", "SEA", "AIR");
+
+ALTER TABLE supplier_shipments
+ADD COLUMN departure_date TIMESTAMP;

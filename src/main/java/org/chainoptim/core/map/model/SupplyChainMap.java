@@ -3,6 +3,7 @@ package org.chainoptim.core.map.model;
 import org.chainoptim.exception.ValidationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,20 +45,12 @@ public class SupplyChainMap {
 
     public MapData getMapData() {
         if (this.mapData == null && this.mapDataJson != null) {
-            // Remove backslashes used to escape double quotes
-            String correctedJson = this.mapDataJson.replace("\\\"", "\"").trim();
-
-            // Ensure there are no outer quotes surrounding the JSON object
-            if (correctedJson.startsWith("\"") && correctedJson.endsWith("\"")) {
-                correctedJson = correctedJson.substring(1, correctedJson.length() - 1);
-            }
-
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
             try {
-                this.mapData = mapper.readValue(correctedJson, MapData.class);
+                this.mapData = mapper.readValue(this.mapDataJson, MapData.class);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
-                throw new ValidationException("Invalid Map Data json");
+                throw new ValidationException("Invalid Map Data json on get");
             }
         }
         return this.mapData;
@@ -66,11 +59,11 @@ public class SupplyChainMap {
     public void setMapData(MapData mapData) {
         this.mapData = mapData;
         // Serialize when setting the object
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         try {
             this.mapDataJson = mapper.writeValueAsString(mapData);
         } catch (JsonProcessingException e) {
-            throw new ValidationException("Invalid Map Data json");
+            throw new ValidationException("Invalid Map Data json on set");
         }
     }
 }
