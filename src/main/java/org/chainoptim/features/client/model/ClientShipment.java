@@ -3,6 +3,8 @@ package org.chainoptim.features.client.model;
 
 import lombok.Builder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
+import org.chainoptim.shared.enums.ShipmentStatus;
+import org.chainoptim.shared.enums.TransportType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +30,9 @@ public class ClientShipment {
     @Column(name = "client_order_id", nullable = false)
     private Integer clientOrderId;
 
+    @Column(name = "client_id", nullable = false)
+    private Integer clientId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -39,6 +44,9 @@ public class ClientShipment {
     @Column(name = "quantity")
     private Float quantity;
 
+    @Column(name = "departure_date")
+    private LocalDateTime departureDate;
+
     @Column(name = "shipment_starting_date")
     private LocalDateTime shipmentStartingDate;
 
@@ -48,11 +56,13 @@ public class ClientShipment {
     @Column(name = "arrival_date")
     private LocalDateTime arrivalDate;
 
-    @Column(name = "transporter_type")
-    private String transporterType;
+    @Column(name = "transport_type")
+    @Enumerated(EnumType.STRING)
+    private TransportType transportType;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ShipmentStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "source_location_id")
@@ -63,16 +73,13 @@ public class ClientShipment {
     private Location destinationLocation;
 
     @Column(name = "current_location_latitude")
-    private Float currentLocationLatitude;
+    private Double currentLocationLatitude;
 
     @Column(name = "current_location_longitude")
-    private Float currentLocationLongitude;
+    private Double currentLocationLongitude;
 
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
-
-    @Column(name = "client_id", nullable = false)
-    private Integer clientId;
 
     @Column(name = "src_factory_id")
     private Integer srcFactoryId;
@@ -90,7 +97,7 @@ public class ClientShipment {
                 .shipmentStartingDate(this.shipmentStartingDate)
                 .estimatedArrivalDate(this.estimatedArrivalDate)
                 .arrivalDate(this.arrivalDate)
-                .transporterType(this.transporterType)
+                .transportType(this.transportType)
                 .status(this.status)
                 .sourceLocation(this.sourceLocation)
                 .destinationLocation(this.destinationLocation)

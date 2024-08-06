@@ -2,7 +2,9 @@ package org.chainoptim.core.map.service;
 
 import org.chainoptim.core.map.model.*;
 import org.chainoptim.features.client.model.Client;
+import org.chainoptim.features.client.model.ClientShipment;
 import org.chainoptim.features.client.repository.ClientRepository;
+import org.chainoptim.features.client.repository.ClientShipmentRepository;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.repository.FactoryRepository;
 import org.chainoptim.features.supplier.model.Supplier;
@@ -31,6 +33,7 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
     private final SupplierRepository supplierRepository;
     private final SupplierShipmentRepository supplierShipmentRepository;
     private final ClientRepository clientRepository;
+    private final ClientShipmentRepository clientShipmentRepository;
 
     @Autowired
     public SupplyChainMapRefreshServiceImpl(
@@ -38,12 +41,14 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
             WarehouseRepository warehouseRepository,
             SupplierRepository supplierRepository,
             SupplierShipmentRepository supplierShipmentRepository,
-            ClientRepository clientRepository) {
+            ClientRepository clientRepository,
+            ClientShipmentRepository clientShipmentRepository) {
         this.factoryRepository = factoryRepository;
         this.warehouseRepository = warehouseRepository;
         this.supplierRepository = supplierRepository;
         this.supplierShipmentRepository = supplierShipmentRepository;
         this.clientRepository = clientRepository;
+        this.clientShipmentRepository = clientShipmentRepository;
     }
 
     public MapData refreshSupplyChainMap(Integer organizationId) {
@@ -69,7 +74,19 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         for (SupplierShipment supplierShipment : supplierShipments) {
             TransportRoute transportRoute = transformToRoute(supplierShipment);
 
-            transportRoutes.add(transportRoute);
+            if (transportRoute != null) {
+                transportRoutes.add(transportRoute);
+            }
+        }
+
+        List<ClientShipment> clientShipments = clientShipmentRepository.findByOrganizationId(organizationId);
+
+        for (ClientShipment clientShipment : clientShipments) {
+            TransportRoute transportRoute = transformToRoute(clientShipment);
+
+            if (transportRoute != null) {
+                transportRoutes.add(transportRoute);
+            }
         }
 
         return new MapData(facilities, transportRoutes);
@@ -91,6 +108,11 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
     }
 
     private TransportRoute transformToRoute(SupplierShipment supplierShipment) {
+        if (supplierShipment.getSourceLocation() == null || supplierShipment.getSourceLocation().getLatitude() == null || supplierShipment.getSourceLocation().getLongitude() == null
+                || supplierShipment.getDestinationLocation() == null || supplierShipment.getDestinationLocation().getLatitude() == null || supplierShipment.getDestinationLocation().getLongitude() == null) {
+            return null;
+        }
+
         TransportRoute transportRoute = new TransportRoute();
         transportRoute.setEntityId(supplierShipment.getId());
         transportRoute.setEntityType(Feature.SUPPLIER_SHIPMENT);
@@ -121,6 +143,45 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         transportRoute.setDepartureDateTime(supplierShipment.getDepartureDate());
         transportRoute.setEstimatedArrivalDateTime(supplierShipment.getEstimatedArrivalDate());
         transportRoute.setArrivalDateTime(supplierShipment.getArrivalDate());
+
+        return transportRoute;
+    }
+
+    private TransportRoute transformToRoute(ClientShipment clientShipment) {
+        if (clientShipment.getSourceLocation() == null || clientShipment.getSourceLocation().getLatitude() == null || clientShipment.getSourceLocation().getLongitude() == null
+            || clientShipment.getDestinationLocation() == null || clientShipment.getDestinationLocation().getLatitude() == null || clientShipment.getDestinationLocation().getLongitude() == null) {
+            return null;
+        }
+        TransportRoute transportRoute = new TransportRoute();
+        transportRoute.setEntityId(clientShipment.getId());
+        transportRoute.setEntityType(Feature.CLIENT_SHIPMENT);
+        Location srcLocation = clientShipment.getSourceLocation();
+        if (srcLocation != null) {
+            transportRoute.setSrcLocation(Pair.of(srcLocation.getLatitude(), srcLocation.getLongitude()));
+        }
+
+        Location destLocation = clientShipment.getDestinationLocation();
+        if (destLocation != null) {
+            transportRoute.setDestLocation(Pair.of(destLocation.getLatitude(), destLocation.getLongitude()));
+        }
+        if (clientShipment.getSrcFactoryId() != null) {
+            transportRoute.setDestFacilityId(clientShipment.getSrcFactoryId());
+            transportRoute.setDestFacilityType(FacilityType.FACTORY);
+        } else if (clientShipment.getSrcWarehouseId() != null) {
+            transportRoute.setDestFacilityId(clientShipment.getSrcWarehouseId());
+            transportRoute.setDestFacilityType(FacilityType.WAREHOUSE);
+        }
+
+        if (clientShipment.getCurrentLocationLatitude() != null && clientShipment.getCurrentLocationLongitude() != null) {
+            transportRoute.setLiveLocation(Pair.of(clientShipment.getCurrentLocationLatitude(), clientShipment.getCurrentLocationLongitude()));
+        }
+
+        transportRoute.setTransportType(clientShipment.getTransportType());
+        transportRoute.setShipmentStatus(clientShipment.getStatus());
+
+        transportRoute.setDepartureDateTime(clientShipment.getDepartureDate());
+        transportRoute.setEstimatedArrivalDateTime(clientShipment.getEstimatedArrivalDate());
+        transportRoute.setArrivalDateTime(clientShipment.getArrivalDate());
 
         return transportRoute;
     }
