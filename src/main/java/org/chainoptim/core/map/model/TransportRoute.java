@@ -19,16 +19,16 @@ public class TransportRoute {
     private Integer entityId;
     private Feature entityType;
 
-    private Pair<Double, Double> srcLocation;
+    private CustomPair<Double, Double> srcLocation;
     private Integer srcFacilityId;
     private FacilityType srcFacilityType;
 
-    private Pair<Double, Double> destLocation;
+    private CustomPair<Double, Double> destLocation;
     private Integer destFacilityId;
     private FacilityType destFacilityType;
 
-    private List<Pair<Double, Double>> waypoints;
-    private Pair<Double, Double> liveLocation;
+    private List<CustomPair<Double, Double>> waypoints;
+    private CustomPair<Double, Double> liveLocation;
 
     private TransportType transportType;
     private ShipmentStatus shipmentStatus;

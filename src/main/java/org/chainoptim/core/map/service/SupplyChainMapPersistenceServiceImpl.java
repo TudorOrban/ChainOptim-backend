@@ -7,11 +7,15 @@ import org.chainoptim.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class SupplyChainMapPersistenceServiceImpl implements SupplyChainMapPersistenceService {
 
     private final SupplyChainMapRepository supplyChainMapRepository;
     private final SupplyChainMapRefreshService supplyChainMapRefreshService;
+
+    private static final int REFRESH_COOLDOWN = 5000; // 24 hours
 
     @Autowired
     public SupplyChainMapPersistenceServiceImpl(SupplyChainMapRepository supplyChainMapRepository,
@@ -27,6 +31,9 @@ public class SupplyChainMapPersistenceServiceImpl implements SupplyChainMapPersi
 
     public SupplyChainMap refreshMap(Integer organizationId) {
         SupplyChainMap map = supplyChainMapRepository.findByOrganizationId(organizationId).orElse(null);
+        if (map != null && map.getUpdatedAt() != null && map.getUpdatedAt().plusSeconds(REFRESH_COOLDOWN).isAfter(LocalDateTime.now())) {
+            return map;
+        }
 
         if (map == null) {
             map = new SupplyChainMap();

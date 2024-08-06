@@ -118,12 +118,12 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         transportRoute.setEntityType(Feature.SUPPLIER_SHIPMENT);
         Location srcLocation = supplierShipment.getSourceLocation();
         if (srcLocation != null) {
-            transportRoute.setSrcLocation(Pair.of(srcLocation.getLatitude(), srcLocation.getLongitude()));
+            transportRoute.setSrcLocation(new CustomPair<>(srcLocation.getLatitude(), srcLocation.getLongitude()));
         }
 
         Location destLocation = supplierShipment.getDestinationLocation();
         if (destLocation != null) {
-            transportRoute.setDestLocation(Pair.of(destLocation.getLatitude(), destLocation.getLongitude()));
+            transportRoute.setDestLocation(new CustomPair<>(destLocation.getLatitude(), destLocation.getLongitude()));
         }
         if (supplierShipment.getDestFactoryId() != null) {
             transportRoute.setDestFacilityId(supplierShipment.getDestFactoryId());
@@ -134,7 +134,7 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         }
 
         if (supplierShipment.getCurrentLocationLatitude() != null && supplierShipment.getCurrentLocationLongitude() != null) {
-            transportRoute.setLiveLocation(Pair.of(supplierShipment.getCurrentLocationLatitude(), supplierShipment.getCurrentLocationLongitude()));
+            transportRoute.setLiveLocation(new CustomPair<>(supplierShipment.getCurrentLocationLatitude(), supplierShipment.getCurrentLocationLongitude()));
         }
 
         transportRoute.setTransportType(supplierShipment.getTransportType());
@@ -157,12 +157,12 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         transportRoute.setEntityType(Feature.CLIENT_SHIPMENT);
         Location srcLocation = clientShipment.getSourceLocation();
         if (srcLocation != null) {
-            transportRoute.setSrcLocation(Pair.of(srcLocation.getLatitude(), srcLocation.getLongitude()));
+            transportRoute.setSrcLocation(new CustomPair<>(srcLocation.getLatitude(), srcLocation.getLongitude()));
         }
 
         Location destLocation = clientShipment.getDestinationLocation();
         if (destLocation != null) {
-            transportRoute.setDestLocation(Pair.of(destLocation.getLatitude(), destLocation.getLongitude()));
+            transportRoute.setDestLocation(new CustomPair<>(destLocation.getLatitude(), destLocation.getLongitude()));
         }
         if (clientShipment.getSrcFactoryId() != null) {
             transportRoute.setDestFacilityId(clientShipment.getSrcFactoryId());
@@ -173,7 +173,7 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         }
 
         if (clientShipment.getCurrentLocationLatitude() != null && clientShipment.getCurrentLocationLongitude() != null) {
-            transportRoute.setLiveLocation(Pair.of(clientShipment.getCurrentLocationLatitude(), clientShipment.getCurrentLocationLongitude()));
+            transportRoute.setLiveLocation(new CustomPair<>(clientShipment.getCurrentLocationLatitude(), clientShipment.getCurrentLocationLongitude()));
         }
 
         transportRoute.setTransportType(clientShipment.getTransportType());
