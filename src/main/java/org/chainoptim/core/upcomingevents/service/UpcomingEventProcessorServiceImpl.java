@@ -21,7 +21,9 @@ public class UpcomingEventProcessorServiceImpl implements UpcomingEventProcessor
     }
 
     public UpcomingEvent processUpcomingEvent(SupplierOrder supplierOrder) {
-        System.out.println("UpcomingEventProcessorServiceImpl.processUpcomingEvent");
+        if (supplierOrder.getDeliveryDate() == null) {
+            return null;
+        }
         UpcomingEvent upcomingEvent = new UpcomingEvent();
         upcomingEvent.setAssociatedEntityType(Feature.SUPPLIER_ORDER);
 
@@ -30,7 +32,9 @@ public class UpcomingEventProcessorServiceImpl implements UpcomingEventProcessor
 
 
     public UpcomingEvent processUpcomingEvent(ClientOrder clientOrder) {
-        System.out.println("UpcomingEventProcessorServiceImpl.processUpcomingEvent");
+        if (clientOrder.getDeliveryDate() == null) {
+            return null;
+        }
         UpcomingEvent upcomingEvent = new UpcomingEvent();
         upcomingEvent.setAssociatedEntityType(Feature.CLIENT_ORDER);
 
