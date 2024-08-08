@@ -1,5 +1,6 @@
 package org.chainoptim.features.client.dto;
 
+import org.chainoptim.shared.enums.ShipmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,9 @@ public class UpdateClientShipmentDTO {
     private LocalDateTime shipmentStartingDate;
     private LocalDateTime estimatedArrivalDate;
     private LocalDateTime arrivalDate;
-    private String status;
+    private ShipmentStatus status;
     private Integer sourceLocationId;
     private Integer destinationLocationId;
-    private Float currentLocationLatitude;
-    private Float currentLocationLongitude;
+    private Double currentLocationLatitude;
+    private Double currentLocationLongitude;
 }
