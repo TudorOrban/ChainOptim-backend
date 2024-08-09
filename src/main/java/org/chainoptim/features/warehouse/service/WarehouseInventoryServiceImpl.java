@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +78,7 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
 
         // Sanitize input and map to entity
         CreateWarehouseInventoryItemDTO sanitizedItemDTO = entitySanitizerService.sanitizeCreateWarehouseInventoryItemDTO(itemDTO);
-        WarehouseInventoryItem item = WarehouseDTOMapper.convertCreateWarehouseItemDTOToWarehouseItem(sanitizedItemDTO);
+        WarehouseInventoryItem item = WarehouseDTOMapper.mapCreateWarehouseItemDTOToWarehouseItem(sanitizedItemDTO);
 
         return warehouseInventoryRepository.save(item);
     }
@@ -99,7 +98,7 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
         List<WarehouseInventoryItem> items = itemDTOs.stream()
                 .map(itemDTO -> {
                     CreateWarehouseInventoryItemDTO sanitizedItemDTO = entitySanitizerService.sanitizeCreateWarehouseInventoryItemDTO(itemDTO);
-                    return WarehouseDTOMapper.convertCreateWarehouseItemDTOToWarehouseItem(sanitizedItemDTO);
+                    return WarehouseDTOMapper.mapCreateWarehouseItemDTOToWarehouseItem(sanitizedItemDTO);
                 })
                 .toList();
 
@@ -113,6 +112,7 @@ public class WarehouseInventoryServiceImpl implements WarehouseInventoryService 
                 orElseThrow(() -> new ResourceNotFoundException("Warehouse inventory item with ID: " + sanitizedItemDTO.getId() + " not found."));
 
         item.setQuantity(sanitizedItemDTO.getQuantity());
+        item.setMinimumRequiredQuantity(sanitizedItemDTO.getMinimumRequiredQuantity());
 
         warehouseInventoryRepository.save(item);
         return item;

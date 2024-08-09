@@ -111,12 +111,14 @@ public class NotificationDistributionServiceImpl implements NotificationDistribu
     }
 
     private Integer determineOrderOrganization(SupplierOrderEvent event) {
-        return supplierRepository.findOrganizationIdById(Long.valueOf(event.getNewEntity().getSupplierId()))
+        Long supplierId = Long.valueOf(event.getNewEntity() != null ? event.getNewEntity().getSupplierId() : event.getOldEntity().getSupplierId());
+        return supplierRepository.findOrganizationIdById(supplierId)
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier with ID: " + event.getNewEntity().getSupplierId() + " not found"));
     }
 
     private Integer determineOrderOrganization(ClientOrderEvent event) {
-        return clientRepository.findOrganizationIdById(Long.valueOf(event.getNewEntity().getClientId()))
+        Long clientId = Long.valueOf(event.getNewEntity() != null ? event.getNewEntity().getClientId() : event.getOldEntity().getClientId());
+        return clientRepository.findOrganizationIdById(clientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID: " + event.getNewEntity().getClientId() + " not found"));
     }
 

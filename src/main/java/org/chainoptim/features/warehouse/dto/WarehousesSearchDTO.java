@@ -1,15 +1,13 @@
 package org.chainoptim.features.warehouse.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class WarehousesSearchDTO {
     private Integer id;
     private String name;

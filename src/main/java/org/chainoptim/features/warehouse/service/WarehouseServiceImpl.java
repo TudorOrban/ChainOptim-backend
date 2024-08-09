@@ -45,6 +45,10 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID: " + warehouseId + " not found."));
     }
 
+    public List<WarehousesSearchDTO> getWarehousesByOrganizationIdSmall(Integer organizationId) {
+        return warehouseRepository.findByOrganizationIdSmall(organizationId);
+    }
+
     public List<Warehouse> getWarehousesByOrganizationId(Integer organizationId) {
         return warehouseRepository.findByOrganizationId(organizationId);
     }
@@ -82,11 +86,11 @@ public class WarehouseServiceImpl implements WarehouseService {
         // Create location if requested
         if (sanitizedWarehouseDTO.isCreateLocation() && sanitizedWarehouseDTO.getLocation() != null) {
             Location location = locationService.createLocation(sanitizedWarehouseDTO.getLocation());
-            Warehouse warehouse = WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO);
+            Warehouse warehouse = WarehouseDTOMapper.mapCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO);
             warehouse.setLocation(location);
             return warehouseRepository.save(warehouse);
         } else {
-            return warehouseRepository.save(WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO));
+            return warehouseRepository.save(WarehouseDTOMapper.mapCreateWarehouseDTOToWarehouse(sanitizedWarehouseDTO));
         }
     }
 

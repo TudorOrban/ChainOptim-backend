@@ -84,6 +84,7 @@ public class FactoryDTOMapper {
 
     public static FactoryInventoryItem mapCreateFactoryInventoryItemDTOToFactoryInventoryItem(CreateFactoryInventoryItemDTO item) {
         FactoryInventoryItem factoryInventoryItem = new FactoryInventoryItem();
+        factoryInventoryItem.setOrganizationId(item.getOrganizationId());
         factoryInventoryItem.setFactoryId(item.getFactoryId());
         factoryInventoryItem.setQuantity(item.getQuantity());
         factoryInventoryItem.setMinimumRequiredQuantity(item.getMinimumRequiredQuantity());

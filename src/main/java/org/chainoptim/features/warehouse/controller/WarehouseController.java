@@ -34,6 +34,16 @@ public class WarehouseController {
 
     // Fetch
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Warehouse\", \"Read\")")
+    @GetMapping("/organization/{organizationId}/small")
+    public ResponseEntity<List<WarehousesSearchDTO>> getWarehousesByOrganizationIdSmall(@PathVariable Integer organizationId) {
+        List<WarehousesSearchDTO> warehouses = warehouseService.getWarehousesByOrganizationIdSmall(organizationId);
+        if (warehouses.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(warehouses);
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Warehouse\", \"Read\")")
     @GetMapping("/organization/{organizationId}")
     public ResponseEntity<List<Warehouse>> getWarehousesByOrganizationId(@PathVariable Integer organizationId) {
         List<Warehouse> warehouses = warehouseService.getWarehousesByOrganizationId(organizationId);

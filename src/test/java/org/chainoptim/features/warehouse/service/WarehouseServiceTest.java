@@ -39,7 +39,7 @@ class WarehouseServiceTest {
     void testCreateWarehouse() {
         // Arrange
         CreateWarehouseDTO warehouseDTO = new CreateWarehouseDTO("Test Warehouse", 1, 1, new CreateLocationDTO(), false);
-        Warehouse expectedWarehouse = WarehouseDTOMapper.convertCreateWarehouseDTOToWarehouse(warehouseDTO);
+        Warehouse expectedWarehouse = WarehouseDTOMapper.mapCreateWarehouseDTOToWarehouse(warehouseDTO);
 
         when(warehouseRepository.save(any(Warehouse.class))).thenReturn(expectedWarehouse);
         when(planLimiterService.isLimitReached(any(), any(), any())).thenReturn(false);
