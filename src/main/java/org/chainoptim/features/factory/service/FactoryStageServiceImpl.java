@@ -39,9 +39,9 @@ public class FactoryStageServiceImpl implements FactoryStageService {
     // Create
     public FactoryStage createFactoryStage(CreateFactoryStageDTO stageDTO, Boolean refreshGraph) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(stageDTO.getFactoryId(), Feature.FACTORY_STAGE, 1)) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed factory stages for the current Subscription Plan.");
-        }
+//        if (planLimiterService.isLimitReached(stageDTO.getFactoryId(), Feature.FACTORY_STAGE, 1)) {
+//            throw new PlanLimitReachedException("You have reached the limit of allowed factory stages for the current Subscription Plan.");
+//        }
 
         FactoryStage factoryStage = factoryStageRepository.save(FactoryDTOMapper.convertCreateFactoryStageDTOToFactoryStage(stageDTO));
 

@@ -34,7 +34,8 @@ public class FactoryStageController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessEntity(#stageDTO.getFactoryId(), 'Factory')")
+    // TODO: Secure endpoint
+//    @PreAuthorize("@securityService.canAccessEntity(#stageDTO.getFactoryId(), 'Factory', 'Create')")
     @PostMapping("/create/{refreshGraph}")
     public ResponseEntity<FactoryStage> createFactoryStage(@RequestBody CreateFactoryStageDTO stageDTO, @PathVariable("refreshGraph") Boolean refreshGraph) {
         FactoryStage stage = factoryStageService.createFactoryStage(stageDTO, refreshGraph);
@@ -43,6 +44,7 @@ public class FactoryStageController {
 
     // Update
     // TODO: Secure endpoint
+//    @PreAuthorize("@securityService.canAccessEntity(#stageDTO.getFactoryId(), 'Factory', 'Update')")
     @PutMapping("/update")
     public ResponseEntity<FactoryStage> updateFactoryStage(@RequestBody UpdateFactoryStageDTO factoryDTO) {
         FactoryStage stage = factoryStageService.updateFactoryStage(factoryDTO);
