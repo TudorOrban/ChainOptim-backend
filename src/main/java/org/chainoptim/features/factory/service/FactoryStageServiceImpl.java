@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FactoryStageServiceImpl implements FactoryStageService {
 
@@ -35,6 +37,10 @@ public class FactoryStageServiceImpl implements FactoryStageService {
     public FactoryStage getFactoryStageById(Integer factoryStageId) {
         return factoryStageRepository.findByIdWithStage(factoryStageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Factory Stage with ID: " + factoryStageId + " not found."));
+    }
+
+    public List<FactoryStage> getFactoryStagesByFactoryId(Integer factoryId) {
+        return factoryStageRepository.findByFactoryId(factoryId);
     }
 
     // Create
@@ -71,10 +77,12 @@ public class FactoryStageServiceImpl implements FactoryStageService {
 
     // Delete
     public void deleteFactoryStage(Integer factoryStageId, Boolean refreshGraph) {
+        FactoryStage factoryStage = factoryStageRepository.findById(factoryStageId)
+                .orElseThrow(() -> new ResourceNotFoundException("Factory Stage with ID: " + factoryStageId + " not found."));
         factoryStageRepository.deleteById(factoryStageId);
 
         if (Boolean.TRUE.equals(refreshGraph)) {
-            graphService.updateFactoryGraph(factoryStageId);
+            graphService.updateFactoryGraph(factoryStage.getFactory().getId());
         }
     }
 }

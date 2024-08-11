@@ -11,8 +11,8 @@ public class DeleteConnectionDTO {
 
     private Integer factoryId;
     private Integer organizationId;
-    private Integer outgoingFactoryStageId;
-    private Integer incomingFactoryStageId;
-    private Integer outgoingStageInputId;
-    private Integer incomingStageOutputId;
+    private Integer srcFactoryStageId;
+    private Integer srcStageOutputId;
+    private Integer destFactoryStageId;
+    private Integer destStageInputId;
 }

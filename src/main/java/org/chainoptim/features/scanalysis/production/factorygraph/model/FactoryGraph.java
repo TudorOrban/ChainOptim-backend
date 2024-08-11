@@ -26,7 +26,7 @@ public class FactoryGraph {
             if (factoryStage.getStage() == null) {
                 continue;
             }
-            
+
             StageNode node = new StageNode();
             List<Edge> newEdges = new ArrayList<>();
 

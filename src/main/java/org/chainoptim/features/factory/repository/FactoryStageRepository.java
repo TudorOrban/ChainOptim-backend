@@ -5,9 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FactoryStageRepository extends JpaRepository<FactoryStage, Integer> {
+
+    List<FactoryStage> findByFactoryId(Integer factoryId);
 
     @Query("SELECT fs FROM FactoryStage fs JOIN FETCH fs.stage WHERE fs.id = :id")
     Optional<FactoryStage> findByIdWithStage(@Param("id") Integer id);

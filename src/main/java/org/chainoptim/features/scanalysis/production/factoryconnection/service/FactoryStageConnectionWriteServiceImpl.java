@@ -48,8 +48,8 @@ public class FactoryStageConnectionWriteServiceImpl implements FactoryStageConne
     }
 
     public void findAndDeleteConnection(DeleteConnectionDTO connectionDTO) {
-        FactoryStageConnection connection = factoryStageConnectionRepository.findConnectionByStageInputAndOutputIds(connectionDTO.getFactoryId(), connectionDTO.getOutgoingStageInputId(), connectionDTO.getIncomingStageOutputId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Factory Connection with Factory ID: " + connectionDTO.getFactoryId() + " and Stage Input ID: " + connectionDTO.getOutgoingStageInputId() + " and Stage Output ID: " + connectionDTO.getIncomingStageOutputId() + " not found."));
+        FactoryStageConnection connection = factoryStageConnectionRepository.findConnectionByStageInputAndOutputIds(connectionDTO.getFactoryId(), connectionDTO.getSrcStageOutputId(), connectionDTO.getDestStageInputId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Factory Connection with Factory ID: " + connectionDTO.getFactoryId() + " and Stage Input ID: " + connectionDTO.getDestStageInputId() + " and Stage Output ID: " + connectionDTO.getSrcStageOutputId() + " not found."));
         factoryStageConnectionRepository.delete(connection);
 
         factoryProductionGraphService.updateFactoryGraph(connectionDTO.getFactoryId());
