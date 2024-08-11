@@ -18,17 +18,17 @@ public class FactoryStageConnection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "outgoing_stage_input_id", nullable = false)
-    private Integer outgoingStageInputId;
-
-    @Column(name = "incoming_stage_output_id", nullable = false)
-    private Integer incomingStageOutputId;
-
     @Column(name = "outgoing_factory_stage_id", nullable = false)
-    private Integer outgoingFactoryStageId;
+    private Integer srcFactoryStageId;
+
+    @Column(name = "outgoing_stage_output_id", nullable = false)
+    private Integer srcStageOutputId;
 
     @Column(name = "incoming_factory_stage_id", nullable = false)
-    private Integer incomingFactoryStageId;
+    private Integer destFactoryStageId;
+
+    @Column(name = "incoming_stage_input_id", nullable = false)
+    private Integer destStageInputId;
 
     @Column(name = "factory_id", nullable = false)
     private Integer factoryId;

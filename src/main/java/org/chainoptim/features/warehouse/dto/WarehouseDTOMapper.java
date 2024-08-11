@@ -1,12 +1,9 @@
 package org.chainoptim.features.warehouse.dto;
 
-import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.model.WarehouseInventoryItem;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.productpipeline.model.Component;
-import org.chainoptim.features.productpipeline.model.Stage;
-import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 public class WarehouseDTOMapper {
@@ -23,7 +20,7 @@ public class WarehouseDTOMapper {
         return dto;
     }
 
-    public static Warehouse convertCreateWarehouseDTOToWarehouse(CreateWarehouseDTO warehouseDTO) {
+    public static Warehouse mapCreateWarehouseDTOToWarehouse(CreateWarehouseDTO warehouseDTO) {
         Warehouse warehouse = new Warehouse();
         warehouse.setName(warehouseDTO.getName());
         warehouse.setOrganizationId(warehouseDTO.getOrganizationId());
@@ -36,9 +33,10 @@ public class WarehouseDTOMapper {
         return warehouse;
     }
 
-    public static WarehouseInventoryItem convertCreateWarehouseItemDTOToWarehouseItem(CreateWarehouseInventoryItemDTO itemDTO) {
+    public static WarehouseInventoryItem mapCreateWarehouseItemDTOToWarehouseItem(CreateWarehouseInventoryItemDTO itemDTO) {
         WarehouseInventoryItem item = new WarehouseInventoryItem();
         item.setWarehouseId(itemDTO.getWarehouseId());
+        item.setOrganizationId(itemDTO.getOrganizationId());
         if (itemDTO.getComponentId() != null) {
             Component component = new Component();
             component.setId(itemDTO.getComponentId());

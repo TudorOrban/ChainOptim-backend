@@ -17,7 +17,7 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
 
     List<Factory> findByOrganizationId(Integer organizationId);
 
-    @Query("SELECT new org.chainoptim.features.factory.dto.FactoriesSearchDTO(f.id, f.name, f.createdAt, f.updatedAt, f.location) FROM Factory f WHERE f.organizationId = :organizationId")
+    @Query("SELECT new org.chainoptim.features.factory.dto.FactoriesSearchDTO(f.id, f.name, f.createdAt, f.updatedAt, f.location, f.overallScore, f.resourceDistributionScore, f.resourceReadinessScore, f.resourceUtilizationScore) FROM Factory f WHERE f.organizationId = :organizationId")
     List<FactoriesSearchDTO> findByOrganizationIdSmall(Integer organizationId);
 
     @Query("SELECT f.organizationId FROM Factory f WHERE f.id = :factoryId")
@@ -28,7 +28,10 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
 
     @Query("SELECT f FROM Factory f " +
             "LEFT JOIN FETCH f.factoryStages fs " +
-            "LEFT JOIN FETCH fs.stage WHERE f.id = :factoryId")
+            "LEFT JOIN FETCH fs.stage s " +
+            "LEFT JOIN FETCH s.stageInputs si " +
+            "LEFT JOIN FETCH s.stageOutputs so " +
+            "WHERE f.id = :factoryId")
     Optional<Factory> findFactoryWithStagesById(@Param("factoryId") Integer factoryId);
 
     @Query("SELECT c FROM FactoryStageConnection c " +

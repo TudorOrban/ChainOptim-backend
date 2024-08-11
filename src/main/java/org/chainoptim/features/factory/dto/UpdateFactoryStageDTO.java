@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateFactoryStageDTO {
     private Integer id;
+    private Integer factoryId;
     private Float capacity;
     private Float duration;
     private Integer priority;

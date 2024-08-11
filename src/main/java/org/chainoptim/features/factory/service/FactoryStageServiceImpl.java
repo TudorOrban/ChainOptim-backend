@@ -39,32 +39,40 @@ public class FactoryStageServiceImpl implements FactoryStageService {
     // Create
     public FactoryStage createFactoryStage(CreateFactoryStageDTO stageDTO, Boolean refreshGraph) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(stageDTO.getFactoryId(), Feature.FACTORY_STAGE, 1)) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed factory stages for the current Subscription Plan.");
-        }
+//        if (planLimiterService.isLimitReached(stageDTO.getFactoryId(), Feature.FACTORY_STAGE, 1)) {
+//            throw new PlanLimitReachedException("You have reached the limit of allowed factory stages for the current Subscription Plan.");
+//        }
 
         FactoryStage factoryStage = factoryStageRepository.save(FactoryDTOMapper.convertCreateFactoryStageDTOToFactoryStage(stageDTO));
 
         // TODO: Fix this (the stageInputs and stageOutputs are null for some reason)
-//        if (Boolean.TRUE.equals(refreshGraph)) {
-//            graphService.updateFactoryGraph(factoryStage.getFactory().getId());
-//        }
+        if (Boolean.TRUE.equals(refreshGraph)) {
+            graphService.updateFactoryGraph(factoryStage.getFactory().getId());
+        }
 
         return factoryStage;
     }
 
     // Update
-    public FactoryStage updateFactoryStage(UpdateFactoryStageDTO factoryDTO) {
+    public FactoryStage updateFactoryStage(UpdateFactoryStageDTO factoryDTO, Boolean refreshGraph) {
         FactoryStage factoryStage = factoryStageRepository.findById(factoryDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Factory Stage with ID: " + factoryDTO.getId() + " not found."));
 
         FactoryDTOMapper.updateFactoryStageWithUpdateFactoryStageDTO(factoryStage, factoryDTO);
 
+        if (Boolean.TRUE.equals(refreshGraph)) {
+            graphService.updateFactoryGraph(factoryStage.getFactory().getId());
+        }
+
         return factoryStageRepository.save(factoryStage);
     }
 
     // Delete
-    public void deleteFactoryStage(Integer factoryStageId) {
+    public void deleteFactoryStage(Integer factoryStageId, Boolean refreshGraph) {
         factoryStageRepository.deleteById(factoryStageId);
+
+        if (Boolean.TRUE.equals(refreshGraph)) {
+            graphService.updateFactoryGraph(factoryStageId);
+        }
     }
 }

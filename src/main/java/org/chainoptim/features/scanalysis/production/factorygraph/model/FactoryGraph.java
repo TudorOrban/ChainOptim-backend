@@ -53,14 +53,14 @@ public class FactoryGraph {
 
                 // Add outgoing neighbors to adjList
                 List<FactoryStageConnection> adjacentConnections = connections.stream()
-                        .filter(c -> Objects.equals(c.getIncomingStageOutputId(), stageOutput.getId())).toList();
+                        .filter(c -> Objects.equals(c.getSrcStageOutputId(), stageOutput.getId())).toList();
 
                 for (FactoryStageConnection factoryStageConnection : adjacentConnections) {
                     Edge newEdge = new Edge(
-                            factoryStageConnection.getIncomingFactoryStageId(),
-                            factoryStageConnection.getIncomingStageOutputId(),
-                            factoryStageConnection.getOutgoingFactoryStageId(),
-                            factoryStageConnection.getOutgoingStageInputId());
+                            factoryStageConnection.getSrcFactoryStageId(),
+                            factoryStageConnection.getSrcStageOutputId(),
+                            factoryStageConnection.getDestFactoryStageId(),
+                            factoryStageConnection.getDestStageInputId());
                     newEdges.add(newEdge);
                 }
             }

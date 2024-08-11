@@ -34,7 +34,8 @@ public class FactoryStageController {
     }
 
     // Create
-    @PreAuthorize("@securityService.canAccessEntity(#stageDTO.getFactoryId(), 'Factory')")
+    // TODO: Secure endpoint
+//    @PreAuthorize("@securityService.canAccessEntity(#stageDTO.getFactoryId(), 'Factory', 'Create')")
     @PostMapping("/create/{refreshGraph}")
     public ResponseEntity<FactoryStage> createFactoryStage(@RequestBody CreateFactoryStageDTO stageDTO, @PathVariable("refreshGraph") Boolean refreshGraph) {
         FactoryStage stage = factoryStageService.createFactoryStage(stageDTO, refreshGraph);
@@ -43,17 +44,18 @@ public class FactoryStageController {
 
     // Update
     // TODO: Secure endpoint
-    @PutMapping("/update")
-    public ResponseEntity<FactoryStage> updateFactoryStage(@RequestBody UpdateFactoryStageDTO factoryDTO) {
-        FactoryStage stage = factoryStageService.updateFactoryStage(factoryDTO);
+//    @PreAuthorize("@securityService.canAccessEntity(#stageDTO.getFactoryId(), 'Factory', 'Update')")
+    @PutMapping("/update/{refreshGraph}")
+    public ResponseEntity<FactoryStage> updateFactoryStage(@RequestBody UpdateFactoryStageDTO factoryDTO, @PathVariable("refreshGraph") Boolean refreshGraph) {
+        FactoryStage stage = factoryStageService.updateFactoryStage(factoryDTO, refreshGraph);
         return ResponseEntity.ok(stage);
     }
 
     // Delete
     // TODO: Secure endpoint
-    @DeleteMapping("/delete/{factoryStageId}")
-    public ResponseEntity<String> deleteFactoryStage(@PathVariable Integer factoryStageId) {
-        factoryStageService.deleteFactoryStage(factoryStageId);
+    @DeleteMapping("/delete/{factoryStageId}/{refreshGraph}")
+    public ResponseEntity<String> deleteFactoryStage(@PathVariable Integer factoryStageId, @PathVariable("refreshGraph") Boolean refreshGraph) {
+        factoryStageService.deleteFactoryStage(factoryStageId, refreshGraph);
         return ResponseEntity.ok("Factory Stage with ID: " + factoryStageId + " deleted successfully.");
     }
 }

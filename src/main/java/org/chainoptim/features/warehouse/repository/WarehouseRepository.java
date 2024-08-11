@@ -1,5 +1,6 @@
 package org.chainoptim.features.warehouse.repository;
 
+import org.chainoptim.features.warehouse.dto.WarehousesSearchDTO;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,9 @@ import java.util.Optional;
 public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>, WarehousesSearchRepository {
 
     List<Warehouse> findByOrganizationId(Integer organizationId);
+
+    @Query("SELECT new org.chainoptim.features.warehouse.dto.WarehousesSearchDTO(w.id, w.name, w.createdAt, w.updatedAt, w.location) FROM Warehouse w WHERE w.organizationId = :organizationId")
+    List<WarehousesSearchDTO> findByOrganizationIdSmall(Integer organizationId);
 
     @Query("SELECT w.organizationId FROM Warehouse w WHERE w.id = :warehouseId")
     Optional<Integer> findOrganizationIdById(@Param("warehouseId") Long warehouseId);

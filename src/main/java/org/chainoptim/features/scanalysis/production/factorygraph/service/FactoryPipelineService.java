@@ -56,7 +56,7 @@ public class FactoryPipelineService {
         // Find nodes that connect to this node (backwards traversal)
         factoryGraph.getAdjList().forEach((key, edges) ->
             edges.forEach(edge -> {
-                if (edge.getOutgoingFactoryStageId().equals(nodeId)) {
+                if (edge.getSrcFactoryStageId().equals(nodeId)) {
                     // Make sure to check and add the reverse connection if it isn't already present in the subGraph
                     if (!visited.contains(factoryGraph.getNodes().get(key))) {
                         exploreNode(factoryGraph, key, visited, subGraph);
