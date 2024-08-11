@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Edge {
-    Integer incomingFactoryStageId;
-    Integer incomingStageOutputId;
-    Integer outgoingFactoryStageId;
-    Integer outgoingStageInputId;
+    Integer srcFactoryStageId;
+    Integer srcStageOutputId;
+    Integer destFactoryStageId;
+    Integer destStageInputId;
 }

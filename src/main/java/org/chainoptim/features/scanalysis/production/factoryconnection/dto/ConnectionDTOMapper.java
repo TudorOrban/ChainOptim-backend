@@ -9,20 +9,20 @@ public class ConnectionDTOMapper {
     public static FactoryStageConnection mapCreateConnectionDTOToFactoryStageConnection(CreateConnectionDTO createConnectionDTO) {
         FactoryStageConnection factoryStageConnection = new FactoryStageConnection();
         factoryStageConnection.setFactoryId(createConnectionDTO.getFactoryId());
-        factoryStageConnection.setOutgoingFactoryStageId(createConnectionDTO.getOutgoingFactoryStageId());
-        factoryStageConnection.setIncomingFactoryStageId(createConnectionDTO.getIncomingFactoryStageId());
-        factoryStageConnection.setOutgoingStageInputId(createConnectionDTO.getOutgoingStageInputId());
-        factoryStageConnection.setIncomingStageOutputId(createConnectionDTO.getIncomingStageOutputId());
+        factoryStageConnection.setSrcFactoryStageId(createConnectionDTO.getSrcFactoryStageId());
+        factoryStageConnection.setSrcStageOutputId(createConnectionDTO.getSrcStageOutputId());
+        factoryStageConnection.setDestFactoryStageId(createConnectionDTO.getDestFactoryStageId());
+        factoryStageConnection.setDestStageInputId(createConnectionDTO.getDestStageInputId());
 
         return factoryStageConnection;
     }
 
     public static FactoryStageConnection setUpdateConnectionDTOTOFacotryStageConnection(UpdateConnectionDTO updateConnectionDTO, FactoryStageConnection factoryStageConnection) {
         factoryStageConnection.setFactoryId(updateConnectionDTO.getFactoryId());
-        factoryStageConnection.setOutgoingFactoryStageId(updateConnectionDTO.getOutgoingFactoryStageId());
-        factoryStageConnection.setIncomingFactoryStageId(updateConnectionDTO.getIncomingFactoryStageId());
-        factoryStageConnection.setOutgoingStageInputId(updateConnectionDTO.getOutgoingStageInputId());
-        factoryStageConnection.setIncomingStageOutputId(updateConnectionDTO.getIncomingStageOutputId());
+        factoryStageConnection.setSrcFactoryStageId(updateConnectionDTO.getSrcFactoryStageId());
+        factoryStageConnection.setSrcStageOutputId(updateConnectionDTO.getSrcStageOutputId());
+        factoryStageConnection.setDestFactoryStageId(updateConnectionDTO.getDestFactoryStageId());
+        factoryStageConnection.setDestStageInputId(updateConnectionDTO.getDestStageInputId());
 
         return factoryStageConnection;
     }

@@ -18,9 +18,9 @@ public interface FactoryStageConnectionRepository extends JpaRepository<FactoryS
 
     @Query("SELECT c FROM FactoryStageConnection c " +
             "WHERE c.factoryId = :factoryId " +
-            "AND c.outgoingStageInputId = :outgoingStageInputId " +
-            "AND c.incomingStageOutputId = :incomingStageOutputId")
+            "AND c.srcStageOutputId = :srcStageOutputId " +
+            "AND c.destStageInputId = :destStageInputId")
     Optional<FactoryStageConnection> findConnectionByStageInputAndOutputIds(@Param("factoryId") Integer factoryId,
-                                                                            @Param("outgoingStageInputId") Integer outgoingStageInputId,
-                                                                            @Param("incomingStageOutputId") Integer incomingStageOutputId);
+                                                                            @Param("srcStageOutputId") Integer srcStageOutputId,
+                                                                            @Param("destStageInputId") Integer destStageInputId);
 }
