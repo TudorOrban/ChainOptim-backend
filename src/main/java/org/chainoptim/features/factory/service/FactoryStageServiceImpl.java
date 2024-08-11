@@ -11,6 +11,7 @@ import org.chainoptim.features.factory.repository.FactoryStageRepository;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.shared.enums.Feature;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class FactoryStageServiceImpl implements FactoryStageService {
     }
 
     // Create
+    @Transactional
     public FactoryStage createFactoryStage(CreateFactoryStageDTO stageDTO, Boolean refreshGraph) {
         // Check if plan limit is reached
 //        if (planLimiterService.isLimitReached(stageDTO.getFactoryId(), Feature.FACTORY_STAGE, 1)) {

@@ -16,6 +16,7 @@ import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.dto.SmallEntityDTO;
 import org.chainoptim.shared.search.model.PaginatedResults;
 
+import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,7 @@ public class FactoryServiceImpl implements FactoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Factory not found with ID: " + factoryId));
     }
 
+    @Transactional
     public Factory getFactoryWithStagesById(Integer factoryId) {
         Factory factory = factoryRepository.findFactoryWithStagesById(factoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Factory not found with ID: " + factoryId));
