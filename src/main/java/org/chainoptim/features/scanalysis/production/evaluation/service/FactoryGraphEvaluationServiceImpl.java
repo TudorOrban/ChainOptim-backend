@@ -1,12 +1,12 @@
 package org.chainoptim.features.scanalysis.production.evaluation.service;
 
 import org.chainoptim.features.scanalysis.production.evaluation.model.TemporaryEvaluationType;
+import org.chainoptim.features.scanalysis.production.factoryconnection.service.FactoryStageConnectionService;
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.StageNode;
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryPipelineService;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
-import org.chainoptim.features.scanalysis.production.factoryconnection.service.FactoryStageConnectionService;
 import org.chainoptim.features.scanalysis.production.recommendation.service.FactoryResolutionRecommendationService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.DeficitResolverPlan;

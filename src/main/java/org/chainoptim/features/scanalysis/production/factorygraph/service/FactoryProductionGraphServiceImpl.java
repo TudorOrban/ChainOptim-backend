@@ -10,7 +10,6 @@ import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryP
 import org.chainoptim.features.scanalysis.production.factorygraph.repository.FactoryProductionGraphRepository;
 
 import jakarta.transaction.Transactional;
-import org.chainoptim.features.scanalysis.production.productgraph.model.ProductProductionGraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
