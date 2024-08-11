@@ -28,7 +28,10 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
 
     @Query("SELECT f FROM Factory f " +
             "LEFT JOIN FETCH f.factoryStages fs " +
-            "LEFT JOIN FETCH fs.stage WHERE f.id = :factoryId")
+            "LEFT JOIN FETCH fs.stage s " +
+            "LEFT JOIN FETCH s.stageInputs si " +
+            "LEFT JOIN FETCH s.stageOutputs so " +
+            "WHERE f.id = :factoryId")
     Optional<Factory> findFactoryWithStagesById(@Param("factoryId") Integer factoryId);
 
     @Query("SELECT c FROM FactoryStageConnection c " +

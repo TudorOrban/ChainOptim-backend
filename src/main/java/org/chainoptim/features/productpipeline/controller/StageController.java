@@ -46,7 +46,7 @@ public class StageController {
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
     @GetMapping("/organization/advanced/{organizationId}")
-    public ResponseEntity<PaginatedResults<StagesSearchDTO>> getProductsByOrganizationIdAdvanced(
+    public ResponseEntity<PaginatedResults<StagesSearchDTO>> getStagesByOrganizationIdAdvanced(
             @PathVariable Integer organizationId,
             @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
             @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,

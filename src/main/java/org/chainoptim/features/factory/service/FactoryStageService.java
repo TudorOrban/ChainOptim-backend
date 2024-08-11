@@ -13,8 +13,8 @@ public interface FactoryStageService {
     FactoryStage createFactoryStage(CreateFactoryStageDTO factoryDTO, Boolean refreshGraph);
 
     // Update
-    FactoryStage updateFactoryStage(UpdateFactoryStageDTO factoryDTO);
+    FactoryStage updateFactoryStage(UpdateFactoryStageDTO factoryDTO, Boolean refreshGraph);
 
     // Delete
-    void deleteFactoryStage(Integer factoryStageId);
+    void deleteFactoryStage(Integer factoryStageId, Boolean refreshGraph);
 }

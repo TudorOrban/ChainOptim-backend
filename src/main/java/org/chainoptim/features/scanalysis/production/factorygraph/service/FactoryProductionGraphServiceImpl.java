@@ -10,6 +10,7 @@ import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryP
 import org.chainoptim.features.scanalysis.production.factorygraph.repository.FactoryProductionGraphRepository;
 
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +76,14 @@ public class FactoryProductionGraphServiceImpl implements FactoryProductionGraph
 
         // Fetch factory with its stages, stage connections
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
+        if (factory.getFactoryStages() != null) {
+            factory.getFactoryStages().forEach(fs -> {
+                if (fs.getStage() != null) {
+                    Hibernate.initialize(fs.getStage().getStageInputs());
+                    Hibernate.initialize(fs.getStage().getStageOutputs());
+                }
+            });
+        }
         List<FactoryStageConnection> connections = factoryStageConnectionService.getConnectionsByFactoryId(factoryId);
 
         // Recompute graph with fresh factory and connections
