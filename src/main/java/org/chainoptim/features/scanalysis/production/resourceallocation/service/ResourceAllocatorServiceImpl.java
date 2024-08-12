@@ -53,9 +53,12 @@ public class ResourceAllocatorServiceImpl implements ResourceAllocatorService {
             // - Update inventoryBalance with expected outputs for connected stages
             for (SmallStageOutput stageOutput : node.getSmallStage().getStageOutputs()) {
                 FactoryInventoryItem inventoryItem = inventoryBalance.get(factoryStageId);
+                if (inventoryItem == null) {
+                    continue;
+                }
+
                 List<Edge> outputNeighbors = nodeNeighbors.stream()
                         .filter(nn -> Objects.equals(nn.getSrcStageOutputId(), stageOutput.getId())).toList();
-
                 if (outputNeighbors.size() == 1) { // Ignore > 1 for now
                     inventoryItem.setQuantity(inventoryItem.getQuantity() + stageOutput.getExpectedOutputPerAllocation());
                 }

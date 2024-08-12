@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/factory-stages")
 public class FactoryStageController {
@@ -27,6 +29,12 @@ public class FactoryStageController {
 
     // Fetch
     // TODO: Secure endpoint
+    @GetMapping("/factory/{factoryId}")
+    public ResponseEntity<List<FactoryStage>> getFactoryStageByFactoryId(@PathVariable Integer factoryId) {
+        List<FactoryStage> stages = factoryStageService.getFactoryStagesByFactoryId(factoryId);
+        return ResponseEntity.ok(stages);
+    }
+
     @GetMapping("/{factoryStageId}")
     public ResponseEntity<FactoryStage> getFactoryStageById(@PathVariable Integer factoryStageId) {
         FactoryStage stage = factoryStageService.getFactoryStageById(factoryStageId);
@@ -54,8 +62,8 @@ public class FactoryStageController {
     // Delete
     // TODO: Secure endpoint
     @DeleteMapping("/delete/{factoryStageId}/{refreshGraph}")
-    public ResponseEntity<String> deleteFactoryStage(@PathVariable Integer factoryStageId, @PathVariable("refreshGraph") Boolean refreshGraph) {
+    public ResponseEntity<Void> deleteFactoryStage(@PathVariable Integer factoryStageId, @PathVariable("refreshGraph") Boolean refreshGraph) {
         factoryStageService.deleteFactoryStage(factoryStageId, refreshGraph);
-        return ResponseEntity.ok("Factory Stage with ID: " + factoryStageId + " deleted successfully.");
+        return ResponseEntity.ok().build();
     }
 }

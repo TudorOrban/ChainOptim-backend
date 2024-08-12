@@ -3,7 +3,7 @@ package org.chainoptim.features.scanalysis.production.productgraph.service;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.service.ProductService;
 import org.chainoptim.features.scanalysis.production.productconnection.model.ProductStageConnection;
-import org.chainoptim.features.scanalysis.production.productconnection.service.ProductStageConnectionService;
+import org.chainoptim.features.scanalysis.production.productconnection.service.StageConnectionService;
 import org.chainoptim.features.scanalysis.production.productgraph.model.ProductGraph;
 import org.chainoptim.features.scanalysis.production.productgraph.model.ProductProductionGraph;
 import org.chainoptim.features.scanalysis.production.productgraph.repository.ProductProductionGraphRepository;
@@ -21,16 +21,16 @@ public class ProductProductionGraphServiceImpl implements ProductProductionGraph
 
     private final ProductProductionGraphRepository graphRepository;
     private final ProductService productService;
-    private final ProductStageConnectionService productStageConnectionService;
+    private final StageConnectionService stageConnectionService;
 
     @Autowired
     public ProductProductionGraphServiceImpl(ProductProductionGraphRepository graphRepository,
                                              ProductService productService,
-                                             ProductStageConnectionService productStageConnectionService
+                                             StageConnectionService stageConnectionService
     ) {
         this.graphRepository = graphRepository;
         this.productService = productService;
-        this.productStageConnectionService = productStageConnectionService;
+        this.stageConnectionService = stageConnectionService;
     }
 
 
@@ -53,7 +53,7 @@ public class ProductProductionGraphServiceImpl implements ProductProductionGraph
 
         // Fetch product with its stages, stage connections
         Product product = productService.getProductWithStages(productId);
-        List<ProductStageConnection> connections = productStageConnectionService.getConnectionsByProductId(productId);
+        List<ProductStageConnection> connections = stageConnectionService.getConnectionsByProductId(productId);
 
         // Compute graph with latest product and connections
         ProductGraph updatedGraph = new ProductGraph();
@@ -77,7 +77,7 @@ public class ProductProductionGraphServiceImpl implements ProductProductionGraph
 
         // Fetch product with its stages, stage connections
         Product product = productService.getProductWithStages(productId);
-        List<ProductStageConnection> connections = productStageConnectionService.getConnectionsByProductId(productId);
+        List<ProductStageConnection> connections = stageConnectionService.getConnectionsByProductId(productId);
 
         // Recompute graph with fresh product and connections
         ProductGraph updatedGraph = new ProductGraph();

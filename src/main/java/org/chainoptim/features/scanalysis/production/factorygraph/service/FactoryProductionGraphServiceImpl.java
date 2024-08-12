@@ -75,9 +75,12 @@ public class FactoryProductionGraphServiceImpl implements FactoryProductionGraph
         FactoryProductionGraph productionGraph = productionGraphs.getFirst();
 
         // Fetch factory with its stages, stage connections
+        // TODO: Fix this mess
         Factory factory = factoryService.getFactoryWithStagesById(factoryId);
+        Hibernate.initialize(factory.getFactoryStages());
         if (factory.getFactoryStages() != null) {
             factory.getFactoryStages().forEach(fs -> {
+                Hibernate.initialize(fs.getStage());
                 if (fs.getStage() != null) {
                     Hibernate.initialize(fs.getStage().getStageInputs());
                     Hibernate.initialize(fs.getStage().getStageOutputs());

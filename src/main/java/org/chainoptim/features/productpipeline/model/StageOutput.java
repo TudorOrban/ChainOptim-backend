@@ -18,6 +18,7 @@ import java.util.List;
 public class StageOutput {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Integer id;
 
@@ -27,12 +28,11 @@ public class StageOutput {
     private Stage stage;
 
     @ManyToOne
-    @JoinColumn(name = "component_id", nullable = false)
+    @JoinColumn(name = "component_id")
     private Component component;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @Column(name = "product_id")
+    private Integer productId;
 
     @Column(name = "quantity")
     private Float quantity;

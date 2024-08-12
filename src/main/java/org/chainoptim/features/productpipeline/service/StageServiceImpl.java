@@ -34,7 +34,6 @@ public class StageServiceImpl implements StageService {
         this.entitySanitizerService = entitySanitizerService;
     }
 
-    // Fetch
     public List<StagesSearchDTO> getStagesByOrganizationIdSmall(Integer organizationId) {
         return stageRepository.findByOrganizationIdSmall(organizationId);
     }
@@ -66,35 +65,5 @@ public class StageServiceImpl implements StageService {
             Hibernate.initialize(stage.getStageOutputs());
         });
         return productStages;
-    }
-
-    public Stage createStage(CreateStageDTO stageDTO) {
-        // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(stageDTO.getOrganizationId(), Feature.FACTORY_STAGE, 1)) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed Factory Stages for the current Subscription Plan.");
-        }
-
-        // Sanitize input
-        CreateStageDTO sanitizedStageDTO = entitySanitizerService.sanitizeCreateStageDTO(stageDTO);
-
-        return stageRepository.save(StageDTOMapper.convertCreateStageDTOToStage(sanitizedStageDTO));
-    }
-
-    public Stage updateStage(UpdateStageDTO stageDTO) {
-        UpdateStageDTO sanitizedStageDTO = entitySanitizerService.sanitizeUpdateStageDTO(stageDTO);
-        Stage stage = stageRepository.findById(sanitizedStageDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Stage with ID: " + sanitizedStageDTO.getId() + " not found."));
-
-        stage.setName(sanitizedStageDTO.getName());
-        stage.setDescription(sanitizedStageDTO.getDescription());
-
-        stageRepository.save(stage);
-        return stage;
-    }
-
-    public void deleteStage(Integer stageId) {
-        Stage stage = new Stage();
-        stage.setId(stageId);
-        stageRepository.delete(stage);
     }
 }

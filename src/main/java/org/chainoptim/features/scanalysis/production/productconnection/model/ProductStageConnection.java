@@ -21,16 +21,16 @@ public class ProductStageConnection {
     @Column(name = "product_id", nullable = false)
     private Integer productId;
 
-    @Column(name = "outgoing_stage_input_id", nullable = false)
-    private Integer outgoingStageInputId;
+    @Column(name = "outgoing_stage_id", nullable = false)
+    private Integer srcStageId;
 
     @Column(name = "incoming_stage_output_id", nullable = false)
-    private Integer incomingStageOutputId;
-
-    @Column(name = "outgoing_stage_id", nullable = false)
-    private Integer outgoingStageId;
+    private Integer srcStageOutputId;
 
     @Column(name = "incoming_stage_id", nullable = false)
-    private Integer incomingStageId;
+    private Integer destStageId;
+
+    @Column(name = "outgoing_stage_input_id", nullable = false)
+    private Integer destStageInputId;
 
 }

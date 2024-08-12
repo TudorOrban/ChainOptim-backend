@@ -11,8 +11,11 @@ import org.chainoptim.features.factory.repository.FactoryStageRepository;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.shared.enums.Feature;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FactoryStageServiceImpl implements FactoryStageService {
@@ -36,7 +39,12 @@ public class FactoryStageServiceImpl implements FactoryStageService {
                 .orElseThrow(() -> new ResourceNotFoundException("Factory Stage with ID: " + factoryStageId + " not found."));
     }
 
+    public List<FactoryStage> getFactoryStagesByFactoryId(Integer factoryId) {
+        return factoryStageRepository.findByFactoryId(factoryId);
+    }
+
     // Create
+    @Transactional
     public FactoryStage createFactoryStage(CreateFactoryStageDTO stageDTO, Boolean refreshGraph) {
         // Check if plan limit is reached
 //        if (planLimiterService.isLimitReached(stageDTO.getFactoryId(), Feature.FACTORY_STAGE, 1)) {
@@ -69,10 +77,12 @@ public class FactoryStageServiceImpl implements FactoryStageService {
 
     // Delete
     public void deleteFactoryStage(Integer factoryStageId, Boolean refreshGraph) {
+        FactoryStage factoryStage = factoryStageRepository.findById(factoryStageId)
+                .orElseThrow(() -> new ResourceNotFoundException("Factory Stage with ID: " + factoryStageId + " not found."));
         factoryStageRepository.deleteById(factoryStageId);
 
         if (Boolean.TRUE.equals(refreshGraph)) {
-            graphService.updateFactoryGraph(factoryStageId);
+            graphService.updateFactoryGraph(factoryStage.getFactory().getId());
         }
     }
 }
