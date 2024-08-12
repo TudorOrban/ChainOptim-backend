@@ -1,6 +1,8 @@
 package org.chainoptim.features.productpipeline.dto;
 
 import org.chainoptim.features.productpipeline.model.Stage;
+import org.chainoptim.features.productpipeline.model.StageInput;
+import org.chainoptim.features.productpipeline.model.StageOutput;
 
 public class StageDTOMapper {
 
@@ -15,7 +17,7 @@ public class StageDTOMapper {
         return stageDTO;
     }
 
-    public static Stage convertCreateStageDTOToStage(CreateStageDTO stageDTO) {
+    public static Stage mapCreateStageDTOToStage(CreateStageDTO stageDTO) {
         Stage stage = new Stage();
         stage.setOrganizationId(stageDTO.getOrganizationId());
         stage.setProductId(stageDTO.getProductId());
@@ -23,5 +25,33 @@ public class StageDTOMapper {
         stage.setDescription(stageDTO.getDescription());
 
         return stage;
+    }
+
+    public static StageInput mapCreateStageInputDTOToStageInput(CreateStageInputDTO createStageInputDTO) {
+        StageInput stageInput = new StageInput();
+
+        stageInput.setQuantity(createStageInputDTO.getQuantity());
+
+        return stageInput;
+    }
+
+    public static StageInput setUpdateStageInputDTOToStageInput(UpdateStageInputDTO updateStageInputDTO, StageInput stageInput) {
+        stageInput.setQuantity(updateStageInputDTO.getQuantity());
+
+        return stageInput;
+    }
+
+    public static StageOutput mapCreateStageOutputDTOToStageOutput(CreateStageOutputDTO createStageOutputDTO) {
+        StageOutput stageOutput = new StageOutput();
+
+        stageOutput.setQuantity(createStageOutputDTO.getQuantity());
+
+        return stageOutput;
+    }
+
+    public static StageOutput setUpdateStageOutputDTOToStageOutput(UpdateStageOutputDTO updateStageOutputDTO, StageOutput stageOutput) {
+        stageOutput.setQuantity(updateStageOutputDTO.getQuantity());
+
+        return stageOutput;
     }
 }

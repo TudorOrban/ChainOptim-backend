@@ -35,14 +35,14 @@ public class StageWriteServiceImpl implements StageWriteService {
 
     public Stage createStage(CreateStageDTO stageDTO) {
         // Check if plan limit is reached
-        if (planLimiterService.isLimitReached(stageDTO.getOrganizationId(), Feature.FACTORY_STAGE, 1)) {
-            throw new PlanLimitReachedException("You have reached the limit of allowed Factory Stages for the current Subscription Plan.");
+        if (planLimiterService.isLimitReached(stageDTO.getOrganizationId(), Feature.PRODUCT_STAGE, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed Product Stages for the current Subscription Plan.");
         }
 
         // Sanitize input
         CreateStageDTO sanitizedStageDTO = entitySanitizerService.sanitizeCreateStageDTO(stageDTO);
 
-        Stage savedStage = stageRepository.save(StageDTOMapper.convertCreateStageDTOToStage(sanitizedStageDTO));
+        Stage savedStage = stageRepository.save(StageDTOMapper.mapCreateStageDTOToStage(sanitizedStageDTO));
 
         productionGraphService.updateProductGraph(stageDTO.getProductId());
 
