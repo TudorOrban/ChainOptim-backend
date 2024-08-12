@@ -15,13 +15,4 @@ public interface StageService {
     PaginatedResults<StagesSearchDTO> getStagesByOrganizationIdAdvanced(Integer organizationId, String searchQuery, String sortBy, boolean ascending, int page, int itemsPerPage);
     Stage getStageById(Integer stageId);
     List<Stage> getStagesByProductId(Integer productId);
-
-    // Create
-    Stage createStage(CreateStageDTO stageDTO);
-
-    // Update
-    Stage updateStage(UpdateStageDTO stageDTO);
-
-    // Delete
-    void deleteStage(Integer stageId);
 }

@@ -6,6 +6,7 @@ import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;
 import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.service.StageService;
+import org.chainoptim.features.productpipeline.service.StageWriteService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,15 @@ import java.util.List;
 public class StageController {
 
     private final StageService stageService;
+    private final StageWriteService stageWriteService;
     private final SecurityService securityService;
 
     @Autowired
-    public StageController(StageService stageService, SecurityService securityService) {
+    public StageController(StageService stageService,
+                           StageWriteService stageWriteService,
+                           SecurityService securityService) {
         this.stageService = stageService;
+        this.stageWriteService = stageWriteService;
         this.securityService = securityService;
     }
 
@@ -69,7 +74,7 @@ public class StageController {
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#stageDTO.getOrganizationId(), \"Stage\", \"Create\")")
     @PostMapping("/create")
     public ResponseEntity<Stage> createStage(@RequestBody CreateStageDTO stageDTO) {
-        Stage stage = stageService.createStage(stageDTO);
+        Stage stage = stageWriteService.createStage(stageDTO);
         return ResponseEntity.ok(stage);
     }
 
@@ -77,7 +82,7 @@ public class StageController {
     @PreAuthorize("@securityService.canAccessEntity(#updateStageDTO.getId(), \"Stage\", \"Update\")")
     @PutMapping("/update")
     public ResponseEntity<Stage> updateStage(@RequestBody UpdateStageDTO updateStageDTO) {
-        Stage stage = stageService.updateStage(updateStageDTO);
+        Stage stage = stageWriteService.updateStage(updateStageDTO);
         return ResponseEntity.ok(stage);
     }
 
@@ -85,7 +90,7 @@ public class StageController {
     @PreAuthorize("@securityService.canAccessEntity(#stageId, \"Stage\", \"Delete\")")
     @DeleteMapping("/delete/{stageId}")
     public ResponseEntity<Void> deleteStage(@PathVariable Integer stageId) {
-        stageService.deleteStage(stageId);
+        stageWriteService.deleteStage(stageId);
         return ResponseEntity.ok().build();
     }
 }
