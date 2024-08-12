@@ -51,14 +51,14 @@ public class ProductGraph {
 
                 // Add outgoing neighbors to adjList
                 List<ProductStageConnection> adjacentConnections = connections.stream()
-                        .filter(c -> Objects.equals(c.getIncomingStageOutputId(), stageOutput.getId())).toList();
+                        .filter(c -> Objects.equals(c.getSrcStageOutputId(), stageOutput.getId())).toList();
 
                 for (ProductStageConnection productStageConnection : adjacentConnections) {
                     ProductEdge newEdge = new ProductEdge(
-                            productStageConnection.getIncomingStageId(),
-                            productStageConnection.getIncomingStageOutputId(),
-                            productStageConnection.getOutgoingStageId(),
-                            productStageConnection.getOutgoingStageInputId());
+                            productStageConnection.getSrcStageId(),
+                            productStageConnection.getSrcStageOutputId(),
+                            productStageConnection.getDestStageId(),
+                            productStageConnection.getDestStageInputId());
                     newEdges.add(newEdge);
                 }
             }
