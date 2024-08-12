@@ -1,5 +1,6 @@
 package org.chainoptim.features.productpipeline.service;
 
+import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.dto.CreateStageOutputDTO;
@@ -8,6 +9,7 @@ import org.chainoptim.features.productpipeline.dto.StageDTOMapper;
 import org.chainoptim.features.productpipeline.dto.UpdateStageOutputDTO;
 import org.chainoptim.features.productpipeline.model.Component;
 import org.chainoptim.features.productpipeline.model.Stage;
+import org.chainoptim.features.productpipeline.model.StageInput;
 import org.chainoptim.features.productpipeline.model.StageOutput;
 import org.chainoptim.features.productpipeline.repository.ComponentRepository;
 import org.chainoptim.features.productpipeline.repository.StageOutputRepository;
@@ -44,6 +46,11 @@ public class StageOutputServiceImpl implements StageOutputService {
 
     public List<StageOutput> getStageOutputsByStageId(Integer stageId) {
         return stageOutputRepository.findByStageId(stageId);
+    }
+
+    public StageOutput getStageOutputById(Integer id) {
+        return stageOutputRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Stage output with ID: " + id + " not found"));
     }
 
     public StageOutput createStageOutput(CreateStageOutputDTO outputDTO) {

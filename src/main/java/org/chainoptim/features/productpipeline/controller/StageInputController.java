@@ -26,6 +26,11 @@ public class StageInputController {
         return stageInputService.getStageInputsByStageId(stageId);
     }
 
+    @GetMapping("/{id}")
+    public StageInput getStageInputById(@PathVariable Integer id) {
+        return stageInputService.getStageInputById(id);
+    }
+
     @PostMapping("/create")
     public StageInput createStageInput(@RequestBody CreateStageInputDTO inputDTO) {
         return stageInputService.createStageInput(inputDTO);

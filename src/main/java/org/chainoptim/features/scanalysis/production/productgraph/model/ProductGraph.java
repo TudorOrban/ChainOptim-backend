@@ -27,47 +27,8 @@ public class ProductGraph {
             List<ProductEdge> newEdges = new ArrayList<>();
 
             SmallStage stage = new SmallStage();
-            List<SmallStageInput> stageInputs = new ArrayList<>();
-            List<SmallStageOutput> stageOutputs = new ArrayList<>();
-
-            for (StageInput stageInput : productStage.getStageInputs()) {
-                // Transform to small stage input and add
-                SmallStageInput smallStageInput = new SmallStageInput();
-                smallStageInput.setId(stageInput.getId());
-                smallStageInput.setQuantityPerStage(stageInput.getQuantity());
-                smallStageInput.setComponentId(stageInput.getComponent().getId());
-                smallStageInput.setComponentName(stageInput.getComponent().getName());
-
-                stageInputs.add(smallStageInput);
-            }
-
-            for (StageOutput stageOutput : productStage.getStageOutputs()) {
-                // Transform to small stage output and add
-                SmallStageOutput smallStageOutput = new SmallStageOutput();
-                smallStageOutput.setId(stageOutput.getId());
-                smallStageOutput.setQuantityPerStage(stageOutput.getQuantity());
-                if (stageOutput.getProductId() != null) {
-                    smallStageOutput.setProductId(stageOutput.getProductId());
-                } else if (stageOutput.getComponent() != null) {
-                    smallStageOutput.setComponentId(stageOutput.getComponent().getId());
-                    smallStageOutput.setComponentName(stageOutput.getComponent().getName());
-                }
-
-                stageOutputs.add(smallStageOutput);
-
-                // Add outgoing neighbors to adjList
-                List<ProductStageConnection> adjacentConnections = connections.stream()
-                        .filter(c -> Objects.equals(c.getSrcStageOutputId(), stageOutput.getId())).toList();
-
-                for (ProductStageConnection productStageConnection : adjacentConnections) {
-                    ProductEdge newEdge = new ProductEdge(
-                            productStageConnection.getSrcStageId(),
-                            productStageConnection.getSrcStageOutputId(),
-                            productStageConnection.getDestStageId(),
-                            productStageConnection.getDestStageInputId());
-                    newEdges.add(newEdge);
-                }
-            }
+            List<SmallStageInput> stageInputs = getSmallStageInputs(productStage);
+            List<SmallStageOutput> stageOutputs = getSmallStageOutputs(productStage, connections, newEdges);
 
             // Set stage
             stage.setId(productStage.getId());
@@ -78,7 +39,65 @@ public class ProductGraph {
             nodes.put(stage.getId(), stage);
             adjList.put(stage.getId(), newEdges);
         }
+    }
 
+    private List<SmallStageInput> getSmallStageInputs(Stage stage) {
+        if (stage.getStageInputs() == null) {
+            return new ArrayList<>();
+        }
+        List<SmallStageInput> stageInputs = new ArrayList<>();
 
+        for (StageInput stageInput : stage.getStageInputs()) {
+            System.out.println("Stage Input: " + stageInput);
+            // Transform to small stage input and add
+            SmallStageInput smallStageInput = new SmallStageInput();
+            smallStageInput.setId(stageInput.getId());
+            smallStageInput.setQuantityPerStage(stageInput.getQuantity());
+            if (stageInput.getComponent() != null) {
+                smallStageInput.setComponentId(stageInput.getComponent().getId());
+                smallStageInput.setComponentName(stageInput.getComponent().getName());
+            }
+
+            stageInputs.add(smallStageInput);
+        }
+
+        return stageInputs;
+    }
+
+    private List<SmallStageOutput> getSmallStageOutputs(Stage stage, List<ProductStageConnection> connections, List<ProductEdge> newEdges) {
+        if (stage.getStageOutputs() == null) {
+            return new ArrayList<>();
+        }
+        List<SmallStageOutput> stageOutputs = new ArrayList<>();
+
+        for (StageOutput stageOutput : stage.getStageOutputs()) {
+            // Transform to small stage output and add
+            SmallStageOutput smallStageOutput = new SmallStageOutput();
+            smallStageOutput.setId(stageOutput.getId());
+            smallStageOutput.setQuantityPerStage(stageOutput.getQuantity());
+            if (stageOutput.getComponent() != null) {
+                smallStageOutput.setComponentId(stageOutput.getComponent().getId());
+                smallStageOutput.setComponentName(stageOutput.getComponent().getName());
+            } else if (stageOutput.getProductId() != null) {
+                smallStageOutput.setProductId(stageOutput.getProductId());
+            }
+
+            stageOutputs.add(smallStageOutput);
+
+            // Add outgoing neighbors to adjList
+            List<ProductStageConnection> adjacentConnections = connections.stream()
+                    .filter(c -> Objects.equals(c.getSrcStageOutputId(), stageOutput.getId())).toList();
+
+            for (ProductStageConnection productStageConnection : adjacentConnections) {
+                ProductEdge newEdge = new ProductEdge(
+                        productStageConnection.getSrcStageId(),
+                        productStageConnection.getSrcStageOutputId(),
+                        productStageConnection.getDestStageId(),
+                        productStageConnection.getDestStageInputId());
+                newEdges.add(newEdge);
+            }
+        }
+
+        return stageOutputs;
     }
 }

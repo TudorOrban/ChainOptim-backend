@@ -1,5 +1,6 @@
 package org.chainoptim.features.productpipeline.service;
 
+import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.productpipeline.dto.CreateStageInputDTO;
 import org.chainoptim.features.productpipeline.dto.DeleteStageInputDTO;
 import org.chainoptim.features.productpipeline.dto.StageDTOMapper;
@@ -40,6 +41,11 @@ public class StageInputServiceImpl implements StageInputService {
 
     public List<StageInput> getStageInputsByStageId(Integer stageId) {
         return stageInputRepository.findByStageId(stageId);
+    }
+
+    public StageInput getStageInputById(Integer id) {
+        return stageInputRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Stage input with ID: " + id + " not found"));
     }
 
     public StageInput createStageInput(CreateStageInputDTO inputDTO) {

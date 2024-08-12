@@ -10,6 +10,7 @@ import java.util.List;
 public interface StageOutputService {
 
     List<StageOutput> getStageOutputsByStageId(Integer stageId);
+    StageOutput getStageOutputById(Integer id);
     StageOutput createStageOutput(CreateStageOutputDTO outputDTO);
     StageOutput updateStageOutput(UpdateStageOutputDTO outputDTO);
     void deleteStageOutput(DeleteStageOutputDTO outputDTO);

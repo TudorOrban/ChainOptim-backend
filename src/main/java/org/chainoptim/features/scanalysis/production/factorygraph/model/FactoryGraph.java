@@ -66,8 +66,10 @@ public class FactoryGraph {
             SmallStageInput smallStageInput = new SmallStageInput();
             smallStageInput.setId(stageInput.getId());
             smallStageInput.setQuantityPerStage(stageInput.getQuantity());
-            smallStageInput.setComponentId(stageInput.getComponent().getId());
-            smallStageInput.setComponentName(stageInput.getComponent().getName());
+            if (stageInput.getComponent() != null) {
+                smallStageInput.setComponentId(stageInput.getComponent().getId());
+                smallStageInput.setComponentName(stageInput.getComponent().getName());
+            }
 
             stageInputs.add(smallStageInput);
         }
@@ -86,8 +88,12 @@ public class FactoryGraph {
             SmallStageOutput smallStageOutput = new SmallStageOutput();
             smallStageOutput.setId(stageOutput.getId());
             smallStageOutput.setQuantityPerStage(stageOutput.getQuantity());
-            smallStageOutput.setComponentId(stageOutput.getComponent().getId());
-            smallStageOutput.setComponentName(stageOutput.getComponent().getName());
+            if (stageOutput.getComponent() != null) {
+                smallStageOutput.setComponentId(stageOutput.getComponent().getId());
+                smallStageOutput.setComponentName(stageOutput.getComponent().getName());
+            } else if (stageOutput.getProductId() != null) {
+                smallStageOutput.setProductId(stageOutput.getProductId());
+            }
 
             stageOutputs.add(smallStageOutput);
 

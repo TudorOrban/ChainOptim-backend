@@ -25,6 +25,11 @@ public class StageOutputController {
         return stageOutputService.getStageOutputsByStageId(stageId);
     }
 
+    @GetMapping("/{id}")
+    public StageOutput getStageOutputById(@PathVariable Integer id) {
+        return stageOutputService.getStageOutputById(id);
+    }
+
     @PostMapping("/create")
     public StageOutput createStageOutput(@RequestBody CreateStageOutputDTO outputDTO) {
         return stageOutputService.createStageOutput(outputDTO);
