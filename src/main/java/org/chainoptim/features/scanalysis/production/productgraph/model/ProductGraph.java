@@ -36,6 +36,7 @@ public class ProductGraph {
                 smallStageInput.setId(stageInput.getId());
                 smallStageInput.setQuantityPerStage(stageInput.getQuantity());
                 smallStageInput.setComponentId(stageInput.getComponent().getId());
+                smallStageInput.setComponentName(stageInput.getComponent().getName());
 
                 stageInputs.add(smallStageInput);
             }
@@ -45,7 +46,12 @@ public class ProductGraph {
                 SmallStageOutput smallStageOutput = new SmallStageOutput();
                 smallStageOutput.setId(stageOutput.getId());
                 smallStageOutput.setQuantityPerStage(stageOutput.getQuantity());
-                smallStageOutput.setComponentId(stageOutput.getComponent().getId());
+                if (stageOutput.getProductId() != null) {
+                    smallStageOutput.setProductId(stageOutput.getProductId());
+                } else if (stageOutput.getComponent() != null) {
+                    smallStageOutput.setComponentId(stageOutput.getComponent().getId());
+                    smallStageOutput.setComponentName(stageOutput.getComponent().getName());
+                }
 
                 stageOutputs.add(smallStageOutput);
 

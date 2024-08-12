@@ -49,7 +49,7 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
     List<SmallEntityDTO> findManufacturedComponentsByFactoryId(@Param("factoryId") Integer factoryId);
 
     @Query("SELECT new org.chainoptim.shared.search.dto.SmallEntityDTO(p.id, p.name) FROM Product p WHERE " +
-            "p.id IN (SELECT so.product.id FROM StageOutput so WHERE " +
+            "p.id IN (SELECT so.productId FROM StageOutput so WHERE " +
             "so.stage.id IN (SELECT s.id FROM Stage s WHERE " +
             "s.id IN (SELECT fs.stage.id FROM FactoryStage fs WHERE fs.factory.id = :factoryId)))")
     List<SmallEntityDTO> findManufacturedProductsByFactoryId(@Param("factoryId") Integer factoryId);

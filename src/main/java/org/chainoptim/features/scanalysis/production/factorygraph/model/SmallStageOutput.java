@@ -11,6 +11,8 @@ public class SmallStageOutput {
     private Integer id;
     private Integer componentId;
     private String componentName;
+    private Integer productId;
+    private String productName;
     private Float quantityPerStage;
     private Float expectedOutputPerAllocation;
     private Float outputPerRequest;

@@ -71,9 +71,9 @@ public class StageInputServiceImpl implements StageInputService {
         }
 
         StageInput stageInput = stageInputOptional.get();
-        StageDTOMapper.setUpdateStageInputDTOToStageInput(inputDTO, stageInput);
+        StageInput updatedInput = StageDTOMapper.setUpdateStageInputDTOToStageInput(inputDTO, stageInput);
 
-        StageInput savedInput = stageInputRepository.save(stageInput);
+        StageInput savedInput = stageInputRepository.save(updatedInput);
 
         graphService.updateProductGraph(inputDTO.getProductId());
 

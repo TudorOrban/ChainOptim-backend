@@ -1,5 +1,7 @@
 package org.chainoptim.features.productpipeline.service;
 
+import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.dto.CreateStageOutputDTO;
 import org.chainoptim.features.productpipeline.dto.DeleteStageOutputDTO;
 import org.chainoptim.features.productpipeline.dto.StageDTOMapper;
@@ -23,6 +25,7 @@ public class StageOutputServiceImpl implements StageOutputService {
     private final StageOutputRepository stageOutputRepository;
     private final StageRepository stageRepository;
     private final ComponentRepository componentRepository;
+    private final ProductRepository productRepository;
     private final ProductProductionGraphService graphService;
 
     @Autowired
@@ -30,10 +33,12 @@ public class StageOutputServiceImpl implements StageOutputService {
             StageOutputRepository stageOutputRepository,
             StageRepository stageRepository,
             ComponentRepository componentRepository,
+            ProductRepository productRepository,
             ProductProductionGraphService graphService) {
         this.stageOutputRepository = stageOutputRepository;
         this.stageRepository = stageRepository;
         this.componentRepository = componentRepository;
+        this.productRepository = productRepository;
         this.graphService = graphService;
     }
 
@@ -44,17 +49,29 @@ public class StageOutputServiceImpl implements StageOutputService {
     public StageOutput createStageOutput(CreateStageOutputDTO outputDTO) {
         StageOutput stageOutput = StageDTOMapper.mapCreateStageOutputDTOToStageOutput(outputDTO);
 
-        Optional<Stage> stage = stageRepository.findById(outputDTO.getStageId());
-        if (stage.isEmpty()) {
-            throw new IllegalArgumentException("Stage not found");
+        if (outputDTO.getStageId() != null) {
+            Optional<Stage> stage = stageRepository.findById(outputDTO.getStageId());
+            if (stage.isEmpty()) {
+                throw new IllegalArgumentException("Stage not found");
+            }
+            stageOutput.setStage(stage.get());
         }
-        stageOutput.setStage(stage.get());
 
-        Optional<Component> component = componentRepository.findById(outputDTO.getComponentId());
-        if (component.isEmpty()) {
-            throw new IllegalArgumentException("Component not found");
+        if (outputDTO.getProductId() == null) {
+            throw new IllegalArgumentException("Product must be provided");
         }
-        stageOutput.setComponent(component.get());
+        if (outputDTO.getOutputProductId() == null && outputDTO.getComponentId() == null) {
+            throw new IllegalArgumentException("Output Product or component must be provided");
+        }
+        if (outputDTO.getComponentId() != null) {
+            Optional<Component> component = componentRepository.findById(outputDTO.getComponentId());
+            component.ifPresent(stageOutput::setComponent);
+        }
+
+        if (outputDTO.getOutputProductId() != null) {
+            Optional<Product> product = productRepository.findById(outputDTO.getOutputProductId());
+            product.ifPresent(value -> stageOutput.setProductId(value.getId()));
+        }
 
         StageOutput savedOutput = stageOutputRepository.save(stageOutput);
 
@@ -70,9 +87,33 @@ public class StageOutputServiceImpl implements StageOutputService {
         }
 
         StageOutput stageOutput = stageOutputOptional.get();
-        StageDTOMapper.setUpdateStageOutputDTOToStageOutput(outputDTO, stageOutput);
+        StageOutput updatedOutput = StageDTOMapper.setUpdateStageOutputDTOToStageOutput(outputDTO, stageOutput);
 
-        StageOutput savedOutput = stageOutputRepository.save(stageOutput);
+        if (outputDTO.getStageId() != null) {
+            Optional<Stage> stage = stageRepository.findById(outputDTO.getStageId());
+            if (stage.isEmpty()) {
+                throw new IllegalArgumentException("Stage not found");
+            }
+            updatedOutput.setStage(stage.get());
+        }
+
+        if (outputDTO.getProductId() == null) {
+            throw new IllegalArgumentException("Product must be provided");
+        }
+        if (outputDTO.getOutputProductId() == null && outputDTO.getComponentId() == null) {
+            throw new IllegalArgumentException("Output Product or component must be provided");
+        }
+        if (outputDTO.getComponentId() != null) {
+            Optional<Component> component = componentRepository.findById(outputDTO.getComponentId());
+            component.ifPresent(updatedOutput::setComponent);
+        }
+
+        if (outputDTO.getOutputProductId() != null) {
+            Optional<Product> product = productRepository.findById(outputDTO.getOutputProductId());
+            product.ifPresent(value -> updatedOutput.setProductId(value.getId()));
+        }
+
+        StageOutput savedOutput = stageOutputRepository.save(updatedOutput);
 
         graphService.updateProductGraph(outputDTO.getProductId());
 
