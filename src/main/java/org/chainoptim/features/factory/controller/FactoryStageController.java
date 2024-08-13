@@ -2,6 +2,7 @@ package org.chainoptim.features.factory.controller;
 
 import org.chainoptim.config.security.SecurityService;
 import org.chainoptim.features.factory.dto.CreateFactoryStageDTO;
+import org.chainoptim.features.factory.dto.FactoryStageSearchDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryStageDTO;
 import org.chainoptim.features.factory.model.FactoryStage;
 import org.chainoptim.features.factory.service.FactoryStageService;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/factory-stages")
-public class FactoryStageController {
+public class FactoryStageController { // TODO: Secure endpoints
 
     private final FactoryStageService factoryStageService;
     private final SecurityService securityService;
@@ -28,10 +29,15 @@ public class FactoryStageController {
     }
 
     // Fetch
-    // TODO: Secure endpoint
+    @GetMapping("/organization/{organizationId}")
+    public ResponseEntity<List<FactoryStageSearchDTO>> getFactoryStagesByOrganizationId(@PathVariable Integer organizationId) {
+        List<FactoryStageSearchDTO> stages = factoryStageService.getFactoryStagesByOrganizationId(organizationId);
+        return ResponseEntity.ok(stages);
+    }
+
     @GetMapping("/factory/{factoryId}")
-    public ResponseEntity<List<FactoryStage>> getFactoryStageByFactoryId(@PathVariable Integer factoryId) {
-        List<FactoryStage> stages = factoryStageService.getFactoryStagesByFactoryId(factoryId);
+    public ResponseEntity<List<FactoryStageSearchDTO>> getFactoryStageByFactoryId(@PathVariable Integer factoryId) {
+        List<FactoryStageSearchDTO> stages = factoryStageService.getFactoryStagesByFactoryId(factoryId);
         return ResponseEntity.ok(stages);
     }
 

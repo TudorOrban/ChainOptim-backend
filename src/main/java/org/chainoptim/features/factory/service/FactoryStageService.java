@@ -1,6 +1,7 @@
 package org.chainoptim.features.factory.service;
 
 import org.chainoptim.features.factory.dto.CreateFactoryStageDTO;
+import org.chainoptim.features.factory.dto.FactoryStageSearchDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryStageDTO;
 import org.chainoptim.features.factory.model.FactoryStage;
 
@@ -10,7 +11,8 @@ public interface FactoryStageService {
 
     // Fetch
     FactoryStage getFactoryStageById(Integer factoryStageId);
-    List<FactoryStage> getFactoryStagesByFactoryId(Integer factoryId);
+    List<FactoryStageSearchDTO> getFactoryStagesByFactoryId(Integer factoryId);
+    List<FactoryStageSearchDTO> getFactoryStagesByOrganizationId(Integer organizationId);
 
     // Create
     FactoryStage createFactoryStage(CreateFactoryStageDTO factoryDTO, Boolean refreshGraph);

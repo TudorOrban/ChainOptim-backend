@@ -1,12 +1,12 @@
-package org.chainoptim.core.map.model;
+package org.chainoptim.features.product.model;
 
-import org.chainoptim.shared.enums.Feature;
+import org.chainoptim.core.map.model.CustomPair;
+import org.chainoptim.core.map.model.FacilityType;
 import org.chainoptim.shared.enums.ShipmentStatus;
 import org.chainoptim.shared.enums.TransportType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.util.Pair;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,9 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransportRoute {
-
-    private Integer entityId;
-    private Feature entityType;
 
     private CustomPair<Double, Double> srcLocation;
     private Integer srcFacilityId;
@@ -36,4 +33,6 @@ public class TransportRoute {
     private LocalDateTime departureDateTime;
     private LocalDateTime estimatedArrivalDateTime;
     private LocalDateTime arrivalDateTime;
+
+    private List<TransportedEntity> transportedEntities;
 }

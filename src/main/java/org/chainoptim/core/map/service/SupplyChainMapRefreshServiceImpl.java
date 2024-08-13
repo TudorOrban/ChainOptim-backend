@@ -14,10 +14,8 @@ import org.chainoptim.features.supplier.repository.SupplierShipmentRepository;
 import org.chainoptim.features.warehouse.model.Warehouse;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
-import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,7 +51,7 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
 
     public MapData refreshSupplyChainMap(Integer organizationId) {
         List<Facility> facilities = new ArrayList<>();
-        List<TransportRoute> transportRoutes = new ArrayList<>();
+        List<MapTransportRoute> transportRoutes = new ArrayList<>();
 
         // Facilities
         facilities.addAll(processEntities(factoryRepository.findByOrganizationId(organizationId),
@@ -72,7 +70,7 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         List<SupplierShipment> supplierShipments = supplierShipmentRepository.findByOrganizationId(organizationId);
 
         for (SupplierShipment supplierShipment : supplierShipments) {
-            TransportRoute transportRoute = transformToRoute(supplierShipment);
+            MapTransportRoute transportRoute = transformToRoute(supplierShipment);
 
             if (transportRoute != null) {
                 transportRoutes.add(transportRoute);
@@ -82,7 +80,7 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         List<ClientShipment> clientShipments = clientShipmentRepository.findByOrganizationId(organizationId);
 
         for (ClientShipment clientShipment : clientShipments) {
-            TransportRoute transportRoute = transformToRoute(clientShipment);
+            MapTransportRoute transportRoute = transformToRoute(clientShipment);
 
             if (transportRoute != null) {
                 transportRoutes.add(transportRoute);
@@ -107,13 +105,13 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
                 .toList();
     }
 
-    private TransportRoute transformToRoute(SupplierShipment supplierShipment) {
+    private MapTransportRoute transformToRoute(SupplierShipment supplierShipment) {
         if (supplierShipment.getSourceLocation() == null || supplierShipment.getSourceLocation().getLatitude() == null || supplierShipment.getSourceLocation().getLongitude() == null
                 || supplierShipment.getDestinationLocation() == null || supplierShipment.getDestinationLocation().getLatitude() == null || supplierShipment.getDestinationLocation().getLongitude() == null) {
             return null;
         }
 
-        TransportRoute transportRoute = new TransportRoute();
+        MapTransportRoute transportRoute = new MapTransportRoute();
         transportRoute.setEntityId(supplierShipment.getId());
         transportRoute.setEntityType(Feature.SUPPLIER_SHIPMENT);
         Location srcLocation = supplierShipment.getSourceLocation();
@@ -147,12 +145,12 @@ public class SupplyChainMapRefreshServiceImpl implements SupplyChainMapRefreshSe
         return transportRoute;
     }
 
-    private TransportRoute transformToRoute(ClientShipment clientShipment) {
+    private MapTransportRoute transformToRoute(ClientShipment clientShipment) {
         if (clientShipment.getSourceLocation() == null || clientShipment.getSourceLocation().getLatitude() == null || clientShipment.getSourceLocation().getLongitude() == null
             || clientShipment.getDestinationLocation() == null || clientShipment.getDestinationLocation().getLatitude() == null || clientShipment.getDestinationLocation().getLongitude() == null) {
             return null;
         }
-        TransportRoute transportRoute = new TransportRoute();
+        MapTransportRoute transportRoute = new MapTransportRoute();
         transportRoute.setEntityId(clientShipment.getId());
         transportRoute.setEntityType(Feature.CLIENT_SHIPMENT);
         Location srcLocation = clientShipment.getSourceLocation();

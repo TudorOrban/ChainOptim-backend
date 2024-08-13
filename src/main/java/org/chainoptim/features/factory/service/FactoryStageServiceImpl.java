@@ -5,6 +5,7 @@ import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.factory.dto.CreateFactoryStageDTO;
 import org.chainoptim.features.factory.dto.FactoryDTOMapper;
+import org.chainoptim.features.factory.dto.FactoryStageSearchDTO;
 import org.chainoptim.features.factory.dto.UpdateFactoryStageDTO;
 import org.chainoptim.features.factory.model.FactoryStage;
 import org.chainoptim.features.factory.repository.FactoryStageRepository;
@@ -39,8 +40,12 @@ public class FactoryStageServiceImpl implements FactoryStageService {
                 .orElseThrow(() -> new ResourceNotFoundException("Factory Stage with ID: " + factoryStageId + " not found."));
     }
 
-    public List<FactoryStage> getFactoryStagesByFactoryId(Integer factoryId) {
+    public List<FactoryStageSearchDTO> getFactoryStagesByFactoryId(Integer factoryId) {
         return factoryStageRepository.findByFactoryId(factoryId);
+    }
+
+    public List<FactoryStageSearchDTO> getFactoryStagesByOrganizationId(Integer organizationId) {
+        return factoryStageRepository.findByOrganizationId(organizationId);
     }
 
     // Create
