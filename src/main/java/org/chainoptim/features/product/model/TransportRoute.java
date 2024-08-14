@@ -17,12 +17,16 @@ import java.util.List;
 public class TransportRoute {
 
     private CustomPair<Double, Double> srcLocation;
+    private Integer srcLocationId;
     private Integer srcFacilityId;
     private FacilityType srcFacilityType;
+    private String srcFacilityName;
 
     private CustomPair<Double, Double> destLocation;
+    private Integer destLocationId;
     private Integer destFacilityId;
     private FacilityType destFacilityType;
+    private String destFacilityName;
 
     private List<CustomPair<Double, Double>> waypoints;
     private CustomPair<Double, Double> liveLocation;

@@ -5,6 +5,8 @@ import org.chainoptim.features.product.dto.CreateRouteDTO;
 import org.chainoptim.features.product.dto.UpdateRouteDTO;
 import org.chainoptim.features.product.model.ResourceTransportRoute;
 import org.chainoptim.features.product.repository.ResourceTransportRouteRepository;
+import org.chainoptim.shared.search.model.PaginatedResults;
+import org.chainoptim.shared.search.model.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,10 @@ public class ResourceTransportRouteServiceImpl implements ResourceTransportRoute
 
     public List<ResourceTransportRoute> getRoutesByOrganizationId(Integer organizationId) {
         return routeRepository.findByOrganizationId(organizationId);
+    }
+
+    public PaginatedResults<ResourceTransportRoute> getRoutesByOrganizationIdAdvanced(Integer organizationId, SearchParams searchParams) {
+        return routeRepository.findByOrganizationIdAdvanced(organizationId, searchParams);
     }
 
     public ResourceTransportRoute createRoute(CreateRouteDTO routeDTO) {

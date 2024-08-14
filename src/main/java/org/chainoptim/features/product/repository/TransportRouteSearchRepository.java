@@ -1,14 +1,13 @@
 package org.chainoptim.features.product.repository;
 
-import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.model.ResourceTransportRoute;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.chainoptim.shared.search.model.SearchParams;
 
-public interface ProductsSearchRepository {
+public interface TransportRouteSearchRepository {
 
-    PaginatedResults<Product> findByOrganizationIdAdvanced(
+    PaginatedResults<ResourceTransportRoute> findByOrganizationIdAdvanced(
             Integer organizationId,
             SearchParams searchParams
     );
-
 }

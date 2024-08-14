@@ -32,6 +32,9 @@ public class ResourceTransportRoute {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "company_id")
+    private Integer companyId;
+
     // Manual deserialization and caching of JSON column
     @Column(name = "transport_route", columnDefinition = "json")
     private String transportRouteJson;

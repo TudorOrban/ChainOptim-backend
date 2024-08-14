@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ResourceTransportRouteRepository extends JpaRepository<ResourceTransportRoute, Integer> {
+public interface ResourceTransportRouteRepository extends JpaRepository<ResourceTransportRoute, Integer>, TransportRouteSearchRepository {
 
     List<ResourceTransportRoute> findByOrganizationId(Integer organizationId);
 }
