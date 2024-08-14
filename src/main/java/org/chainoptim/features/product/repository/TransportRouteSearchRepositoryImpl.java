@@ -1,6 +1,6 @@
 package org.chainoptim.features.product.repository;
 
-import org.chainoptim.features.product.model.Product;
+import org.chainoptim.features.product.model.ResourceTransportRoute;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.chainoptim.shared.search.model.SearchParams;
 import org.springframework.stereotype.Repository;
@@ -14,16 +14,16 @@ import jakarta.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
-public class ProductsSearchRepositoryImpl implements ProductsSearchRepository {
+public class TransportRouteSearchRepositoryImpl implements TransportRouteSearchRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public PaginatedResults<Product> findByOrganizationIdAdvanced(Integer organizationId, SearchParams searchParams) {
+    public PaginatedResults<ResourceTransportRoute> findByOrganizationIdAdvanced(Integer organizationId, SearchParams searchParams) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Product> query = builder.createQuery(Product.class);
-        Root<Product> product = query.from(Product.class);
+        CriteriaQuery<ResourceTransportRoute> query = builder.createQuery(ResourceTransportRoute.class);
+        Root<ResourceTransportRoute> product = query.from(ResourceTransportRoute.class);
 
         // Add conditions (organizationId and searchQuery)
         Predicate conditions = getConditions(builder, product, organizationId, searchParams.getSearchQuery());
@@ -37,7 +37,7 @@ public class ProductsSearchRepositoryImpl implements ProductsSearchRepository {
         }
 
         // Create query with pagination
-        List<Product> products = entityManager.createQuery(query)
+        List<ResourceTransportRoute> products = entityManager.createQuery(query)
                 .setFirstResult((searchParams.getPage() - 1) * searchParams.getItemsPerPage())
                 .setMaxResults(searchParams.getItemsPerPage())
                 .getResultList();
@@ -45,7 +45,7 @@ public class ProductsSearchRepositoryImpl implements ProductsSearchRepository {
         // Query total results count
         CriteriaBuilder countBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = countBuilder.createQuery(Long.class);
-        Root<Product> countRoot = countQuery.from(Product.class);
+        Root<ResourceTransportRoute> countRoot = countQuery.from(ResourceTransportRoute.class);
         countQuery.select(countBuilder.count(countRoot));
         countQuery.where(getConditions(countBuilder, countRoot, organizationId, searchParams.getSearchQuery()));
 
@@ -55,13 +55,13 @@ public class ProductsSearchRepositoryImpl implements ProductsSearchRepository {
         return new PaginatedResults<>(products, totalCount);
     }
 
-    private Predicate getConditions(CriteriaBuilder builder, Root<Product> root, Integer organizationId, String searchQuery) {
+    private Predicate getConditions(CriteriaBuilder builder, Root<ResourceTransportRoute> root, Integer organizationId, String searchQuery) {
         Predicate conditions = builder.conjunction();
         if (organizationId != null) {
             conditions = builder.and(conditions, builder.equal(root.get("organizationId"), organizationId));
         }
         if (searchQuery != null && !searchQuery.isEmpty()) {
-            conditions = builder.and(conditions, builder.like(root.get("name"), "%" + searchQuery + "%"));
+            conditions = builder.and(conditions, builder.like(root.get("companyId"), "%" + searchQuery + "%"));
         }
         return conditions;
     }

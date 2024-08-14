@@ -6,7 +6,6 @@ import org.chainoptim.shared.enums.TransportType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.util.Pair;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransportRoute {
+public class MapTransportRoute {
 
     private Integer entityId;
     private Feature entityType;

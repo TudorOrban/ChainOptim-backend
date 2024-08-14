@@ -12,5 +12,5 @@ import java.util.List;
 public class MapData {
 
     private List<Facility> facilities;
-    private List<TransportRoute> transportRoutes;
+    private List<MapTransportRoute> transportRoutes;
 }
