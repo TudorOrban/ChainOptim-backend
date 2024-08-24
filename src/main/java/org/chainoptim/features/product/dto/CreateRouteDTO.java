@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class CreateRouteDTO {
 
     private Integer organizationId;
+    private String companyId;
     private TransportRoute transportRoute;
 }

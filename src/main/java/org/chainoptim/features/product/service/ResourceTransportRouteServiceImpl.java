@@ -34,6 +34,7 @@ public class ResourceTransportRouteServiceImpl implements ResourceTransportRoute
         ResourceTransportRoute route = new ResourceTransportRoute();
         route.setOrganizationId(routeDTO.getOrganizationId());
         route.setTransportRoute(routeDTO.getTransportRoute());
+        route.setCompanyId(routeDTO.getCompanyId());
 
         return routeRepository.save(route);
     }
