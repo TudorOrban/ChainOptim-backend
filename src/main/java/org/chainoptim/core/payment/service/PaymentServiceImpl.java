@@ -18,27 +18,18 @@ public class PaymentServiceImpl implements PaymentService {
     public Session createCheckoutSession(CustomSubscriptionPlan customPlan) throws StripeException {
         com.stripe.Stripe.apiKey = stripeSecretKey;
 
-        // Create line items based on the custom plan details
-        SessionCreateParams.LineItem lineItem = SessionCreateParams.LineItem.builder()
-                .setPriceData(
-                        SessionCreateParams.LineItem.PriceData.builder()
-                                .setCurrency("usd")
-                                .setUnitAmount((long) Math.round(customPlan.getTotalDollarsMonthly() * 100)) // Convert dollars to cents
-                                .setProductData(
-                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                .setName("Custom Subscription Plan - " + customPlan.getPlanTier())
-                                                .build()
-                                )
-                                .build()
-                )
-                .setQuantity(1L)
-                .build();
+        String stripePriceId = "price_1PrIw1RvgicEPEXuwJpow9dd";
 
         // Create the session params
         SessionCreateParams params = SessionCreateParams.builder()
+                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
+                .addLineItem(SessionCreateParams.LineItem.builder()
+                        .setPrice(stripePriceId)
+                        .setQuantity(1L)
+                        .build())
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-                .setSuccessUrl("https://yourdomain.com/success?session_id={CHECKOUT_SESSION_ID}")
-                .setCancelUrl("https://yourdomain.com/cancel")
+                .setSuccessUrl("http://localhost:4200/success?session_id={CHECKOUT_SESSION_ID}")
+                .setCancelUrl("http://localhost:4200/cancel")
                 .build();
 
         // Create and return the session
