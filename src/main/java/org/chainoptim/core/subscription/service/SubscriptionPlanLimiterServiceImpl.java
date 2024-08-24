@@ -1,11 +1,11 @@
-package org.chainoptim.core.subscriptionplan.service;
+package org.chainoptim.core.subscription.service;
 
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.scsnapshot.service.SnapshotPersistenceService;
-import org.chainoptim.core.subscriptionplan.model.PlanDetails;
-import org.chainoptim.core.subscriptionplan.model.SubscriptionPlans;
+import org.chainoptim.core.subscription.model.PlanDetails;
+import org.chainoptim.core.subscription.model.BaseSubscriptionPlans;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.shared.enums.Feature;
 
@@ -29,7 +29,7 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
         Snapshot snapshot = snapshotPersistenceService.getSupplyChainSnapshotByOrganizationId(organizationId).getSnapshot();
         Organization.SubscriptionPlanTier planTier = organizationRepository.getSubscriptionPlanTierById(organizationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
-        PlanDetails planDetails = SubscriptionPlans.getPlans().get(planTier);
+        PlanDetails planDetails = BaseSubscriptionPlans.getPlans().get(planTier);
 
         if (planTier.equals(Organization.SubscriptionPlanTier.PRO)) return false; // No limits for PRO plan
 

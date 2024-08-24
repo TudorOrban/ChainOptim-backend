@@ -1,4 +1,4 @@
-package org.chainoptim.core.payment.model;
+package org.chainoptim.core.subscription.model;
 
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.shared.enums.Feature;

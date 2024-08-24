@@ -1,7 +1,7 @@
 package org.chainoptim.core.organization.model;
 
-import org.chainoptim.core.subscriptionplan.model.PlanDetails;
-import org.chainoptim.core.subscriptionplan.model.SubscriptionPlans;
+import org.chainoptim.core.subscription.model.PlanDetails;
+import org.chainoptim.core.subscription.model.BaseSubscriptionPlans;
 import org.chainoptim.core.user.model.User;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -54,8 +54,14 @@ public class Organization {
     @Column(name = "subscription_plan", nullable = false)
     private SubscriptionPlanTier subscriptionPlanTier;
 
+    @Column(name = "is_plan_basic")
+    private Boolean isPlanBasic;
+
+    @Column(name = "is_plan_active")
+    private Boolean isPlanActive;
+
     public PlanDetails getSubscriptionPlan() {
-        return SubscriptionPlans.getPlans().get(subscriptionPlanTier);
+        return BaseSubscriptionPlans.getPlans().get(subscriptionPlanTier);
     }
 
     @PrePersist

@@ -1,4 +1,4 @@
-package org.chainoptim.core.subscriptionplan.service;
+package org.chainoptim.core.subscription.service;
 
 import org.chainoptim.shared.enums.Feature;
 

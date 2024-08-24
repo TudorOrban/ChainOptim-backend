@@ -8,7 +8,7 @@ import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
 import org.chainoptim.core.settings.dto.DeleteUserSettingsDTO;
 import org.chainoptim.core.settings.model.GeneralSettings;
 import org.chainoptim.core.settings.model.NotificationSettings;
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.core.user.jwt.JwtTokenProvider;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.model.UserDetailsImpl;
