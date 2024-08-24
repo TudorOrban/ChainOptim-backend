@@ -1,15 +1,11 @@
 package org.chainoptim.features.productpipeline.service;
 
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
-import org.chainoptim.exception.PlanLimitReachedException;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
 import org.chainoptim.features.productpipeline.dto.StageDTOMapper;
 import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;
-import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
 import org.chainoptim.features.productpipeline.model.Stage;
 import org.chainoptim.features.productpipeline.repository.StageRepository;
-import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.hibernate.Hibernate;

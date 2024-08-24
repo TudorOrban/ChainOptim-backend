@@ -1,4 +1,4 @@
-package org.chainoptim.core.subscriptionplan.model;
+package org.chainoptim.core.subscription.model;
 
 import org.chainoptim.core.organization.model.Organization;
 
@@ -7,9 +7,9 @@ import lombok.Getter;
 import java.util.Map;
 
 @Getter
-public class SubscriptionPlans {
+public class BaseSubscriptionPlans {
 
-    private SubscriptionPlans() {}
+    private BaseSubscriptionPlans() {}
 
     private static final PlanDetails NONE_PLAN = PlanDetails.builder()
             .pricePerMonthDollars(0)

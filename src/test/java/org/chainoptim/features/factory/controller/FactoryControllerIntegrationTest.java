@@ -3,7 +3,7 @@ package org.chainoptim.features.factory.controller;
 import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
 import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.features.factory.dto.*;
 import org.chainoptim.features.factory.model.Factory;
 import org.chainoptim.features.factory.repository.FactoryRepository;

@@ -2,7 +2,7 @@ package org.chainoptim.core.settings.service;
 
 import org.chainoptim.core.settings.model.GeneralSettings;
 import org.chainoptim.core.settings.model.NotificationSettings;
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.core.settings.dto.UserSettingsDTOMapper;
 import org.chainoptim.core.settings.dto.CreateUserSettingsDTO;

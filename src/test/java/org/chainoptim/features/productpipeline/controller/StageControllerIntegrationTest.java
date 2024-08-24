@@ -3,7 +3,7 @@ package org.chainoptim.features.productpipeline.controller;
 import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
 import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.repository.ProductRepository;
 import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;

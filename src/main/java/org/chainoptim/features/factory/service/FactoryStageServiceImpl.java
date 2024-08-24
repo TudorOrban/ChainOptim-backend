@@ -1,7 +1,6 @@
 package org.chainoptim.features.factory.service;
 
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
-import org.chainoptim.exception.PlanLimitReachedException;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.factory.dto.CreateFactoryStageDTO;
 import org.chainoptim.features.factory.dto.FactoryDTOMapper;
@@ -11,7 +10,6 @@ import org.chainoptim.features.factory.model.FactoryStage;
 import org.chainoptim.features.factory.repository.FactoryStageRepository;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
-import org.chainoptim.shared.enums.Feature;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

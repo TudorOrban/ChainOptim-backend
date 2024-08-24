@@ -5,7 +5,7 @@ import org.chainoptim.core.organization.dto.CustomRoleDTOMapper;
 import org.chainoptim.core.organization.dto.UpdateCustomRoleDTO;
 import org.chainoptim.core.organization.model.CustomRole;
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.shared.enums.Feature;

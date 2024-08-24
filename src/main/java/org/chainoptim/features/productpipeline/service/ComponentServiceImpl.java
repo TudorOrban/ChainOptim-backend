@@ -1,11 +1,8 @@
 package org.chainoptim.features.productpipeline.service;
 
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.product.dto.ProductDTOMapper;
-import org.chainoptim.features.product.dto.ProductsSearchDTO;
-import org.chainoptim.features.product.model.Product;
 import org.chainoptim.features.product.model.UnitOfMeasurement;
 import org.chainoptim.features.product.service.UnitOfMeasurementService;
 import org.chainoptim.features.productpipeline.dto.ComponentDTOMapper;

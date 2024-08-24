@@ -3,7 +3,7 @@ package org.chainoptim.features.client.controller;
 import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
 import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
-import org.chainoptim.core.subscriptionplan.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.features.client.dto.CreateClientDTO;
 import org.chainoptim.features.client.dto.ClientsSearchDTO;
 import org.chainoptim.features.client.dto.UpdateClientDTO;
