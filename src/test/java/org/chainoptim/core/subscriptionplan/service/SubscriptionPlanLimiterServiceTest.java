@@ -1,6 +1,6 @@
 package org.chainoptim.core.subscriptionplan.service;
 
-import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
@@ -37,7 +37,7 @@ class SubscriptionPlanLimiterServiceTest {
     void testIsLimitReached_ProPlan() {
         // Arrange
         createTestSnapshot(0);
-        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(Organization.SubscriptionPlanTier.PRO));
+        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(SubscriptionPlanTier.PROFESSIONAL));
 
         // Act
         boolean isLimitReached = subscriptionPlanLimiterService.isLimitReached(organizationId, Feature.PRODUCT, 0);
@@ -50,7 +50,7 @@ class SubscriptionPlanLimiterServiceTest {
     void testIsLimitReached_ProductLimitReached() {
         // Arrange
         createTestSnapshot(11);
-        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(Organization.SubscriptionPlanTier.BASIC));
+        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(SubscriptionPlanTier.BASIC));
 
         // Act
         boolean isLimitReached = subscriptionPlanLimiterService.isLimitReached(organizationId, Feature.PRODUCT, 1);
@@ -63,7 +63,7 @@ class SubscriptionPlanLimiterServiceTest {
     void testIsLimitReached_ProductLimitNotReached() {
         // Arrange
         createTestSnapshot(8);
-        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(Organization.SubscriptionPlanTier.BASIC));
+        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(SubscriptionPlanTier.BASIC));
 
         // Act
         boolean isLimitReached = subscriptionPlanLimiterService.isLimitReached(organizationId, Feature.PRODUCT, 1);
@@ -76,7 +76,7 @@ class SubscriptionPlanLimiterServiceTest {
     void testIsLimitReached_NonePlan() {
         // Arrange
         createTestSnapshot(2);
-        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(Organization.SubscriptionPlanTier.NONE));
+        when(organizationRepository.getSubscriptionPlanTierById(anyInt())).thenReturn(Optional.of(SubscriptionPlanTier.NONE));
 
         // Act
         boolean isLimitReached = subscriptionPlanLimiterService.isLimitReached(organizationId, Feature.PRODUCT, 0);

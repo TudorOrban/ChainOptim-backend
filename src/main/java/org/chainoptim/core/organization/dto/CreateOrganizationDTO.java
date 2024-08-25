@@ -1,6 +1,6 @@
 package org.chainoptim.core.organization.dto;
 
-import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,5 +15,5 @@ public class CreateOrganizationDTO {
     private String creatorId;
     private Set<CreateOrganizationUserDTO> createdUsers;
     private Set<String> existingUserIds;
-    private Organization.SubscriptionPlanTier subscriptionPlanTier;
+    private SubscriptionPlanTier planTier;
 }

@@ -1,6 +1,7 @@
 package org.chainoptim.core.settings.controller;
 
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
@@ -81,7 +82,7 @@ class UserSettingsControllerIntegrationTest {
         // Create organization
         Organization newOrganization = Organization.builder()
                 .name("Test Org")
-                .subscriptionPlanTier(Organization.SubscriptionPlanTier.PRO)
+                .subscriptionPlanTier(SubscriptionPlanTier.PROFESSIONAL)
                 .build();
 
         organization = organizationRepository.save(newOrganization);

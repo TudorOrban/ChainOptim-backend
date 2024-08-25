@@ -1,6 +1,6 @@
 package org.chainoptim.core.subscription.model;
 
-import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 
 import lombok.Getter;
 
@@ -89,13 +89,17 @@ public class BaseSubscriptionPlans {
             .clientPerformanceOn(true)
             .build();
 
-    private static final Map<Organization.SubscriptionPlanTier, PlanDetails> PLANS = Map.of(
-            Organization.SubscriptionPlanTier.NONE, NONE_PLAN,
-            Organization.SubscriptionPlanTier.BASIC, BASIC_PLAN,
-            Organization.SubscriptionPlanTier.PRO, PRO_PLAN
+    private static final Map<SubscriptionPlanTier, PlanDetails> PLANS = Map.of(
+            SubscriptionPlanTier.NONE, NONE_PLAN,
+            SubscriptionPlanTier.BASIC, BASIC_PLAN,
+            SubscriptionPlanTier.PROFESSIONAL, PRO_PLAN
     );
 
-    public static Map<Organization.SubscriptionPlanTier, PlanDetails> getPlans() {
+    public static Map<SubscriptionPlanTier, PlanDetails> getPlans() {
         return PLANS;
+    }
+
+    public static PlanDetails getPlan(SubscriptionPlanTier tier) {
+        return PLANS.get(tier);
     }
 }

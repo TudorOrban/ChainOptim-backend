@@ -9,6 +9,8 @@ import org.chainoptim.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
 
@@ -19,13 +21,18 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
         this.subscriptionPlanRepository = subscriptionPlanRepository;
     }
 
-    public SubscriptionPlan getSubscriptionPlan(Integer id) {
+    public SubscriptionPlan getSubscriptionPlanByOrganizationId(Integer id) {
         return subscriptionPlanRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Subscription Plan with ID: " + id + " not found."));
     }
 
     public SubscriptionPlan createSubscriptionPlan(CreateSubscriptionPlanDTO planDTO) {
         SubscriptionPlan plan = SubscriptionPlanDTOMapper.mapCreateSubscriptionPlanDTOToSubscriptionPlan(planDTO);
+
+        List<SubscriptionPlan> existingPlans = subscriptionPlanRepository.findByOrganizationId(plan.getOrganizationId());
+        if (!existingPlans.isEmpty()) {
+            throw new IllegalArgumentException("Subscription Plan for Organization with ID: " + plan.getOrganizationId() + " already exists.");
+        }
 
         return subscriptionPlanRepository.save(plan);
     }

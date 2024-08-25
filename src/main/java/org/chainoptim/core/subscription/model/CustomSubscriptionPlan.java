@@ -1,6 +1,6 @@
 package org.chainoptim.core.subscription.model;
 
-import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.shared.enums.Feature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class CustomSubscriptionPlan {
 
-    private Organization.SubscriptionPlanTier planTier;
+    private SubscriptionPlanTier planTier;
     private Float totalDollarsMonthly;
     private Map<Feature, Float> additionalFeatures;
 }

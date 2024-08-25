@@ -28,30 +28,24 @@ public class Organization {
     @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(name = "address")
     private String address;
 
-    @Column
+    @Column(name = "contact_info")
     private String contactInfo;
 
     @Column(name = "created_at", nullable = false)
-    private java.time.LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private java.time.LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
     @JsonManagedReference
     private Set<User> users;
 
-    public enum SubscriptionPlanTier {
-        NONE,
-        BASIC,
-        PRO
-    }
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "subscription_plan", nullable = false)
+    @Column(name = "plan_tier", nullable = false)
     private SubscriptionPlanTier subscriptionPlanTier;
 
     @Column(name = "is_plan_basic")
@@ -61,7 +55,7 @@ public class Organization {
     private Boolean isPlanActive;
 
     public PlanDetails getSubscriptionPlan() {
-        return BaseSubscriptionPlans.getPlans().get(subscriptionPlanTier);
+        return BaseSubscriptionPlans.getPlan(subscriptionPlanTier);
     }
 
     @PrePersist

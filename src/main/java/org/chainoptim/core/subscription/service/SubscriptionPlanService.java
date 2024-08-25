@@ -6,7 +6,7 @@ import org.chainoptim.core.subscription.model.SubscriptionPlan;
 
 public interface SubscriptionPlanService {
 
-    SubscriptionPlan getSubscriptionPlan(Integer id);
+    SubscriptionPlan getSubscriptionPlanByOrganizationId(Integer organizationId);
     SubscriptionPlan createSubscriptionPlan(CreateSubscriptionPlanDTO planDTO);
     SubscriptionPlan updateSubscriptionPlan(UpdateSubscriptionPlanDTO planDTO);
     void deleteSubscriptionPlan(Integer id);

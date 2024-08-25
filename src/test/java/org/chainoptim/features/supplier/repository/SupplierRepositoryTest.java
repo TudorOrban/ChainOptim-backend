@@ -1,6 +1,7 @@
 package org.chainoptim.features.supplier.repository;
 
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
@@ -38,7 +39,7 @@ class SupplierRepositoryTest {
         // Set up an organization and a unit of measurement
         Organization organization = Organization.builder()
                 .name("Test Org")
-                .subscriptionPlanTier(Organization.SubscriptionPlanTier.PRO)
+                .subscriptionPlanTier(SubscriptionPlanTier.PROFESSIONAL)
                 .build();
 
         entityManager.persist(organization);

@@ -5,6 +5,7 @@ import org.chainoptim.core.organization.dto.CreateOrganizationUserDTO;
 import org.chainoptim.core.organization.dto.OrganizationDTO;
 import org.chainoptim.core.organization.dto.UpdateOrganizationDTO;
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
@@ -84,7 +85,7 @@ class OrganizationControllerIntegrationTest {
         assertNotNull(organizationDTO);
         assertEquals(organizationId, organizationDTO.getId());
         assertEquals("Test Org", organizationDTO.getName());
-        assertEquals(Organization.SubscriptionPlanTier.PRO, organizationDTO.getSubscriptionPlanTier());
+        assertEquals(SubscriptionPlanTier.PROFESSIONAL, organizationDTO.getSubscriptionPlanTier());
         assertEquals(1, organizationDTO.getUsers().size());
     }
 
@@ -103,7 +104,7 @@ class OrganizationControllerIntegrationTest {
         createOrganizationDTO.setName("New Organization");
         createOrganizationDTO.setAddress("New Address");
         createOrganizationDTO.setContactInfo("New Contact Info");
-        createOrganizationDTO.setSubscriptionPlanTier(Organization.SubscriptionPlanTier.BASIC);
+        createOrganizationDTO.setPlanTier(SubscriptionPlanTier.BASIC);
         createOrganizationDTO.setCreatorId(newUser.getId());
 
         Set<CreateOrganizationUserDTO> createdUsers = new HashSet<>();
@@ -135,7 +136,7 @@ class OrganizationControllerIntegrationTest {
         assertEquals("New Organization", createdOrganization.getName());
         assertEquals("New Address", createdOrganization.getAddress());
         assertEquals("New Contact Info", createdOrganization.getContactInfo());
-        assertEquals(Organization.SubscriptionPlanTier.BASIC, createdOrganization.getSubscriptionPlanTier());
+        assertEquals(SubscriptionPlanTier.BASIC, createdOrganization.getSubscriptionPlanTier());
 
         assertEquals(2, createdOrganization.getUsers().size()); // Creator and created user
         List<User> creators = createdOrganization.getUsers().stream().filter(user -> user.getUsername().equals("Creator User")).toList();
