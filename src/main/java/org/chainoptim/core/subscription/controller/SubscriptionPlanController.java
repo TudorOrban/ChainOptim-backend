@@ -28,6 +28,17 @@ public class SubscriptionPlanController {
         this.paymentService = paymentService;
     }
 
+    @GetMapping("/organization/{organizationId}")
+    public ResponseEntity<SubscriptionPlan> getSubscriptionPlan(@PathVariable Integer organizationId) {
+        SubscriptionPlan plan = planService.getSubscriptionPlanByOrganizationId(organizationId);
+
+        if (plan == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(plan);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Map<String, String>> createSubscriptionPlan(@RequestBody CreateSubscriptionPlanDTO customPlanDTO) {
         SubscriptionPlan plan = planService.createSubscriptionPlan(customPlanDTO);

@@ -13,12 +13,10 @@ import org.chainoptim.core.user.model.User;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.client.model.ClientOrderEvent;
 import org.chainoptim.features.client.repository.ClientRepository;
-import org.chainoptim.features.supplier.model.Supplier;
 import org.chainoptim.features.supplier.model.SupplierOrderEvent;
 import org.chainoptim.features.supplier.repository.SupplierRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

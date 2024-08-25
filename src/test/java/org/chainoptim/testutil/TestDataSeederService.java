@@ -1,6 +1,7 @@
 package org.chainoptim.testutil;
 
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.user.jwt.JwtTokenProvider;
 import org.chainoptim.core.user.model.User;
@@ -43,7 +44,7 @@ public class TestDataSeederService {
         // Create organization
         Organization organization = Organization.builder()
                 .name("Test Org")
-                .subscriptionPlanTier(Organization.SubscriptionPlanTier.PRO)
+                .subscriptionPlanTier(SubscriptionPlanTier.PROFESSIONAL)
                 .build();
 
         organization = organizationRepository.save(organization);

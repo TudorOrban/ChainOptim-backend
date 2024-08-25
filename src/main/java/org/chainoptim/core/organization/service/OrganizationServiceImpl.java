@@ -14,8 +14,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
 
@@ -54,7 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         organization.setName(createOrganizationDTO.getName());
         organization.setAddress(createOrganizationDTO.getAddress());
         organization.setContactInfo(createOrganizationDTO.getContactInfo());
-        organization.setSubscriptionPlanTier(createOrganizationDTO.getSubscriptionPlanTier());
+        organization.setSubscriptionPlanTier(createOrganizationDTO.getPlanTier());
 
         // Ensure creation is within plan limits
         int existingUsers = createOrganizationDTO.getExistingUserIds() != null ? createOrganizationDTO.getExistingUserIds().size() : 0;

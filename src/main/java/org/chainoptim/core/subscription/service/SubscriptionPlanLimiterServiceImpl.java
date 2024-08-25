@@ -1,6 +1,6 @@
 package org.chainoptim.core.subscription.service;
 
-import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.scsnapshot.model.Snapshot;
 import org.chainoptim.core.scsnapshot.service.SnapshotPersistenceService;
@@ -27,11 +27,11 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
 
     public boolean isLimitReached(Integer organizationId, Feature feature, Integer quantity) {
         Snapshot snapshot = snapshotPersistenceService.getSupplyChainSnapshotByOrganizationId(organizationId).getSnapshot();
-        Organization.SubscriptionPlanTier planTier = organizationRepository.getSubscriptionPlanTierById(organizationId)
+        SubscriptionPlanTier planTier = organizationRepository.getSubscriptionPlanTierById(organizationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
         PlanDetails planDetails = BaseSubscriptionPlans.getPlans().get(planTier);
 
-        if (planTier.equals(Organization.SubscriptionPlanTier.PRO)) return false; // No limits for PRO plan
+        if (planTier.equals(SubscriptionPlanTier.PROFESSIONAL)) return false; // No limits for PRO plan
 
         return switch (feature) {
             case Feature.PRODUCT -> snapshot.getProductsCount() + quantity >= planDetails.getMaxProducts();

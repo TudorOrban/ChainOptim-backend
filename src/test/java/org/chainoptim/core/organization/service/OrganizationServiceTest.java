@@ -5,6 +5,7 @@ import org.chainoptim.core.organization.dto.CreateOrganizationInviteDTO;
 import org.chainoptim.core.organization.dto.CreateOrganizationUserDTO;
 import org.chainoptim.core.organization.dto.UpdateOrganizationDTO;
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
@@ -51,7 +52,7 @@ class OrganizationServiceTest {
         createOrganizationDTO.setName("Test Organization");
         createOrganizationDTO.setAddress("Test Address");
         createOrganizationDTO.setContactInfo("Test Contact Info");
-        createOrganizationDTO.setSubscriptionPlanTier(Organization.SubscriptionPlanTier.BASIC);
+        createOrganizationDTO.setPlanTier(SubscriptionPlanTier.BASIC);
         User creator = Mockito.mock(User.class);
         Mockito.when(creator.getId()).thenReturn("Test Creator ID");
         createOrganizationDTO.setCreatorId(creator.getId());
@@ -96,7 +97,7 @@ class OrganizationServiceTest {
         assertEquals(createOrganizationDTO.getName(), createdOrganization.getName());
         assertEquals(createOrganizationDTO.getAddress(), createdOrganization.getAddress());
         assertEquals(createOrganizationDTO.getContactInfo(), createdOrganization.getContactInfo());
-        assertEquals(createOrganizationDTO.getSubscriptionPlanTier(), createdOrganization.getSubscriptionPlanTier());
+        assertEquals(createOrganizationDTO.getPlanTier(), createdOrganization.getSubscriptionPlanTier());
 
         // Assert user registrations
         verify(userWriteService).registerNewOrganizationUser(usernameCaptor.capture(), emailCaptor.capture(), organizationIdCaptor.capture(), roleCaptor.capture());
