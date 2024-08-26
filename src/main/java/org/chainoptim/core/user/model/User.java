@@ -31,11 +31,17 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(name = "full_name")
+    private String fullName;
+
     @Column(name = "password_hash")
     private String passwordHash;
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(name = "phone")
+    private String phone;
 
     @Column(name = "created_at", nullable = false)
     private java.time.LocalDateTime createdAt;
@@ -77,6 +83,9 @@ public class User {
 
     @Column(name = "is_first_confirmation_email")
     private Boolean isFirstConfirmationEmail;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @PrePersist
     protected void onCreate() {

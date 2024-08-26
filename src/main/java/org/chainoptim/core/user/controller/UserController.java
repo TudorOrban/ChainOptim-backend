@@ -1,10 +1,7 @@
 package org.chainoptim.core.user.controller;
 
 import org.chainoptim.core.redis.service.RedisService;
-import org.chainoptim.core.user.dto.AssignBasicRoleDTO;
-import org.chainoptim.core.user.dto.AssignCustomRoleDTO;
-import org.chainoptim.core.user.dto.UserSearchResultDTO;
-import org.chainoptim.core.user.dto.UserWithOrganizationDTO;
+import org.chainoptim.core.user.dto.*;
 import org.chainoptim.core.user.service.*;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.chainoptim.core.user.model.User;
@@ -94,8 +91,8 @@ public class UserController {
 
     // Update
     @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        return ResponseEntity.ok(userUpdateService.updateUser(user));
+    public ResponseEntity<User> updateUser(@RequestBody UpdateUserProfileDTO userDTO) {
+        return ResponseEntity.ok(userUpdateService.updateUser(userDTO));
     }
 
     @PutMapping("/{userId}/assign-basic-role")
