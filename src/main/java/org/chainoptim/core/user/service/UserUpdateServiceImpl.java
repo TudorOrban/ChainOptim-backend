@@ -2,6 +2,8 @@ package org.chainoptim.core.user.service;
 
 import org.chainoptim.core.organization.model.CustomRole;
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
+import org.chainoptim.core.user.dto.UpdateUserProfileDTO;
+import org.chainoptim.core.user.dto.UserDTOMapper;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
 
@@ -23,8 +25,13 @@ public class UserUpdateServiceImpl implements UserUpdateService {
     }
 
     // Update
-    public User updateUser(User user) {
-        return userRepository.save(user);
+    public User updateUser(UpdateUserProfileDTO userDTO) {
+        User user = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + userDTO.getId() + " not found"));
+
+        User updatedUser = UserDTOMapper.setUpdateUserProfileDTOToUser(userDTO, user);
+
+        return userRepository.save(updatedUser);
     }
 
     public User assignBasicRoleToUser(String userId, User.Role role) {

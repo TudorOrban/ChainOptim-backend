@@ -21,9 +21,12 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService {
         this.subscriptionPlanRepository = subscriptionPlanRepository;
     }
 
-    public SubscriptionPlan getSubscriptionPlanByOrganizationId(Integer id) {
-        return subscriptionPlanRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Subscription Plan with ID: " + id + " not found."));
+    public SubscriptionPlan getSubscriptionPlanByOrganizationId(Integer organizationId) {
+        List<SubscriptionPlan> plans = subscriptionPlanRepository.findByOrganizationId(organizationId);
+        if (plans.isEmpty()) {
+            throw new ResourceNotFoundException("Subscription Plan with organization ID: " + organizationId + " not found.");
+        }
+        return plans.getFirst();
     }
 
     public SubscriptionPlan createSubscriptionPlan(CreateSubscriptionPlanDTO planDTO) {

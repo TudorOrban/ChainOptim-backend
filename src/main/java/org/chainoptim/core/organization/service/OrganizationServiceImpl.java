@@ -2,6 +2,7 @@ package org.chainoptim.core.organization.service;
 
 import org.chainoptim.core.organization.dto.*;
 import org.chainoptim.core.organization.model.Organization;
+import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.chainoptim.core.organization.repository.OrganizationRepository;
 import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.repository.UserRepository;
@@ -109,5 +110,14 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         organizationRepository.deleteById(id);
+    }
+
+    public void unsubscribeOrganization(Integer id) {
+        Organization organization = organizationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + id + " not found"));
+        organization.setIsPlanBasic(true);
+        organization.setIsPlanActive(true);
+        organization.setSubscriptionPlanTier(SubscriptionPlanTier.NONE);
+        organizationRepository.save(organization);
     }
 }

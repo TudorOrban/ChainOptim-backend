@@ -52,9 +52,15 @@ public class OrganizationController {
     }
 
     @PreAuthorize("@securityService.canAccessOrganizationEntity(#id, \"Organization\", \"Delete\")")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteOrganization(@PathVariable Integer id) {
         organizationService.deleteOrganization(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/unsubscribe/{id}")
+    public ResponseEntity<Organization> unsubscribeOrganization(@PathVariable Integer id) {
+        organizationService.unsubscribeOrganization(id);
         return ResponseEntity.ok().build();
     }
 }
