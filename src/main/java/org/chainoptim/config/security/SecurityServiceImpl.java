@@ -140,8 +140,10 @@ public class SecurityServiceImpl implements SecurityService {
 
         boolean hasPermissions;
         if (userDetails.getCustomRole() == null) {
+            logger.warn("User {} does not have a custom role", userDetails.getUsername());
             hasPermissions = canAccessOrganizationEntityWithBasicRole(userDetails.getRole(), operationType);
         } else {
+            logger.info("User {} has a custom role", userDetails.getUsername());
             hasPermissions = customRoleSecurityService.canUserAccessOrganizationEntity(currentOrganizationId, userDetails, entityType, operationType);
         }
         if (!hasPermissions) {

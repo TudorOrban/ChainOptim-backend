@@ -41,6 +41,9 @@ public class SubscriptionPlan {
     @Column(name = "is_paid")
     private Boolean isPaid;
 
+    @Column(name = "last_payment_date")
+    private LocalDateTime lastPaymentDate;
+
     // Manual deserialization and caching of JSON columns
     @Column(name = "custom_plan", columnDefinition = "json")
     private String customPlanJson;
@@ -48,7 +51,7 @@ public class SubscriptionPlan {
     @Transient // Ignore field
     private CustomSubscriptionPlan customPlan;
 
-    public CustomSubscriptionPlan getCustomSubscriptionPlan() {
+    public CustomSubscriptionPlan getCustomPlan() {
         if (this.customPlan == null && this.customPlanJson != null) {
             // Remove backslashes used to escape double quotes
             String correctedJson = this.customPlanJson.replace("\\\"", "\"").trim();
@@ -69,7 +72,7 @@ public class SubscriptionPlan {
         return this.customPlan;
     }
 
-    public void setCustomSubscriptionPlan(CustomSubscriptionPlan customPlan) {
+    public void setCustomPlan(CustomSubscriptionPlan customPlan) {
         this.customPlan = customPlan;
         // Serialize when setting the object
         ObjectMapper mapper = new ObjectMapper();

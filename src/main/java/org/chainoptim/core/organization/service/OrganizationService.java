@@ -12,4 +12,5 @@ public interface OrganizationService {
     Organization createOrganization(CreateOrganizationDTO createOrganizationDTO);
     Organization updateOrganization(UpdateOrganizationDTO organizationDTO);
     void deleteOrganization(Integer id);
+    void unsubscribeOrganization(Integer id);
 }
