@@ -12,5 +12,6 @@ public class UpdatePricingDTO {
 
     private Integer id;
     private Integer productId;
+    private Integer organizationId;
     private ProductPricing productPricing;
 }

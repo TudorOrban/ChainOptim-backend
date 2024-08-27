@@ -9,12 +9,12 @@ public class PricingDTOMapper {
     public static Pricing mapCreatePricingDTOToPricing(CreatePricingDTO createPricingDTO) {
         Pricing pricing = new Pricing();
         pricing.setProductId(createPricingDTO.getProductId());
+        pricing.setOrganizationId(createPricingDTO.getOrganizationId());
         pricing.setProductPricing(createPricingDTO.getProductPricing());
         return pricing;
     }
 
     public static Pricing setUpdatePricingDTOToPricing(UpdatePricingDTO updatePricingDTO, Pricing pricing) {
-        pricing.setId(updatePricingDTO.getId());
         pricing.setProductPricing(updatePricingDTO.getProductPricing());
         return pricing;
     }

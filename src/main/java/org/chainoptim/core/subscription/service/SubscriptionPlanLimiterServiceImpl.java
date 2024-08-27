@@ -54,7 +54,7 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
 
         long baseFeatureCount = getBaseMaxCountByFeature(feature, planDetails);
 
-        if (Boolean.FALSE.equals(currentPlan.getIsBasic())) {
+        if (Boolean.FALSE.equals(currentPlan.getIsBasic() && currentPlan.getCustomPlan().getAdditionalFeatures() != null)) {
             baseFeatureCount += currentPlan.getCustomPlan().getAdditionalFeatures().getOrDefault(feature, 0L);
         }
 
@@ -63,21 +63,26 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
 
     private long getBaseMaxCountByFeature(Feature feature, PlanDetails planDetails) {
         return switch (feature) {
-            case Feature.MEMBER -> planDetails.getMaxMembers();
-            case Feature.PRODUCT -> planDetails.getMaxProducts();
-            case Feature.PRODUCT_STAGE -> planDetails.getMaxProductStages();
-            case Feature.COMPONENT -> planDetails.getMaxComponents();
-            case Feature.FACTORY -> planDetails.getMaxFactories();
-            case Feature.FACTORY_STAGE -> planDetails.getMaxFactoryStages();
-            case Feature.FACTORY_INVENTORY -> planDetails.getMaxFactoryInventoryItems();
-            case Feature.WAREHOUSE -> planDetails.getMaxWarehouses();
-            case Feature.WAREHOUSE_INVENTORY -> planDetails.getMaxWarehouseInventoryItems();
-            case Feature.SUPPLIER -> planDetails.getMaxSuppliers();
-            case Feature.SUPPLIER_ORDER -> planDetails.getMaxSupplierOrders();
-            case Feature.SUPPLIER_SHIPMENT -> planDetails.getMaxSupplierShipments();
-            case Feature.CLIENT -> planDetails.getMaxClients();
-            case Feature.CLIENT_ORDER -> planDetails.getMaxClientOrders();
-            case Feature.CLIENT_SHIPMENT -> planDetails.getMaxClientShipments();
+            case MEMBER -> planDetails.getMaxMembers();
+            case PRODUCT -> planDetails.getMaxProducts();
+            case PRODUCT_STAGE -> planDetails.getMaxProductStages();
+            case COMPONENT -> planDetails.getMaxComponents();
+            case TRANSPORT_ROUTE -> planDetails.getMaxTransportRoutes();
+            case PRICING -> planDetails.getMaxPricings();
+            case FACTORY -> planDetails.getMaxFactories();
+            case FACTORY_STAGE -> planDetails.getMaxFactoryStages();
+            case FACTORY_INVENTORY -> planDetails.getMaxFactoryInventoryItems();
+            case WAREHOUSE -> planDetails.getMaxWarehouses();
+            case WAREHOUSE_INVENTORY -> planDetails.getMaxWarehouseInventoryItems();
+            case COMPARTMENT -> planDetails.getMaxCompartments();
+            case CRATE -> planDetails.getMaxCrates();
+            case SUPPLIER -> planDetails.getMaxSuppliers();
+            case SUPPLIER_ORDER -> planDetails.getMaxSupplierOrders();
+            case SUPPLIER_SHIPMENT -> planDetails.getMaxSupplierShipments();
+            case CLIENT -> planDetails.getMaxClients();
+            case CLIENT_ORDER -> planDetails.getMaxClientOrders();
+            case CLIENT_SHIPMENT -> planDetails.getMaxClientShipments();
+            case LOCATION -> planDetails.getMaxLocations();
             default -> 0L;
         };
     }

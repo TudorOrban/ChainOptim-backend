@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ResourceTransportRouteRepository extends JpaRepository<ResourceTransportRoute, Integer>, TransportRouteSearchRepository {
 
@@ -13,4 +14,7 @@ public interface ResourceTransportRouteRepository extends JpaRepository<Resource
 
     @Query("SELECT COUNT(r) FROM ResourceTransportRoute r WHERE r.organizationId = :organizationId")
     long countByOrganizationId(@Param("organizationId") Integer organizationId);
+
+    @Query("SELECT r.organizationId FROM ResourceTransportRoute r WHERE r.id = :routeId")
+    Optional<Integer> findOrganizationIdById(@Param("routeId") Long routeId);
 }

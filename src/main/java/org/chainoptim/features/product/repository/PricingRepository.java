@@ -13,4 +13,7 @@ public interface PricingRepository extends JpaRepository<Pricing, Integer> {
 
     @Query("SELECT COUNT(p) FROM Pricing p WHERE p.organizationId = :organizationId")
     long countByOrganizationId(@Param("organizationId") Integer organizationId);
+
+    @Query("SELECT p.organizationId FROM Pricing p WHERE p.id = :pricingId")
+    Optional<Integer> findOrganizationIdById(@Param("pricingId") Long pricingId);
 }

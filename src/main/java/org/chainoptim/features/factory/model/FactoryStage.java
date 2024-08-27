@@ -33,6 +33,9 @@ public class FactoryStage {
     @Column(name = "minimum_required_capacity")
     private Float minimumRequiredCapacity;
 
+    @Column(name = "organization_id")
+    private Integer organizationId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factory_id", referencedColumnName = "id")
     @JsonIgnore

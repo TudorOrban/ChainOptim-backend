@@ -1,7 +1,6 @@
-package org.chainoptim.core.subscription.service;
+package org.chainoptim.core.organization.service;
 
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
-import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.features.client.repository.ClientOrderRepository;
 import org.chainoptim.features.client.repository.ClientRepository;
 import org.chainoptim.features.client.repository.ClientShipmentRepository;
@@ -21,15 +20,17 @@ import org.chainoptim.features.warehouse.repository.CrateRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseInventoryItemRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
-import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class FeatureCounterServiceImpl implements FeatureCounterService {
+import java.util.Optional;
 
-    private final UserRepository userRepository;
+@Service
+public class OrganizationIdFinderServiceImpl implements OrganizationIdFinderService {
+
+
     private final CustomRoleRepository customRoleRepository;
+
     private final ProductRepository productRepository;
     private final StageRepository stageRepository;
     private final ComponentRepository componentRepository;
@@ -51,8 +52,7 @@ public class FeatureCounterServiceImpl implements FeatureCounterService {
     private final LocationRepository locationRepository;
 
     @Autowired
-    public FeatureCounterServiceImpl(
-            UserRepository userRepository,
+    public OrganizationIdFinderServiceImpl(
             CustomRoleRepository customRoleRepository,
             ProductRepository productRepository,
             StageRepository stageRepository,
@@ -74,7 +74,6 @@ public class FeatureCounterServiceImpl implements FeatureCounterService {
             ClientShipmentRepository clientShipmentRepository,
             LocationRepository locationRepository
     ) {
-        this.userRepository = userRepository;
         this.customRoleRepository = customRoleRepository;
         this.productRepository = productRepository;
         this.stageRepository = stageRepository;
@@ -97,30 +96,29 @@ public class FeatureCounterServiceImpl implements FeatureCounterService {
         this.locationRepository = locationRepository;
     }
 
-    public long getCountByFeature(Integer entityId, Feature feature) {
-        return switch (feature) {
-            case MEMBER -> userRepository.countByOrganizationId(entityId);
-            case CUSTOM_ROLE -> customRoleRepository.countByOrganizationId(entityId);
-            case PRODUCT -> productRepository.countByOrganizationId(entityId);
-            case PRODUCT_STAGE -> stageRepository.countByOrganizationId(entityId);
-            case COMPONENT -> componentRepository.countByOrganizationId(entityId);
-            case TRANSPORT_ROUTE -> transportRouteRepository.countByOrganizationId(entityId);
-            case PRICING -> pricingRepository.countByOrganizationId(entityId);
-            case FACTORY -> factoryRepository.countByOrganizationId(entityId);
-            case FACTORY_STAGE -> factoryStageRepository.countByOrganizationId(entityId);
-            case FACTORY_INVENTORY -> factoryInventoryRepository.countByOrganizationId(entityId);
-            case WAREHOUSE -> warehouseRepository.countByOrganizationId(entityId);
-            case WAREHOUSE_INVENTORY -> warehouseInventoryRepository.countByOrganizationId(entityId);
-            case COMPARTMENT -> compartmentRepository.countByOrganizationId(entityId);
-            case CRATE -> crateRepository.countByOrganizationId(entityId);
-            case SUPPLIER -> supplierRepository.countByOrganizationId(entityId);
-            case SUPPLIER_ORDER -> supplierOrderRepository.countByOrganizationId(entityId);
-            case SUPPLIER_SHIPMENT -> supplierShipmentRepository.countByOrganizationId(entityId);
-            case CLIENT -> clientRepository.countByOrganizationId(entityId);
-            case CLIENT_ORDER -> clientOrderRepository.countByOrganizationId(entityId);
-            case CLIENT_SHIPMENT -> clientShipmentRepository.countByOrganizationId(entityId);
-            case LOCATION -> locationRepository.countByOrganizationId(entityId);
-            default -> 0L;
+    public Optional<Integer> findOrganizationIdByEntityId(Long entityId, String entityType) {
+        return switch (entityType) {
+            case "CustomRole" -> customRoleRepository.findOrganizationIdById(entityId);
+            case "Product" -> productRepository.findOrganizationIdById(entityId);
+            case "Stage" -> stageRepository.findOrganizationIdById(entityId);
+            case "Component" -> componentRepository.findOrganizationIdById(entityId);
+            case "ResourceTransportRoute" -> transportRouteRepository.findOrganizationIdById(entityId);
+            case "Pricing" -> pricingRepository.findOrganizationIdById(entityId);
+            case "Factory" -> factoryRepository.findOrganizationIdById(entityId);
+            case "FactoryStage" -> factoryStageRepository.findOrganizationIdById(entityId);
+            case "FactoryInventoryItem" -> factoryInventoryRepository.findOrganizationIdById(entityId);
+            case "Warehouse" -> warehouseRepository.findOrganizationIdById(entityId);
+            case "WarehouseInventoryItem" -> warehouseInventoryRepository.findOrganizationIdById(entityId);
+            case "Compartment" -> compartmentRepository.findOrganizationIdById(entityId);
+            case "Crate" -> crateRepository.findOrganizationIdById(entityId);
+            case "Supplier" -> supplierRepository.findOrganizationIdById(entityId);
+            case "SupplierOrder" -> supplierOrderRepository.findOrganizationIdById(entityId);
+            case "SupplierShipment" -> supplierShipmentRepository.findOrganizationIdById(entityId);
+            case "Client" -> clientRepository.findOrganizationIdById(entityId);
+            case "ClientOrder" -> clientOrderRepository.findOrganizationIdById(entityId);
+            case "ClientShipment" -> clientShipmentRepository.findOrganizationIdById(entityId);
+            case "Location" -> locationRepository.findOrganizationIdById(entityId);
+            default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
         };
     }
 }
