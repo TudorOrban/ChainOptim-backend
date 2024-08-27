@@ -1,54 +1,93 @@
 package org.chainoptim.core.subscription.service;
 
 import org.chainoptim.core.organization.model.SubscriptionPlanTier;
-import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.scsnapshot.model.Snapshot;
-import org.chainoptim.core.scsnapshot.service.SnapshotPersistenceService;
 import org.chainoptim.core.subscription.model.PlanDetails;
 import org.chainoptim.core.subscription.model.BaseSubscriptionPlans;
+import org.chainoptim.core.subscription.model.SubscriptionPlan;
+import org.chainoptim.core.subscription.repository.SubscriptionPlanRepository;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.shared.enums.Feature;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimiterService {
 
-    private final SnapshotPersistenceService snapshotPersistenceService;
-    private final OrganizationRepository organizationRepository;
+    private final SubscriptionPlanRepository subscriptionPlanRepository;
+    private final FeatureCounterService featureCounterService;
 
     @Autowired
-    public SubscriptionPlanLimiterServiceImpl(SnapshotPersistenceService snapshotPersistenceService,
-                                              OrganizationRepository organizationRepository) {
-        this.snapshotPersistenceService = snapshotPersistenceService;
-        this.organizationRepository = organizationRepository;
+    public SubscriptionPlanLimiterServiceImpl(SubscriptionPlanRepository subscriptionPlanRepository,
+                                              FeatureCounterService featureCounterService) {
+        this.subscriptionPlanRepository = subscriptionPlanRepository;
+        this.featureCounterService = featureCounterService;
     }
 
     public boolean isLimitReached(Integer organizationId, Feature feature, Integer quantity) {
-        Snapshot snapshot = snapshotPersistenceService.getSupplyChainSnapshotByOrganizationId(organizationId).getSnapshot();
-        SubscriptionPlanTier planTier = organizationRepository.getSubscriptionPlanTierById(organizationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization with ID: " + organizationId + " not found"));
-        PlanDetails planDetails = BaseSubscriptionPlans.getPlans().get(planTier);
+        // Get the current subscription plan
+        List<SubscriptionPlan> plans = subscriptionPlanRepository.findByOrganizationId(organizationId);
+        if (plans.isEmpty()) {
+            throw new ResourceNotFoundException("Subscription plan not found for organization with ID: " + organizationId);
+        }
+        SubscriptionPlan currentPlan = plans.getFirst();
 
-        if (planTier.equals(SubscriptionPlanTier.PROFESSIONAL)) return false; // No limits for PRO plan
+        if (Boolean.FALSE.equals(currentPlan.getIsActive()) || Boolean.FALSE.equals(currentPlan.getIsPaid())) {
+            return true;
+        }
 
+        // Determine limit for the feature
+        long maxCount = getMaxCount(currentPlan, feature);
+        if (maxCount == -1) return false; // No limits for ENTERPRISE plan
+
+        long currentCount = featureCounterService.getCountByFeature(organizationId, feature);
+
+        return isAboveLimit(currentCount, maxCount, quantity);
+    }
+
+    private long getMaxCount(SubscriptionPlan currentPlan, Feature feature) {
+        if (currentPlan.getCustomPlan().getPlanTier().equals(SubscriptionPlanTier.ENTERPRISE)) return -1;
+
+        PlanDetails planDetails = BaseSubscriptionPlans.getPlans().get(currentPlan.getCustomPlan().getPlanTier());
+
+        long baseFeatureCount = getBaseMaxCountByFeature(feature, planDetails);
+
+        if (Boolean.TRUE.equals(!currentPlan.getIsBasic()) && currentPlan.getCustomPlan().getAdditionalFeatures() != null) {
+            baseFeatureCount += currentPlan.getCustomPlan().getAdditionalFeatures().getOrDefault(feature, 0L);
+        }
+
+        return baseFeatureCount;
+    }
+
+    private long getBaseMaxCountByFeature(Feature feature, PlanDetails planDetails) {
         return switch (feature) {
-            case Feature.PRODUCT -> snapshot.getProductsCount() + quantity >= planDetails.getMaxProducts();
-            case Feature.PRODUCT_STAGE -> snapshot.getProductStagesCount() + quantity >= planDetails.getMaxProductStages();
-            case Feature.COMPONENT -> snapshot.getComponentsCount() + quantity >= planDetails.getMaxComponents();
-            case Feature.FACTORY -> snapshot.getFactoriesCount() + quantity >= planDetails.getMaxFactories();
-            case Feature.FACTORY_INVENTORY -> snapshot.getFactoryInventoryItemsCount() + quantity >= planDetails.getMaxFactoryInventoryItems();
-            case Feature.FACTORY_STAGE -> snapshot.getFactoryStagesCount() + quantity >= planDetails.getMaxFactoryStages();
-            case Feature.WAREHOUSE -> snapshot.getWarehousesCount() + quantity >= planDetails.getMaxWarehouses();
-            case Feature.WAREHOUSE_INVENTORY -> snapshot.getWarehouseInventoryItemsCount() + quantity >= planDetails.getMaxWarehouseInventoryItems();
-            case Feature.SUPPLIER -> snapshot.getSuppliersCount() + quantity >= planDetails.getMaxSuppliers();
-            case Feature.SUPPLIER_ORDER -> snapshot.getSupplierOrdersCount() + quantity >= planDetails.getMaxSupplierOrders();
-            case Feature.SUPPLIER_SHIPMENT -> snapshot.getSupplierShipmentsCount() + quantity >= planDetails.getMaxSupplierShipments();
-            case Feature.CLIENT -> snapshot.getClientsCount() + quantity >= planDetails.getMaxClients();
-            case Feature.CLIENT_ORDER -> snapshot.getClientOrdersCount() + quantity >= planDetails.getMaxClientOrders();
-            case Feature.CLIENT_SHIPMENT -> snapshot.getClientShipmentsCount() + quantity >= planDetails.getMaxClientShipments();
-            default -> true; // Don't restrict here for now
+            case MEMBER -> planDetails.getMaxMembers();
+            case PRODUCT -> planDetails.getMaxProducts();
+            case PRODUCT_STAGE -> planDetails.getMaxProductStages();
+            case COMPONENT -> planDetails.getMaxComponents();
+            case TRANSPORT_ROUTE -> planDetails.getMaxTransportRoutes();
+            case PRICING -> planDetails.getMaxPricings();
+            case FACTORY -> planDetails.getMaxFactories();
+            case FACTORY_STAGE -> planDetails.getMaxFactoryStages();
+            case FACTORY_INVENTORY -> planDetails.getMaxFactoryInventoryItems();
+            case WAREHOUSE -> planDetails.getMaxWarehouses();
+            case WAREHOUSE_INVENTORY -> planDetails.getMaxWarehouseInventoryItems();
+            case COMPARTMENT -> planDetails.getMaxCompartments();
+            case CRATE -> planDetails.getMaxCrates();
+            case SUPPLIER -> planDetails.getMaxSuppliers();
+            case SUPPLIER_ORDER -> planDetails.getMaxSupplierOrders();
+            case SUPPLIER_SHIPMENT -> planDetails.getMaxSupplierShipments();
+            case CLIENT -> planDetails.getMaxClients();
+            case CLIENT_ORDER -> planDetails.getMaxClientOrders();
+            case CLIENT_SHIPMENT -> planDetails.getMaxClientShipments();
+            case LOCATION -> planDetails.getMaxLocations();
+            default -> 0L;
         };
+    }
+
+    private boolean isAboveLimit(Long currentCount, Long maxCount, Integer quantity) {
+        return currentCount + quantity >= maxCount;
     }
 }

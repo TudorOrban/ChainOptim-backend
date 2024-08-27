@@ -15,5 +15,8 @@ public interface CrateRepository extends JpaRepository<Crate, Integer> {
     @Query("SELECT c.organizationId FROM Crate c WHERE c.id = :crateId")
     Optional<Integer> findOrganizationIdById(@Param("crateId") Long crateId);
 
+    @Query("SELECT COUNT(c) FROM Crate c WHERE c.organizationId = :organizationId")
+    long countByOrganizationId(@Param("organizationId") Integer organizationId);
+
 
 }

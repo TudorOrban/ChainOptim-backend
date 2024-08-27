@@ -16,4 +16,7 @@ public interface CompartmentRepository extends JpaRepository<Compartment, Intege
     @Query("SELECT c.organizationId FROM Crate c WHERE c.id = :compartmentId")
     Optional<Integer> findOrganizationIdById(@Param("compartmentId") Long compartmentId);
 
+    @Query("SELECT COUNT(c) FROM Compartment c WHERE c.organizationId = :organizationId")
+    long countByOrganizationId(@Param("organizationId") Integer organizationId);
+
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClientShipmentRepository extends JpaRepository<ClientShipment, Integer>, ClientShipmentsSearchRepository {
 
@@ -17,4 +18,7 @@ public interface ClientShipmentRepository extends JpaRepository<ClientShipment, 
 
     @Query("SELECT COUNT(cs) FROM ClientShipment cs, ClientOrder co WHERE cs.clientOrderId = co.id AND co.organizationId = :organizationId")
     long countByOrganizationId(@Param("organizationId") Integer organizationId);
+
+    @Query("SELECT cs.organizationId FROM ClientShipment cs WHERE cs.id = :shipmentId")
+    Optional<Integer> findOrganizationIdById(@Param("shipmentId") Long shipmentId);
 }

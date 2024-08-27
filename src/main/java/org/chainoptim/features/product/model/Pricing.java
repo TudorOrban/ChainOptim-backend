@@ -25,6 +25,9 @@ public class Pricing {
     @Column(name = "product_id", nullable = false)
     private Integer productId;
 
+    @Column(name = "organization_id", nullable = false)
+    private Integer organizationId;
+
     // Manual deserialization and caching of JSON column
     @Column(name = "product_pricing", columnDefinition = "json")
     private String pricingJson;

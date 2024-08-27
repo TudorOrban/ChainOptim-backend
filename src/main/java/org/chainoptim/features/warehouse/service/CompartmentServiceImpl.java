@@ -1,10 +1,13 @@
 package org.chainoptim.features.warehouse.service;
 
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.features.warehouse.dto.CompartmentDTOMapper;
 import org.chainoptim.features.warehouse.dto.CreateCompartmentDTO;
 import org.chainoptim.features.warehouse.dto.UpdateCompartmentDTO;
 import org.chainoptim.features.warehouse.model.Compartment;
 import org.chainoptim.features.warehouse.repository.CompartmentRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +18,13 @@ import java.util.List;
 public class CompartmentServiceImpl implements CompartmentService {
 
     private final CompartmentRepository compartmentRepository;
+    private final SubscriptionPlanLimiterService planLimiterService;
 
     @Autowired
-    public CompartmentServiceImpl(CompartmentRepository compartmentRepository) {
+    public CompartmentServiceImpl(CompartmentRepository compartmentRepository,
+                                  SubscriptionPlanLimiterService planLimiterService) {
         this.compartmentRepository = compartmentRepository;
+        this.planLimiterService = planLimiterService;
     }
 
     public List<Compartment> getCompartmentsByOrganizationId(Integer organizationId) {
@@ -35,6 +41,11 @@ public class CompartmentServiceImpl implements CompartmentService {
     }
 
     public Compartment createCompartment(CreateCompartmentDTO compartmentDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(compartmentDTO.getOrganizationId(), Feature.COMPARTMENT, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed compartments for the current Subscription Plan.");
+        }
+
         Compartment compartment = CompartmentDTOMapper.mapCreateCompartmentDTOToCompartment(compartmentDTO);
         return compartmentRepository.save(compartment);
     }

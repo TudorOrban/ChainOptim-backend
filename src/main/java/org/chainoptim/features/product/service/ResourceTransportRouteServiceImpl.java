@@ -1,10 +1,13 @@
 package org.chainoptim.features.product.service;
 
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.product.dto.CreateRouteDTO;
 import org.chainoptim.features.product.dto.UpdateRouteDTO;
 import org.chainoptim.features.product.model.ResourceTransportRoute;
 import org.chainoptim.features.product.repository.ResourceTransportRouteRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.chainoptim.shared.search.model.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +19,13 @@ import java.util.List;
 public class ResourceTransportRouteServiceImpl implements ResourceTransportRouteService {
 
     private final ResourceTransportRouteRepository routeRepository;
+    private final SubscriptionPlanLimiterService planLimiterService;
 
     @Autowired
-    public ResourceTransportRouteServiceImpl(ResourceTransportRouteRepository routeRepository) {
+    public ResourceTransportRouteServiceImpl(ResourceTransportRouteRepository routeRepository,
+                                             SubscriptionPlanLimiterService planLimiterService) {
         this.routeRepository = routeRepository;
+        this.planLimiterService = planLimiterService;
     }
 
     public List<ResourceTransportRoute> getRoutesByOrganizationId(Integer organizationId) {
@@ -31,6 +37,11 @@ public class ResourceTransportRouteServiceImpl implements ResourceTransportRoute
     }
 
     public ResourceTransportRoute createRoute(CreateRouteDTO routeDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(routeDTO.getOrganizationId(), Feature.TRANSPORT_ROUTE, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed transport routes for the current Subscription Plan.");
+        }
+
         ResourceTransportRoute route = new ResourceTransportRoute();
         route.setOrganizationId(routeDTO.getOrganizationId());
         route.setTransportRoute(routeDTO.getTransportRoute());

@@ -10,20 +10,22 @@ public enum Feature {
     PRODUCT,
     PRODUCT_STAGE,
     COMPONENT,
-    UNIT_OF_MEASUREMENT,
+    TRANSPORT_ROUTE,
+    PRICING,
 
     // Factories
     FACTORY,
     FACTORY_STAGE,
-    RESOURCE_ALLOCATION_PLAN,
     FACTORY_INVENTORY,
+    RESOURCE_ALLOCATION_PLAN,
     FACTORY_PRODUCTION_HISTORY,
     FACTORY_PERFORMANCE,
 
     // Warehouses
     WAREHOUSE,
     WAREHOUSE_INVENTORY,
-
+    COMPARTMENT,
+    CRATE,
 
     // Suppliers
     SUPPLIER,
@@ -39,6 +41,7 @@ public enum Feature {
 
     // Overview
     UPCOMING_EVENT,
+    LOCATION,
 
     NONE;
 
@@ -50,15 +53,18 @@ public enum Feature {
             case PRODUCT -> "Product";
             case PRODUCT_STAGE -> "Product Stage";
             case COMPONENT -> "Component";
-            case UNIT_OF_MEASUREMENT -> "Unit of Measurement";
+            case TRANSPORT_ROUTE -> "Transport Route";
+            case PRICING -> "Pricing";
             case FACTORY -> "Factory";
             case FACTORY_STAGE -> "Factory Stage";
-            case RESOURCE_ALLOCATION_PLAN -> "Resource Allocation Plan";
             case FACTORY_INVENTORY -> "Factory Inventory";
+            case RESOURCE_ALLOCATION_PLAN -> "Resource Allocation Plan";
             case FACTORY_PRODUCTION_HISTORY -> "Factory Production History";
             case FACTORY_PERFORMANCE -> "Factory Performance";
             case WAREHOUSE -> "Warehouse";
             case WAREHOUSE_INVENTORY -> "Warehouse Inventory";
+            case COMPARTMENT -> "Compartment";
+            case CRATE -> "Crate";
             case SUPPLIER -> "Supplier";
             case SUPPLIER_ORDER -> "Supplier Order";
             case SUPPLIER_SHIPMENT -> "Supplier Shipment";
@@ -68,6 +74,7 @@ public enum Feature {
             case CLIENT_SHIPMENT -> "Client Shipment";
             case CLIENT_EVALUATION -> "Client Evaluation";
             case UPCOMING_EVENT -> "Upcoming Event";
+            case LOCATION -> "Location";
             case NONE -> "None";
         };
     }
@@ -79,15 +86,18 @@ public enum Feature {
             case "Product" -> PRODUCT;
             case "Product Stage" -> PRODUCT_STAGE;
             case "Component" -> COMPONENT;
-            case "Unit of Measurement" -> UNIT_OF_MEASUREMENT;
+            case "Transport Route" -> TRANSPORT_ROUTE;
+            case "Pricing" -> PRICING;
             case "Factory" -> FACTORY;
             case "Factory Stage" -> FACTORY_STAGE;
-            case "Resource Allocation Plan" -> RESOURCE_ALLOCATION_PLAN;
             case "Factory Inventory" -> FACTORY_INVENTORY;
+            case "Resource Allocation Plan" -> RESOURCE_ALLOCATION_PLAN;
             case "Factory Production History" -> FACTORY_PRODUCTION_HISTORY;
             case "Factory Performance" -> FACTORY_PERFORMANCE;
             case "Warehouse" -> WAREHOUSE;
             case "Warehouse Inventory" -> WAREHOUSE_INVENTORY;
+            case "Compartment" -> COMPARTMENT;
+            case "Crate" -> CRATE;
             case "Supplier" -> SUPPLIER;
             case "Supplier Order" -> SUPPLIER_ORDER;
             case "Supplier Shipment" -> SUPPLIER_SHIPMENT;
@@ -97,6 +107,7 @@ public enum Feature {
             case "Client Shipment" -> CLIENT_SHIPMENT;
             case "Client Evaluation" -> CLIENT_EVALUATION;
             case "Upcoming Event" -> UPCOMING_EVENT;
+            case "Location" -> LOCATION;
             case "None" -> NONE;
             default -> throw new IllegalArgumentException("Unsupported feature: " + feature);
         };

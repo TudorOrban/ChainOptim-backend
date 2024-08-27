@@ -21,6 +21,8 @@ public class PlanDetails {
     private int maxProducts;
     private int maxComponents;
     private int maxProductStages;
+    private int maxTransportRoutes;
+    private int maxPricings;
 
     // Factories
     private int maxFactories;
@@ -31,6 +33,8 @@ public class PlanDetails {
     // Warehouses
     private int maxWarehouses;
     private int maxWarehouseInventoryItems;
+    private int maxCompartments;
+    private int maxCrates;
 
     // Suppliers
     private int maxSuppliers;
@@ -43,4 +47,7 @@ public class PlanDetails {
     private int maxClientOrders;
     private int maxClientShipments;
     private boolean clientPerformanceOn;
+
+    // Location
+    private int maxLocations;
 }

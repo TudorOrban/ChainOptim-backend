@@ -1,10 +1,13 @@
 package org.chainoptim.features.warehouse.service;
 
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.features.warehouse.dto.CrateDTOMapper;
 import org.chainoptim.features.warehouse.dto.CreateCrateDTO;
 import org.chainoptim.features.warehouse.dto.UpdateCrateDTO;
 import org.chainoptim.features.warehouse.model.Crate;
 import org.chainoptim.features.warehouse.repository.CrateRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +18,13 @@ import java.util.List;
 public class CrateServiceImpl implements CrateService {
 
     private final CrateRepository crateRepository;
+    private final SubscriptionPlanLimiterService planLimiterService;
 
     @Autowired
-    public CrateServiceImpl(CrateRepository crateRepository) {
+    public CrateServiceImpl(CrateRepository crateRepository,
+                            SubscriptionPlanLimiterService planLimiterService) {
         this.crateRepository = crateRepository;
+        this.planLimiterService = planLimiterService;
     }
 
     public List<Crate> getCratesByOrganizationId(Integer organizationId) {
@@ -26,6 +32,11 @@ public class CrateServiceImpl implements CrateService {
     }
 
     public Crate createCrate(CreateCrateDTO crateDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(crateDTO.getOrganizationId(), Feature.CRATE, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed crates for the current Subscription Plan.");
+        }
+
         Crate crate = CrateDTOMapper.mapCreateCrateDTOToCrate(crateDTO);
         return crateRepository.save(crate);
     }
