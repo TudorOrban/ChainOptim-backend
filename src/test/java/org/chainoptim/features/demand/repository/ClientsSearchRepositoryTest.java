@@ -1,6 +1,7 @@
 package org.chainoptim.features.demand.repository;
 
-import org.chainoptim.features.demand.model.Client;
+import org.chainoptim.features.demand.client.model.Client;
+import org.chainoptim.features.demand.client.repository.ClientsSearchRepositoryImpl;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.search.model.PaginatedResults;
 

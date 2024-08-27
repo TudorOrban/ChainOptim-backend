@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.*;
 import lombok.*;
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.production.model.FactoryInventoryItem;
+import org.chainoptim.features.production.inventory.model.FactoryInventoryItem;
 import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
 import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.goods.stage.model.StageInput;

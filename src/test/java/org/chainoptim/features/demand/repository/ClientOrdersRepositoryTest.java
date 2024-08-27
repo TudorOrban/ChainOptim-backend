@@ -2,9 +2,10 @@ package org.chainoptim.features.demand.repository;
 
 import org.chainoptim.core.tenant.organization.model.Organization;
 import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
+import org.chainoptim.features.demand.clientorder.repository.ClientOrderRepository;
 import org.chainoptim.features.goods.product.model.Product;
-import org.chainoptim.features.demand.model.Client;
-import org.chainoptim.features.demand.model.ClientOrder;
+import org.chainoptim.features.demand.client.model.Client;
+import org.chainoptim.features.demand.clientorder.model.ClientOrder;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.enums.OrderStatus;
 

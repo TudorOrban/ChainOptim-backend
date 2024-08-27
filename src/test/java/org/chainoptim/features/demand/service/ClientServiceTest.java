@@ -2,12 +2,13 @@ package org.chainoptim.features.demand.service;
 
 import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.demand.dto.CreateClientDTO;
-import org.chainoptim.features.demand.dto.ClientDTOMapper;
-import org.chainoptim.features.demand.dto.UpdateClientDTO;
-import org.chainoptim.features.demand.model.Client;
-import org.chainoptim.features.demand.repository.ClientRepository;
+import org.chainoptim.features.demand.client.dto.CreateClientDTO;
+import org.chainoptim.features.demand.client.dto.ClientDTOMapper;
+import org.chainoptim.features.demand.client.dto.UpdateClientDTO;
+import org.chainoptim.features.demand.client.model.Client;
+import org.chainoptim.features.demand.client.repository.ClientRepository;
 
+import org.chainoptim.features.demand.client.service.ClientServiceImpl;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.junit.jupiter.api.Test;

@@ -8,7 +8,7 @@ import org.chainoptim.features.goods.stage.dto.StageDTOMapper;
 import org.chainoptim.features.goods.stage.dto.UpdateStageDTO;
 import org.chainoptim.features.goods.stage.model.Stage;
 import org.chainoptim.features.goods.stage.repository.StageRepository;
-import org.chainoptim.features.scanalysis.production.productgraph.service.ProductProductionGraphService;
+import org.chainoptim.features.goods.productgraph.service.ProductProductionGraphService;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.springframework.beans.factory.annotation.Autowired;

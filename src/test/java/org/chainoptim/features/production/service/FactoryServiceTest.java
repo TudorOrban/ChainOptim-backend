@@ -2,11 +2,12 @@ package org.chainoptim.features.production.service;
 
 import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.production.dto.CreateFactoryDTO;
-import org.chainoptim.features.production.dto.FactoryDTOMapper;
-import org.chainoptim.features.production.dto.UpdateFactoryDTO;
-import org.chainoptim.features.production.model.Factory;
-import org.chainoptim.features.production.repository.FactoryRepository;
+import org.chainoptim.features.production.factory.dto.CreateFactoryDTO;
+import org.chainoptim.features.production.factory.dto.FactoryDTOMapper;
+import org.chainoptim.features.production.factory.dto.UpdateFactoryDTO;
+import org.chainoptim.features.production.factory.model.Factory;
+import org.chainoptim.features.production.factory.repository.FactoryRepository;
+import org.chainoptim.features.production.factory.service.FactoryServiceImpl;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 

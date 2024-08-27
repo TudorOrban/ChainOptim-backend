@@ -1,6 +1,5 @@
 package org.chainoptim.core.tenant.organization.service;
 
-import org.chainoptim.core.tenant.dto.*;
 import org.chainoptim.core.tenant.organization.dto.*;
 import org.chainoptim.core.tenant.organization.model.Organization;
 import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;

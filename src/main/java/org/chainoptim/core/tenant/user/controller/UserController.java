@@ -6,8 +6,6 @@ import org.chainoptim.core.tenant.user.service.CachedUserService;
 import org.chainoptim.core.tenant.user.service.UserService;
 import org.chainoptim.core.tenant.user.service.UserUpdateService;
 import org.chainoptim.core.tenant.user.service.UserWriteService;
-import org.chainoptim.core.user.dto.*;
-import org.chainoptim.core.user.service.*;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.chainoptim.core.tenant.user.model.User;
 

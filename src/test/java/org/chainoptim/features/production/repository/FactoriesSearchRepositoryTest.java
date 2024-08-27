@@ -1,6 +1,7 @@
 package org.chainoptim.features.production.repository;
 
-import org.chainoptim.features.production.model.Factory;
+import org.chainoptim.features.production.factory.model.Factory;
+import org.chainoptim.features.production.factory.repository.FactoriesSearchRepositoryImpl;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.search.model.PaginatedResults;
 

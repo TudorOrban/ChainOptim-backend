@@ -1,13 +1,12 @@
 package org.chainoptim.core.overview.map.service;
 
-import org.chainoptim.core.map.model.*;
 import org.chainoptim.core.overview.map.model.*;
-import org.chainoptim.features.demand.model.Client;
-import org.chainoptim.features.demand.model.ClientShipment;
-import org.chainoptim.features.demand.repository.ClientRepository;
-import org.chainoptim.features.demand.repository.ClientShipmentRepository;
-import org.chainoptim.features.production.model.Factory;
-import org.chainoptim.features.production.repository.FactoryRepository;
+import org.chainoptim.features.demand.client.model.Client;
+import org.chainoptim.features.demand.clientshipment.model.ClientShipment;
+import org.chainoptim.features.demand.client.repository.ClientRepository;
+import org.chainoptim.features.demand.clientshipment.repository.ClientShipmentRepository;
+import org.chainoptim.features.production.factory.model.Factory;
+import org.chainoptim.features.production.factory.repository.FactoryRepository;
 import org.chainoptim.features.supply.model.Supplier;
 import org.chainoptim.features.supply.model.SupplierShipment;
 import org.chainoptim.features.supply.repository.SupplierRepository;

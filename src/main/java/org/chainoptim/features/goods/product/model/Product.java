@@ -1,10 +1,10 @@
 package org.chainoptim.features.goods.product.model;
 
 import org.chainoptim.exception.ValidationException;
-import org.chainoptim.features.demand.model.ClientOrder;
+import org.chainoptim.features.demand.clientorder.model.ClientOrder;
 import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
 import org.chainoptim.features.goods.controller.UnitOfMeasurement;
-import org.chainoptim.features.production.model.FactoryInventoryItem;
+import org.chainoptim.features.production.inventory.model.FactoryInventoryItem;
 import org.chainoptim.features.goods.stage.model.Stage;
 import org.chainoptim.features.storage.model.WarehouseInventoryItem;
 

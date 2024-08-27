@@ -1,12 +1,12 @@
 package org.chainoptim.core.tenant.organization.service;
 
 import org.chainoptim.core.tenant.customrole.repository.CustomRoleRepository;
-import org.chainoptim.features.demand.repository.ClientOrderRepository;
-import org.chainoptim.features.demand.repository.ClientRepository;
-import org.chainoptim.features.demand.repository.ClientShipmentRepository;
-import org.chainoptim.features.production.repository.FactoryInventoryItemRepository;
-import org.chainoptim.features.production.repository.FactoryRepository;
-import org.chainoptim.features.production.repository.FactoryStageRepository;
+import org.chainoptim.features.demand.clientorder.repository.ClientOrderRepository;
+import org.chainoptim.features.demand.client.repository.ClientRepository;
+import org.chainoptim.features.demand.clientshipment.repository.ClientShipmentRepository;
+import org.chainoptim.features.production.inventory.repository.FactoryInventoryItemRepository;
+import org.chainoptim.features.production.factory.repository.FactoryRepository;
+import org.chainoptim.features.production.stage.repository.FactoryStageRepository;
 import org.chainoptim.features.goods.pricing.repository.PricingRepository;
 import org.chainoptim.features.goods.product.repository.ProductRepository;
 import org.chainoptim.features.goods.transportroute.repository.ResourceTransportRouteRepository;

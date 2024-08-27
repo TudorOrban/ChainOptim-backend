@@ -13,7 +13,7 @@ import org.chainoptim.features.goods.stage.model.StageOutput;
 import org.chainoptim.features.goods.component.repository.ComponentRepository;
 import org.chainoptim.features.goods.stage.repository.StageOutputRepository;
 import org.chainoptim.features.goods.stage.repository.StageRepository;
-import org.chainoptim.features.scanalysis.production.productgraph.service.ProductProductionGraphService;
+import org.chainoptim.features.goods.productgraph.service.ProductProductionGraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

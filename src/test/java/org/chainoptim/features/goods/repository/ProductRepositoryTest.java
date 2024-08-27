@@ -2,11 +2,11 @@ package org.chainoptim.features.goods.repository;
 
 import org.chainoptim.core.tenant.organization.model.Organization;
 import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
-import org.chainoptim.features.demand.model.Client;
-import org.chainoptim.features.demand.model.ClientOrder;
+import org.chainoptim.features.demand.client.model.Client;
+import org.chainoptim.features.demand.clientorder.model.ClientOrder;
 import org.chainoptim.features.goods.product.repository.ProductRepository;
-import org.chainoptim.features.production.model.Factory;
-import org.chainoptim.features.production.model.FactoryStage;
+import org.chainoptim.features.production.factory.model.Factory;
+import org.chainoptim.features.production.stage.model.FactoryStage;
 import org.chainoptim.features.goods.product.model.Product;
 import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.goods.stage.model.Stage;
