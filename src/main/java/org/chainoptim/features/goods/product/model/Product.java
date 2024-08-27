@@ -6,7 +6,7 @@ import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
 import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.production.inventory.model.FactoryInventoryItem;
 import org.chainoptim.features.goods.stage.model.Stage;
-import org.chainoptim.features.storage.model.WarehouseInventoryItem;
+import org.chainoptim.features.storage.inventory.model.WarehouseInventoryItem;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;

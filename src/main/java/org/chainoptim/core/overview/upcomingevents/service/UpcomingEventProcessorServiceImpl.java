@@ -3,7 +3,7 @@ package org.chainoptim.core.overview.upcomingevents.service;
 import org.chainoptim.core.overview.upcomingevents.repository.UpcomingEventRepository;
 import org.chainoptim.core.overview.upcomingevents.model.UpcomingEvent;
 import org.chainoptim.features.demand.clientorder.model.ClientOrder;
-import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supply.supplierorder.model.SupplierOrder;
 import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

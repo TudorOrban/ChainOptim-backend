@@ -7,7 +7,7 @@ import org.chainoptim.core.overview.notifications.model.Notification;
 import org.chainoptim.core.overview.notifications.model.NotificationUserDistribution;
 import org.chainoptim.core.overview.notifications.websocket.WebSocketMessagingService;
 import org.chainoptim.features.demand.clientorder.model.ClientOrderEvent;
-import org.chainoptim.features.supply.model.SupplierOrderEvent;
+import org.chainoptim.features.supply.supplierorder.model.SupplierOrderEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

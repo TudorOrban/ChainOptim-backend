@@ -12,8 +12,8 @@ import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
 import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.goods.stage.model.StageInput;
 import org.chainoptim.features.goods.stage.model.StageOutput;
-import org.chainoptim.features.supply.model.SupplierOrder;
-import org.chainoptim.features.storage.model.WarehouseInventoryItem;
+import org.chainoptim.features.supply.supplierorder.model.SupplierOrder;
+import org.chainoptim.features.storage.inventory.model.WarehouseInventoryItem;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 

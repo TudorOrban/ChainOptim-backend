@@ -1,6 +1,7 @@
 package org.chainoptim.features.storage.repository;
 
-import org.chainoptim.features.storage.model.Warehouse;
+import org.chainoptim.features.storage.warehouse.model.Warehouse;
+import org.chainoptim.features.storage.warehouse.repository.WarehousesSearchRepositoryImpl;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.search.model.PaginatedResults;
 

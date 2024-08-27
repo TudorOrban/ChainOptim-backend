@@ -7,9 +7,9 @@ import lombok.Setter;
 import org.chainoptim.features.demand.client.model.Client;
 import org.chainoptim.features.demand.clientshipment.model.ClientShipment;
 import org.chainoptim.features.production.factory.model.Factory;
-import org.chainoptim.features.supply.model.Supplier;
-import org.chainoptim.features.supply.model.SupplierShipment;
-import org.chainoptim.features.storage.model.Warehouse;
+import org.chainoptim.features.supply.supplier.model.Supplier;
+import org.chainoptim.features.supply.suppliershipment.model.SupplierShipment;
+import org.chainoptim.features.storage.warehouse.model.Warehouse;
 
 import java.util.Set;
 

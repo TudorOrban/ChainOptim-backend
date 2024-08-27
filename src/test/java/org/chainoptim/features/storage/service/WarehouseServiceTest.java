@@ -2,11 +2,12 @@ package org.chainoptim.features.storage.service;
 
 import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.storage.dto.CreateWarehouseDTO;
-import org.chainoptim.features.storage.dto.WarehouseDTOMapper;
-import org.chainoptim.features.storage.dto.UpdateWarehouseDTO;
-import org.chainoptim.features.storage.model.Warehouse;
-import org.chainoptim.features.storage.repository.WarehouseRepository;
+import org.chainoptim.features.storage.warehouse.dto.CreateWarehouseDTO;
+import org.chainoptim.features.storage.warehouse.dto.WarehouseDTOMapper;
+import org.chainoptim.features.storage.warehouse.dto.UpdateWarehouseDTO;
+import org.chainoptim.features.storage.warehouse.model.Warehouse;
+import org.chainoptim.features.storage.warehouse.repository.WarehouseRepository;
+import org.chainoptim.features.storage.warehouse.service.WarehouseServiceImpl;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 

@@ -1,6 +1,7 @@
 package org.chainoptim.features.supply.repository;
 
-import org.chainoptim.features.supply.model.Supplier;
+import org.chainoptim.features.supply.supplier.model.Supplier;
+import org.chainoptim.features.supply.supplier.repository.SuppliersSearchRepositoryImpl;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.search.model.PaginatedResults;
 

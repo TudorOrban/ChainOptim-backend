@@ -1,8 +1,9 @@
 package org.chainoptim.features.supply.repository;
 
 import org.chainoptim.features.goods.component.model.Component;
-import org.chainoptim.features.supply.model.Supplier;
-import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supply.supplier.model.Supplier;
+import org.chainoptim.features.supply.supplierorder.model.SupplierOrder;
+import org.chainoptim.features.supply.supplierorder.repository.SupplierOrdersSearchRepositoryImpl;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.enums.OrderStatus;
 import org.chainoptim.shared.enums.SearchMode;

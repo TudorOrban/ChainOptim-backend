@@ -2,11 +2,12 @@ package org.chainoptim.features.supply.service;
 
 import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.supply.dto.CreateSupplierDTO;
-import org.chainoptim.features.supply.dto.SupplierDTOMapper;
-import org.chainoptim.features.supply.dto.UpdateSupplierDTO;
-import org.chainoptim.features.supply.model.Supplier;
-import org.chainoptim.features.supply.repository.SupplierRepository;
+import org.chainoptim.features.supply.supplier.dto.CreateSupplierDTO;
+import org.chainoptim.features.supply.supplier.dto.SupplierDTOMapper;
+import org.chainoptim.features.supply.supplier.dto.UpdateSupplierDTO;
+import org.chainoptim.features.supply.supplier.model.Supplier;
+import org.chainoptim.features.supply.supplier.repository.SupplierRepository;
+import org.chainoptim.features.supply.supplier.service.SupplierServiceImpl;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 

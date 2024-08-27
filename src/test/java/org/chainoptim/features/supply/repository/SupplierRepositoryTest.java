@@ -2,7 +2,8 @@ package org.chainoptim.features.supply.repository;
 
 import org.chainoptim.core.tenant.organization.model.Organization;
 import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
-import org.chainoptim.features.supply.model.Supplier;
+import org.chainoptim.features.supply.supplier.model.Supplier;
+import org.chainoptim.features.supply.supplier.repository.SupplierRepository;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 
 import org.junit.jupiter.api.BeforeEach;
