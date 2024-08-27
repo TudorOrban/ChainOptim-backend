@@ -20,10 +20,13 @@ import org.chainoptim.features.warehouse.repository.CrateRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseInventoryItemRepository;
 import org.chainoptim.features.warehouse.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static org.chainoptim.shared.enums.Feature.*;
 
 @Service
 public class OrganizationIdFinderServiceImpl implements OrganizationIdFinderService {
@@ -96,29 +99,29 @@ public class OrganizationIdFinderServiceImpl implements OrganizationIdFinderServ
         this.locationRepository = locationRepository;
     }
 
-    public Optional<Integer> findOrganizationIdByEntityId(Long entityId, String entityType) {
-        return switch (entityType) {
-            case "CustomRole" -> customRoleRepository.findOrganizationIdById(entityId);
-            case "Product" -> productRepository.findOrganizationIdById(entityId);
-            case "Stage" -> stageRepository.findOrganizationIdById(entityId);
-            case "Component" -> componentRepository.findOrganizationIdById(entityId);
-            case "ResourceTransportRoute" -> transportRouteRepository.findOrganizationIdById(entityId);
-            case "Pricing" -> pricingRepository.findOrganizationIdById(entityId);
-            case "Factory" -> factoryRepository.findOrganizationIdById(entityId);
-            case "FactoryStage" -> factoryStageRepository.findOrganizationIdById(entityId);
-            case "FactoryInventoryItem" -> factoryInventoryRepository.findOrganizationIdById(entityId);
-            case "Warehouse" -> warehouseRepository.findOrganizationIdById(entityId);
-            case "WarehouseInventoryItem" -> warehouseInventoryRepository.findOrganizationIdById(entityId);
-            case "Compartment" -> compartmentRepository.findOrganizationIdById(entityId);
-            case "Crate" -> crateRepository.findOrganizationIdById(entityId);
-            case "Supplier" -> supplierRepository.findOrganizationIdById(entityId);
-            case "SupplierOrder" -> supplierOrderRepository.findOrganizationIdById(entityId);
-            case "SupplierShipment" -> supplierShipmentRepository.findOrganizationIdById(entityId);
-            case "Client" -> clientRepository.findOrganizationIdById(entityId);
-            case "ClientOrder" -> clientOrderRepository.findOrganizationIdById(entityId);
-            case "ClientShipment" -> clientShipmentRepository.findOrganizationIdById(entityId);
-            case "Location" -> locationRepository.findOrganizationIdById(entityId);
-            default -> throw new IllegalArgumentException("Unsupported entity type: " + entityType);
+    public Optional<Integer> findOrganizationIdByEntityId(Long entityId, Feature feature) {
+        return switch (feature) {
+            case CUSTOM_ROLE -> customRoleRepository.findOrganizationIdById(entityId);
+            case PRODUCT -> productRepository.findOrganizationIdById(entityId);
+            case PRODUCT_STAGE -> stageRepository.findOrganizationIdById(entityId);
+            case COMPONENT -> componentRepository.findOrganizationIdById(entityId);
+            case TRANSPORT_ROUTE -> transportRouteRepository.findOrganizationIdById(entityId);
+            case PRICING -> pricingRepository.findOrganizationIdById(entityId);
+            case FACTORY -> factoryRepository.findOrganizationIdById(entityId);
+            case FACTORY_STAGE -> factoryStageRepository.findOrganizationIdById(entityId);
+            case FACTORY_INVENTORY -> factoryInventoryRepository.findOrganizationIdById(entityId);
+            case WAREHOUSE -> warehouseRepository.findOrganizationIdById(entityId);
+            case WAREHOUSE_INVENTORY -> warehouseInventoryRepository.findOrganizationIdById(entityId);
+            case COMPARTMENT -> compartmentRepository.findOrganizationIdById(entityId);
+            case CRATE -> crateRepository.findOrganizationIdById(entityId);
+            case SUPPLIER -> supplierRepository.findOrganizationIdById(entityId);
+            case SUPPLIER_ORDER -> supplierOrderRepository.findOrganizationIdById(entityId);
+            case SUPPLIER_SHIPMENT -> supplierShipmentRepository.findOrganizationIdById(entityId);
+            case CLIENT -> clientRepository.findOrganizationIdById(entityId);
+            case CLIENT_ORDER -> clientOrderRepository.findOrganizationIdById(entityId);
+            case CLIENT_SHIPMENT -> clientShipmentRepository.findOrganizationIdById(entityId);
+            case LOCATION -> locationRepository.findOrganizationIdById(entityId);
+            default -> throw new IllegalArgumentException("Unsupported feature: " + feature);
         };
     }
 }

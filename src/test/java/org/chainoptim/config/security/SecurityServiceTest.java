@@ -76,7 +76,7 @@ class SecurityServiceTest {
     void testCanAccessOrganizationEntity_CustomRole() {
         // Arrange
         setUserDetailsToContext(User.Role.NONE, new CustomRole());
-        when(customRoleSecurityService.canUserAccessOrganizationEntity(any(), any(), any(), any())).thenReturn(true);
+        when(customRoleSecurityService.canUserAccessOrganizationEntity(any(), any(), any())).thenReturn(true);
 
         // Act
         boolean canAccess = securityService.canAccessOrganizationEntity(Optional.of(1), "Product", "Read");

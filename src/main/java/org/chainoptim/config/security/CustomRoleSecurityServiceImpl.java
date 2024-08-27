@@ -3,27 +3,20 @@ package org.chainoptim.config.security;
 import org.chainoptim.core.organization.model.FeaturePermissions;
 import org.chainoptim.core.organization.model.Permissions;
 import org.chainoptim.core.user.model.UserDetailsImpl;
+import org.chainoptim.shared.enums.Feature;
 
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomRoleSecurityServiceImpl implements CustomRoleSecurityService {
 
-    public boolean canUserAccessOrganizationEntity(Integer organizationId, UserDetailsImpl userDetails, String entityType, String operationType) {
+    public boolean canUserAccessOrganizationEntity(UserDetailsImpl userDetails, Feature feature, String operationType) {
         Permissions userPermissions = userDetails.getCustomRole().getPermissions();
-        if (userPermissions == null) {
+        if (userPermissions == null || userPermissions.getFeaturePermissions() == null) {
             return false;
         }
 
-        return switch (entityType) {
-            case "Organization" -> hasOperationAccess(userPermissions.getOrganization(), operationType);
-            case "Product" -> hasOperationAccess(userPermissions.getProducts(), operationType);
-            case "Factory" -> hasOperationAccess(userPermissions.getFactories(), operationType);
-            case "Warehouse" -> hasOperationAccess(userPermissions.getWarehouses(), operationType);
-            case "Supplier" -> hasOperationAccess(userPermissions.getSuppliers(), operationType);
-            case "Client" -> hasOperationAccess(userPermissions.getClients(), operationType);
-            default -> true; // Allow access to entities not supported in custom permissions
-        };
+        return hasOperationAccess(userPermissions.getFeaturePermissions().get(feature), operationType);
     }
 
     private boolean hasOperationAccess(FeaturePermissions permissions, String operationType) {

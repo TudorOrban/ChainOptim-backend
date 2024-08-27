@@ -54,7 +54,7 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
 
         long baseFeatureCount = getBaseMaxCountByFeature(feature, planDetails);
 
-        if (Boolean.FALSE.equals(currentPlan.getIsBasic() && currentPlan.getCustomPlan().getAdditionalFeatures() != null)) {
+        if (Boolean.TRUE.equals(!currentPlan.getIsBasic()) && currentPlan.getCustomPlan().getAdditionalFeatures() != null) {
             baseFeatureCount += currentPlan.getCustomPlan().getAdditionalFeatures().getOrDefault(feature, 0L);
         }
 

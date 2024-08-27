@@ -5,6 +5,7 @@ import org.chainoptim.core.user.model.User;
 import org.chainoptim.core.user.model.UserDetailsImpl;
 import org.chainoptim.core.user.repository.UserRepository;
 import org.chainoptim.exception.AuthorizationException;
+import org.chainoptim.shared.enums.Feature;
 
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static org.chainoptim.shared.enums.Feature.*;
 
 @Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
@@ -39,7 +42,8 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     public boolean canAccessEntity(Long entityId, String entityType, String operationType) {
-        Optional<Integer> entityOrganizationId = organizationIdFinderService.findOrganizationIdByEntityId(entityId, entityType);
+        Feature feature = parseEntityType(entityType);
+        Optional<Integer> entityOrganizationId = organizationIdFinderService.findOrganizationIdByEntityId(entityId, feature);
 
         return canAccessOrganizationEntity(entityOrganizationId, entityType, operationType);
     }
@@ -65,11 +69,10 @@ public class SecurityServiceImpl implements SecurityService {
         // Condition 2: Check if user has permissions (with basic or custom role)
         boolean hasPermissions;
         if (userDetails.getCustomRole() == null) {
-            logger.warn("User {} does not have a custom role", userDetails.getUsername());
             hasPermissions = canAccessOrganizationEntityWithBasicRole(userDetails.getRole(), operationType);
         } else {
-            logger.info("User {} has a custom role", userDetails.getUsername());
-            hasPermissions = customRoleSecurityService.canUserAccessOrganizationEntity(currentOrganizationId, userDetails, entityType, operationType);
+            Feature feature = parseEntityType(entityType);
+            hasPermissions = customRoleSecurityService.canUserAccessOrganizationEntity(userDetails, feature, operationType);
         }
         if (!hasPermissions) {
             logger.warn("User {} does not have permission to perform operation: {} on entity: {}", userDetails.getUsername(), operationType, entityType);
@@ -91,5 +94,39 @@ public class SecurityServiceImpl implements SecurityService {
         Optional<Integer> organizationId = userRepository.findOrganizationIdById(userId);
 
         return canAccessOrganizationEntity(organizationId, "User", operationType);
+    }
+
+    // Util
+    private Feature parseEntityType(String entityType) {
+        return switch (entityType) {
+            case "User" -> MEMBER;
+            case "CustomRole" -> CUSTOM_ROLE;
+            case "Product" -> PRODUCT;
+            case "Stage" -> PRODUCT_STAGE;
+            case "Component" -> COMPONENT;
+            case "TransportRoute" -> TRANSPORT_ROUTE;
+            case "Pricing" -> PRICING;
+            case "Factory" -> FACTORY;
+            case "FactoryStage" -> FACTORY_STAGE;
+            case "FactoryInventory" -> FACTORY_INVENTORY;
+            case "ResourceAllocationPlan" -> RESOURCE_ALLOCATION_PLAN;
+            case "FactoryProductionHistory" -> FACTORY_PRODUCTION_HISTORY;
+            case "FactoryPerformance" -> FACTORY_PERFORMANCE;
+            case "Warehouse" -> WAREHOUSE;
+            case "WarehouseInventory" -> WAREHOUSE_INVENTORY;
+            case "Compartment" -> COMPARTMENT;
+            case "Crate" -> CRATE;
+            case "Supplier" -> SUPPLIER;
+            case "SupplierOrder" -> SUPPLIER_ORDER;
+            case "SupplierShipment" -> SUPPLIER_SHIPMENT;
+            case "SupplierPerformance" -> SUPPLIER_PERFORMANCE;
+            case "Client" -> CLIENT;
+            case "ClientOrder" -> CLIENT_ORDER;
+            case "ClientShipment" -> CLIENT_SHIPMENT;
+            case "ClientEvaluation" -> CLIENT_EVALUATION;
+            case "UpcomingEvent" -> UPCOMING_EVENT;
+            case "Location" -> LOCATION;
+            default -> throw new IllegalArgumentException("Invalid entity type: " + entityType);
+        };
     }
 }
