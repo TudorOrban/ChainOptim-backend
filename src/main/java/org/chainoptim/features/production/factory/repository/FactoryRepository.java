@@ -17,7 +17,7 @@ public interface FactoryRepository extends JpaRepository<Factory, Integer>, Fact
 
     List<Factory> findByOrganizationId(Integer organizationId);
 
-    @Query("SELECT new org.chainoptim.features.factory.dto.FactoriesSearchDTO(f.id, f.name, f.createdAt, f.updatedAt, f.location, f.overallScore, f.resourceDistributionScore, f.resourceReadinessScore, f.resourceUtilizationScore) FROM Factory f WHERE f.organizationId = :organizationId")
+    @Query("SELECT new org.chainoptim.features.production.factory.dto.FactoriesSearchDTO(f.id, f.name, f.createdAt, f.updatedAt, f.location, f.overallScore, f.resourceDistributionScore, f.resourceReadinessScore, f.resourceUtilizationScore) FROM Factory f WHERE f.organizationId = :organizationId")
     List<FactoriesSearchDTO> findByOrganizationIdSmall(Integer organizationId);
 
     @Query("SELECT f.organizationId FROM Factory f WHERE f.id = :factoryId")

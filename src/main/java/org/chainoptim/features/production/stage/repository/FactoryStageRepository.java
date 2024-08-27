@@ -11,10 +11,10 @@ import java.util.Optional;
 
 public interface FactoryStageRepository extends JpaRepository<FactoryStage, Integer> {
 
-    @Query("SELECT new org.chainoptim.features.factory.dto.FactoryStageSearchDTO(fs.id, fs.factory.id, fs.stage.id, fs.stage.name) FROM FactoryStage fs JOIN fs.factory f WHERE f.organizationId = :organizationId")
+    @Query("SELECT new org.chainoptim.features.production.stage.dto.FactoryStageSearchDTO(fs.id, fs.factory.id, fs.stage.id, fs.stage.name) FROM FactoryStage fs JOIN fs.factory f WHERE f.organizationId = :organizationId")
     List<FactoryStageSearchDTO> findByOrganizationId(Integer organizationId);
 
-    @Query("SELECT new org.chainoptim.features.factory.dto.FactoryStageSearchDTO(fs.id, fs.factory.id, fs.stage.id, fs.stage.name) FROM FactoryStage fs WHERE fs.factory.id = :factoryId")
+    @Query("SELECT new org.chainoptim.features.production.stage.dto.FactoryStageSearchDTO(fs.id, fs.factory.id, fs.stage.id, fs.stage.name) FROM FactoryStage fs WHERE fs.factory.id = :factoryId")
     List<FactoryStageSearchDTO> findByFactoryId(Integer factoryId);
 
     @Query("SELECT fs FROM FactoryStage fs JOIN FETCH fs.stage WHERE fs.id = :id")

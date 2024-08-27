@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, Prod
 
     List<Product> findByOrganizationId(Integer organizationId);
 
-    @Query("SELECT new org.chainoptim.features.product.dto.ProductsSearchDTO(p.id, p.name, p.description, p.createdAt, p.updatedAt) FROM Product p WHERE p.organizationId = :organizationId")
+    @Query("SELECT new org.chainoptim.features.goods.product.dto.ProductsSearchDTO(p.id, p.name, p.description, p.createdAt, p.updatedAt) FROM Product p WHERE p.organizationId = :organizationId")
     List<ProductsSearchDTO> findByOrganizationIdSmall(Integer organizationId);
 
     @Query("SELECT p.organizationId FROM Product p WHERE p.id = :productId")

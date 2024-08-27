@@ -16,7 +16,7 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>, 
 
     List<Warehouse> findByOrganizationId(Integer organizationId);
 
-    @Query("SELECT new org.chainoptim.features.warehouse.dto.WarehousesSearchDTO(w.id, w.name, w.createdAt, w.updatedAt, w.location) FROM Warehouse w WHERE w.organizationId = :organizationId")
+    @Query("SELECT new org.chainoptim.features.storage.warehouse.dto.WarehousesSearchDTO(w.id, w.name, w.createdAt, w.updatedAt, w.location) FROM Warehouse w WHERE w.organizationId = :organizationId")
     List<WarehousesSearchDTO> findByOrganizationIdSmall(Integer organizationId);
 
     @Query("SELECT w.organizationId FROM Warehouse w WHERE w.id = :warehouseId")
