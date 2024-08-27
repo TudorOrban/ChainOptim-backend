@@ -1,14 +1,14 @@
 package org.chainoptim.features.productpipeline.service;
 
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
-import org.chainoptim.features.product.model.NewUnitOfMeasurement;
-import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
-import org.chainoptim.features.productpipeline.dto.ComponentDTOMapper;
-import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
-import org.chainoptim.features.productpipeline.model.Component;
-import org.chainoptim.features.productpipeline.repository.ComponentRepository;
+import org.chainoptim.features.goods.unit.model.UnitOfMeasurement;
+import org.chainoptim.features.goods.component.dto.CreateComponentDTO;
+import org.chainoptim.features.goods.component.dto.ComponentDTOMapper;
+import org.chainoptim.features.goods.component.dto.UpdateComponentDTO;
+import org.chainoptim.features.goods.component.model.Component;
+import org.chainoptim.features.goods.component.repository.ComponentRepository;
+import org.chainoptim.features.goods.component.service.ComponentServiceImpl;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ class ComponentServiceTest {
     @Test
     void testCreateComponent() {
         // Arrange
-        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component", "Test Description", 1, 1, new CreateUnitOfMeasurementDTO(), false, new NewUnitOfMeasurement());
+        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component", "Test Description", 1, new UnitOfMeasurement());
         Component expectedComponent = ComponentDTOMapper.convertCreateComponentDTOToComponent(componentDTO);
 
         when(componentRepository.save(any(Component.class))).thenReturn(expectedComponent);
@@ -53,13 +53,12 @@ class ComponentServiceTest {
         assertEquals(expectedComponent.getName(), createdComponent.getName());
         assertEquals(expectedComponent.getDescription(), createdComponent.getDescription());
         assertEquals(expectedComponent.getOrganizationId(), createdComponent.getOrganizationId());
-        assertEquals(expectedComponent.getUnit().getId(), createdComponent.getUnit().getId());
     }
 
     @Test
     void testUpdateComponent_ExistingComponent() {
         // Arrange
-        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", 1, new NewUnitOfMeasurement());
+        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", new UnitOfMeasurement());
         Component existingComponent = new Component();
         existingComponent.setId(1);
 
@@ -81,7 +80,7 @@ class ComponentServiceTest {
     @Test
     void testUpdateComponent_NonExistingComponent() {
         // Arrange
-        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", 1, new NewUnitOfMeasurement());
+        UpdateComponentDTO componentDTO = new UpdateComponentDTO(1, "Test Component", "Test Description", new UnitOfMeasurement());
         Component existingComponent = new Component();
         existingComponent.setId(1);
 

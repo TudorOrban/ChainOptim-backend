@@ -1,16 +1,16 @@
 package org.chainoptim.features.productpipeline.controller;
 
-import org.chainoptim.core.scsnapshot.model.Snapshot;
-import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
-import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
-import org.chainoptim.features.product.model.Product;
-import org.chainoptim.features.product.repository.ProductRepository;
-import org.chainoptim.features.productpipeline.dto.StagesSearchDTO;
-import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
-import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
-import org.chainoptim.features.productpipeline.model.Stage;
-import org.chainoptim.features.productpipeline.repository.StageRepository;
+import org.chainoptim.core.overview.scsnapshot.model.Snapshot;
+import org.chainoptim.core.overview.scsnapshot.model.SupplyChainSnapshot;
+import org.chainoptim.core.overview.scsnapshot.repository.SupplyChainSnapshotRepository;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.features.goods.product.model.Product;
+import org.chainoptim.features.goods.product.repository.ProductRepository;
+import org.chainoptim.features.goods.stage.dto.StagesSearchDTO;
+import org.chainoptim.features.goods.stage.dto.CreateStageDTO;
+import org.chainoptim.features.goods.stage.dto.UpdateStageDTO;
+import org.chainoptim.features.goods.stage.model.Stage;
+import org.chainoptim.features.goods.stage.repository.StageRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.testutil.TestDataSeederService;
 

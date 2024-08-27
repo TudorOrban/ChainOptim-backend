@@ -1,6 +1,6 @@
 package org.chainoptim.shared.commonfeatures.location.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.model.Location;

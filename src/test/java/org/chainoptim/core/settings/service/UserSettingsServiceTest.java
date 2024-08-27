@@ -1,14 +1,15 @@
 package org.chainoptim.core.settings.service;
 
-import org.chainoptim.core.settings.model.GeneralSettings;
-import org.chainoptim.core.settings.model.NotificationSettings;
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.tenant.settings.model.GeneralSettings;
+import org.chainoptim.core.tenant.settings.model.NotificationSettings;
+import org.chainoptim.core.tenant.settings.service.UserSettingsServiceImpl;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.core.settings.dto.UserSettingsDTOMapper;
-import org.chainoptim.core.settings.dto.CreateUserSettingsDTO;
-import org.chainoptim.core.settings.dto.UpdateUserSettingsDTO;
-import org.chainoptim.core.settings.model.UserSettings;
-import org.chainoptim.core.settings.repository.UserSettingsRepository;
+import org.chainoptim.core.tenant.settings.dto.UserSettingsDTOMapper;
+import org.chainoptim.core.tenant.settings.dto.CreateUserSettingsDTO;
+import org.chainoptim.core.tenant.settings.dto.UpdateUserSettingsDTO;
+import org.chainoptim.core.tenant.settings.model.UserSettings;
+import org.chainoptim.core.tenant.settings.repository.UserSettingsRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 
 import org.junit.jupiter.api.Test;

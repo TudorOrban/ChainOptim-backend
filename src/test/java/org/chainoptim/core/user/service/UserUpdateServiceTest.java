@@ -1,7 +1,9 @@
 package org.chainoptim.core.user.service;
 
-import org.chainoptim.core.user.model.User;
-import org.chainoptim.core.user.repository.UserRepository;
+import org.chainoptim.core.tenant.user.model.User;
+import org.chainoptim.core.tenant.user.repository.UserRepository;
+import org.chainoptim.core.tenant.user.service.UserUpdateService;
+import org.chainoptim.core.tenant.user.service.UserWriteService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

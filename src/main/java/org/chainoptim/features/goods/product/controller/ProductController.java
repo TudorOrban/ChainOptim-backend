@@ -1,0 +1,98 @@
+package org.chainoptim.features.goods.product.controller;
+
+import org.chainoptim.core.general.security.service.SecurityService;
+import org.chainoptim.features.goods.product.dto.CreateProductDTO;
+import org.chainoptim.features.goods.product.dto.ProductOverviewDTO;
+import org.chainoptim.features.goods.product.dto.ProductsSearchDTO;
+import org.chainoptim.features.goods.product.dto.UpdateProductDTO;
+import org.chainoptim.features.goods.product.model.Product;
+import org.chainoptim.features.goods.product.service.ProductService;
+import org.chainoptim.shared.search.model.PaginatedResults;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/products")
+public class ProductController {
+
+    private final ProductService productService;
+    private final SecurityService securityService;
+
+    @Autowired
+    public ProductController(
+            ProductService productService,
+            SecurityService securityService
+    ) {
+        this.productService = productService;
+        this.securityService = securityService;
+    }
+
+    // Fetch
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
+    @GetMapping("/organization/{organizationId}/small")
+    public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationIdSmall(@PathVariable Integer organizationId) {
+        return ResponseEntity.ok(productService.getProductsByOrganizationIdSmall(organizationId));
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
+    @GetMapping("/organization/{organizationId}")
+    public ResponseEntity<List<ProductsSearchDTO>> getProductsByOrganizationId(@PathVariable Integer organizationId) {
+        return ResponseEntity.ok(productService.getProductsByOrganizationId(organizationId));
+    }
+
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#organizationId, \"Product\", \"Read\")")
+    @GetMapping("/organization/advanced/{organizationId}")
+    public ResponseEntity<PaginatedResults<ProductsSearchDTO>> getProductsByOrganizationIdAdvanced(
+            @PathVariable Integer organizationId,
+            @RequestParam(name = "searchQuery", required = false, defaultValue = "") String searchQuery,
+            @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "ascending", required = false, defaultValue = "true") boolean ascending,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(name = "itemsPerPage", required = false, defaultValue = "30") int itemsPerPage
+    ) {
+        PaginatedResults<ProductsSearchDTO> paginatedResults = productService.getProductsByOrganizationIdAdvanced(organizationId, searchQuery, sortBy, ascending, page, itemsPerPage);
+        return ResponseEntity.ok(paginatedResults);
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Read\")")
+    @GetMapping("/{productId}/overview")
+    public ResponseEntity<ProductOverviewDTO> getProductOverview(@PathVariable Integer productId) {
+        ProductOverviewDTO productOverview = productService.getProductOverview(productId);
+        return ResponseEntity.ok(productOverview);
+    }
+
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Read\")")
+    @GetMapping("/{productId}/stages")
+    public ResponseEntity<Product> getProductWithStages(@PathVariable Integer productId) {
+        Product product = productService.getProductWithStages(productId);
+        return ResponseEntity.ok(product);
+    }
+
+    // Create
+    @PreAuthorize("@securityService.canAccessOrganizationEntity(#productDTO.getOrganizationId(), \"Product\", \"Create\")")
+    @PostMapping("/create")
+    public ResponseEntity<Product> createProduct(@RequestBody CreateProductDTO productDTO) {
+        Product product = productService.createProduct(productDTO);
+        return ResponseEntity.ok(product);
+    }
+
+    // Update
+    @PreAuthorize("@securityService.canAccessEntity(#productDTO.getId(), \"Product\", \"Update\")")
+    @PutMapping("/update")
+    public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductDTO productDTO) {
+        Product product = productService.updateProduct(productDTO);
+        return ResponseEntity.ok(product);
+    }
+
+    // Delete
+    @PreAuthorize("@securityService.canAccessEntity(#productId, \"Product\", \"Delete\")")
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<Integer> deleteProduct(@PathVariable Integer productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok(productId);
+    }
+}

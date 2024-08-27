@@ -1,13 +1,13 @@
 package org.chainoptim.core.user.service;
 
-import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.user.model.User;
-import org.chainoptim.core.user.repository.UserRepository;
+import org.chainoptim.core.tenant.organization.repository.OrganizationRepository;
+import org.chainoptim.core.tenant.user.model.User;
+import org.chainoptim.core.tenant.user.repository.UserRepository;
+import org.chainoptim.core.tenant.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 

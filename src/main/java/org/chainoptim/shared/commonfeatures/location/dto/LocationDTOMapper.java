@@ -1,14 +1,6 @@
 package org.chainoptim.shared.commonfeatures.location.dto;
 
-import org.chainoptim.features.product.dto.ProductsSearchDTO;
-import org.chainoptim.features.product.model.Product;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
-
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import static org.chainoptim.shared.util.ReflectionUtil.setPropertyWithNullCheck;
 

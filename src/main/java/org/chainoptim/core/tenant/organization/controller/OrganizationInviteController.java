@@ -1,0 +1,53 @@
+package org.chainoptim.core.tenant.organization.controller;
+
+import org.chainoptim.core.tenant.organization.dto.CreateOrganizationInviteDTO;
+import org.chainoptim.core.tenant.organization.model.OrganizationInvite;
+import org.chainoptim.core.tenant.organization.service.OrganizationInviteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/organization-invites")
+public class OrganizationInviteController {
+
+    private final OrganizationInviteService organizationInviteService;
+
+    @Autowired
+    public OrganizationInviteController(OrganizationInviteService organizationInviteService) {
+        this.organizationInviteService = organizationInviteService;
+    }
+
+    @PostMapping
+    public ResponseEntity<OrganizationInvite> createOrganizationInvite(@RequestBody CreateOrganizationInviteDTO createOrganizationInviteDTO) {
+        return ResponseEntity.ok(organizationInviteService.createOrganizationInvite(createOrganizationInviteDTO));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrganizationInvite> getOrganizationInviteById(@PathVariable Integer id) {
+        OrganizationInvite organizationInvite = organizationInviteService.getOrganizationInviteById(id);
+        if (organizationInvite != null) {
+            return ResponseEntity.ok(organizationInvite);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public List<OrganizationInvite> getAllOrganizationInvites() {
+        return organizationInviteService.getAllOrganizationInvites();
+    }
+
+    @PutMapping
+    public ResponseEntity<OrganizationInvite> updateOrganizationInvite(@RequestBody OrganizationInvite organizationInvite) {
+        return ResponseEntity.ok(organizationInviteService.updateOrganizationInvite(organizationInvite));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrganizationInvite(@PathVariable Integer id) {
+        organizationInviteService.deleteOrganizationInvite(id);
+        return ResponseEntity.ok().build();
+    }
+}

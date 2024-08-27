@@ -1,7 +1,8 @@
 package org.chainoptim.features.productpipeline.service;
 
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
-import org.chainoptim.features.productpipeline.repository.StageRepository;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.features.goods.stage.repository.StageRepository;
+import org.chainoptim.features.goods.stage.service.StageServiceImpl;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 
 import org.junit.jupiter.api.extension.ExtendWith;

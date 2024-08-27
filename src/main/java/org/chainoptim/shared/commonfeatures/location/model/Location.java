@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.chainoptim.features.client.model.Client;
-import org.chainoptim.features.client.model.ClientShipment;
-import org.chainoptim.features.factory.model.Factory;
-import org.chainoptim.features.supplier.model.Supplier;
-import org.chainoptim.features.supplier.model.SupplierShipment;
-import org.chainoptim.features.warehouse.model.Warehouse;
+import org.chainoptim.features.demand.client.model.Client;
+import org.chainoptim.features.demand.clientshipment.model.ClientShipment;
+import org.chainoptim.features.production.factory.model.Factory;
+import org.chainoptim.features.supply.supplier.model.Supplier;
+import org.chainoptim.features.supply.suppliershipment.model.SupplierShipment;
+import org.chainoptim.features.storage.warehouse.model.Warehouse;
 
 import java.util.Set;
 

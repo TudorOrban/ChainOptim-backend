@@ -1,6 +1,7 @@
 package org.chainoptim.core.user.repository;
 
-import org.chainoptim.core.user.model.User;
+import org.chainoptim.core.tenant.user.model.User;
+import org.chainoptim.core.tenant.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

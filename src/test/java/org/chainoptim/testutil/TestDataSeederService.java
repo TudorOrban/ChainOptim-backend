@@ -1,12 +1,12 @@
 package org.chainoptim.testutil;
 
-import org.chainoptim.core.organization.model.Organization;
-import org.chainoptim.core.organization.model.SubscriptionPlanTier;
-import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.user.jwt.JwtTokenProvider;
-import org.chainoptim.core.user.model.User;
-import org.chainoptim.core.user.model.UserDetailsImpl;
-import org.chainoptim.core.user.repository.UserRepository;
+import org.chainoptim.core.tenant.organization.model.Organization;
+import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
+import org.chainoptim.core.tenant.organization.repository.OrganizationRepository;
+import org.chainoptim.core.tenant.user.jwt.JwtTokenProvider;
+import org.chainoptim.core.tenant.user.model.User;
+import org.chainoptim.core.tenant.user.model.UserDetailsImpl;
+import org.chainoptim.core.tenant.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,25 +1,33 @@
 package org.chainoptim.shared.sanitization;
 
-import org.chainoptim.core.settings.dto.CreateUserSettingsDTO;
-import org.chainoptim.core.settings.dto.UpdateUserSettingsDTO;
-import org.chainoptim.features.client.dto.*;
-import org.chainoptim.features.factory.dto.CreateFactoryDTO;
-import org.chainoptim.features.factory.dto.CreateFactoryInventoryItemDTO;
-import org.chainoptim.features.factory.dto.UpdateFactoryDTO;
-import org.chainoptim.features.factory.dto.UpdateFactoryInventoryItemDTO;
-import org.chainoptim.features.product.dto.CreateProductDTO;
-import org.chainoptim.features.product.dto.CreateUnitOfMeasurementDTO;
-import org.chainoptim.features.product.dto.UpdateProductDTO;
-import org.chainoptim.features.product.dto.UpdateUnitOfMeasurementDTO;
-import org.chainoptim.features.productpipeline.dto.CreateComponentDTO;
-import org.chainoptim.features.productpipeline.dto.CreateStageDTO;
-import org.chainoptim.features.productpipeline.dto.UpdateComponentDTO;
-import org.chainoptim.features.productpipeline.dto.UpdateStageDTO;
-import org.chainoptim.features.supplier.dto.*;
-import org.chainoptim.features.warehouse.dto.CreateWarehouseDTO;
-import org.chainoptim.features.warehouse.dto.CreateWarehouseInventoryItemDTO;
-import org.chainoptim.features.warehouse.dto.UpdateWarehouseDTO;
-import org.chainoptim.features.warehouse.dto.UpdateWarehouseInventoryItemDTO;
+import org.chainoptim.core.tenant.settings.dto.CreateUserSettingsDTO;
+import org.chainoptim.core.tenant.settings.dto.UpdateUserSettingsDTO;
+import org.chainoptim.features.demand.client.dto.CreateClientDTO;
+import org.chainoptim.features.demand.client.dto.UpdateClientDTO;
+import org.chainoptim.features.demand.clientorder.dto.CreateClientOrderDTO;
+import org.chainoptim.features.demand.clientorder.dto.UpdateClientOrderDTO;
+import org.chainoptim.features.demand.clientshipment.dto.CreateClientShipmentDTO;
+import org.chainoptim.features.demand.clientshipment.dto.UpdateClientShipmentDTO;
+import org.chainoptim.features.supply.suppliershipment.dto.CreateSupplierShipmentDTO;
+import org.chainoptim.features.supply.suppliershipment.dto.UpdateSupplierShipmentDTO;
+import org.chainoptim.features.production.factory.dto.CreateFactoryDTO;
+import org.chainoptim.features.production.inventory.dto.CreateFactoryInventoryItemDTO;
+import org.chainoptim.features.production.factory.dto.UpdateFactoryDTO;
+import org.chainoptim.features.production.inventory.dto.UpdateFactoryInventoryItemDTO;
+import org.chainoptim.features.goods.product.dto.CreateProductDTO;
+import org.chainoptim.features.goods.product.dto.UpdateProductDTO;
+import org.chainoptim.features.goods.component.dto.CreateComponentDTO;
+import org.chainoptim.features.goods.stage.dto.CreateStageDTO;
+import org.chainoptim.features.goods.component.dto.UpdateComponentDTO;
+import org.chainoptim.features.goods.stage.dto.UpdateStageDTO;
+import org.chainoptim.features.storage.warehouse.dto.CreateWarehouseDTO;
+import org.chainoptim.features.storage.inventory.dto.CreateWarehouseInventoryItemDTO;
+import org.chainoptim.features.storage.warehouse.dto.UpdateWarehouseDTO;
+import org.chainoptim.features.storage.inventory.dto.UpdateWarehouseInventoryItemDTO;
+import org.chainoptim.features.supply.supplier.dto.CreateSupplierDTO;
+import org.chainoptim.features.supply.supplier.dto.UpdateSupplierDTO;
+import org.chainoptim.features.supply.supplierorder.dto.CreateSupplierOrderDTO;
+import org.chainoptim.features.supply.supplierorder.dto.UpdateSupplierOrderDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,21 +192,6 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         locationDTO.setZipCode(sanitizationService.sanitize(locationDTO.getZipCode()));
 
         return locationDTO;
-    }
-
-    // Units of Measurement
-    public CreateUnitOfMeasurementDTO sanitizeCreateUnitOfMeasurementDTO(CreateUnitOfMeasurementDTO unitOfMeasurementDTO) {
-        unitOfMeasurementDTO.setName(sanitizationService.sanitize(unitOfMeasurementDTO.getName()));
-        unitOfMeasurementDTO.setUnitType(sanitizationService.sanitize(unitOfMeasurementDTO.getUnitType()));
-
-        return unitOfMeasurementDTO;
-    }
-
-    public UpdateUnitOfMeasurementDTO sanitizeUpdateUnitOfMeasurementDTO(UpdateUnitOfMeasurementDTO unitOfMeasurementDTO) {
-        unitOfMeasurementDTO.setName(sanitizationService.sanitize(unitOfMeasurementDTO.getName()));
-        unitOfMeasurementDTO.setUnitType(sanitizationService.sanitize(unitOfMeasurementDTO.getUnitType()));
-
-        return unitOfMeasurementDTO;
     }
 
     // Component
