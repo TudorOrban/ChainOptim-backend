@@ -1,6 +1,6 @@
 package org.chainoptim.features.scanalysis.production.resourceallocation.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.dto.CreateAllocationPlanDTO;
 import org.chainoptim.features.scanalysis.production.resourceallocation.dto.UpdateAllocationPlanDTO;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.ResourceAllocationPlan;

@@ -1,6 +1,6 @@
 package org.chainoptim.features.scanalysis.production.productionhistory.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.AddDayToFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.CreateFactoryProductionHistoryDTO;
 import org.chainoptim.features.scanalysis.production.productionhistory.dto.UpdateFactoryProductionHistoryDTO;

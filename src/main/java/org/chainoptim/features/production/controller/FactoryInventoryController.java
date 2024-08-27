@@ -1,6 +1,6 @@
 package org.chainoptim.features.production.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.production.dto.CreateFactoryInventoryItemDTO;
 import org.chainoptim.features.production.dto.UpdateFactoryInventoryItemDTO;
 import org.chainoptim.features.production.model.FactoryInventoryItem;

@@ -1,7 +1,7 @@
 package org.chainoptim.shared.sanitization;
 
-import org.chainoptim.core.settings.dto.CreateUserSettingsDTO;
-import org.chainoptim.core.settings.dto.UpdateUserSettingsDTO;
+import org.chainoptim.core.tenant.settings.dto.CreateUserSettingsDTO;
+import org.chainoptim.core.tenant.settings.dto.UpdateUserSettingsDTO;
 import org.chainoptim.features.demand.dto.*;
 import org.chainoptim.features.production.dto.CreateFactoryDTO;
 import org.chainoptim.features.production.dto.CreateFactoryInventoryItemDTO;

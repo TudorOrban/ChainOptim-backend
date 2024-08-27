@@ -1,11 +1,11 @@
 package org.chainoptim.core.subscriptionplan.service;
 
-import org.chainoptim.core.organization.model.SubscriptionPlanTier;
-import org.chainoptim.core.organization.repository.OrganizationRepository;
-import org.chainoptim.core.scsnapshot.model.Snapshot;
-import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
-import org.chainoptim.core.scsnapshot.service.SnapshotPersistenceService;
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterServiceImpl;
+import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
+import org.chainoptim.core.tenant.organization.repository.OrganizationRepository;
+import org.chainoptim.core.overview.scsnapshot.model.Snapshot;
+import org.chainoptim.core.overview.scsnapshot.model.SupplyChainSnapshot;
+import org.chainoptim.core.overview.scsnapshot.service.SnapshotPersistenceService;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterServiceImpl;
 import org.chainoptim.shared.enums.Feature;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

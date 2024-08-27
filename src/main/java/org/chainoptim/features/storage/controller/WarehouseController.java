@@ -1,6 +1,6 @@
 package org.chainoptim.features.storage.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.storage.dto.CreateWarehouseDTO;
 import org.chainoptim.features.storage.dto.UpdateWarehouseDTO;
 import org.chainoptim.features.storage.dto.WarehouseOverviewDTO;

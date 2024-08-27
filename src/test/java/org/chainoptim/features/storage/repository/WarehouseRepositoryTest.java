@@ -1,7 +1,7 @@
 package org.chainoptim.features.storage.repository;
 
-import org.chainoptim.core.organization.model.Organization;
-import org.chainoptim.core.organization.model.SubscriptionPlanTier;
+import org.chainoptim.core.tenant.organization.model.Organization;
+import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
 import org.chainoptim.features.storage.model.Warehouse;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 

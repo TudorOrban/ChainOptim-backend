@@ -1,6 +1,6 @@
 package org.chainoptim.features.supply.service;
 
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;

@@ -1,7 +1,7 @@
 package org.chainoptim.features.goods.repository;
 
-import org.chainoptim.core.organization.model.Organization;
-import org.chainoptim.core.organization.model.SubscriptionPlanTier;
+import org.chainoptim.core.tenant.organization.model.Organization;
+import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
 import org.chainoptim.features.demand.model.Client;
 import org.chainoptim.features.demand.model.ClientOrder;
 import org.chainoptim.features.goods.product.repository.ProductRepository;

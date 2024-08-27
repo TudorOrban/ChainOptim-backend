@@ -1,6 +1,6 @@
 package org.chainoptim.features.goods.stage.service;
 
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.goods.stage.dto.StageDTOMapper;
 import org.chainoptim.features.goods.stage.dto.StagesSearchDTO;

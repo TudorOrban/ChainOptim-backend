@@ -1,6 +1,6 @@
 package org.chainoptim.features.goods.stage.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.goods.stage.dto.CreateStageDTO;
 import org.chainoptim.features.goods.stage.dto.StagesSearchDTO;
 import org.chainoptim.features.goods.stage.dto.UpdateStageDTO;

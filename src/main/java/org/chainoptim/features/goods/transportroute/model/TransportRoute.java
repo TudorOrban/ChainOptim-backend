@@ -1,7 +1,7 @@
 package org.chainoptim.features.goods.transportroute.model;
 
-import org.chainoptim.core.map.model.CustomPair;
-import org.chainoptim.core.map.model.FacilityType;
+import org.chainoptim.core.overview.map.model.CustomPair;
+import org.chainoptim.core.overview.map.model.FacilityType;
 import org.chainoptim.shared.enums.ShipmentStatus;
 import org.chainoptim.shared.enums.TransportType;
 import lombok.AllArgsConstructor;

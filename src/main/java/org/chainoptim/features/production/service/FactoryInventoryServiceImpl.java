@@ -1,7 +1,7 @@
 package org.chainoptim.features.production.service;
 
-import org.chainoptim.core.notifications.model.KafkaEvent;
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.overview.notifications.model.KafkaEvent;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.exception.ValidationException;

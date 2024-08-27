@@ -1,6 +1,6 @@
 package org.chainoptim.features.storage.service;
 
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.features.storage.dto.CrateDTOMapper;
 import org.chainoptim.features.storage.dto.CreateCrateDTO;

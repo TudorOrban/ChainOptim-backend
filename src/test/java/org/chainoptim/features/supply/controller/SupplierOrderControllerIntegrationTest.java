@@ -1,9 +1,9 @@
 package org.chainoptim.features.supply.controller;
 
-import org.chainoptim.core.scsnapshot.model.Snapshot;
-import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
-import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.overview.scsnapshot.model.Snapshot;
+import org.chainoptim.core.overview.scsnapshot.model.SupplyChainSnapshot;
+import org.chainoptim.core.overview.scsnapshot.repository.SupplyChainSnapshotRepository;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.goods.component.model.Component;
 import org.chainoptim.features.goods.component.repository.ComponentRepository;

@@ -1,6 +1,6 @@
 package org.chainoptim.features.goods.product.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.goods.product.dto.CreateProductDTO;
 import org.chainoptim.features.goods.product.dto.ProductOverviewDTO;
 import org.chainoptim.features.goods.product.dto.ProductsSearchDTO;

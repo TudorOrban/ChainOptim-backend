@@ -1,6 +1,6 @@
 package org.chainoptim.features.supply.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.supply.dto.CreateSupplierDTO;
 import org.chainoptim.features.supply.dto.SupplierOverviewDTO;
 import org.chainoptim.features.supply.dto.SuppliersSearchDTO;

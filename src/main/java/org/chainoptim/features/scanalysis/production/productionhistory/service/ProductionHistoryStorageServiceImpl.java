@@ -1,6 +1,6 @@
 package org.chainoptim.features.scanalysis.production.productionhistory.service;
 
-import org.chainoptim.core.s3.service.S3JsonService;
+import org.chainoptim.core.general.s3.service.S3JsonService;
 import org.chainoptim.features.scanalysis.production.productionhistory.model.ProductionHistory;
 
 import org.springframework.beans.factory.annotation.Autowired;

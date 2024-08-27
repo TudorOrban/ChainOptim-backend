@@ -1,6 +1,6 @@
 package org.chainoptim.features.productpipeline.service;
 
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.goods.controller.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;

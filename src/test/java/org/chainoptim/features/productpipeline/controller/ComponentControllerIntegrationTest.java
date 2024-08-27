@@ -1,9 +1,9 @@
 package org.chainoptim.features.productpipeline.controller;
 
-import org.chainoptim.core.scsnapshot.model.Snapshot;
-import org.chainoptim.core.scsnapshot.model.SupplyChainSnapshot;
-import org.chainoptim.core.scsnapshot.repository.SupplyChainSnapshotRepository;
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.overview.scsnapshot.model.Snapshot;
+import org.chainoptim.core.overview.scsnapshot.model.SupplyChainSnapshot;
+import org.chainoptim.core.overview.scsnapshot.repository.SupplyChainSnapshotRepository;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.features.goods.controller.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.goods.controller.UnitDTOMapper;
 import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;

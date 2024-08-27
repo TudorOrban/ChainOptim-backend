@@ -1,7 +1,7 @@
 package org.chainoptim.features.demand.repository;
 
-import org.chainoptim.core.organization.model.Organization;
-import org.chainoptim.core.organization.model.SubscriptionPlanTier;
+import org.chainoptim.core.tenant.organization.model.Organization;
+import org.chainoptim.core.tenant.organization.model.SubscriptionPlanTier;
 import org.chainoptim.features.demand.model.Client;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 

@@ -1,6 +1,6 @@
 package org.chainoptim.features.storage.service;
 
-import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.storage.dto.CreateWarehouseDTO;
 import org.chainoptim.features.storage.dto.WarehouseDTOMapper;

@@ -1,9 +1,10 @@
 package org.chainoptim.config.security;
 
-import org.chainoptim.core.organization.model.CustomRole;
-import org.chainoptim.core.organization.model.FeaturePermissions;
-import org.chainoptim.core.organization.model.Permissions;
-import org.chainoptim.core.user.model.UserDetailsImpl;
+import org.chainoptim.core.tenant.customrole.model.CustomRole;
+import org.chainoptim.core.tenant.customrole.model.FeaturePermissions;
+import org.chainoptim.core.tenant.customrole.model.Permissions;
+import org.chainoptim.core.general.security.service.CustomRoleSecurityServiceImpl;
+import org.chainoptim.core.tenant.user.model.UserDetailsImpl;
 import org.chainoptim.shared.enums.Feature;
 
 import org.junit.jupiter.api.Test;

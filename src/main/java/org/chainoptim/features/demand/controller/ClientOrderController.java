@@ -1,6 +1,6 @@
 package org.chainoptim.features.demand.controller;
 
-import org.chainoptim.config.security.SecurityService;
+import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.demand.dto.CreateClientOrderDTO;
 import org.chainoptim.features.demand.dto.UpdateClientOrderDTO;
 import org.chainoptim.features.demand.model.ClientOrder;
