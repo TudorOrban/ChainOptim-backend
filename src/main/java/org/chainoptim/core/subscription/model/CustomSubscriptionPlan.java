@@ -16,5 +16,5 @@ public class CustomSubscriptionPlan {
     private SubscriptionPlanTier planTier;
     private Boolean isMonthly;
     private Float totalDollarsMonthly;
-    private Map<Feature, Float> additionalFeatures;
+    private Map<Feature, Long> additionalFeatures;
 }

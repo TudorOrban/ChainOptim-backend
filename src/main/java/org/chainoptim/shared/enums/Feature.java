@@ -10,7 +10,7 @@ public enum Feature {
     PRODUCT,
     PRODUCT_STAGE,
     COMPONENT,
-    UNIT_OF_MEASUREMENT,
+
 
     // Factories
     FACTORY,
@@ -50,7 +50,6 @@ public enum Feature {
             case PRODUCT -> "Product";
             case PRODUCT_STAGE -> "Product Stage";
             case COMPONENT -> "Component";
-            case UNIT_OF_MEASUREMENT -> "Unit of Measurement";
             case FACTORY -> "Factory";
             case FACTORY_STAGE -> "Factory Stage";
             case RESOURCE_ALLOCATION_PLAN -> "Resource Allocation Plan";

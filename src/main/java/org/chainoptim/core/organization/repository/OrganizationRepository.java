@@ -1,5 +1,6 @@
 package org.chainoptim.core.organization.repository;
 
+import org.chainoptim.core.organization.dto.OrganizationSmallDTO;
 import org.chainoptim.core.organization.model.Organization;
 import org.chainoptim.core.organization.model.SubscriptionPlanTier;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +26,9 @@ public interface OrganizationRepository extends JpaRepository<Organization, Inte
 
     @Query("SELECT o.subscriptionPlanTier FROM Organization o WHERE o.id = :id")
     Optional<SubscriptionPlanTier> getSubscriptionPlanTierById(Integer id);
+
+    @Query("SELECT new org.chainoptim.core.organization.dto.OrganizationSmallDTO(o.id, o.name, o.createdAt, o.subscriptionPlanTier, o.isPlanBasic) FROM Organization o WHERE o.id = :id")
+    Optional<OrganizationSmallDTO> getOrganizationSmallDTOById(Integer id);
 
     @Query("SELECT o.id FROM Organization o")
     List<Integer> getAllOrganizationIds();
