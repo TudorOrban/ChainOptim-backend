@@ -3,12 +3,10 @@ package org.chainoptim.features.goods.service;
 import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.goods.product.dto.CreateProductDTO;
-import org.chainoptim.features.goods.controller.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.goods.product.dto.ProductDTOMapper;
 import org.chainoptim.features.goods.product.dto.UpdateProductDTO;
-import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
+import org.chainoptim.features.goods.unit.model.UnitOfMeasurement;
 import org.chainoptim.features.goods.product.model.Product;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.goods.product.repository.ProductRepository;
 import org.chainoptim.features.goods.product.service.ProductServiceImpl;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
@@ -41,7 +39,7 @@ class ProductServiceTest {
     @Test
     void testCreateProduct() {
         // Arrange
-        CreateProductDTO productDTO = new CreateProductDTO("Test product", "Test description", 1, 1, new CreateUnitOfMeasurementDTO(), false, new NewUnitOfMeasurement());
+        CreateProductDTO productDTO = new CreateProductDTO("Test product", "Test description", 1, new UnitOfMeasurement());
         Product expectedProduct = ProductDTOMapper.convertCreateProductDTOToProduct(productDTO);
 
         when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
@@ -56,7 +54,6 @@ class ProductServiceTest {
         assertEquals(expectedProduct.getName(), createdProduct.getName());
         assertEquals(expectedProduct.getDescription(), createdProduct.getDescription());
         assertEquals(expectedProduct.getOrganizationId(), createdProduct.getOrganizationId());
-        assertEquals(expectedProduct.getUnit().getId(), createdProduct.getUnit().getId());
 
         verify(productRepository, times(1)).save(any(Product.class));
     }
@@ -64,14 +61,11 @@ class ProductServiceTest {
     @Test
     void testUpdateProduct_ExistingProduct() {
         // Arrange
-        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", 2, new NewUnitOfMeasurement());
+        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", new UnitOfMeasurement());
         Product existingProduct = new Product();
         existingProduct.setId(1);
         existingProduct.setName("Test Product");
         existingProduct.setDescription("Test Description");
-        UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setId(1);
-        existingProduct.setUnit(unit);
 
         when(productRepository.findById(productDTO.getId())).thenReturn(Optional.of(existingProduct));
         when(productRepository.save(any(Product.class))).thenReturn(existingProduct);
@@ -84,7 +78,6 @@ class ProductServiceTest {
         assertNotNull(updatedProduct);
         assertEquals(productDTO.getName(), updatedProduct.getName());
         assertEquals(productDTO.getDescription(), updatedProduct.getDescription());
-        assertEquals(productDTO.getUnitId(), updatedProduct.getUnit().getId());
 
         verify(productRepository, times(1)).findById(productDTO.getId());
         verify(productRepository, times(1)).save(any(Product.class));
@@ -93,14 +86,11 @@ class ProductServiceTest {
     @Test
     void testUpdateProduct_NonExistingProduct() {
         // Arrange
-        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", 2, new NewUnitOfMeasurement());
+        UpdateProductDTO productDTO = new UpdateProductDTO(1, "Test Product Update", "Test Description Update", new UnitOfMeasurement());
         Product existingProduct = new Product();
         existingProduct.setId(2); // Different id
         existingProduct.setName("Test Product");
         existingProduct.setDescription("Test Description");
-        UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setId(1);
-        existingProduct.setUnit(unit);
 
         when(productRepository.findById(productDTO.getId())).thenReturn(Optional.empty());
         when(entitySanitizerService.sanitizeUpdateProductDTO(any(UpdateProductDTO.class))).thenReturn(productDTO);

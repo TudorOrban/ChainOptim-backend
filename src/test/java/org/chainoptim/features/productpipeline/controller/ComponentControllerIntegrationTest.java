@@ -4,14 +4,10 @@ import org.chainoptim.core.overview.scsnapshot.model.Snapshot;
 import org.chainoptim.core.overview.scsnapshot.model.SupplyChainSnapshot;
 import org.chainoptim.core.overview.scsnapshot.repository.SupplyChainSnapshotRepository;
 import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
-import org.chainoptim.features.goods.controller.CreateUnitOfMeasurementDTO;
-import org.chainoptim.features.goods.controller.UnitDTOMapper;
-import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
-import org.chainoptim.features.goods.controller.UnitOfMeasurementRepository;
+import org.chainoptim.features.goods.unit.model.UnitOfMeasurement;
 import org.chainoptim.features.goods.component.dto.ComponentsSearchDTO;
 import org.chainoptim.features.goods.component.dto.CreateComponentDTO;
-import org.chainoptim.features.goods.controller.UpdateComponentDTO;
+import org.chainoptim.features.goods.component.dto.UpdateComponentDTO;
 import org.chainoptim.features.goods.component.model.Component;
 import org.chainoptim.features.goods.component.repository.ComponentRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
@@ -49,8 +45,6 @@ class ComponentControllerIntegrationTest {
     @Autowired
     private TestDataSeederService seederService;
     @Autowired
-    private UnitOfMeasurementRepository unitOfMeasurementRepository;
-    @Autowired
     private ComponentRepository componentRepository;
     @Autowired
     private EntitySanitizerService entitySanitizerService;
@@ -62,8 +56,6 @@ class ComponentControllerIntegrationTest {
     // Necessary seed data
     Integer organizationId;
     String jwtToken;
-    CreateUnitOfMeasurementDTO unitDTO;
-    UnitOfMeasurement unit;
     Integer componentId;
 
     @BeforeEach
@@ -72,14 +64,6 @@ class ComponentControllerIntegrationTest {
         Pair<Integer, String> seedResult = seederService.seedDatabaseWithTenant();
         organizationId = seedResult.getFirst();
         jwtToken = seedResult.getSecond();
-
-        // Set up a unit of measurement for components
-        unitDTO = new CreateUnitOfMeasurementDTO();
-        unitDTO.setName("Test unit");
-        unitDTO.setUnitType("Test unit type");
-        unitDTO.setOrganizationId(organizationId);
-
-        unit = unitOfMeasurementRepository.save(UnitDTOMapper.convertCreateUnitDTOToUnit(unitDTO));
 
         // Set up supply chain snapshot for plan limiter service
         SupplyChainSnapshot supplyChainSnapshot = new SupplyChainSnapshot();
@@ -98,7 +82,6 @@ class ComponentControllerIntegrationTest {
         component1.setName("Test Component 1");
         component1.setDescription("Test Description 1");
         component1.setOrganizationId(organizationId);
-        component1.setUnit(unit);
 
         component1 = componentRepository.save(component1);
         componentId = component1.getId();
@@ -107,7 +90,6 @@ class ComponentControllerIntegrationTest {
         component2.setName("Test Component 2");
         component2.setDescription("Test Description 2");
         component2.setOrganizationId(organizationId);
-        component2.setUnit(unit);
 
         componentRepository.save(component2);
 
@@ -115,7 +97,6 @@ class ComponentControllerIntegrationTest {
         component3.setName("Test Component 3");
         component3.setDescription("Test Description 3");
         component3.setOrganizationId(organizationId);
-        component3.setUnit(unit);
 
         componentRepository.save(component3);
     }
@@ -151,7 +132,7 @@ class ComponentControllerIntegrationTest {
     @Test
     void testCreateComponent() throws Exception {
         // Arrange
-        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component - Unique Title 123456789", "Test Description", organizationId, unit.getId(), unitDTO, false, new NewUnitOfMeasurement());
+        CreateComponentDTO componentDTO = new CreateComponentDTO("Test Component - Unique Title 123456789", "Test Description", organizationId, new UnitOfMeasurement());
         String componentDTOJson = objectMapper.writeValueAsString(componentDTO);
         String invalidJWTToken = "Invalid";
 
@@ -184,14 +165,12 @@ class ComponentControllerIntegrationTest {
         assertEquals(componentDTO.getName(), createdComponent.getName());
         assertEquals(componentDTO.getDescription(), createdComponent.getDescription());
         assertEquals(componentDTO.getOrganizationId(), createdComponent.getOrganizationId());
-        assertEquals(componentDTO.getUnitId(), createdComponent.getUnit().getId());
-
     }
 
     @Test
     void testUpdateComponent() throws Exception {
         // Arrange
-        UpdateComponentDTO componentDTO = new UpdateComponentDTO(componentId, "Test Component - Updated Unique Title 123456789", "Test Description", unit.getId(), new NewUnitOfMeasurement());
+        UpdateComponentDTO componentDTO = new UpdateComponentDTO(componentId, "Test Component - Updated Unique Title 123456789", "Test Description", new UnitOfMeasurement());
         String componentDTOJson = objectMapper.writeValueAsString(componentDTO);
         String invalidJWTToken = "Invalid";
 
@@ -224,7 +203,6 @@ class ComponentControllerIntegrationTest {
         assertNotNull(updatedComponent);
         assertEquals(componentDTO.getName(), updatedComponent.getName());
         assertEquals(componentDTO.getDescription(), updatedComponent.getDescription());
-        assertEquals(componentDTO.getUnitId(), updatedComponent.getUnit().getId());
     }
 
     @Test

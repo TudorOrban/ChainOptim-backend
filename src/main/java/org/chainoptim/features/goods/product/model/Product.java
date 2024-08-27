@@ -2,8 +2,7 @@ package org.chainoptim.features.goods.product.model;
 
 import org.chainoptim.exception.ValidationException;
 import org.chainoptim.features.demand.clientorder.model.ClientOrder;
-import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
+import org.chainoptim.features.goods.unit.model.UnitOfMeasurement;
 import org.chainoptim.features.production.inventory.model.FactoryInventoryItem;
 import org.chainoptim.features.goods.stage.model.Stage;
 import org.chainoptim.features.storage.inventory.model.WarehouseInventoryItem;
@@ -51,36 +50,32 @@ public class Product {
     @Column(name = "organization_id", nullable = false)
     private Integer organizationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "unit_id")
-    private UnitOfMeasurement unit;
-
     // Manual deserialization and caching of JSON column
     @Column(name = "unit_of_measurement", columnDefinition = "json")
     private String unitJson;
 
     @Transient // Ignore field
-    private NewUnitOfMeasurement newUnit;
+    private UnitOfMeasurement unit;
 
-    public NewUnitOfMeasurement getNewUnit() {
-        if (this.newUnit == null && this.unitJson != null) {
+    public UnitOfMeasurement getUnit() {
+        if (this.unit == null && this.unitJson != null) {
             // Deserialize when accessed
             ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
             try {
-                this.newUnit = mapper.readValue(this.unitJson, NewUnitOfMeasurement.class);
+                this.unit = mapper.readValue(this.unitJson, UnitOfMeasurement.class);
             } catch (JsonProcessingException e) {
                 throw new ValidationException("Invalid Unit json");
             }
         }
-        return this.newUnit;
+        return this.unit;
     }
 
-    public void setNewUnit(NewUnitOfMeasurement newUnit) {
-        this.newUnit = newUnit;
+    public void setUnit(UnitOfMeasurement unit) {
+        this.unit = unit;
         // Serialize when setting the object
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         try {
-            this.unitJson = mapper.writeValueAsString(newUnit);
+            this.unitJson = mapper.writeValueAsString(unit);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new ValidationException("Invalid Unit json");

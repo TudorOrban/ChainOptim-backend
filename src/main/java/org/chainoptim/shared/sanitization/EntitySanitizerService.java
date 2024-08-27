@@ -13,12 +13,10 @@ import org.chainoptim.features.production.inventory.dto.CreateFactoryInventoryIt
 import org.chainoptim.features.production.factory.dto.UpdateFactoryDTO;
 import org.chainoptim.features.production.inventory.dto.UpdateFactoryInventoryItemDTO;
 import org.chainoptim.features.goods.product.dto.CreateProductDTO;
-import org.chainoptim.features.goods.controller.CreateUnitOfMeasurementDTO;
 import org.chainoptim.features.goods.product.dto.UpdateProductDTO;
-import org.chainoptim.features.goods.controller.UpdateUnitOfMeasurementDTO;
 import org.chainoptim.features.goods.component.dto.CreateComponentDTO;
 import org.chainoptim.features.goods.stage.dto.CreateStageDTO;
-import org.chainoptim.features.goods.controller.UpdateComponentDTO;
+import org.chainoptim.features.goods.component.dto.UpdateComponentDTO;
 import org.chainoptim.features.goods.stage.dto.UpdateStageDTO;
 import org.chainoptim.features.storage.warehouse.dto.CreateWarehouseDTO;
 import org.chainoptim.features.storage.inventory.dto.CreateWarehouseInventoryItemDTO;
@@ -74,10 +72,6 @@ public interface EntitySanitizerService {
     // Location
     CreateLocationDTO sanitizeCreateLocationDTO(CreateLocationDTO locationDTO);
     UpdateLocationDTO sanitizeUpdateLocationDTO(UpdateLocationDTO locationDTO);
-
-    // Unit of Measurement
-    CreateUnitOfMeasurementDTO sanitizeCreateUnitOfMeasurementDTO(CreateUnitOfMeasurementDTO uomDTO);
-    UpdateUnitOfMeasurementDTO sanitizeUpdateUnitOfMeasurementDTO(UpdateUnitOfMeasurementDTO uomDTO);
 
     // Component
     CreateComponentDTO sanitizeCreateComponentDTO(CreateComponentDTO componentDTO);

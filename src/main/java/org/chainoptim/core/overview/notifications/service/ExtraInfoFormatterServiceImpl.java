@@ -44,7 +44,7 @@ public class ExtraInfoFormatterServiceImpl implements ExtraInfoFormatterService 
 
     private void formatQuantityChange(SupplierOrderEvent orderEvent, List<String> extraMessages) {
         Component newComponent = orderEvent.getNewEntity().getComponent();
-        String unitName = (newComponent != null && newComponent.getUnit() != null) ? newComponent.getUnit().getName() : "units";
+        String unitName = (newComponent != null && newComponent.getUnit() != null) ? newComponent.getUnit().getFullName() : "units";
 
         Float oldQuantity = orderEvent.getOldEntity().getQuantity();
         Float newQuantity = orderEvent.getNewEntity().getQuantity();
@@ -64,7 +64,7 @@ public class ExtraInfoFormatterServiceImpl implements ExtraInfoFormatterService 
 
     private void formatDeliveredQuantityChange(SupplierOrderEvent orderEvent, List<String> extraMessages) {
         Component newComponent = orderEvent.getNewEntity().getComponent();
-        String unitName = (newComponent != null && newComponent.getUnit() != null) ? newComponent.getUnit().getName() : "units";
+        String unitName = (newComponent != null && newComponent.getUnit() != null) ? newComponent.getUnit().getFullName() : "units";
 
         Float oldDeliveredQuantity = orderEvent.getOldEntity().getDeliveredQuantity();
         Float newDeliveredQuantity = orderEvent.getNewEntity().getDeliveredQuantity();

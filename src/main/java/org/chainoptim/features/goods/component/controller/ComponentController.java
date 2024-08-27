@@ -3,7 +3,7 @@ package org.chainoptim.features.goods.component.controller;
 import org.chainoptim.core.general.security.service.SecurityService;
 import org.chainoptim.features.goods.component.dto.ComponentsSearchDTO;
 import org.chainoptim.features.goods.component.dto.CreateComponentDTO;
-import org.chainoptim.features.goods.controller.UpdateComponentDTO;
+import org.chainoptim.features.goods.component.dto.UpdateComponentDTO;
 import org.chainoptim.features.goods.component.model.Component;
 import org.chainoptim.features.goods.component.service.ComponentService;
 import org.chainoptim.shared.search.model.PaginatedResults;

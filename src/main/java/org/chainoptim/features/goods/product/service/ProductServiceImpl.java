@@ -4,10 +4,8 @@ import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterSe
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.features.goods.product.model.Product;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.goods.product.dto.*;
 import org.chainoptim.features.goods.product.repository.ProductRepository;
-import org.chainoptim.features.goods.controller.UnitOfMeasurementService;
 import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.chainoptim.shared.search.dto.SmallEntityDTO;
@@ -26,17 +24,14 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final UnitOfMeasurementService unitOfMeasurementService;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
-                              UnitOfMeasurementService unitOfMeasurementService,
                               SubscriptionPlanLimiterService planLimiterService,
                               EntitySanitizerService entitySanitizerService) {
         this.productRepository = productRepository;
-        this.unitOfMeasurementService = unitOfMeasurementService;
         this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
@@ -95,15 +90,7 @@ public class ProductServiceImpl implements ProductService {
         // Sanitize input
         CreateProductDTO sanitizedProductDTO = entitySanitizerService.sanitizeCreateProductDTO(productDTO);
 
-        // Create unit of measurement if requested
-        if (sanitizedProductDTO.isCreateUnit() && sanitizedProductDTO.getUnitDTO() != null) {
-            UnitOfMeasurement unitOfMeasurement = unitOfMeasurementService.createUnitOfMeasurement(sanitizedProductDTO.getUnitDTO());
-            Product product = ProductDTOMapper.convertCreateProductDTOToProduct(sanitizedProductDTO);
-            product.setUnit(unitOfMeasurement);
-            return productRepository.save(product);
-        } else {
-            return productRepository.save(ProductDTOMapper.convertCreateProductDTOToProduct(sanitizedProductDTO));
-        }
+        return productRepository.save(ProductDTOMapper.convertCreateProductDTOToProduct(sanitizedProductDTO));
     }
 
     public Product updateProduct(UpdateProductDTO productDTO) {

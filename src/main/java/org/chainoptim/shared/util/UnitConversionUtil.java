@@ -1,6 +1,6 @@
 package org.chainoptim.shared.util;
 
-import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
+import org.chainoptim.features.goods.unit.model.UnitOfMeasurement;
 import org.chainoptim.features.goods.unit.model.StandardUnit;
 
 import org.springframework.data.util.Pair;
@@ -21,7 +21,7 @@ public class UnitConversionUtil {
         return conversionMap.getOrDefault(Pair.of(from, to), Double.NaN);
     }
 
-    public static double convert(double value, NewUnitOfMeasurement from, NewUnitOfMeasurement to) {
+    public static double convert(double value, UnitOfMeasurement from, UnitOfMeasurement to) {
         if (!from.getStandardUnit().getCategory().equals(to.getStandardUnit().getCategory())) {
             throw new IllegalArgumentException("Cannot convert between different categories of units");
         }

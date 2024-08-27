@@ -1,7 +1,6 @@
 package org.chainoptim.features.goods.repository;
 
 import org.chainoptim.features.goods.product.model.Product;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.goods.product.repository.ProductsSearchRepositoryImpl;
 import org.chainoptim.shared.search.model.PaginatedResults;
 import org.chainoptim.shared.search.model.SearchParams;
@@ -34,9 +33,6 @@ class ProductsSearchRepositoryTest {
 
     void createTestProduct(String name, String description, String createdAt, String updatedAt) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setName("Unit");
-        entityManager.persist(unit);
 
         Product product = Product.builder()
                 .organizationId(1)
@@ -44,7 +40,6 @@ class ProductsSearchRepositoryTest {
                 .description(description)
                 .createdAt(LocalDateTime.parse(createdAt, formatter))
                 .updatedAt(LocalDateTime.parse(updatedAt, formatter))
-                .unit(unit)
                 .build();
 
         entityManager.persist(product);

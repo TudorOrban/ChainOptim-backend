@@ -8,7 +8,6 @@ import org.chainoptim.features.goods.product.repository.ProductRepository;
 import org.chainoptim.features.production.factory.model.Factory;
 import org.chainoptim.features.production.stage.model.FactoryStage;
 import org.chainoptim.features.goods.product.model.Product;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 import org.chainoptim.features.goods.stage.model.Stage;
 import org.chainoptim.features.storage.warehouse.model.Warehouse;
 import org.chainoptim.features.storage.inventory.model.WarehouseInventoryItem;
@@ -40,12 +39,10 @@ class ProductRepositoryTest {
     private ProductRepository productRepository;
 
     Integer organizationId;
-    Integer unitId;
     Integer productId;
 
     @BeforeEach
     void setUp() {
-        // Set up an organization and a unit of measurement
         Organization organization = Organization.builder()
                 .name("Test Org")
                 .subscriptionPlanTier(SubscriptionPlanTier.PROFESSIONAL)
@@ -54,15 +51,6 @@ class ProductRepositoryTest {
         entityManager.persist(organization);
         entityManager.flush();
         organizationId = organization.getId();
-
-        UnitOfMeasurement unitOfMeasurement = new UnitOfMeasurement();
-        unitOfMeasurement.setName("Test unit");
-        unitOfMeasurement.setUnitType("Test unit type");
-        unitOfMeasurement.setOrganizationId(organizationId);
-
-        entityManager.persist(unitOfMeasurement);
-        entityManager.flush();
-        unitId = unitOfMeasurement.getId();
 
         // Set up product for update and delete tests
         Product product = addTestProduct();
@@ -198,7 +186,6 @@ class ProductRepositoryTest {
         assertEquals(savedProduct.getName(), foundProduct.getName());
         assertEquals(savedProduct.getDescription(), foundProduct.getDescription());
         assertEquals(savedProduct.getOrganizationId(), foundProduct.getOrganizationId());
-        assertEquals(savedProduct.getUnit().getId(), foundProduct.getUnit().getId());
     }
 
     @Test
@@ -245,11 +232,8 @@ class ProductRepositoryTest {
     Product addTestProduct() {
         Product product = new Product();
         product.setName("Test Product");
-        product.setDescription("Test Description");
+
         product.setOrganizationId(organizationId);
-        UnitOfMeasurement unit = new UnitOfMeasurement();
-        unit.setId(unitId);
-        product.setUnit(unit);
 
         return entityManager.persist(product);
     }

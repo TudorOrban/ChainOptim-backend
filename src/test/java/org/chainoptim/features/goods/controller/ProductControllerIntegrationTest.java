@@ -7,7 +7,7 @@ import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterSe
 import org.chainoptim.features.goods.product.dto.CreateProductDTO;
 import org.chainoptim.features.goods.product.dto.ProductsSearchDTO;
 import org.chainoptim.features.goods.product.dto.UpdateProductDTO;
-import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
+import org.chainoptim.features.goods.unit.model.UnitOfMeasurement;
 import org.chainoptim.features.goods.product.model.Product;
 import org.chainoptim.features.goods.product.repository.ProductRepository;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
@@ -46,8 +46,6 @@ class ProductControllerIntegrationTest {
     @Autowired
     private TestDataSeederService seederService;
     @Autowired
-    private UnitOfMeasurementRepository unitOfMeasurementRepository;
-    @Autowired
     private ProductRepository productRepository;
     @Autowired
     private EntitySanitizerService entitySanitizerService;
@@ -59,8 +57,6 @@ class ProductControllerIntegrationTest {
     // Necessary seed data
     Integer organizationId;
     String jwtToken;
-    CreateUnitOfMeasurementDTO unitDTO;
-    UnitOfMeasurement unit;
     Integer productId;
 
     @BeforeEach
@@ -69,14 +65,6 @@ class ProductControllerIntegrationTest {
         Pair<Integer, String> seedResult = seederService.seedDatabaseWithTenant();
         organizationId = seedResult.getFirst();
         jwtToken = seedResult.getSecond();
-
-        // Set up a unit of measurement for products
-        unitDTO = new CreateUnitOfMeasurementDTO();
-        unitDTO.setName("Test unit");
-        unitDTO.setUnitType("Test unit type");
-        unitDTO.setOrganizationId(organizationId);
-
-        unit = unitOfMeasurementRepository.save(UnitDTOMapper.convertCreateUnitDTOToUnit(unitDTO));
 
         // Set up supply chain snapshot for plan limiter service
         SupplyChainSnapshot supplyChainSnapshot = new SupplyChainSnapshot();
@@ -95,7 +83,6 @@ class ProductControllerIntegrationTest {
         product1.setName("Test Product 1");
         product1.setDescription("Test Description 1");
         product1.setOrganizationId(organizationId);
-        product1.setUnit(unit);
 
         product1 = productRepository.save(product1);
         productId = product1.getId();
@@ -104,7 +91,6 @@ class ProductControllerIntegrationTest {
         product2.setName("Test Product 2");
         product2.setDescription("Test Description 2");
         product2.setOrganizationId(organizationId);
-        product2.setUnit(unit);
 
         productRepository.save(product2);
 
@@ -112,7 +98,6 @@ class ProductControllerIntegrationTest {
         product3.setName("Test Product 3");
         product3.setDescription("Test Description 3");
         product3.setOrganizationId(organizationId);
-        product3.setUnit(unit);
 
         productRepository.save(product3);
     }
@@ -155,7 +140,7 @@ class ProductControllerIntegrationTest {
     @Test
     void testCreateProduct() throws Exception {
         // Arrange
-        CreateProductDTO productDTO = new CreateProductDTO("Test Product - Unique Title 123456789", "Test Description", organizationId, unit.getId(), unitDTO, false, new NewUnitOfMeasurement());
+        CreateProductDTO productDTO = new CreateProductDTO("Test Product - Unique Title 123456789", "Test Description", organizationId, new UnitOfMeasurement());
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
         String invalidJWTToken = "Invalid";
 
@@ -188,14 +173,13 @@ class ProductControllerIntegrationTest {
         assertEquals(productDTO.getName(), createdProduct.getName());
         assertEquals(productDTO.getDescription(), createdProduct.getDescription());
         assertEquals(productDTO.getOrganizationId(), createdProduct.getOrganizationId());
-        assertEquals(productDTO.getUnitId(), createdProduct.getUnit().getId());
 
     }
 
     @Test
     void testUpdateProduct() throws Exception {
         // Arrange
-        UpdateProductDTO productDTO = new UpdateProductDTO(productId, "Test Product - Updated Unique Title 123456789", "Test Description", unit.getId(), new NewUnitOfMeasurement());
+        UpdateProductDTO productDTO = new UpdateProductDTO(productId, "Test Product - Updated Unique Title 123456789", "Test Description", new UnitOfMeasurement());
         String productDTOJson = objectMapper.writeValueAsString(productDTO);
         String invalidJWTToken = "Invalid";
 
@@ -228,7 +212,6 @@ class ProductControllerIntegrationTest {
         assertNotNull(updatedProduct);
         assertEquals(productDTO.getName(), updatedProduct.getName());
         assertEquals(productDTO.getDescription(), updatedProduct.getDescription());
-        assertEquals(productDTO.getUnitId(), updatedProduct.getUnit().getId());
     }
 
     @Test

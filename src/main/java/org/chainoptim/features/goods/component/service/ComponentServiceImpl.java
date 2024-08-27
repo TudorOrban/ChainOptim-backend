@@ -3,12 +3,10 @@ package org.chainoptim.features.goods.component.service;
 import org.chainoptim.core.tenant.subscription.service.SubscriptionPlanLimiterService;
 import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
-import org.chainoptim.features.goods.controller.UnitOfMeasurementService;
 import org.chainoptim.features.goods.component.dto.ComponentDTOMapper;
 import org.chainoptim.features.goods.component.dto.ComponentsSearchDTO;
 import org.chainoptim.features.goods.component.dto.CreateComponentDTO;
-import org.chainoptim.features.goods.controller.UpdateComponentDTO;
+import org.chainoptim.features.goods.component.dto.UpdateComponentDTO;
 import org.chainoptim.features.goods.component.model.Component;
 import org.chainoptim.features.goods.component.repository.ComponentRepository;
 import org.chainoptim.shared.enums.Feature;
@@ -23,17 +21,14 @@ import java.util.List;
 public class ComponentServiceImpl implements ComponentService {
 
     private final ComponentRepository componentRepository;
-    private final UnitOfMeasurementService unitOfMeasurementService;
     private final SubscriptionPlanLimiterService planLimiterService;
     private final EntitySanitizerService entitySanitizerService;
 
     @Autowired
     public ComponentServiceImpl(ComponentRepository componentRepository,
-                                UnitOfMeasurementService unitOfMeasurementService,
                                 SubscriptionPlanLimiterService planLimiterService,
                                 EntitySanitizerService entitySanitizerService) {
         this.componentRepository = componentRepository;
-        this.unitOfMeasurementService = unitOfMeasurementService;
         this.planLimiterService = planLimiterService;
         this.entitySanitizerService = entitySanitizerService;
     }
@@ -71,15 +66,7 @@ public class ComponentServiceImpl implements ComponentService {
 
         CreateComponentDTO sanitizedComponentDTO = entitySanitizerService.sanitizeCreateComponentDTO(componentDTO);
 
-        // Create unit of measurement if requested
-        if (sanitizedComponentDTO.isCreateUnit() && sanitizedComponentDTO.getUnitDTO() != null) {
-            UnitOfMeasurement unitOfMeasurement = unitOfMeasurementService.createUnitOfMeasurement(sanitizedComponentDTO.getUnitDTO());
-            Component component = ComponentDTOMapper.convertCreateComponentDTOToComponent(sanitizedComponentDTO);
-            component.setUnit(unitOfMeasurement);
-            return componentRepository.save(component);
-        } else {
-            return componentRepository.save(ComponentDTOMapper.convertCreateComponentDTOToComponent(sanitizedComponentDTO));
-        }
+        return componentRepository.save(ComponentDTOMapper.convertCreateComponentDTOToComponent(sanitizedComponentDTO));
     }
 
     // Update

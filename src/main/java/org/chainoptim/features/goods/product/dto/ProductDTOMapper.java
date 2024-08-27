@@ -1,7 +1,6 @@
 package org.chainoptim.features.goods.product.dto;
 
 import org.chainoptim.features.goods.product.model.Product;
-import org.chainoptim.features.goods.controller.UnitOfMeasurement;
 
 public class ProductDTOMapper {
 
@@ -23,12 +22,7 @@ public class ProductDTOMapper {
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setOrganizationId(productDTO.getOrganizationId());
-        if (productDTO.getUnitId() != null) {
-            UnitOfMeasurement unit = new UnitOfMeasurement();
-            unit.setId(productDTO.getUnitId());
-            product.setUnit(unit);
-        }
-        product.setNewUnit(productDTO.getNewUnit());
+        product.setUnit(productDTO.getNewUnit());
 
         return product;
     }
@@ -36,12 +30,7 @@ public class ProductDTOMapper {
     public static Product setUpdateProductDTOToProduct(Product product, UpdateProductDTO productDTO) {
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
-        if (productDTO.getUnitId() != null) {
-            UnitOfMeasurement unit = new UnitOfMeasurement();
-            unit.setId(productDTO.getUnitId());
-            product.setUnit(unit);
-        }
-        product.setNewUnit(productDTO.getNewUnit());
+        product.setUnit(productDTO.getNewUnit());
 
         return product;
     }

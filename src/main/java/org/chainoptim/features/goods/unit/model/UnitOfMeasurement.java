@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewUnitOfMeasurement {
+public class UnitOfMeasurement {
 
     StandardUnit standardUnit;
     UnitMagnitude unitMagnitude;
