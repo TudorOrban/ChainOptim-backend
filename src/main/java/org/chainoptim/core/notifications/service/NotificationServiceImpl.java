@@ -6,13 +6,12 @@ import org.chainoptim.core.notifications.dto.NotificationDTOMapper;
 import org.chainoptim.core.notifications.model.Notification;
 import org.chainoptim.core.notifications.model.NotificationUserDistribution;
 import org.chainoptim.core.notifications.websocket.WebSocketMessagingService;
-import org.chainoptim.features.client.model.ClientOrderEvent;
-import org.chainoptim.features.supplier.model.SupplierOrderEvent;
+import org.chainoptim.features.demand.model.ClientOrderEvent;
+import org.chainoptim.features.supply.model.SupplierOrderEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

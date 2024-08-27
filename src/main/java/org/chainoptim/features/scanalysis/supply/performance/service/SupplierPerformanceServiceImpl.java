@@ -3,10 +3,10 @@ package org.chainoptim.features.scanalysis.supply.performance.service;
 import org.chainoptim.features.scanalysis.supply.performance.model.ComponentDeliveryPerformance;
 import org.chainoptim.features.scanalysis.supply.performance.model.ComponentPerformanceMetrics;
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
-import org.chainoptim.features.supplier.model.SupplierOrder;
-import org.chainoptim.features.supplier.model.SupplierShipment;
-import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
-import org.chainoptim.features.supplier.repository.SupplierShipmentRepository;
+import org.chainoptim.features.supply.model.SupplierOrder;
+import org.chainoptim.features.supply.model.SupplierShipment;
+import org.chainoptim.features.supply.repository.SupplierOrderRepository;
+import org.chainoptim.features.supply.repository.SupplierShipmentRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package org.chainoptim.core.upcomingevents.service;
 
 import org.chainoptim.core.upcomingevents.model.UpcomingEvent;
-import org.chainoptim.features.client.model.ClientOrder;
-import org.chainoptim.features.supplier.model.SupplierOrder;
+import org.chainoptim.features.demand.model.ClientOrder;
+import org.chainoptim.features.supply.model.SupplierOrder;
 
 public interface UpcomingEventProcessorService {
 

@@ -2,7 +2,7 @@ package org.chainoptim.features.scanalysis.production.factorygraph.service;
 
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.StageNode;
-import org.chainoptim.features.factory.model.Factory;
+import org.chainoptim.features.production.model.Factory;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
 import org.springframework.stereotype.Service;
 

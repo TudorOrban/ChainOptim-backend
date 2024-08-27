@@ -15,10 +15,10 @@ import org.chainoptim.features.scanalysis.production.resourceallocation.model.Re
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResolutionEvaluationService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceAllocatorService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceSeekerService;
-import org.chainoptim.features.factory.model.Factory;
-import org.chainoptim.features.factory.model.FactoryInventoryItem;
-import org.chainoptim.features.factory.service.FactoryInventoryService;
-import org.chainoptim.features.factory.service.FactoryService;
+import org.chainoptim.features.production.model.Factory;
+import org.chainoptim.features.production.model.FactoryInventoryItem;
+import org.chainoptim.features.production.service.FactoryInventoryService;
+import org.chainoptim.features.production.service.FactoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package org.chainoptim.core.notifications.service;
 
-import org.chainoptim.features.client.model.ClientOrderEvent;
-import org.chainoptim.features.supplier.model.SupplierOrderEvent;
+import org.chainoptim.features.demand.model.ClientOrderEvent;
+import org.chainoptim.features.supply.model.SupplierOrderEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

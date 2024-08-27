@@ -1,9 +1,8 @@
 package org.chainoptim.core.notifications.service;
 
 import org.chainoptim.core.notifications.model.NotificationExtraInfo;
-import org.chainoptim.features.product.model.UnitOfMeasurement;
-import org.chainoptim.features.productpipeline.model.Component;
-import org.chainoptim.features.supplier.model.SupplierOrderEvent;
+import org.chainoptim.features.goods.component.model.Component;
+import org.chainoptim.features.supply.model.SupplierOrderEvent;
 import org.chainoptim.shared.enums.OrderStatus;
 import org.chainoptim.shared.util.TimeUtil;
 import org.springframework.stereotype.Service;

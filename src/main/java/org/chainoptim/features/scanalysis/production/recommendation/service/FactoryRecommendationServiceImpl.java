@@ -5,12 +5,12 @@ import org.chainoptim.features.scanalysis.production.factoryconnection.model.Fac
 import org.chainoptim.features.scanalysis.production.recommendation.model.FactoryRecommendationReport;
 import org.chainoptim.features.scanalysis.production.factoryconnection.service.FactoryStageConnectionService;
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryPipelineService;
-import org.chainoptim.features.factory.model.*;
-import org.chainoptim.features.factory.service.FactoryInventoryService;
-import org.chainoptim.features.factory.service.FactoryService;
-import org.chainoptim.features.productpipeline.model.Component;
-import org.chainoptim.features.productpipeline.model.Stage;
-import org.chainoptim.features.productpipeline.model.StageInput;
+import org.chainoptim.features.production.model.*;
+import org.chainoptim.features.production.service.FactoryInventoryService;
+import org.chainoptim.features.production.service.FactoryService;
+import org.chainoptim.features.goods.component.model.Component;
+import org.chainoptim.features.goods.stage.model.Stage;
+import org.chainoptim.features.goods.stage.model.StageInput;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

@@ -1,32 +1,30 @@
 package org.chainoptim.core.organization.service;
 
 import org.chainoptim.core.organization.repository.CustomRoleRepository;
-import org.chainoptim.features.client.repository.ClientOrderRepository;
-import org.chainoptim.features.client.repository.ClientRepository;
-import org.chainoptim.features.client.repository.ClientShipmentRepository;
-import org.chainoptim.features.factory.repository.FactoryInventoryItemRepository;
-import org.chainoptim.features.factory.repository.FactoryRepository;
-import org.chainoptim.features.factory.repository.FactoryStageRepository;
-import org.chainoptim.features.product.repository.PricingRepository;
-import org.chainoptim.features.product.repository.ProductRepository;
-import org.chainoptim.features.product.repository.ResourceTransportRouteRepository;
-import org.chainoptim.features.productpipeline.repository.ComponentRepository;
-import org.chainoptim.features.productpipeline.repository.StageRepository;
-import org.chainoptim.features.supplier.repository.SupplierOrderRepository;
-import org.chainoptim.features.supplier.repository.SupplierRepository;
-import org.chainoptim.features.supplier.repository.SupplierShipmentRepository;
-import org.chainoptim.features.warehouse.repository.CompartmentRepository;
-import org.chainoptim.features.warehouse.repository.CrateRepository;
-import org.chainoptim.features.warehouse.repository.WarehouseInventoryItemRepository;
-import org.chainoptim.features.warehouse.repository.WarehouseRepository;
+import org.chainoptim.features.demand.repository.ClientOrderRepository;
+import org.chainoptim.features.demand.repository.ClientRepository;
+import org.chainoptim.features.demand.repository.ClientShipmentRepository;
+import org.chainoptim.features.production.repository.FactoryInventoryItemRepository;
+import org.chainoptim.features.production.repository.FactoryRepository;
+import org.chainoptim.features.production.repository.FactoryStageRepository;
+import org.chainoptim.features.goods.pricing.repository.PricingRepository;
+import org.chainoptim.features.goods.product.repository.ProductRepository;
+import org.chainoptim.features.goods.transportroute.repository.ResourceTransportRouteRepository;
+import org.chainoptim.features.goods.component.repository.ComponentRepository;
+import org.chainoptim.features.goods.stage.repository.StageRepository;
+import org.chainoptim.features.supply.repository.SupplierOrderRepository;
+import org.chainoptim.features.supply.repository.SupplierRepository;
+import org.chainoptim.features.supply.repository.SupplierShipmentRepository;
+import org.chainoptim.features.storage.repository.CompartmentRepository;
+import org.chainoptim.features.storage.repository.CrateRepository;
+import org.chainoptim.features.storage.repository.WarehouseInventoryItemRepository;
+import org.chainoptim.features.storage.repository.WarehouseRepository;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
 import org.chainoptim.shared.enums.Feature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
-import static org.chainoptim.shared.enums.Feature.*;
 
 @Service
 public class OrganizationIdFinderServiceImpl implements OrganizationIdFinderService {

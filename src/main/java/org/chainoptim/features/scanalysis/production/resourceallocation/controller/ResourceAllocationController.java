@@ -4,8 +4,8 @@ import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryP
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.scanalysis.production.resourceallocation.service.ResourceAllocatorService;
-import org.chainoptim.features.factory.model.FactoryInventoryItem;
-import org.chainoptim.features.factory.service.FactoryInventoryService;
+import org.chainoptim.features.production.model.FactoryInventoryItem;
+import org.chainoptim.features.production.service.FactoryInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

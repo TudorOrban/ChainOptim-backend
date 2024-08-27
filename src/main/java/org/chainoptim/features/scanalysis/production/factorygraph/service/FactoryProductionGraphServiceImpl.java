@@ -1,8 +1,8 @@
 package org.chainoptim.features.scanalysis.production.factorygraph.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.factory.model.Factory;
-import org.chainoptim.features.factory.service.FactoryService;
+import org.chainoptim.features.production.model.Factory;
+import org.chainoptim.features.production.service.FactoryService;
 import org.chainoptim.features.scanalysis.production.factoryconnection.model.FactoryStageConnection;
 import org.chainoptim.features.scanalysis.production.factoryconnection.service.FactoryStageConnectionService;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryGraph;

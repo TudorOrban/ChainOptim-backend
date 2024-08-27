@@ -1,7 +1,7 @@
 package org.chainoptim.features.scanalysis.production.productgraph.service;
 
-import org.chainoptim.features.product.model.Product;
-import org.chainoptim.features.product.service.ProductService;
+import org.chainoptim.features.goods.product.model.Product;
+import org.chainoptim.features.goods.product.service.ProductService;
 import org.chainoptim.features.scanalysis.production.productconnection.model.ProductStageConnection;
 import org.chainoptim.features.scanalysis.production.productconnection.service.StageConnectionService;
 import org.chainoptim.features.scanalysis.production.productgraph.model.ProductGraph;

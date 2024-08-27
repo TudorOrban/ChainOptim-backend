@@ -2,21 +2,11 @@ package org.chainoptim.core.notifications.service;
 
 import org.chainoptim.core.notifications.model.KafkaEvent;
 import org.chainoptim.core.notifications.model.Notification;
-import org.chainoptim.core.notifications.model.NotificationExtraInfo;
-import org.chainoptim.features.client.model.ClientOrderEvent;
-import org.chainoptim.features.product.model.UnitOfMeasurement;
-import org.chainoptim.features.supplier.model.SupplierOrder;
-import org.chainoptim.features.supplier.model.SupplierOrderEvent;
+import org.chainoptim.features.demand.model.ClientOrderEvent;
+import org.chainoptim.features.supply.model.SupplierOrderEvent;
 import org.chainoptim.shared.enums.Feature;
-import org.chainoptim.shared.enums.OrderStatus;
-import org.chainoptim.shared.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class NotificationFormatterServiceImpl implements NotificationFormatterService {

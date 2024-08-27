@@ -7,8 +7,8 @@ import org.chainoptim.features.scanalysis.supply.performance.dto.UpdateSupplierP
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformance;
 import org.chainoptim.features.scanalysis.supply.performance.model.SupplierPerformanceReport;
 import org.chainoptim.features.scanalysis.supply.performance.repository.SupplierPerformanceRepository;
-import org.chainoptim.features.supplier.model.Supplier;
-import org.chainoptim.features.supplier.repository.SupplierRepository;
+import org.chainoptim.features.supply.model.Supplier;
+import org.chainoptim.features.supply.repository.SupplierRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

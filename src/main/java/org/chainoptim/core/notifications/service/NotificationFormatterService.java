@@ -1,8 +1,8 @@
 package org.chainoptim.core.notifications.service;
 
 import org.chainoptim.core.notifications.model.Notification;
-import org.chainoptim.features.client.model.ClientOrderEvent;
-import org.chainoptim.features.supplier.model.SupplierOrderEvent;
+import org.chainoptim.features.demand.model.ClientOrderEvent;
+import org.chainoptim.features.supply.model.SupplierOrderEvent;
 
 public interface NotificationFormatterService {
 

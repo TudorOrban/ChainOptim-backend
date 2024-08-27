@@ -1,7 +1,7 @@
 package org.chainoptim.features.scanalysis.production.performance.service;
 
 import org.chainoptim.exception.ResourceNotFoundException;
-import org.chainoptim.features.factory.repository.FactoryRepository;
+import org.chainoptim.features.production.repository.FactoryRepository;
 import org.chainoptim.features.scanalysis.production.factorygraph.model.FactoryProductionGraph;
 import org.chainoptim.features.scanalysis.production.factorygraph.service.FactoryProductionGraphService;
 import org.chainoptim.features.scanalysis.production.performance.dto.CreateFactoryPerformanceDTO;
@@ -12,7 +12,7 @@ import org.chainoptim.features.scanalysis.production.performance.model.FactoryPe
 import org.chainoptim.features.scanalysis.production.performance.repository.FactoryPerformanceRepository;
 import org.chainoptim.features.scanalysis.production.productionhistory.model.FactoryProductionHistory;
 import org.chainoptim.features.scanalysis.production.productionhistory.service.FactoryProductionHistoryPersistenceService;
-import org.chainoptim.features.factory.model.Factory;
+import org.chainoptim.features.production.model.Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

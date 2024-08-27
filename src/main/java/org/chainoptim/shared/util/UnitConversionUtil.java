@@ -1,7 +1,7 @@
 package org.chainoptim.shared.util;
 
-import org.chainoptim.features.product.model.NewUnitOfMeasurement;
-import org.chainoptim.features.product.model.StandardUnit;
+import org.chainoptim.features.goods.unit.model.NewUnitOfMeasurement;
+import org.chainoptim.features.goods.unit.model.StandardUnit;
 
 import org.springframework.data.util.Pair;
 

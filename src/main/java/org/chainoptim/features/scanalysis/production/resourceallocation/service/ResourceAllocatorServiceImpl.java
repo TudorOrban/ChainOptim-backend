@@ -4,7 +4,7 @@ import org.chainoptim.features.scanalysis.production.factorygraph.model.*;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationPlan;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.AllocationResult;
 import org.chainoptim.features.scanalysis.production.resourceallocation.model.ResourceAllocation;
-import org.chainoptim.features.factory.model.FactoryInventoryItem;
+import org.chainoptim.features.production.model.FactoryInventoryItem;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

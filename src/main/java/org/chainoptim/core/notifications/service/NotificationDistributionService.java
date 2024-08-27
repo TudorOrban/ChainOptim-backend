@@ -1,12 +1,8 @@
 package org.chainoptim.core.notifications.service;
 
 import org.chainoptim.core.notifications.model.NotificationUserDistribution;
-import org.chainoptim.features.client.model.ClientOrderEvent;
-import org.chainoptim.features.supplier.model.SupplierOrderEvent;
-
-import org.springframework.data.util.Pair;
-
-import java.util.List;
+import org.chainoptim.features.demand.model.ClientOrderEvent;
+import org.chainoptim.features.supply.model.SupplierOrderEvent;
 
 public interface NotificationDistributionService {
 
