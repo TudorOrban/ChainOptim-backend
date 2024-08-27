@@ -1,11 +1,14 @@
 package org.chainoptim.shared.commonfeatures.location.service;
 
+import org.chainoptim.core.subscription.service.SubscriptionPlanLimiterService;
+import org.chainoptim.exception.PlanLimitReachedException;
 import org.chainoptim.exception.ResourceNotFoundException;
 import org.chainoptim.shared.commonfeatures.location.dto.CreateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.dto.LocationDTOMapper;
 import org.chainoptim.shared.commonfeatures.location.dto.UpdateLocationDTO;
 import org.chainoptim.shared.commonfeatures.location.model.Location;
 import org.chainoptim.shared.commonfeatures.location.repository.LocationRepository;
+import org.chainoptim.shared.enums.Feature;
 import org.chainoptim.shared.sanitization.EntitySanitizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +25,7 @@ public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
     private final GeocodingService geocodingService;
     private final EntitySanitizerService sanitizerService;
+    private final SubscriptionPlanLimiterService planLimiterService;
 
     @Value("${app.environment}")
     private String environment;
@@ -29,10 +33,12 @@ public class LocationServiceImpl implements LocationService {
     @Autowired
     public LocationServiceImpl(LocationRepository locationRepository,
                                GeocodingService geocodingService,
-                               EntitySanitizerService sanitizerService) {
+                               EntitySanitizerService sanitizerService,
+                               SubscriptionPlanLimiterService planLimiterService) {
         this.locationRepository = locationRepository;
         this.geocodingService = geocodingService;
         this.sanitizerService = sanitizerService;
+        this.planLimiterService = planLimiterService;
     }
 
     // Fetch
@@ -42,6 +48,11 @@ public class LocationServiceImpl implements LocationService {
 
     // Create
     public Location createLocation(CreateLocationDTO locationDTO) {
+        // Check if plan limit is reached
+        if (planLimiterService.isLimitReached(locationDTO.getOrganizationId(), Feature.LOCATION, 1)) {
+            throw new PlanLimitReachedException("You have reached the limit of allowed locations for the current Subscription Plan.");
+        }
+
         CreateLocationDTO sanitizedDTO = sanitizerService.sanitizeCreateLocationDTO(locationDTO);
 
         if (!environment.equals("prod")) {

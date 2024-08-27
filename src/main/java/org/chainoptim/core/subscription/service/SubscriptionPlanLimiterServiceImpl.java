@@ -29,7 +29,7 @@ public class SubscriptionPlanLimiterServiceImpl implements SubscriptionPlanLimit
     public boolean isLimitReached(Integer organizationId, Feature feature, Integer quantity) {
         // Get the current subscription plan
         List<SubscriptionPlan> plans = subscriptionPlanRepository.findByOrganizationId(organizationId);
-        if (plans.size() != 2) {
+        if (plans.isEmpty()) {
             throw new ResourceNotFoundException("Subscription plan not found for organization with ID: " + organizationId);
         }
         SubscriptionPlan currentPlan = plans.getFirst();

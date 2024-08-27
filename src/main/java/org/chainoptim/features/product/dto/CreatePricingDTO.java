@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class CreatePricingDTO {
 
     private Integer productId;
+    private Integer organizationId;
     private ProductPricing productPricing;
 
 }
