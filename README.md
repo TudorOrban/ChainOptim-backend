@@ -1,12 +1,15 @@
 ## ChainOptim
 
-**ChainOptim** is a Supply Chain Manager and Optimizer, consisting of a [Spring Boot backend](https://github.com/TudorOrban/ChainOptim-backend), a [web frontend](https://github.com/TudorOrban/ChainOptim-frontend) in Angular and a [Desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp) in JavaFX.
-It is designed as a general service that can accommodate the needs of companies from a variety of sectors, providing
+ChainOptim is a comprehensive Enterprise Resource Planning (ERP) system designed to streamline and optimize the end-to-end processes of modern businesses. It is designed as a general service that can accommodate the needs of companies from a variety of sectors, providing
 detailed insights into their supply chain, from suppliers to production to clients.
+
+This repository contains the source code for the [Spring Boot backend](https://github.com/TudorOrban/ChainOptim-backend), see [this](https://github.com/TudorOrban/ChainOptim-frontend) for the Angular web frontend and [this](https://github.com/SorinPopteanu/ChainOptim-DesktopApp) for the JavaFX desktop frontend.
+
+### Features
 
 ![Chain Optim screenshots](/screenshots/chainoptim-4screenshots.png)
 
-### Features
+There are six main domains in ChainOptim: **organization**, **goods**, **supply**, **production**, **storage** and **demand**.
 
 #### **Organizations**: 
 ChainOptim employs a multi-tenant architecture that minimizes costs for the clients (while maintaining solid security) and facilitates interorganizational communication.
