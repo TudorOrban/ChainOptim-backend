@@ -1,26 +1,31 @@
 ## ChainOptim
 
-**ChainOptim** is a Supply Chain Manager and Optimizer, consisting of a [Spring Boot backend](https://github.com/TudorOrban/ChainOptim-backend), a [web frontend](https://github.com/TudorOrban/ChainOptim-frontend) in Angular and a [Desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp) in JavaFX.
-It is designed as a general service that can accommodate the needs of companies from a variety of sectors, providing
-detailed insights into their supply chain, from suppliers to production to clients.
+ChainOptim is a comprehensive Enterprise Resource Planning (ERP) system designed to streamline and optimize the end-to-end processes of modern businesses. Designed to meet the diverse needs of companies across various sizes and sectors, ChainOptim delivers robust management tools and detailed insights into every aspect of the supply chain, enhancing operational efficiency and decision-making capabilities.
+
+This repository contains the source code for the [Spring Boot backend](https://github.com/TudorOrban/ChainOptim-backend). For the Angular web frontend, see [this](https://github.com/TudorOrban/ChainOptim-frontend) repository, and for the JavaFX desktop frontend, visit [this](https://github.com/SorinPopteanu/ChainOptim-DesktopApp) link.
+### Features
+
+There are six main domains in ChainOptim: **Organization**, **Goods**, **Supply**, **Production**, **Storage** and **Demand**.
 
 ![Chain Optim screenshots](/screenshots/chainoptim-4screenshots.png)
 
-### Features
+#### **Organization**: 
+This domain focuses on managing the company's profile, subscription plan, members and their security roles.
 
-#### **Organizations**: 
-ChainOptim employs a multi-tenant architecture that minimizes costs for the clients (while maintaining solid security) and facilitates interorganizational communication.
+#### **Goods**:
+**Components** and **Products** are goods manufactured and/or sold by the company. The user can configure a blueprint for the manufacturing process of a product, define pricing models and set up transportation routes.
 
-#### **Products** and **Components**:
-Products are the goods manufactured by a company, while components are general goods needed in the manufacturing process.
-Each product can have a *Production Pipeline* that configures how the components are assembled into products.
+#### **Supply**:
+**Suppliers** are organizations that provide components to the company. This domain is responsible with tracking their orders, shipments, and analyzing their performance over time.
 
-#### **Factories** and **Warehouses**:
-An organization's sites for production and storage of goods. Configuring a factory's stages of production
-allows the software to provide valuable information into its operations, including allocating resources, seeking solutions to resource deficits and evaluating performance over time. 
+#### **Production**:
+This domain is concerned with **Factories** and their underlying operations. Several solutions are provided for optimizing the production process, such as establishing resource allocation plans, seeking missing resources or storing and analyzing the production history.
 
-#### **Suppliers** and **Clients**:
-ChainOptim allows registration of suppliers and clients, tracking orders and shipments and responding in real time to unpredictable disruptions that are more and more common in the present supply chain.
+#### **Storage**:
+**Warehouses** are company facilities used for storing goods. This domain provides tools for managing their inventories, including levels of goods and storage space.
+
+#### **Demand**:
+**Clients** are organizations that are provided products by the company. Similar to suppliers, ChainOptim allows tracking of their orders, shipments, and evaluating them.
 
 ### How to use
 ChainOptim is not yet deployed. To use it, you will have to set up locally the database, backend server and chosen frontend.
@@ -29,14 +34,14 @@ ChainOptim is not yet deployed. To use it, you will have to set up locally the d
 - an application-docker.properties from the [application-docker-dev.properties.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/src/main/resources/application-docker-dev.properties.example), replacing the database user and password appropriately, and the JWT secret as needed. 
 - a docker-compose.dev.yml from the [docker-compose.dev.yml.example](https://github.com/TudorOrban/ChainOptim-backend/blob/main/docker-compose.dev.yml.example), replacing the database user and password.
 3. Build the Spring Boot image and spin up the necessary Docker containers (MySQL, Spring Boot, Redis, Kafka). You can find a script that does this for your operating system in the [scripts](https://github.com/TudorOrban/ChainOptim-backend/blob/main/scripts) folder (Restart.ps1 or Restart.sh). *Run it twice*, as the first time around the database will be empty and Spring Boot won't start.
-4. Fetch the [JavaFX desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp), run it in your IDE of choice and log in with:
+4. Fetch the [Angular web frontend](https://github.com/TudorOrban/ChainOptim-frontend), run `ng serve` and log in with:
 - Username: ExampleUser
 - Password: example-password
 
-Now you can interact with the application. Alternatively, fetch the [Angular web frontend](https://github.com/TudorOrban/ChainOptim-frontend), run `ng serve` and log in.
+Now you can interact with the application. Alternatively, fetch the [JavaFX desktop frontend](https://github.com/SorinPopteanu/ChainOptim-DesktopApp), run it in your IDE of choice and log in.
 
 ### Status
-In mid stages of development.
+In late stages of development.
 
 ### Contributing
 All contributions are warmly welcomed. Head over to [CONTRIBUTING.md](https://github.com/TudorOrban/ChainOptim-backend/blob/main/CONTRIBUTING.md) for details.
