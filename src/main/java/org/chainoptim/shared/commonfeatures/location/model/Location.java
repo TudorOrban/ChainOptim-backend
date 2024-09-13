@@ -24,25 +24,25 @@ public class Location {
     @Column(name = "id", updatable = false, nullable = false)
     private Integer id;
 
-    @Column(name = "address", nullable = true)
+    @Column(name = "address")
     private String address;
 
-    @Column(name = "city", nullable = true)
+    @Column(name = "city")
     private String city;
 
-    @Column(name = "state", nullable = true)
+    @Column(name = "state")
     private String state;
 
-    @Column(name = "country", nullable = true)
+    @Column(name = "country")
     private String country;
 
-    @Column(name = "latitude", nullable = true)
+    @Column(name = "latitude")
     private Double latitude;
 
-    @Column(name = "longitude", nullable = true)
+    @Column(name = "longitude")
     private Double longitude;
 
-    @Column(name = "zip_code", nullable = true)
+    @Column(name = "zip_code")
     private String zipCode;
 
     @Column(name = "organization_id", nullable = false)
