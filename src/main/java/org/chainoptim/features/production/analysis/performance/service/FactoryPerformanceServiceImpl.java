@@ -108,6 +108,7 @@ public class FactoryPerformanceServiceImpl implements FactoryPerformanceService 
         return factoryStagePerformanceReport;
     }
 
+
     private float determineRecordsDuration(Map<Float, DailyProductionRecord> productionRecords) {
         return productionRecords.values().stream()
                 .map(DailyProductionRecord::getDurationDays)
